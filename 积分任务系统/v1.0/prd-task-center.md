@@ -53,7 +53,7 @@
 
 ## C端 · 任务中心页
 
-<!-- prototype: src="../../prototype/task-center.html" width="375" height="812" scale="0.85" title="C端原型 · 任务中心" -->
+<!-- prototype: src="prototype/task-center.html" width="375" height="812" scale="0.85" title="C端原型 · 任务中心" -->
 
 #### 功能描述
 
@@ -161,7 +161,7 @@
 
 ## C端 · 我的账户页
 
-<!-- prototype: src="../../prototype/my-account.html" width="375" height="812" scale="0.85" title="C端原型 · 我的账户" -->
+<!-- prototype: src="prototype/my-account.html" width="375" height="812" scale="0.85" title="C端原型 · 我的账户" -->
 
 #### 本版本改动点
 
@@ -202,7 +202,7 @@
 
 ## C端 · 积分兑换页
 
-<!-- prototype: src="../../prototype/points-exchange.html" width="375" height="812" scale="0.85" title="C端原型 · 积分兑换" -->
+<!-- prototype: src="prototype/points-exchange.html" width="375" height="812" scale="0.85" title="C端原型 · 积分兑换" -->
 
 #### 本版本改动点
 
@@ -226,7 +226,7 @@
 
 ## C端 · 个人中心页
 
-<!-- prototype: src="../../prototype/my-profile.html" width="375" height="812" scale="0.85" title="C端原型 · 个人中心" -->
+<!-- prototype: src="prototype/my-profile.html" width="375" height="812" scale="0.85" title="C端原型 · 个人中心" -->
 
 #### 本版本改动点
 
@@ -285,7 +285,7 @@
 
 ## PC端 · 任务配置管理
 
-<!-- prototype: src="../../prototype/task-config.html" width="1920" height="1080" scale="0.35" title="PC端原型 · 任务配置列表" -->
+<!-- prototype: src="prototype/task-config.html" width="1920" height="1080" scale="0.35" title="PC端原型 · 任务配置列表" -->
 
 #### 设计原则
 
@@ -391,7 +391,7 @@
 
 ## PC端 · 任务明细管理
 
-<!-- prototype: src="../../prototype/task-detail-page.html" width="1920" height="1080" scale="0.35" title="PC端原型 · 任务明细列表" -->
+<!-- prototype: src="prototype/task-detail-page.html" width="1920" height="1080" scale="0.35" title="PC端原型 · 任务明细列表" -->
 
 #### 功能描述
 
@@ -446,7 +446,7 @@
 
 ## 订阅消息
 
-<!-- prototype: src="../../prototype/notification-settings.html" width="375" height="812" scale="0.85" title="C端原型 · 消息订阅设置" -->
+<!-- prototype: src="prototype/notification-settings.html" width="375" height="812" scale="0.85" title="C端原型 · 消息订阅设置" -->
 
 #### 功能描述
 

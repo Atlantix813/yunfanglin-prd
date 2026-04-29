@@ -353,7 +353,7 @@ function flowZoomFit() {
 function openFlowModal(num) {
   document.getElementById('flowTitle').textContent = FLOW_NAMES[num] || '流程' + num;
   var img = new Image();
-  img.src = '../../prototype/flows/flow-' + num + '.png';
+  img.src = 'prototype/flows/flow-' + num + '.png';
   var body = document.getElementById('flowBody');
   body.innerHTML = '<div class="no-image" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">加载中...</div>';
   img.onload = function() {
