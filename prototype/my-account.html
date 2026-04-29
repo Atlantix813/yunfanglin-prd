@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>我的账户</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif; background:#F2F6FF; color:#222835; font-size:14px; width:375px; overscroll-behavior:contain; }
+html { overscroll-behavior:contain; }
+body::-webkit-scrollbar { display:none; }
+body { -ms-overflow-style:none; scrollbar-width:none; }
+
+.status-bar { height:44px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; }
+.status-bar .time { font-family:Inter,sans-serif; font-weight:700; font-size:15px; }
+.nav-bar { height:44px; display:flex; align-items:center; justify-content:center; position:relative; }
+.nav-bar .back { position:absolute; left:16px; font-size:24px; color:#222835; font-weight:500; }
+.nav-bar .title { font-size:17px; font-weight:700; }
+.nav-bar .capsule { position:absolute; right:8px; height:32px; width:87px; border-radius:16px; border:0.5px solid rgba(0,0,0,0.1); background:rgba(255,255,255,0.55); display:flex; align-items:center; justify-content:center; }
+.capsule-dots { flex:1; display:flex; align-items:center; justify-content:center; gap:3px; }
+.capsule-dots span { width:4px; height:4px; border-radius:2px; background:#222835; }
+.capsule-divider { width:0.5px; height:16px; background:rgba(0,0,0,0.15); }
+.capsule-close { flex:1; display:flex; align-items:center; justify-content:center; }
+
+/* Points card */
+.points-card {
+  margin:16px 16px 0; border-radius:16px; padding:20px 20px 18px;
+  position:relative; overflow:hidden; color:#fff;
+  background:linear-gradient(135deg, #488CF8 0%, #2F6EEB 50%, #3B7DF0 100%);
+  box-shadow:0 6px 20px rgba(63,134,245,0.25); min-height:160px;
+}
+.points-card .deco1 { position:absolute; right:20px; top:15px; width:90px; height:90px; }
+.points-label { font-size:13px; opacity:0.85; letter-spacing:0.3px; }
+.points-value { font-family:Inter,sans-serif; font-size:42px; font-weight:700; line-height:1.1; margin:6px 0 2px; display:inline; }
+.points-worth { font-size:13px; opacity:0.7; margin-left:6px; }
+.points-sub { margin-top:16px; }
+.points-sub-label { font-size:12px; opacity:0.75; }
+.points-sub-value { font-family:Inter,sans-serif; font-size:20px; font-weight:700; line-height:1.3; }
+.points-sub-worth { font-size:12px; opacity:0.6; }
+
+/* Expiry warning - NEW */
+.expiry-bar {
+  margin:10px 16px 0; background:#FFF3E2; border-radius:12px; padding:10px 14px;
+  display:flex; align-items:center; gap:8px; box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.expiry-icon { width:20px; height:20px; border-radius:10px; background:#FFA424; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.expiry-text { font-size:13px; color:#FF8C00; font-weight:500; }
+
+/* Function grid */
+.func-grid {
+  margin:12px 16px 0; background:#fff; border-radius:16px; padding:20px 24px;
+  display:flex; gap:32px; box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.func-item { display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; }
+.func-icon { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.func-icon.blue { background:#EBF5FF; }
+.func-icon.orange { background:#FFF3E2; }
+.func-icon.green { background:#E9FAF1; }
+.func-label { font-size:12px; color:#4B5563; }
+
+/* Account list section */
+.list-section {
+  margin:12px 16px 24px; background:#fff; border-radius:16px; overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+
+/* List header */
+.list-header { display:flex; align-items:center; padding:14px 16px; gap:10px; border-bottom:1px solid #EEF2F8; }
+.list-filter {
+  height:30px; padding:0 12px; border:1px solid #E8EEF8; border-radius:15px;
+  font-size:13px; color:#4B5563; display:flex; align-items:center; gap:4px; background:#fff;
+}
+.list-search {
+  height:30px; padding:0 12px; border-radius:15px; font-size:13px; color:#fff;
+  background:#3F86F5; display:flex; align-items:center; gap:4px;
+}
+.list-stats { margin-left:auto; font-size:13px; color:#3F86F5; }
+
+/* Month group */
+.month-header {
+  display:flex; align-items:center; padding:14px 16px 10px;
+  border-bottom:1px solid #EEF2F8;
+}
+.month-label { font-size:15px; font-weight:600; color:#222835; display:flex; align-items:center; gap:4px; }
+.month-summary { margin-left:auto; font-size:12px; display:flex; gap:8px; }
+.month-income { color:#34C96E; }
+.month-expense { color:#F53F3F; }
+
+/* Transaction items */
+.tx-item { padding:14px 16px; border-bottom:1px solid #F4F6F9; }
+.tx-row1 { display:flex; justify-content:space-between; align-items:flex-start; }
+.tx-title { font-size:14px; color:#222835; font-weight:500; flex:1; line-height:1.4; }
+.tx-amount { font-size:16px; font-weight:600; text-align:right; flex-shrink:0; margin-left:12px; }
+.tx-amount.income { color:#222835; }
+.tx-amount.expense { color:#222835; }
+.tx-row2 { display:flex; justify-content:space-between; margin-top:4px; }
+.tx-time { font-size:12px; color:#B0B8C8; }
+.tx-remark { font-size:12px; color:#B0B8C8; text-align:right; }
+.tx-row3 { margin-top:2px; display:flex; justify-content:space-between; }
+.tx-link { font-size:12px; color:#3F86F5; }
+.tx-refund { font-size:12px; color:#F53F3F; font-weight:500; }
+
+.list-empty { padding:30px; text-align:center; font-size:14px; color:#C6D0DE; }
+
+/* Expiry close button */
+.expiry-close { flex-shrink:0; width:18px; height:18px; border:none; background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-left:auto; }
+.expiry-bar.hidden { display:none; }
+
+/* Bottom sheet overlay */
+.sheet-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:50; opacity:0; pointer-events:none; transition:opacity 0.25s; }
+.sheet-overlay.show { opacity:1; pointer-events:auto; }
+.sheet { position:fixed; bottom:0; left:0; width:375px; background:#fff; border-radius:16px 16px 0 0; z-index:51; transform:translateY(100%); transition:transform 0.3s ease; padding-bottom:env(safe-area-inset-bottom, 20px); }
+.sheet-overlay.show + .sheet, .sheet.show { transform:translateY(0); }
+.sheet-handle { width:36px; height:4px; border-radius:2px; background:#E5E6EB; margin:10px auto 6px; }
+.sheet-title { font-size:15px; font-weight:600; color:#222835; text-align:center; padding:8px 16px 12px; }
+.sheet-item { padding:14px 20px; font-size:15px; color:#4B5563; border-top:1px solid #F4F6F9; cursor:pointer; }
+.sheet-item:active { background:#F7F8FA; }
+.sheet-item.active { color:#3F86F5; font-weight:600; }
+.sheet-cancel { padding:14px 20px; font-size:15px; color:#939CAB; text-align:center; border-top:6px solid #F4F6F9; cursor:pointer; }
+
+/* Month picker */
+.month-picker-body { max-height:300px; overflow-y:auto; }
+.month-picker-year { padding:12px 20px 6px; font-size:13px; color:#939CAB; font-weight:600; }
+.month-picker-item { padding:12px 20px; font-size:15px; color:#4B5563; cursor:pointer; display:flex; justify-content:space-between; }
+.month-picker-item:active { background:#F7F8FA; }
+.month-picker-item.active { color:#3F86F5; font-weight:600; }
+
+/* Clickable elements */
+.list-filter, .month-label { cursor:pointer; }
+.list-filter:active, .month-label:active { opacity:0.7; }
+</style>
+</head>
+<body>
+
+<!-- Status bar -->
+<div class="status-bar">
+  <span class="time">9:41</span>
+  <div style="display:flex;gap:5px;align-items:center;">
+    <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx="0.5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx="0.5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx="0.5" fill="#222835"/></svg>
+    <svg width="22" height="10" viewBox="0 0 22 10"><rect x="0.5" y="0.5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx="0.5" fill="#222835"/></svg>
+  </div>
+</div>
+
+<!-- Nav bar -->
+<div class="nav-bar">
+  <span class="back">&#8249;</span>
+  <span class="title">我的账户</span>
+  <div class="capsule">
+    <div class="capsule-dots"><span></span><span></span><span></span></div>
+    <div class="capsule-divider"></div>
+    <div class="capsule-close"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#222835" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+  </div>
+</div>
+
+<!-- Points card -->
+<div class="points-card">
+  <div class="deco1">
+    <svg width="90" height="90" viewBox="0 0 90 90" fill="none">
+      <circle cx="45" cy="45" r="35" fill="#FFD54F" stroke="#FFC107" stroke-width="3"/>
+      <circle cx="45" cy="45" r="22" fill="#FFCA28"/>
+      <path d="M45 28l5 10h11l-9 7 3 11-10-7-10 7 3-11-9-7h11z" fill="#FF8F00"/>
+      <circle cx="65" cy="15" r="4" fill="#FFD54F"/>
+      <path d="M70 8l2 4 4 1-3 3 1 4-4-2-4 2 1-4-3-3 4-1z" fill="#FFC107" opacity="0.8"/>
+    </svg>
+  </div>
+  <div class="points-label">积分余额</div>
+  <div><span class="points-value">1,288</span><span class="points-worth">（价值12.88元）</span></div>
+  <div class="points-sub">
+    <div class="points-sub-label">累计赚取积分</div>
+    <div class="points-sub-value">2,000</div>
+    <div class="points-sub-worth">（价值20元）</div>
+  </div>
+</div>
+
+<!-- Expiry warning (NEW) -->
+<div class="expiry-bar" id="expiryBar">
+  <div class="expiry-icon">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round"/></svg>
+  </div>
+  <span class="expiry-text">80 积分将于 2026-05-01 00:00:00 过期，请尽快使用</span>
+  <button class="expiry-close" onclick="document.getElementById('expiryBar').classList.add('hidden')">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#FFB347" stroke-width="2.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+</div>
+
+<!-- Function grid -->
+<div class="func-grid">
+  <div class="func-item">
+    <div class="func-icon blue">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3F86F5" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+    </div>
+    <span class="func-label">支付积分</span>
+  </div>
+  <div class="func-item">
+    <div class="func-icon orange">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFA424" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+    </div>
+    <span class="func-label">收取积分</span>
+  </div>
+  <!-- NEW: 赚积分入口 -->
+  <div class="func-item">
+    <div class="func-icon green">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#34C96E" stroke-width="2"><path d="M12 2v4m0 12v4m-7-10H1m22 0h-4"/><circle cx="12" cy="12" r="3"/></svg>
+    </div>
+    <span class="func-label">赚积分</span>
+  </div>
+  <div class="func-item" onclick="showToast('跳转邀请好友')">
+    <div class="func-icon" style="background:rgba(255,90,0,0.1);">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF5A00" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+    </div>
+    <span class="func-label">邀请注册</span>
+  </div>
+</div>
+
+<!-- Account list -->
+<div class="list-section">
+  <!-- Header -->
+  <div class="list-header">
+    <div class="list-filter" onclick="openSheet('filter')">全部账单 <svg width="10" height="6" viewBox="0 0 10 6" fill="#8B96A8"><path d="M0 0l5 6 5-6z"/></svg></div>
+    <div class="list-search"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg> 查找交易</div>
+    <div class="list-stats">收支统计 ›</div>
+  </div>
+
+  <!-- Month group -->
+  <div class="month-header">
+    <span class="month-label" onclick="openSheet('month')">2025年10月 <svg width="10" height="6" viewBox="0 0 10 6" fill="#8B96A8"><path d="M0 0l5 6 5-6z"/></svg></span>
+    <div class="month-summary">
+      <span class="month-income">收入780积分</span>
+      <span style="color:#D0D5DD;">|</span>
+      <span class="month-expense">支出340积分</span>
+    </div>
+  </div>
+
+  <!-- 本版本新增相关记录 -->
+  <div class="tx-item">
+    <div class="tx-row1">
+      <span class="tx-title">任务奖励-发布邻里圈帖子</span>
+      <span class="tx-amount income">+2</span>
+    </div>
+    <div class="tx-row2">
+      <span class="tx-time">10月11日 16:20</span>
+    </div>
+  </div>
+
+  <div class="tx-item">
+    <div class="tx-row1">
+      <span class="tx-title">任务奖励-发布邻里圈帖子</span>
+      <span class="tx-amount income">+2</span>
+    </div>
+    <div class="tx-row2">
+      <span class="tx-time">10月11日 15:45</span>
+    </div>
+  </div>
+
+  <div class="tx-item">
+    <div class="tx-row1">
+      <span class="tx-title">任务奖励-点赞邻里圈帖子</span>
+      <span class="tx-amount income">+1</span>
+    </div>
+    <div class="tx-row2">
+      <span class="tx-time">10月11日 14:30</span>
+    </div>
+  </div>
+
+  <div class="tx-item">
+    <div class="tx-row1">
+      <span class="tx-title">积分过期清零</span>
+      <span class="tx-amount expense">-80</span>
+    </div>
+    <div class="tx-row2">
+      <span class="tx-time">10月01日 00:00</span>
+      <span class="tx-refund">月度积分到期自动清零</span>
+    </div>
+  </div>
+
+  <!-- 现有业务记录 -->
+  <div class="tx-item">
+    <div class="tx-row1">
+      <span class="tx-title">向张兰（153*2387）支付积分</span>
+      <span class="tx-amount expense">-13</span>
+    </div>
+    <div class="tx-row2">
+      <span class="tx-time">9月28日 15:30</span>
+      <span class="tx-remark">收取方备注：哈哈</span>
+    </div>
+    <div class="tx-row3">
+      <span class="tx-link">查看交易订单</span>
+      <span class="tx-remark">支付备注：酬谢</span>
+    </div>
+  </div>
+
+  <div class="tx-item">
+    <div class="tx-row1">
+      <span class="tx-title">预约场地-付费-景云社区麻将室</span>
+      <span class="tx-amount expense">-5</span>
+    </div>
+    <div class="tx-row2">
+      <span class="tx-time">9月25日 15:30</span>
+      <span class="tx-refund">已退还5积分</span>
+    </div>
+  </div>
+
+  <div class="tx-item">
+    <div class="tx-row1">
+      <span class="tx-title">注册-奖励（openid3289*9908）</span>
+      <span class="tx-amount income">+50</span>
+    </div>
+    <div class="tx-row2">
+      <span class="tx-time">9月20日 15:30</span>
+    </div>
+  </div>
+
+  <div class="tx-item">
+    <div class="tx-row1">
+      <span class="tx-title">积分兑换-兑换纸巾1包</span>
+      <span class="tx-amount expense">-200</span>
+    </div>
+    <div class="tx-row2">
+      <span class="tx-time">9月15日 16:30</span>
+    </div>
+  </div>
+
+  <div class="list-empty">没有更多了</div>
+</div>
+
+<!-- Bottom sheet overlay -->
+<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+
+<!-- Filter sheet -->
+<div class="sheet" id="filterSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">选择账单类型</div>
+  <div class="sheet-item active" onclick="selectFilter(this,'全部账单')">全部账单</div>
+  <div class="sheet-item" onclick="selectFilter(this,'支出')">支出</div>
+  <div class="sheet-item" onclick="selectFilter(this,'收入')">收入</div>
+  <div class="sheet-cancel" onclick="closeSheet()">取消</div>
+</div>
+
+<!-- Month picker sheet -->
+<div class="sheet" id="monthSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title">选择月份</div>
+  <div class="month-picker-body">
+    <div class="month-picker-year">2025年</div>
+    <div class="month-picker-item active" onclick="selectMonth(this,'2025年10月')">10月 <span style="font-size:12px;color:#939CAB;">当前</span></div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年9月')">9月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年8月')">8月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年7月')">7月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年6月')">6月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年5月')">5月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年4月')">4月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年3月')">3月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年2月')">2月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2025年1月')">1月</div>
+    <div class="month-picker-year">2024年</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2024年12月')">12月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2024年11月')">11月</div>
+    <div class="month-picker-item" onclick="selectMonth(this,'2024年10月')">10月</div>
+  </div>
+  <div class="sheet-cancel" onclick="closeSheet()">取消</div>
+</div>
+
+<script>
+var currentSheet = null;
+function openSheet(type) {
+  closeSheet();
+  var overlay = document.getElementById('sheetOverlay');
+  var sheet = document.getElementById(type === 'filter' ? 'filterSheet' : 'monthSheet');
+  overlay.classList.add('show');
+  sheet.classList.add('show');
+  currentSheet = sheet;
+}
+function closeSheet() {
+  document.getElementById('sheetOverlay').classList.remove('show');
+  document.querySelectorAll('.sheet').forEach(function(s) { s.classList.remove('show'); });
+  currentSheet = null;
+}
+function selectFilter(el, label) {
+  el.parentElement.querySelectorAll('.sheet-item').forEach(function(i) { i.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelector('.list-filter').innerHTML = label + ' <svg width="10" height="6" viewBox="0 0 10 6" fill="#8B96A8"><path d="M0 0l5 6 5-6z"/></svg>';
+  document.querySelector('.list-filter').setAttribute('onclick', "openSheet('filter')");
+  setTimeout(closeSheet, 200);
+}
+function selectMonth(el, label) {
+  el.parentElement.querySelectorAll('.month-picker-item').forEach(function(i) { i.classList.remove('active'); });
+  el.classList.add('active');
+  document.querySelector('.month-label').innerHTML = label + ' <svg width="10" height="6" viewBox="0 0 10 6" fill="#8B96A8"><path d="M0 0l5 6 5-6z"/></svg>';
+  document.querySelector('.month-label').setAttribute('onclick', "openSheet('month')");
+  setTimeout(closeSheet, 200);
+}
+</script>
+
+</body>
+</html>

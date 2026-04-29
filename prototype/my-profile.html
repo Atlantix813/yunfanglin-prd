@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>个人中心</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile-components.css">
+<style>
+body { background: #fff; padding-bottom: 70px; }
+
+/* Light blue header backdrop (extends from top to behind points card) */
+.bg-header {
+  position: absolute; top: 0; left: 0; width: 375px; height: 367px;
+  background: linear-gradient(180deg, #DCEAFF 0%, rgba(206,225,255,0) 100%);
+  z-index: 0;
+}
+.bg-header-solid {
+  position: absolute; top: 0; left: 0; width: 375px; height: 89px;
+  background: #DCEAFF; z-index: 0;
+}
+
+/* Status bar + nav bar wrap (89px total) */
+.m-status-bar, .m-nav-bar { position: relative; z-index: 2; }
+
+/* User info row */
+.user-info-row {
+  position: relative; z-index: 1; height: 90px; padding: 0 16px; margin-top: 0;
+}
+.user-avatar {
+  position: absolute; left: 16px; top: 0;
+  width: 66px; height: 66px; border-radius: 50%; border: 1px solid #297FFF;
+  background: #fff; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.user-avatar img { width: 62px; height: 62px; border-radius: 50%; }
+
+.user-name {
+  position: absolute; left: 98px; top: 8px;
+  font-size: 16px; font-weight: 700; color: #222835; line-height: 22px;
+}
+.user-gender {
+  position: absolute; left: 136px; top: 12px; width: 17px; height: 17px;
+}
+
+.user-tag-row1 { position: absolute; left: 98px; top: 32px; display: flex; align-items: center; gap: 8px; }
+.user-tag-row2 { position: absolute; left: 98px; top: 50px; display: flex; align-items: center; gap: 4px; }
+.tag-label {
+  height: 16px; padding: 0 6px; border-radius: 8px; font-size: 10px; font-weight: 600;
+  display: inline-flex; align-items: center; flex-shrink: 0; color: #fff;
+}
+.tag-label.orange { background: #FFB938; }
+.tag-label.blue { background: #3F86F5; }
+.tag-label.partner { background: linear-gradient(90deg,#FFD89E,#FFB938); color: #fff; }
+.user-address { font-size: 12px; color: #4B5563; }
+
+.profile-link {
+  position: absolute; right: 0; top: 12px;
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,0.85); padding: 4px 10px;
+  border-radius: 14px 0 0 14px; font-size: 12px; color: #4B5563; cursor: pointer;
+}
+.profile-link img { width: 14px; height: auto; flex-shrink: 0; }
+
+/* Points card (16,209 343x84) */
+.points-card {
+  position: relative; z-index: 1;
+  margin: 24px 16px 0; width: 343px; height: 84px;
+  border-radius: 12px; overflow: hidden; color: #fff;
+  background: url('icons/bg@2x.png') center/cover no-repeat;
+  box-shadow: 0 4px 16px rgba(63,134,245,0.18);
+}
+.points-card-label {
+  position: absolute; left: 30px; top: 18px;
+  font-size: 12px; opacity: 0.9; display: flex; align-items: center; gap: 4px;
+}
+.points-card-label::after { content: '›'; font-size: 14px; opacity: 0.8; }
+.points-card-value {
+  position: absolute; left: 36px; top: 36px;
+  font-family: Inter, sans-serif; font-size: 20px; font-weight: 700;
+}
+.points-card-worth {
+  position: absolute; left: 19px; top: 58px;
+  font-size: 10px; opacity: 0.7;
+}
+.points-card-icon-wrap {
+  position: absolute; top: 17px;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  cursor: pointer;
+}
+.points-card-icon-wrap.exchange { left: 152px; }
+.points-card-icon-wrap.earn { left: 268px; }
+.points-card-icon-circle {
+  width: 36px; height: 36px; border-radius: 50%; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+.points-card-icon-circle img { width: 22px; height: 22px; }
+.points-card-icon-text { font-size: 12px; color: #fff; }
+
+/* Function grid card (16,313 343x192 white card) */
+.func-card {
+  position: relative; z-index: 1;
+  margin: 20px 16px 0; width: 343px;
+  background: #fff; border-radius: 16px;
+  padding: 14px 0 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+.func-row { display: flex; height: 72px; }
+.func-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 8px; cursor: pointer;
+}
+.func-item .icon-wrap {
+  position: relative;
+  width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
+}
+.func-item .icon-wrap img { max-width: 100%; max-height: 100%; }
+.func-item .label { font-size: 12px; color: #4B5563; }
+.func-item .badge-dot {
+  position: absolute; top: -6px; right: -6px;
+  width: 12px; height: 12px; border-radius: 50%;
+  background: #FF4D4F; border: 2px solid #fff;
+  box-shadow: 0 0 0 0.5px rgba(255,77,79,0.4);
+}
+
+/* Bottom tab bar */
+.tab-bar {
+  position: fixed; bottom: 0; left: 0; width: 375px; height: 60px;
+  background: #fff; border-top: 1px solid #EEF2F8;
+  display: flex; z-index: 10;
+}
+.tab-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 3px; cursor: pointer;
+  font-size: 10px; color: #939CAB;
+}
+.tab-item.active { color: #3F86F5; }
+.tab-item img { width: 22px; height: 22px; }
+
+/* Toast */
+.toast {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.8);
+  background: rgba(34,40,53,0.88); color: #fff; padding: 14px 24px; border-radius: 12px;
+  font-size: 14px; font-weight: 500; z-index: 100; opacity: 0;
+  transition: all 0.3s ease; pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+</style>
+</head>
+<body>
+
+<div class="bg-header"></div>
+<div class="bg-header-solid"></div>
+
+<!-- Status bar (44px) -->
+<div class="m-status-bar">
+  <span class="time">9:41</span>
+  <div style="display:flex;gap:5px;align-items:center;">
+    <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx="0.5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx="0.5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx="0.5" fill="#222835"/></svg>
+    <svg width="22" height="10" viewBox="0 0 22 10"><rect x="0.5" y="0.5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx="0.5" fill="#222835"/></svg>
+  </div>
+</div>
+
+<!-- Nav bar (44px) -->
+<div class="m-nav-bar">
+  <span class="title">云芳邻</span>
+  <div class="capsule">
+    <div class="capsule-dots"><span></span><span></span><span></span></div>
+    <div class="capsule-divider"></div>
+    <div class="capsule-close"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#222835" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+  </div>
+</div>
+
+<!-- User info row (Y starts at 89, avatar from y=20 in this section maps to 109 absolute) -->
+<div class="user-info-row" style="margin-top:20px;">
+  <div class="user-avatar">
+    <img src="icons/m3@2x.png" alt="头像">
+  </div>
+  <span class="user-name">张三</span>
+  <img class="user-gender" src="icons/icon_m@2x.png" alt="">
+  <div class="user-tag-row1">
+    <span class="tag-label orange">居民</span>
+    <span class="user-address">白云区-白云湖街道-A社区</span>
+  </div>
+  <div class="user-tag-row2">
+    <span class="tag-label blue">商家</span>
+    <span class="tag-label partner">合伙人</span>
+  </div>
+  <div class="profile-link" onclick="showToast('个人信息')">
+    <img src="icons/icon_message@2x.png">
+    <span>个人信息</span>
+  </div>
+</div>
+
+<!-- Points card -->
+<div class="points-card">
+  <div class="points-card-label">我的积分</div>
+  <div class="points-card-value">1988</div>
+  <div class="points-card-worth">（价值19.88元）</div>
+  <div class="points-card-icon-wrap exchange" onclick="showToast('积分兑换')">
+    <div class="points-card-icon-circle"><img src="icons/icon_duihuan@2x.png"></div>
+    <span class="points-card-icon-text">积分兑换</span>
+  </div>
+  <div class="points-card-icon-wrap earn" onclick="showToast('跳转到任务中心')">
+    <div class="points-card-icon-circle"><img src="icons/icon_zhuang@2x.png"></div>
+    <span class="points-card-icon-text">去赚积分</span>
+  </div>
+</div>
+
+<!-- Function grid -->
+<div class="func-card">
+  <div class="func-row">
+    <div class="func-item" onclick="showToast('办事记录')">
+      <div class="icon-wrap"><img src="icons/icon_banshi@2x.png"></div>
+      <span class="label">办事记录</span>
+    </div>
+    <div class="func-item" onclick="showToast('我的互助')">
+      <div class="icon-wrap"><img src="icons/icon_huzhu@2x.png"></div>
+      <span class="label">我的互助</span>
+    </div>
+    <div class="func-item" onclick="showToast('我的房源')">
+      <div class="icon-wrap"><img src="icons/icon_fangyuan@2x.png"></div>
+      <span class="label">我的房源</span>
+    </div>
+    <div class="func-item" onclick="showToast('我的招聘')">
+      <div class="icon-wrap"><img src="icons/icon_zhaopin@2x.png"></div>
+      <span class="label">我的招聘</span>
+    </div>
+  </div>
+  <div class="func-row">
+    <div class="func-item" onclick="showToast('我的活动')">
+      <div class="icon-wrap"><img src="icons/icon_date@2x.png"></div>
+      <span class="label">我的活动</span>
+    </div>
+    <div class="func-item" onclick="showToast('消息中心')">
+      <div class="icon-wrap"><img src="icons/icon_xiaoxi@2x.png"></div>
+      <span class="label">消息中心</span>
+    </div>
+    <div class="func-item" onclick="showToast('我的社团')">
+      <div class="icon-wrap"><img src="icons/icon_shetuan@2x.png"></div>
+      <span class="label">我的社团</span>
+    </div>
+    <div class="func-item" onclick="showToast('邀请码')">
+      <div class="icon-wrap"><img src="icons/icon_yaoqing@2x.png"></div>
+      <span class="label">邀请码</span>
+    </div>
+  </div>
+  <div class="func-row">
+    <div class="func-item" onclick="showToast('组织账户')">
+      <div class="icon-wrap"><img src="icons/icon_zuzhi@2x.png"></div>
+      <span class="label">组织账户</span>
+    </div>
+    <div class="func-item" onclick="showToast('跳转到任务中心')">
+      <div class="icon-wrap">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke="#222835" stroke-width="1.6"/>
+          <path d="M9 14l2 2 4-4" stroke="#3F86F5" stroke-width="2"/>
+        </svg>
+        <span class="badge-dot" title="有待领取奖励"></span>
+      </div>
+      <span class="label">任务中心</span>
+    </div>
+    <div class="func-item"></div>
+    <div class="func-item"></div>
+  </div>
+</div>
+
+<!-- Bottom tab bar -->
+<div class="tab-bar">
+  <div class="tab-item">
+    <img src="icons/icon_home_selected@2x.png">
+    <span>首页</span>
+  </div>
+  <div class="tab-item">
+    <img src="icons/icon_service_default@2x.png">
+    <span>服务</span>
+  </div>
+  <div class="tab-item">
+    <img src="icons/icon_neighbor_default@2x.png">
+    <span>邻里</span>
+  </div>
+  <div class="tab-item">
+    <img src="icons/icon_market_default@2x.png">
+    <span>市集</span>
+  </div>
+  <div class="tab-item active">
+    <img src="icons/icon_my_default@2x.png">
+    <span>我的</span>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 1500);
+}
+</script>
+
+</body>
+</html>

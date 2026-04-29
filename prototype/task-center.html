@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>任务中心</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif; background:#F4F8FF; color:#222835; font-size:14px; width:375px; overscroll-behavior:contain; }
+html { overscroll-behavior:contain; }
+body::-webkit-scrollbar { display:none; }
+body { -ms-overflow-style:none; scrollbar-width:none; padding-bottom:40px; }
+
+/* === Full-width Header Banner === */
+.header-banner {
+  position:absolute; top:0; left:0; right:0; height:240px; z-index:0; overflow:hidden;
+  background:linear-gradient(135deg, #5395FF 0%, #296CFF 100%);
+  clip-path:ellipse(150% 100% at 50% 0%);
+}
+.banner-deco1 { position:absolute; right:-20px; top:40px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.1); filter:blur(20px); pointer-events:none; }
+.banner-deco2 { position:absolute; left:-40px; bottom:-40px; width:140px; height:140px; border-radius:50%; background:rgba(255,255,255,0.1); filter:blur(15px); pointer-events:none; }
+
+/* === Status Bar & Nav Bar (white on banner) === */
+.status-bar { position:relative; z-index:50; height:44px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; color:#fff; }
+.status-bar .time { font-family:Inter,sans-serif; font-weight:700; font-size:15px; }
+.nav-bar { position:relative; z-index:50; height:44px; display:flex; align-items:center; justify-content:center; }
+.nav-bar .back { position:absolute; left:16px; font-size:22px; color:#fff; cursor:pointer; }
+.nav-bar .title { font-size:17px; font-weight:700; color:#fff; }
+.nav-bar .capsule { position:absolute; right:8px; height:32px; width:87px; border-radius:16px; border:0.5px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
+.capsule-dots { flex:1; display:flex; align-items:center; justify-content:center; gap:3px; }
+.capsule-dots span { width:4px; height:4px; border-radius:2px; background:#fff; }
+.capsule-divider { width:0.5px; height:16px; background:rgba(255,255,255,0.3); }
+.capsule-close { flex:1; display:flex; align-items:center; justify-content:center; }
+
+/* === Points Section (on banner) === */
+.points-section { position:relative; z-index:10; padding:12px 24px 0; }
+.points-label { font-size:14px; color:rgba(255,255,255,0.8); }
+.points-value { font-family:'Inter',sans-serif; font-size:48px; font-weight:700; color:#fff; line-height:1; letter-spacing:0.5px; margin-top:4px; text-shadow:0 4px 12px rgba(0,0,0,0.1); }
+.points-actions { display:flex; align-items:center; gap:12px; margin-top:16px; padding-left:16px; }
+.points-exchange-btn { height:30px; padding:0 18px; border-radius:15px; background:#fff; font-size:13px; font-weight:700; color:#3F86F5; cursor:pointer; display:flex; align-items:center; box-shadow:0 4px 12px rgba(41,108,255,0.3); }
+.points-detail-link { position:absolute; right:24px; top:100px; font-size:12px; color:rgba(255,255,255,0.85); cursor:pointer; display:flex; align-items:center; gap:2px; z-index:50; }
+
+/* === Invite Card === */
+.invite-card {
+  position:relative; z-index:20; margin:24px 16px 0;
+  background:#fff; border-radius:16px; padding:20px 16px;
+  display:flex; justify-content:space-between; align-items:center;
+  overflow:hidden; box-shadow:0 8px 24px rgba(33,71,128,0.08);
+}
+.invite-card-bg { position:absolute; inset:0; z-index:0; pointer-events:none; background:linear-gradient(135deg, #FFF0E0 0%, #FFE0CC 100%); }
+.invite-sub { font-size:11px; color:#9B7B5E; margin-top:2px; }
+.invite-left { display:flex; flex-direction:column; position:relative; z-index:1; }
+.invite-title-row { display:flex; align-items:center; gap:6px; }
+.invite-title { font-size:16px; font-weight:700; color:#1F2937; }
+.invite-hot { background:#FF5A00; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:6px 2px 6px 2px; }
+.invite-desc { font-size:13px; color:#4B5563; margin-top:4px; font-weight:500; display:flex; align-items:center; }
+.invite-points { color:#FF5A00; font-size:20px; font-weight:700; font-family:'Inter',sans-serif; margin:0 4px; }
+.invite-btn { position:relative; z-index:1; flex-shrink:0; height:34px; padding:0 18px; background:linear-gradient(135deg, #FF7E66 0%, #FFA424 100%); color:#fff; font-size:14px; font-weight:700; border-radius:17px; display:flex; align-items:center; cursor:pointer; box-shadow:0 4px 10px rgba(255,164,36,0.3); }
+
+/* === Tab Bar === */
+.tab-bar { position:relative; z-index:10; display:flex; align-items:center; padding:12px 20px 0; gap:24px; margin-top:12px; border-bottom:1px solid #E8EEF8; position:sticky; top:0; background:#F4F8FF; }
+.tab-item { font-size:15px; color:#939CAB; position:relative; padding-bottom:10px; cursor:pointer; user-select:none; }
+.tab-item.active { color:#222835; font-weight:700; }
+.tab-item.active::after { content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:16px; height:3px; border-radius:2px; background:#3F86F5; }
+
+/* === Task List === */
+.task-list { padding:16px 16px 24px; display:flex; flex-direction:column; gap:12px; }
+
+.task-card { background:#fff; border-radius:16px; padding:14px; box-shadow:0 2px 6px rgba(30,50,90,0.05); display:flex; gap:12px; align-items:flex-start; transition:opacity 0.3s, transform 0.3s; }
+.task-card.disabled { opacity:0.75; box-shadow:none; border:1px solid #EFF2F8; }
+.task-card.hidden { display:none; }
+.task-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.task-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
+.task-header { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.task-name { font-size:16px; font-weight:700; color:#222835; line-height:19px; }
+.task-badge { height:18px; padding:0 6px; border-radius:4px; background:#FFF3E2; font-size:10px; font-weight:600; color:#FFA424; display:inline-flex; align-items:center; gap:2px; flex-shrink:0; white-space:nowrap; }
+.task-desc { font-size:12px; color:#939CAB; line-height:18px; }
+.task-right { flex-shrink:0; display:flex; flex-direction:column; align-items:flex-end; gap:6px; justify-content:center; align-self:center; }
+.task-cycle { font-size:11px; font-weight:500; color:#8B96A8; margin-right:8px; }
+
+.btn-claim { height:30px; padding:0 12px; border-radius:15px; border:none; font-size:12px; font-weight:700; color:#fff; white-space:nowrap; background:#FF9D19; box-shadow:0 4px 5px rgba(255,157,25,0.28); cursor:pointer; }
+.btn-go { height:30px; padding:0 12px; border-radius:15px; border:none; font-size:12px; font-weight:700; color:#fff; white-space:nowrap; background:#3F86F5; box-shadow:0 4px 5px rgba(63,134,245,0.22); cursor:pointer; }
+.btn-done { height:30px; padding:0 12px; border-radius:15px; border:none; font-size:12px; font-weight:700; color:#CAD1DD; white-space:nowrap; background:#F1F3F8; cursor:pointer; }
+
+/* Toast */
+.toast { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.8); background:rgba(34,40,53,0.88); color:#fff; padding:14px 24px; border-radius:12px; font-size:14px; font-weight:700; z-index:100; opacity:0; transition:all 0.3s ease; pointer-events:none; text-align:center; white-space:nowrap; }
+.toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+/* Empty state */
+.empty-state { display:none; padding:60px 20px; text-align:center; }
+.empty-state svg { width:120px; height:120px; margin-bottom:16px; opacity:0.6; }
+.empty-state .empty-text { font-size:15px; color:#C6D0DE; font-weight:500; }
+
+</style>
+</head>
+<body>
+
+<!-- Full-width Header Banner -->
+<div class="header-banner">
+  <div class="banner-deco1"></div>
+  <div class="banner-deco2"></div>
+  <svg style="position:absolute;right:10px;top:130px;opacity:0.15;" width="140" height="100" viewBox="0 0 80 60" fill="none"><path d="M60 30a15 15 0 00-28.5-6.5A10 10 0 0015 30a10 10 0 000 20h45a10 10 0 000-20z" fill="#fff"/><circle cx="10" cy="15" r="3" fill="#fff"/><circle cx="75" cy="20" r="2" fill="#fff"/></svg>
+  <svg style="position:absolute;left:20px;top:180px;opacity:0.08;" width="100" height="70" viewBox="0 0 80 60" fill="none"><path d="M60 30a15 15 0 00-28.5-6.5A10 10 0 0015 30a10 10 0 000 20h45a10 10 0 000-20z" fill="#fff"/></svg>
+</div>
+
+<!-- Status Bar (white on banner) -->
+<div class="status-bar">
+  <span class="time">9:41</span>
+  <div style="display:flex;gap:5px;align-items:center;">
+    <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="#fff"/><rect x="4" y="4" width="3" height="6" rx="0.5" fill="#fff"/><rect x="8" y="2" width="3" height="8" rx="0.5" fill="#fff"/><rect x="12" y="0" width="3" height="10" rx="0.5" fill="#fff"/></svg>
+    <svg width="22" height="10" viewBox="0 0 22 10"><rect x="0.5" y="0.5" width="18" height="9" rx="2" fill="none" stroke="#fff"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#fff"/><rect x="20" y="3" width="1.5" height="4" rx="0.5" fill="#fff"/></svg>
+  </div>
+</div>
+
+<!-- Nav Bar (white on banner) -->
+<div class="nav-bar">
+  <span class="back">&#8249;</span>
+  <span class="title">任务中心</span>
+  <div class="capsule">
+    <div class="capsule-dots"><span></span><span></span><span></span></div>
+    <div class="capsule-divider"></div>
+    <div class="capsule-close"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+  </div>
+</div>
+
+<!-- 积分明细（右上角） -->
+<span class="points-detail-link" onclick="showToast('跳转积分明细')">积分明细 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
+
+<!-- Points Section (on banner) -->
+<div class="points-section">
+  <div class="points-label">我的积分</div>
+  <div class="points-value" id="totalPoints">1,280</div>
+  <div class="points-actions">
+    <span class="points-exchange-btn" onclick="showToast('跳转积分兑换')">积分兑换</span>
+  </div>
+</div>
+
+<!-- Invite Card -->
+<div class="invite-card" onclick="showToast('跳转邀请好友')">
+  <div class="invite-card-bg"></div>
+  <svg style="position:absolute;right:0;top:0;z-index:0;opacity:0.5;pointer-events:none;" width="120" height="90" viewBox="0 0 120 90" fill="none"><circle cx="100" cy="15" r="20" fill="#FF8C42" opacity="0.35"/><circle cx="75" cy="65" r="14" fill="#FF6B35" opacity="0.25"/><circle cx="110" cy="55" r="8" fill="#FFB347" opacity="0.3"/></svg>
+  <div class="invite-left">
+    <div class="invite-title-row">
+      <span class="invite-title">邀请街坊邻居</span>
+      <span class="invite-hot">HOT</span>
+    </div>
+    <div class="invite-desc">新用户完善信息，双方各得 <span class="invite-points">50</span> 积分</div>
+  </div>
+  <div class="invite-btn">去邀请</div>
+</div>
+
+<!-- Tab Bar -->
+<div class="tab-bar" id="tabBar">
+  <div class="tab-item active" data-tab="all">全部</div>
+  <div class="tab-item" data-tab="doing">待完成</div>
+  <div class="tab-item" data-tab="done">已完成</div>
+</div>
+
+<!-- Task List -->
+<div class="task-list" id="taskList"></div>
+<div class="empty-state" id="emptyState">
+  <svg viewBox="0 0 200 200" fill="none">
+    <circle cx="100" cy="90" r="60" fill="#F2F6FF"/>
+    <rect x="70" y="60" width="60" height="70" rx="8" fill="#E5E6EB"/>
+    <path d="M85 80h30M85 92h20M85 104h25" stroke="#C6D0DE" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="100" cy="140" r="12" fill="#E5E6EB"/>
+    <path d="M96 140l3 3 5-6" stroke="#C6D0DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div class="empty-text">暂无可用任务</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var ICONS = {
+  eye: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',
+  share: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98"/></svg>',
+  vote: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>',
+  form: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h4"/></svg>',
+  bulb: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M9 18h6M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A7 7 0 1012 19h0"/></svg>',
+  chat: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><path d="M8 9h8M8 13h4"/></svg>',
+  like: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>',
+  star: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>',
+  group: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>',
+  home: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg>',
+  shop: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>',
+  bell: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>',
+  user: '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>'
+};
+
+var tasks = [
+  { id:1, name:'发布邻里圈帖子', desc:'在邻里圈发布帖子，分享生活点滴', points:2, icon:'chat', color:'#FF765A', cycleCur:1, cycleMax:3, cycleLabel:'每日', status:'claim' },
+  { id:3, name:'点赞邻里圈帖子', desc:'为邻居的帖子点赞，传递社区温暖', points:1, icon:'like', color:'#7D82F6', cycleCur:0, cycleMax:3, cycleLabel:'每日', status:'go' },
+  { id:4, name:'浏览信息公开资讯', desc:'浏览信息公开模块下的资讯内容即可获得积分', points:1, icon:'eye', color:'#47B5F2', cycleCur:0, cycleMax:3, cycleLabel:'每日', status:'go' },
+  { id:5, name:'分享社区活动', desc:'将社区活动分享给微信好友或微信群，助力社区传播', points:1, icon:'share', color:'#34C96E', cycleCur:0, cycleMax:4, cycleLabel:'每日', status:'go' },
+  { id:6, name:'参与社区投票', desc:'积极参与社区投票，为社区事务贡献你的一票', points:1, icon:'vote', color:'#3F86F5', cycleCur:0, cycleMax:5, cycleLabel:'每日', status:'go' },
+  { id:7, name:'填写调查问卷', desc:'认真填写社区问卷调查，帮助社区了解居民需求', points:2, icon:'form', color:'#47B5F2', cycleCur:1, cycleMax:3, cycleLabel:'每日', status:'go' },
+  { id:8, name:'浏览周边好店', desc:'浏览周边好店商家详情即可获得积分', points:1, icon:'shop', color:'#FF9D19', cycleCur:3, cycleMax:10, cycleLabel:'每日', status:'go' },
+  { id:10, name:'浏览社区宣传资讯', desc:'浏览社区宣传模块下的资讯内容即可获得积分', points:1, icon:'eye', color:'#47B5F2', cycleCur:3, cycleMax:3, cycleLabel:'每日', status:'limit' },
+  { id:11, name:'分享志愿服务', desc:'将志愿服务分享给微信好友或微信群，传递正能量', points:1, icon:'share', color:'#D9DEE5', cycleCur:3, cycleMax:3, cycleLabel:'每日', status:'limit' },
+  { id:12, name:'成为社区达人', desc:'申请成为社区达人，居委审核通过即可获得积分', points:5, icon:'star', color:'#D9DEE5', cycleCur:1, cycleMax:1, cycleLabel:'仅', status:'done' },
+  { id:13, name:'完善个人信息', desc:'将个人信息所有必填项全部完善即可获得积分', points:5, icon:'user', color:'#D9DEE5', cycleCur:1, cycleMax:1, cycleLabel:'仅', status:'done' },
+  { id:14, name:'开启消息订阅通知', desc:'开启消息订阅通知，及时接收社区动态', points:5, icon:'bell', color:'#D9DEE5', cycleCur:1, cycleMax:1, cycleLabel:'仅', status:'done' }
+];
+
+var currentTab = 'all';
+var totalPts = 1280;
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 1800);
+}
+
+function getStatusGroup(s) {
+  if (s === 'claim') return 0;
+  if (s === 'go') return 1;
+  return 2;
+}
+
+function sortTasks() {
+  tasks.sort(function(a, b) { return getStatusGroup(a.status) - getStatusGroup(b.status); });
+}
+
+function getCycleText(t) {
+  if (t.cycleLabel === '无上限') return '无上限';
+  if (t.cycleLabel === '仅') return '仅 ' + t.cycleCur + '/' + t.cycleMax + '次';
+  return t.cycleLabel + ' ' + t.cycleCur + '/' + t.cycleMax;
+}
+
+function isVisible(t) {
+  if (currentTab === 'all') return true;
+  if (currentTab === 'doing') return t.status === 'go' || t.status === 'claim';
+  if (currentTab === 'done') return t.status === 'limit' || t.status === 'done';
+  return true;
+}
+
+function render() {
+  sortTasks();
+  var list = document.getElementById('taskList');
+  list.className = 'task-list';
+  var html = '';
+  var visibleCount = 0;
+  tasks.forEach(function(t) {
+    var dis = (t.status === 'limit' || t.status === 'done');
+    var vis = isVisible(t);
+    if (vis) visibleCount++;
+    var cls = 'task-card' + (dis ? ' disabled' : '') + (!vis ? ' hidden' : '');
+    var iconColor = dis ? '#D9DEE5' : t.color;
+
+    html += '<div class="' + cls + '" data-id="' + t.id + '">';
+    html += '<div class="task-icon" style="background:' + iconColor + ';">' + ICONS[t.icon] + '</div>';
+    html += '<div class="task-body">';
+    html += '<div class="task-header"><span class="task-name">' + t.name + '</span><span class="task-badge">&#9733; ' + t.points + '积分</span></div>';
+    html += '<div class="task-desc">' + t.desc + '</div>';
+    html += '</div>';
+
+    html += '<div class="task-right">';
+    if (t.status === 'claim') html += '<button class="btn-claim" onclick="onClaim(' + t.id + ')">领取奖励</button>';
+    else if (t.status === 'go') html += '<button class="btn-go" onclick="onGo(' + t.id + ')">去完成</button>';
+    else if (t.status === 'limit') html += '<button class="btn-done" onclick="onDone()">已达上限</button>';
+    else html += '<button class="btn-done" onclick="onDone()">已完成</button>';
+    html += '<span class="task-cycle">' + getCycleText(t) + '</span>';
+    html += '</div></div>';
+  });
+  list.innerHTML = html;
+  document.getElementById('totalPoints').textContent = totalPts.toLocaleString();
+  document.getElementById('emptyState').style.display = visibleCount === 0 ? 'block' : 'none';
+  list.style.display = visibleCount === 0 ? 'none' : 'flex';
+}
+
+function findTask(id) {
+  for (var i = 0; i < tasks.length; i++) { if (tasks[i].id === id) return tasks[i]; }
+  return null;
+}
+
+function onGo(id) {
+  var t = findTask(id);
+  if (!t || t.status !== 'go') return;
+  t.status = 'claim';
+  render();
+}
+
+function onClaim(id) {
+  var t = findTask(id);
+  if (!t || t.status !== 'claim') return;
+  showToast('任务完成，获得 <b>' + t.points + '</b> 积分');
+  totalPts += t.points;
+  t.cycleCur++;
+  if (t.cycleMax > 0 && t.cycleCur >= t.cycleMax) {
+    t.status = (t.cycleLabel === '仅') ? 'done' : 'limit';
+  } else {
+    t.status = 'go';
+  }
+  setTimeout(render, 300);
+}
+
+function onDone() {
+  showToast('任务完成数已达上限');
+}
+
+document.getElementById('tabBar').addEventListener('click', function(e) {
+  var tab = e.target.closest('[data-tab]');
+  if (!tab) return;
+  currentTab = tab.dataset.tab;
+  document.querySelectorAll('.tab-item').forEach(function(el) { el.classList.remove('active'); });
+  tab.classList.add('active');
+  render();
+});
+
+render();
+
+function switchState(mode) {
+  if (mode === 'empty') {
+    document.getElementById('taskList').style.display = 'none';
+    document.getElementById('emptyState').style.display = 'block';
+  } else {
+    document.getElementById('taskList').style.display = 'flex';
+    document.getElementById('emptyState').style.display = 'none';
+    render();
+  }
+}
+</script>
+
+</body>
+</html>
