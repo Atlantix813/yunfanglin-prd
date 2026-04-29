@@ -20,7 +20,10 @@ body { font-family:'Noto Sans SC',-apple-system,sans-serif; color:#272E3B; font-
   padding:24px 0; position:fixed; top:0; left:0; bottom:0;
   overflow-y:auto; z-index:10;
 }
-.toc-title { padding:0 20px 16px; font-size:20px; font-weight:700; color:#3491FA; border-bottom:1px solid #EEF2F8; margin-bottom:4px; line-height:1.4; }
+.toc-title { padding:0 20px 16px; font-size:20px; font-weight:700; color:#3491FA; border-bottom:1px solid #EEF2F8; margin-bottom:4px; line-height:1.4; display:flex; align-items:center; justify-content:space-between; }
+.toc-download { height:26px; padding:0 10px; border-radius:6px; border:1px solid #E5E6EB; background:#fff; cursor:pointer; display:flex; align-items:center; gap:4px; flex-shrink:0; transition:background 0.2s; font-size:11px; color:#86909C; font-family:inherit; }
+.toc-download:hover { background:#EBF5FF; color:#3491FA; border-color:#3491FA; }
+.toc-download:hover svg { stroke:#3491FA; }
 .toc-subtitle { padding:8px 20px 16px; font-size:12px; color:#86909C; }
 .toc a {
   display:block; padding:9px 20px; font-size:14px; color:#4E5969;
@@ -282,7 +285,7 @@ body { font-family:'Noto Sans SC',-apple-system,sans-serif; color:#272E3B; font-
 
 <div class="prd-layout">
   <nav class="toc" id="toc">
-    <div class="toc-title" id="toc-title">PRD</div>
+    <div class="toc-title" id="toc-title"><span>PRD</span><button class="toc-download" onclick="downloadMd()" title="下载 Markdown 源文件"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>下载MD</button></div>
     <div class="toc-subtitle" id="toc-subtitle"></div>
   </nav>
 
@@ -394,6 +397,17 @@ function initFlowDrag(body) {
 (function() {
   const params = new URLSearchParams(location.search);
   const mdFile = params.get('file') || 'prd-task-center.md';
+
+  window.downloadMd = function() {
+    fetch(mdFile).then(r => r.text()).then(text => {
+      var blob = new Blob([text], { type: 'text/markdown;charset=utf-8' });
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = mdFile;
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+  };
 
   mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
 
@@ -549,7 +563,7 @@ function initFlowDrag(body) {
         document.title = h1.text;
         // TOC title: use short product name
         const parts = h1.text.split('·');
-        document.getElementById('toc-title').textContent = parts[0].trim();
+        document.getElementById('toc-title').querySelector('span').textContent = parts[0].trim();
         document.getElementById('toc-subtitle').textContent = 'PRD v1.0 · 2026-04-24';
       }
     })
