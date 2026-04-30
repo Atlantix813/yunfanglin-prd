@@ -15,7 +15,8 @@
 .rank-1{color:#FFD700;font-weight:700;}
 .rank-2{color:#C0C0C0;font-weight:700;}
 .rank-3{color:#CD7F32;font-weight:700;}
-.thumb{width:48px;height:36px;border-radius:4px;display:inline-block;vertical-align:middle;}
+.thumb{width:48px;height:36px;border-radius:4px;display:inline-block;vertical-align:middle;overflow:hidden;}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block;}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;display:none;align-items:center;justify-content:center;}
 .modal-overlay.show{display:flex;}
 .modal{background:#fff;border-radius:8px;padding:0;width:720px;max-height:80vh;box-shadow:0 12px 40px rgba(0,0,0,0.15);overflow:hidden;display:flex;flex-direction:column;}
@@ -97,56 +98,56 @@
         <tbody>
           <tr>
             <td class="rank-1">1</td>
-            <td><div class="thumb" style="background:linear-gradient(135deg,#B8D8FF,#5395FF);"></div></td>
+            <td><div class="thumb"><img src="https://images.unsplash.com/photo-1684871430772-569936b1a0ae?w=48&h=36&fit=crop&q=80"></div></td>
             <td>01</td><td>山水画 - 春意盎然</td><td>芳和花园</td><td>绘画组</td><td>李大爷</td><td>1</td><td style="font-weight:600;">456</td><td>0</td><td>100</td>
             <td><span class="status-tag" style="background:#F1F3F8;color:#86909C;">未发放</span></td>
             <td><a class="action-link" onclick="openDetail()">投票明细</a> <a class="action-link" onclick="showToast('冻结操作')">冻结</a> <a class="action-link" onclick="showToast('确认发放 100 积分给李大爷？')">发放</a></td>
           </tr>
           <tr>
             <td class="rank-2">2</td>
-            <td><div class="thumb" style="background:linear-gradient(135deg,#C5F5DA,#34C96E);"></div></td>
+            <td><div class="thumb"><img src="https://images.unsplash.com/photo-1699003788740-5f2df501bdcf?w=48&h=36&fit=crop&q=80"></div></td>
             <td>05</td><td>国画 - 荷塘月色</td><td>翠竹社区</td><td>绘画组</td><td>赵奶奶</td><td>1</td><td style="font-weight:600;">412</td><td style="color:#F53F3F;">12</td><td>80</td>
             <td><span class="status-tag" style="background:#E9FAF1;color:#34C96E;">已发放</span></td>
             <td><a class="action-link" onclick="openDetail()">投票明细</a></td>
           </tr>
           <tr>
             <td class="rank-3">3</td>
-            <td><div class="thumb" style="background:linear-gradient(135deg,#FFE5B2,#FFA424);"></div></td>
+            <td><div class="thumb"><img src="https://images.unsplash.com/photo-1486303954368-398fea0e72cd?w=48&h=36&fit=crop&q=80"></div></td>
             <td>02</td><td>书法 - 家和万事兴</td><td>芳和花园</td><td>书法组</td><td>王阿姨</td><td>2</td><td style="font-weight:600;">328</td><td>0</td><td>50</td>
             <td><span class="status-tag" style="background:#F1F3F8;color:#86909C;">未发放</span></td>
             <td><a class="action-link" onclick="openDetail()">投票明细</a> <a class="action-link" onclick="showToast('冻结操作')">冻结</a> <a class="action-link" onclick="showToast('确认发放 50 积分给王阿姨？')">发放</a></td>
           </tr>
           <tr>
             <td>4</td>
-            <td><div class="thumb" style="background:linear-gradient(135deg,#C5F5DA,#34C96E);"></div></td>
+            <td><div class="thumb"><img src="https://images.unsplash.com/photo-1632770464350-e73ae4aaa11c?w=48&h=36&fit=crop&q=80"></div></td>
             <td>03</td><td>油画 - 社区花园</td><td>芳和花园</td><td>绘画组</td><td>张阿姨</td><td>3</td><td>289</td><td>0</td><td>30</td>
             <td><span class="status-tag" style="background:#F1F3F8;color:#86909C;">未发放</span></td>
             <td><a class="action-link" onclick="openDetail()">投票明细</a> <a class="action-link" onclick="showToast('冻结操作')">冻结</a> <a class="action-link" onclick="showToast('确认发放？')">发放</a></td>
           </tr>
           <tr>
             <td>5</td>
-            <td><div class="thumb" style="background:linear-gradient(135deg,#FFE5B2,#FFA424);"></div></td>
+            <td><div class="thumb"><img src="https://images.unsplash.com/photo-1713118774750-e1878e76b067?w=48&h=36&fit=crop&q=80"></div></td>
             <td>04</td><td>水彩 - 夕阳小径</td><td>翠竹社区</td><td>绘画组</td><td>刘姐</td><td>2</td><td>245</td><td>0</td><td>30</td>
             <td><span class="status-tag" style="background:#F1F3F8;color:#86909C;">未发放</span></td>
             <td><a class="action-link" onclick="openDetail()">投票明细</a> <a class="action-link" onclick="showToast('冻结操作')">冻结</a> <a class="action-link" onclick="showToast('确认发放？')">发放</a></td>
           </tr>
           <tr>
             <td>6</td>
-            <td><div class="thumb" style="background:linear-gradient(135deg,#E8EEF8,#8B96A8);"></div></td>
+            <td><div class="thumb"><img src="https://images.unsplash.com/photo-1545038522-9bb451739ab9?w=48&h=36&fit=crop&q=80"></div></td>
             <td>06</td><td>素描 - 社区老树</td><td>芳和花园</td><td>绘画组</td><td>周叔叔</td><td>4</td><td>198</td><td>0</td><td>-</td>
             <td><span class="status-tag" style="background:#F1F3F8;color:#C9CDD4;">不适用</span></td>
             <td><a class="action-link" onclick="openDetail()">投票明细</a></td>
           </tr>
           <tr>
             <td>7</td>
-            <td><div class="thumb" style="background:linear-gradient(135deg,#FFD6D6,#FF7E66);"></div></td>
+            <td><div class="thumb"><img src="https://images.unsplash.com/photo-1583389409210-0234eee7cdce?w=48&h=36&fit=crop&q=80"></div></td>
             <td>07</td><td>剪纸 - 福满邻里</td><td>翠竹社区</td><td>手工艺组</td><td>孙小妹</td><td>3</td><td>176</td><td>0</td><td>-</td>
             <td><span class="status-tag" style="background:#F1F3F8;color:#C9CDD4;">不适用</span></td>
             <td><a class="action-link" onclick="openDetail()">投票明细</a></td>
           </tr>
           <tr>
             <td>8</td>
-            <td><div class="thumb" style="background:linear-gradient(135deg,#C5ECFF,#47B5F2);"></div></td>
+            <td><div class="thumb"><img src="https://images.unsplash.com/photo-1689259103820-a375e5a30e00?w=48&h=36&fit=crop&q=80"></div></td>
             <td>08</td><td>版画 - 社区晨曦</td><td>芳和花园</td><td>绘画组</td><td>吴大哥</td><td>5</td><td>164</td><td>0</td><td>-</td>
             <td><span class="status-tag" style="background:#F1F3F8;color:#C9CDD4;">不适用</span></td>
             <td><a class="action-link" onclick="openDetail()">投票明细</a></td>

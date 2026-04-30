@@ -687,7 +687,14 @@ function initFlowDrag(body) {
 
     toc.insertAdjacentHTML('beforeend', html);
 
-    // Click handler: use offsetTop for correct position with sticky headers
+    // Click handler: recalculate position at click time (iframe loading changes doc height)
+    function getElTrueTop(el) {
+      el.style.position = 'relative';
+      let top = 0, node = el;
+      while (node) { top += node.offsetTop || 0; node = node.offsetParent; }
+      el.style.position = '';
+      return top;
+    }
     toc.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', function(e) {
         e.preventDefault();
@@ -695,10 +702,7 @@ function initFlowDrag(body) {
         const id = this.getAttribute('href').slice(1);
         const el = document.getElementById(id);
         if (el) {
-          // Temporarily remove sticky to get true document position
-          el.style.position = 'relative';
-          const y = el.offsetTop;
-          el.style.position = '';
+          const y = getElTrueTop(el);
           window.scrollTo({ top: Math.max(0, y - 10), behavior: 'smooth' });
         }
       });
@@ -718,6 +722,9 @@ function initFlowDrag(body) {
     }
     cacheSectionPositions();
     window.addEventListener('resize', cacheSectionPositions);
+    // Recalculate after iframes load (they change document height)
+    document.querySelectorAll('iframe').forEach(function(f) { f.addEventListener('load', function() { setTimeout(cacheSectionPositions, 300); }); });
+    setTimeout(cacheSectionPositions, 2000);
     window.addEventListener('scroll', () => {
       let current = '';
       sectionPositions.forEach(s => {
