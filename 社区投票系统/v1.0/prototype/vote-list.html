@@ -32,8 +32,12 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 
 .card-list{padding:16px;display:flex;flex-direction:column;gap:16px;}
 .vote-card{background:#fff;border-radius:16px;box-shadow:0 2px 6px rgba(33,71,128,0.06);overflow:hidden;cursor:pointer;}
-.card-cover{width:100%;height:160px;position:relative;}
-.card-cover-img{width:100%;height:100%;object-fit:cover;}
+.card-cover{width:100%;height:160px;position:relative;overflow:hidden;}
+.card-cover img{width:100%;height:100%;object-fit:cover;display:block;}
+.card-scope{position:absolute;top:12px;left:12px;height:22px;padding:0 10px;border-radius:11px;font-size:11px;font-weight:600;display:flex;align-items:center;z-index:2;}
+.scope-local{background:rgba(63,134,245,0.85);color:#fff;}
+.scope-cross{background:rgba(125,130,246,0.85);color:#fff;}
+.scope-all{background:rgba(255,164,36,0.85);color:#fff;}
 .card-status{position:absolute;top:12px;right:12px;height:22px;padding:0 10px;border-radius:11px;font-size:11px;font-weight:600;display:flex;align-items:center;}
 .status-voting{background:#E9FAF1;color:#34C96E;}
 .status-enrolling{background:#EEF5FF;color:#3F86F5;}
@@ -87,7 +91,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 
   <div class="vote-card" data-cat="作品展">
     <div class="card-cover">
-      <div class="card-cover-img" style="background:linear-gradient(135deg,#5395FF 0%,#82B4FF 50%,#B6D4FF 100%);"></div>
+      <img src="https://images.unsplash.com/photo-1546638008-efbe0b62c730?w=375&h=160&fit=crop&q=80" alt="书画展">
+      <div class="card-scope scope-local">芳和花园</div>
       <div class="card-status status-voting">投票中</div>
     </div>
     <div class="card-body">
@@ -105,7 +110,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 
   <div class="vote-card" data-cat="最美评选">
     <div class="card-cover">
-      <div class="card-cover-img" style="background:linear-gradient(135deg,#34C96E 0%,#7DE8A8 50%,#C5F5DA 100%);"></div>
+      <img src="https://images.unsplash.com/photo-1486484290742-0ce4eb743a34?w=375&h=160&fit=crop&q=80" alt="阳台花园">
+      <div class="card-scope scope-cross">XX街道</div>
       <div class="card-status status-enrolling">报名中</div>
     </div>
     <div class="card-body">
@@ -122,7 +128,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 
   <div class="vote-card" data-cat="才艺比赛">
     <div class="card-cover">
-      <div class="card-cover-img" style="background:linear-gradient(135deg,#FFA424 0%,#FFCA70 50%,#FFE5B2 100%);"></div>
+      <img src="https://images.unsplash.com/photo-1605627079912-97c3810a11a4?w=375&h=160&fit=crop&q=80" alt="才艺达人秀">
+      <div class="card-scope scope-all">全区活动</div>
       <div class="card-status status-publicizing">公示中</div>
     </div>
     <div class="card-body">
@@ -140,7 +147,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 
   <div class="vote-card" data-cat="话题投票">
     <div class="card-cover">
-      <div class="card-cover-img" style="background:linear-gradient(135deg,#7D82F6 0%,#A9ABFF 50%,#D5D6FF 100%);"></div>
+      <img src="https://images.unsplash.com/photo-1529778873920-4da4926a72c2?w=375&h=160&fit=crop&q=80" alt="宠物">
+      <div class="card-scope scope-local">翠竹社区</div>
       <div class="card-status status-ended">已结束</div>
     </div>
     <div class="card-body">
@@ -158,7 +166,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 
   <div class="vote-card" data-cat="作品展">
     <div class="card-cover">
-      <div class="card-cover-img" style="background:linear-gradient(135deg,#47B5F2 0%,#89D4FF 50%,#C5ECFF 100%);"></div>
+      <img src="https://images.unsplash.com/photo-1630476504743-a4d342f88760?w=375&h=160&fit=crop&q=80" alt="儿童绘画">
+      <div class="card-scope scope-all">全区活动</div>
       <div class="card-status status-voting">投票中</div>
     </div>
     <div class="card-body">

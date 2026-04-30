@@ -12,7 +12,11 @@ html{overscroll-behavior:contain;}
 body::-webkit-scrollbar{display:none;}
 body{-ms-overflow-style:none;scrollbar-width:none;}
 
-.cover{width:100%;height:200px;background:linear-gradient(135deg,#2F6BD6 0%,#5395FF 50%,#82B4FF 100%);position:relative;}
+.cover{width:100%;height:200px;position:relative;overflow:hidden;}
+.cover>img{width:100%;height:100%;object-fit:cover;display:block;position:absolute;top:0;left:0;z-index:0;}
+.scope-bar{margin:8px 16px 0;padding:8px 12px;border-radius:8px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px;}
+.scope-bar.local{background:#EEF5FF;color:#3F86F5;}
+.scope-bar svg{flex-shrink:0;}
 .cover-overlay{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,rgba(0,0,0,0.45));}
 .cover-title{position:absolute;bottom:16px;left:16px;right:16px;font-size:20px;font-weight:700;color:#fff;z-index:2;}
 .status-bar{position:absolute;top:0;left:0;right:0;z-index:50;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#fff;}
@@ -76,6 +80,7 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 <body>
 
 <div class="cover">
+  <img src="https://images.unsplash.com/photo-1546638008-efbe0b62c730?w=375&h=200&fit=crop&q=80" alt="书画展">
   <div class="status-bar">
     <span class="time">9:41</span>
     <div style="display:flex;gap:5px;align-items:center;">
@@ -100,6 +105,11 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
   <div class="stat-item"><div class="stat-num">1,280</div><div class="stat-label">参与人数</div></div>
   <div class="stat-item"><div class="stat-num">3,650</div><div class="stat-label">累计票数</div></div>
   <div class="stat-item"><div class="stat-num">8,920</div><div class="stat-label">浏览量</div></div>
+</div>
+
+<div class="scope-bar local">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#3F86F5" stroke-width="1.5"/><path d="M8 5v4M8 11h.01" stroke="#3F86F5" stroke-width="1.5" stroke-linecap="round"/></svg>
+  仅限 芳和花园 居民参与
 </div>
 
 <div class="countdown">
@@ -130,14 +140,14 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 
 <script>
 var works=[
-  {no:1,name:'山水画 - 春意盎然',votes:456,h:140,color:'#B8D8FF',voted:true},
-  {no:2,name:'书法 - 家和万事兴',votes:328,h:120,color:'#FFD6B8',voted:true},
-  {no:3,name:'油画 - 社区花园',votes:289,h:155,color:'#C5F5DA',voted:false},
-  {no:4,name:'水彩 - 夕阳小径',votes:245,h:130,color:'#FFE5B2',voted:false},
-  {no:5,name:'国画 - 荷塘月色',votes:412,h:145,color:'#D5D6FF',voted:false},
-  {no:6,name:'素描 - 社区老树',votes:198,h:125,color:'#E8EEF8',voted:false},
-  {no:7,name:'剪纸 - 福满邻里',votes:176,h:150,color:'#FFD6D6',voted:false},
-  {no:8,name:'版画 - 社区晨曦',votes:164,h:135,color:'#C5ECFF',voted:false}
+  {no:1,name:'山水画 - 春意盎然',votes:456,h:140,img:'https://images.unsplash.com/photo-1684871430772-569936b1a0ae?w=180&h=140&fit=crop&q=80',voted:true},
+  {no:2,name:'书法 - 家和万事兴',votes:328,h:120,img:'https://images.unsplash.com/photo-1486303954368-398fea0e72cd?w=180&h=120&fit=crop&q=80',voted:true},
+  {no:3,name:'油画 - 社区花园',votes:289,h:155,img:'https://images.unsplash.com/photo-1632770464350-e73ae4aaa11c?w=180&h=155&fit=crop&q=80',voted:false},
+  {no:4,name:'水彩 - 夕阳小径',votes:245,h:130,img:'https://images.unsplash.com/photo-1713118774750-e1878e76b067?w=180&h=130&fit=crop&q=80',voted:false},
+  {no:5,name:'国画 - 荷塘月色',votes:412,h:145,img:'https://images.unsplash.com/photo-1699003788740-5f2df501bdcf?w=180&h=145&fit=crop&q=80',voted:false},
+  {no:6,name:'素描 - 社区老树',votes:198,h:125,img:'https://images.unsplash.com/photo-1545038522-9bb451739ab9?w=180&h=125&fit=crop&q=80',voted:false},
+  {no:7,name:'剪纸 - 福满邻里',votes:176,h:150,img:'https://images.unsplash.com/photo-1583389409210-0234eee7cdce?w=180&h=150&fit=crop&q=80',voted:false},
+  {no:8,name:'版画 - 社区晨曦',votes:164,h:135,img:'https://images.unsplash.com/photo-1689259103820-a375e5a30e00?w=180&h=135&fit=crop&q=80',voted:false}
 ];
 var avatarColors=['#3F86F5','#34C96E','#FFA424','#7D82F6','#FF7E66'];
 
@@ -151,7 +161,7 @@ function renderWorks(sortBy){
     var avs='';
     for(var j=0;j<3;j++){avs+='<div class="avatar-circle" style="background:'+avatarColors[(w.no+j)%5]+';"></div>';}
     var card='<div class="work-card" id="card-'+w.no+'">'+
-      '<div class="work-img"><div class="work-img-bg" style="height:'+w.h+'px;background:'+w.color+';"></div><div class="work-no">'+String(w.no).padStart(2,'0')+'号</div></div>'+
+      '<div class="work-img"><img class="work-img-bg" src="'+w.img+'" style="height:'+w.h+'px;width:100%;object-fit:cover;display:block;"><div class="work-no">'+String(w.no).padStart(2,'0')+'号</div></div>'+
       '<div class="work-body"><div class="work-name">'+w.name+'</div>'+
       '<div class="work-votes" id="votes-'+w.no+'">'+w.votes+' <span>票</span></div>'+
       '<div class="work-btn-row"><div class="avatars">'+avs+'<span class="avatar-more">+'+Math.floor(Math.random()*20+5)+'</span></div>'+
