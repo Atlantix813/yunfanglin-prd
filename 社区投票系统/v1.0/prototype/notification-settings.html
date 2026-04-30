@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>消息订阅</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mobile-components.css">
+<style>
+body { background: #F2F4F7; padding-bottom: 40px; }
+
+/* 主开关行（独立卡片） */
+.master-row {
+  margin: 12px 16px 0;
+  height: 50px; padding: 0 16px;
+  background: #fff; border-radius: 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.master-row .label { font-size: 14px; color: #222835; font-weight: 500; }
+
+/* 主开关下方说明文案 */
+.intro-tip {
+  margin: 8px 17px 0; font-size: 12px; color: #939CAB;
+  line-height: 1.5;
+}
+
+/* 业务卡片：折叠态（单行） */
+.biz-card {
+  margin: 12px 16px 0;
+  background: #fff; border-radius: 8px;
+  overflow: hidden;
+}
+.biz-row {
+  height: 50px; padding: 0 16px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer;
+}
+.biz-row .biz-title {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 14px; color: #222835; font-weight: 500;
+}
+.biz-count {
+  font-size: 14px; color: #3F86F5; font-weight: 400;
+}
+.biz-count.zero { color: #939CAB; }
+.biz-row .right {
+  display: flex; align-items: center; gap: 8px;
+}
+.chev {
+  display: inline-block; width: 6px; height: 11px;
+  border-right: 1.5px solid #C9CDD4;
+  border-top: 1.5px solid #C9CDD4;
+  transform: rotate(45deg);
+}
+.biz-new {
+  font-size: 10px; font-weight: 700; color: #fff;
+  background: linear-gradient(90deg,#FF6B6B,#FF4D4F);
+  padding: 1px 5px; border-radius: 4px;
+  font-family: Inter, sans-serif; letter-spacing: 0.5px;
+}
+
+/* 子项展开容器 */
+.sub-list {
+  border-top: 1px solid #F0F2F5;
+  padding: 0 16px;
+}
+.sub-row {
+  height: 50px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #F0F2F5;
+}
+.sub-row:last-child { border-bottom: none; }
+.sub-label { font-size: 14px; color: #4B5563; }
+
+/* iOS-style 43x22 toggle */
+.toggle {
+  position: relative; flex-shrink: 0;
+  width: 43px; height: 22px; border-radius: 11px;
+  background: #E5E7EB; cursor: pointer;
+  transition: background 0.25s ease;
+}
+.toggle::after {
+  content: ''; position: absolute; left: 2px; top: 2px;
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.18);
+  transition: transform 0.25s ease;
+}
+.toggle.on { background: #3F86F5; }
+.toggle.on::after { transform: translateX(21px); }
+.toggle.disabled { opacity: 0.4; pointer-events: none; }
+</style>
+</head>
+<body>
+
+<!-- Status bar -->
+<div class="m-status-bar">
+  <span class="time">9:41</span>
+  <div style="display:flex;gap:5px;align-items:center;">
+    <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx="0.5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx="0.5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx="0.5" fill="#222835"/></svg>
+    <svg width="22" height="10" viewBox="0 0 22 10"><rect x="0.5" y="0.5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx="0.5" fill="#222835"/></svg>
+  </div>
+</div>
+
+<!-- Nav bar -->
+<div class="m-nav-bar">
+  <span class="back">‹</span>
+  <span class="title">消息订阅</span>
+</div>
+
+<!-- 主开关 -->
+<div class="master-row">
+  <span class="label">社区通知订阅</span>
+  <div class="toggle on" id="masterSwitch" onclick="toggleMaster()"></div>
+</div>
+
+<!-- 主开关下说明 -->
+<div class="intro-tip">开启社区通知订阅并启用下方订阅项，以接收对应场景消息通知</div>
+
+<!-- 社区公告（折叠） -->
+<div class="biz-card" id="card-1">
+  <div class="biz-row" onclick="toggleExpand('card-1')">
+    <span class="biz-title">社区公告</span>
+    <div class="right">
+      <span class="biz-count" data-id="card-1">3/3</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list" style="display:none;">
+    <div class="sub-row">
+      <span class="sub-label">【社区公告】新公告发布</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-1')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【社区公告】公告内容更新</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-1')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【社区公告】公告即将到期</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-1')"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 参加活动（默认展开） -->
+<div class="biz-card expanded" id="card-2">
+  <div class="biz-row" onclick="toggleExpand('card-2')">
+    <span class="biz-title">参加活动</span>
+    <div class="right">
+      <span class="biz-count" data-id="card-2">3/3</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list">
+    <div class="sub-row">
+      <span class="sub-label">【参加活动】报名成功</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-2')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【参加活动】活动即将开始</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-2')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【参加活动】活动取消</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-2')"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 调查问卷（默认展开） -->
+<div class="biz-card expanded" id="card-3">
+  <div class="biz-row" onclick="toggleExpand('card-3')">
+    <span class="biz-title">调查问卷</span>
+    <div class="right">
+      <span class="biz-count" data-id="card-3">1/1</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list">
+    <div class="sub-row">
+      <span class="sub-label">【调查问卷】新问卷发布</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-3')"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 借用工具 -->
+<div class="biz-card" id="card-4">
+  <div class="biz-row" onclick="toggleExpand('card-4')">
+    <span class="biz-title">借用工具</span>
+    <div class="right">
+      <span class="biz-count" data-id="card-4">1/1</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list" style="display:none;">
+    <div class="sub-row">
+      <span class="sub-label">【借用工具】审核结果</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-4')"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 有事找居委 -->
+<div class="biz-card" id="card-5">
+  <div class="biz-row" onclick="toggleExpand('card-5')">
+    <span class="biz-title">有事找居委</span>
+    <div class="right">
+      <span class="biz-count" data-id="card-5">4/4</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list" style="display:none;">
+    <div class="sub-row">
+      <span class="sub-label">【有事找居委】提交受理</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-5')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【有事找居委】处理中</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-5')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【有事找居委】已回复</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-5')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【有事找居委】已关闭</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-5')"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 云新声 -->
+<div class="biz-card" id="card-6">
+  <div class="biz-row" onclick="toggleExpand('card-6')">
+    <span class="biz-title">云新声</span>
+    <div class="right">
+      <span class="biz-count" data-id="card-6">1/1</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list" style="display:none;">
+    <div class="sub-row">
+      <span class="sub-label">【云新声】新一期内容发布</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-6')"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 场地预约 -->
+<div class="biz-card" id="card-7">
+  <div class="biz-row" onclick="toggleExpand('card-7')">
+    <span class="biz-title">场地预约</span>
+    <div class="right">
+      <span class="biz-count" data-id="card-7">3/3</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list" style="display:none;">
+    <div class="sub-row">
+      <span class="sub-label">【场地预约】预约成功</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-7')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【场地预约】即将开始</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-7')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【场地预约】已取消</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-7')"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 积分提醒 -->
+<div class="biz-card" id="card-8">
+  <div class="biz-row" onclick="toggleExpand('card-8')">
+    <span class="biz-title">积分提醒</span>
+    <div class="right">
+      <span class="biz-count" data-id="card-8">2/2</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list" style="display:none;">
+    <div class="sub-row">
+      <span class="sub-label">【积分提醒】任务完成提醒</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-8')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【积分提醒】积分过期提醒</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-8')"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 投票活动（NEW，默认展开） -->
+<div class="biz-card expanded" id="card-9">
+  <div class="biz-row" onclick="toggleExpand('card-9')">
+    <span class="biz-title">
+      投票活动
+      <span class="biz-new">NEW</span>
+    </span>
+    <div class="right">
+      <span class="biz-count" data-id="card-9">3/3</span>
+      <span class="chev"></span>
+    </div>
+  </div>
+  <div class="sub-list">
+    <div class="sub-row">
+      <span class="sub-label">【投票活动】作品审核结果通知</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-9')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【投票活动】活动状态变更通知</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-9')"></div>
+    </div>
+    <div class="sub-row">
+      <span class="sub-label">【投票活动】活动奖励到账通知</span>
+      <div class="toggle on" onclick="toggleSub(event,this,'card-9')"></div>
+    </div>
+  </div>
+</div>
+
+<div class="m-toast" id="toast"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.remove('show'), 1400);
+}
+
+function toggleExpand(cardId) {
+  const card = document.getElementById(cardId);
+  const list = card.querySelector('.sub-list');
+  const expanded = list.style.display !== 'none';
+  list.style.display = expanded ? 'none' : 'block';
+  card.classList.toggle('expanded', !expanded);
+}
+
+function recountCard(cardId) {
+  const card = document.getElementById(cardId);
+  const toggles = card.querySelectorAll('.sub-list .toggle');
+  const total = toggles.length;
+  const on = card.querySelectorAll('.sub-list .toggle.on').length;
+  const span = card.querySelector('.biz-count');
+  span.textContent = on + '/' + total;
+  span.classList.toggle('zero', on === 0);
+}
+
+function toggleSub(e, el, cardId) {
+  e.stopPropagation();
+  if (el.classList.contains('disabled')) return;
+  const on = el.classList.toggle('on');
+  recountCard(cardId);
+  showToast((on ? '已开启 · ' : '已关闭 · ') + el.previousElementSibling.textContent);
+}
+
+function toggleMaster() {
+  const m = document.getElementById('masterSwitch');
+  const on = m.classList.toggle('on');
+  document.querySelectorAll('.biz-card .toggle').forEach(sw => sw.classList.toggle('disabled', !on));
+  document.querySelectorAll('.biz-card').forEach(c => c.style.opacity = on ? '1' : '0.55');
+  showToast(on ? '社区通知订阅已开启' : '已关闭，所有业务通知停止下发');
+}
+</script>
+
+</body>
+</html>
