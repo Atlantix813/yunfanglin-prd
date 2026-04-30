@@ -7,10 +7,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="components.css">
 <style>
-.stat-cards{display:flex;gap:16px;margin-bottom:16px;}
-.stat-card{flex:1;background:#fff;border-radius:8px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;gap:16px;}
-.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;}
-.stat-value{font-family:Inter,sans-serif;font-size:28px;font-weight:700;line-height:1;}
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px;}
+.stat-card{background:#fff;border-radius:8px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;gap:10px;}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.stat-value{font-family:Inter,sans-serif;font-size:22px;font-weight:700;line-height:1;}
 .stat-label{font-size:13px;color:#86909C;margin-top:4px;}
 .rank-1{color:#FFD700;font-weight:700;}
 .rank-2{color:#C0C0C0;font-weight:700;}
@@ -79,16 +79,26 @@
       </div>
     </div>
 
+    <div class="filter-card">
+      <div class="filter-row">
+        <div class="filter-field"><label>作品名称</label><input placeholder="请输入"></div>
+        <div class="filter-field"><label>所属社区</label>
+          <select><option value="">全部</option><option>芳和花园</option><option>翠竹社区</option></select>
+        </div>
+        <div class="filter-field"><label>分组</label>
+          <select><option value="">全部</option><option>书法组</option><option>绘画组</option><option>手工艺组</option></select>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg> 查询</button>
+          <button class="btn btn-default">重置</button>
+        </div>
+      </div>
+    </div>
+
     <div class="table-card">
       <div class="table-toolbar">
-        <div style="display:flex;gap:8px;">
-          <input placeholder="搜索作品名称" style="height:32px;border:1px solid #E5E6EB;border-radius:4px;padding:0 12px;font-size:13px;width:200px;">
-          <select style="height:32px;border:1px solid #E5E6EB;border-radius:4px;padding:0 12px;font-size:13px;"><option>全部分组</option><option>书法组</option><option>绘画组</option></select>
-        </div>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-default" onclick="showToast('导出Excel')">导出Excel</button>
-          <button class="btn btn-primary" onclick="showToast('请先勾选作品')">批量发放</button>
-        </div>
+        <button class="btn btn-default" onclick="showToast('导出Excel')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg> 导出Excel</button>
+        <button class="btn btn-primary" onclick="showToast('请先勾选作品')">批量发放</button>
       </div>
       <div class="table-scroll">
       <table>
