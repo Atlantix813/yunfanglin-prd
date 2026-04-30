@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>活动管理 - 云芳邻管理系统</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components.css">
+</head>
+<body>
+<div class="page-wrapper">
+
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">云芳邻管理系统</div>
+    <div class="header-hamburger"><span></span><span></span><span></span></div>
+  </div>
+  <div class="header-right">
+    <div class="header-right-item"><div class="avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div><span>管理员</span></div>
+  </div>
+</div>
+
+<div class="layout">
+<div class="sidebar">
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="label">工作台</span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="label">社区宣传</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><span class="label">信息公开</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="label">社区服务</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg><span class="label">邻里社交</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7-10H1m22 0h-4"/></svg><span class="label">积分兑换</span><span class="arrow">></span></div>
+  <div class="sidebar-item expanded"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M12 12l-3 3m0-6l3 3 3-3"/></svg><span class="label">投票管理</span><span class="arrow">></span></div>
+  <div class="sidebar-sub">
+    <div class="sidebar-item active"><span class="label">活动管理</span></div>
+    <div class="sidebar-item"><span class="label">作品审核</span></div>
+    <div class="sidebar-item"><span class="label">投票数据</span></div>
+  </div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg><span class="label">任务管理</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span class="label">权限管理</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33"/></svg><span class="label">系统管理</span><span class="arrow">></span></div>
+</div>
+
+<div class="main">
+  <div class="tab-bar">
+    <div class="tab-item" style="color:#C9CDD4;">工作台</div>
+    <div class="tab-item active">活动管理 <span class="tab-close">x</span></div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <span class="page-title">活动管理</span>
+      <span class="breadcrumb">投票管理 / 活动管理</span>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-row">
+        <div class="filter-field"><label>活动名称</label><input id="filterName" placeholder="请输入"></div>
+        <div class="filter-field"><label>活动状态</label>
+          <select id="filterStatus">
+            <option value="">全部</option>
+            <option>草稿</option><option>报名中</option><option>投票中</option><option>公示中</option><option>已结束</option><option>已归档</option>
+          </select>
+        </div>
+        <div class="filter-field"><label>活动分类</label>
+          <select>
+            <option value="">全部</option>
+            <option>作品展</option><option>才艺比赛</option><option>话题投票</option><option>最美评选</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary" onclick="applyFilter()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg> 查询</button>
+          <button class="btn btn-default" onclick="resetFilter()">重置</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-toolbar">
+        <button class="btn btn-primary" onclick="showToast('打开创建活动弹窗')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> 创建活动</button>
+      </div>
+      <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>活动名称</th><th>活动分类</th><th>活动状态</th><th>报名时间</th><th>投票时间</th><th>候选作品数</th><th>总票数</th><th>创建时间</th><th style="min-width:200px;">操作</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr>
+            <td>2026年社区书画展</td><td>作品展</td>
+            <td><span class="status-tag" style="background:#E9FAF1;color:#34C96E;">投票中</span></td>
+            <td>04-15 ~ 04-30</td><td>05-01 ~ 05-15</td><td>24</td><td>3,650</td><td>2026-04-10 09:30</td>
+            <td><a class="action-link" onclick="showToast('跳转到投票数据')">查看数据</a> <a class="action-link danger" onclick="showToast('投票已暂停')">暂停</a></td>
+          </tr>
+          <tr>
+            <td>最美阳台花园评选</td><td>最美评选</td>
+            <td><span class="status-tag" style="background:#EEF5FF;color:#3F86F5;">报名中</span></td>
+            <td>04-20 ~ 05-10</td><td>05-12 ~ 05-25</td><td>8</td><td>-</td><td>2026-04-18 14:20</td>
+            <td><a class="action-link" onclick="showToast('打开编辑弹窗')">编辑</a> <a class="action-link" onclick="showToast('跳转到作品审核')">查看作品</a> <a class="action-link" onclick="showToast('确认开启投票？')">开启投票</a></td>
+          </tr>
+          <tr>
+            <td>社区才艺达人秀</td><td>才艺比赛</td>
+            <td><span class="status-tag" style="background:#FFF3E2;color:#FFA424;">公示中</span></td>
+            <td>-</td><td>04-20 ~ 05-05</td><td>16</td><td>2,100</td><td>2026-04-05 10:00</td>
+            <td><a class="action-link" onclick="showToast('跳转到投票数据')">查看数据</a> <a class="action-link" onclick="showToast('确认结束公示？')">结束公示</a></td>
+          </tr>
+          <tr>
+            <td>社区最受欢迎宠物</td><td>话题投票</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#8B96A8;">已结束</span></td>
+            <td>-</td><td>04-01 ~ 04-15</td><td>32</td><td>1,800</td><td>2026-03-25 16:45</td>
+            <td><a class="action-link" onclick="showToast('跳转到投票数据')">查看数据</a> <a class="action-link" onclick="showToast('跳转到奖励发放')">发放奖励</a> <a class="action-link" onclick="showToast('确认归档？')">归档</a></td>
+          </tr>
+          <tr>
+            <td>儿童绘画大赛</td><td>作品展</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#C9CDD4;">草稿</span></td>
+            <td>-</td><td>-</td><td>0</td><td>-</td><td>2026-04-28 11:30</td>
+            <td><a class="action-link" onclick="showToast('打开编辑弹窗')">编辑</a> <a class="action-link" onclick="showToast('确认发布？')">发布</a> <a class="action-link danger" onclick="showToast('确认删除？')">删除</a></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="pagination">
+        <span class="pagination-info">共 5 条</span>
+        <div class="pagination-pages">
+          <span class="page-btn disabled">&lt;</span>
+          <span class="page-btn active">1</span>
+          <span class="page-btn disabled">&gt;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="toast" id="toast" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:rgba(34,40,53,0.88);color:#fff;padding:14px 28px;border-radius:8px;font-size:14px;font-weight:500;z-index:1000;opacity:0;transition:all 0.3s;pointer-events:none;"></div>
+
+<script>
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';t.style.transform='translate(-50%,-50%) scale(1)';setTimeout(function(){t.style.opacity='0';t.style.transform='translate(-50%,-50%) scale(0.8)';},1800);}
+function applyFilter(){showToast('筛选已应用');}
+function resetFilter(){document.getElementById('filterName').value='';document.getElementById('filterStatus').value='';showToast('筛选已重置');}
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>投票数据 - 云芳邻管理系统</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components.css">
+<style>
+.stat-cards{display:flex;gap:16px;margin-bottom:16px;}
+.stat-card{flex:1;background:#fff;border-radius:8px;padding:20px;box-shadow:0 1px 4px rgba(0,0,0,0.06);display:flex;align-items:center;gap:16px;}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;}
+.stat-value{font-family:Inter,sans-serif;font-size:28px;font-weight:700;line-height:1;}
+.stat-label{font-size:13px;color:#86909C;margin-top:4px;}
+.rank-1{color:#FFD700;font-weight:700;}
+.rank-2{color:#C0C0C0;font-weight:700;}
+.rank-3{color:#CD7F32;font-weight:700;}
+.thumb{width:48px;height:36px;border-radius:4px;display:inline-block;vertical-align:middle;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:8px;padding:0;width:720px;max-height:80vh;box-shadow:0 12px 40px rgba(0,0,0,0.15);overflow:hidden;display:flex;flex-direction:column;}
+.modal-header{padding:16px 24px;border-bottom:1px solid #E5E6EB;display:flex;justify-content:space-between;align-items:center;}
+.modal-header-title{font-size:16px;font-weight:700;color:#1D2129;}
+.modal-header-close{cursor:pointer;font-size:18px;color:#86909C;}
+.modal-body{padding:16px 24px;overflow-y:auto;flex:1;}
+.modal-body table{width:100%;border-collapse:collapse;font-size:13px;}
+.modal-body th,.modal-body td{padding:10px 12px;text-align:left;border-bottom:1px solid #F2F3F5;}
+.modal-body th{background:#F7F8FA;color:#86909C;font-weight:500;}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<div class="header">
+  <div class="header-left"><div class="header-logo">云芳邻管理系统</div></div>
+  <div class="header-right"><div class="header-right-item"><div class="avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div><span>管理员</span></div></div>
+</div>
+
+<div class="layout">
+<div class="sidebar">
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="label">工作台</span></div>
+  <div class="sidebar-item expanded"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M12 12l-3 3m0-6l3 3 3-3"/></svg><span class="label">投票管理</span><span class="arrow">></span></div>
+  <div class="sidebar-sub">
+    <div class="sidebar-item"><span class="label">活动管理</span></div>
+    <div class="sidebar-item"><span class="label">作品审核</span></div>
+    <div class="sidebar-item active"><span class="label">投票数据</span></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="tab-bar">
+    <div class="tab-item" style="color:#C9CDD4;">工作台</div>
+    <div class="tab-item active">投票数据 <span class="tab-close">x</span></div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <span class="page-title">投票数据 - 2026年社区书画展</span>
+      <span class="breadcrumb">投票管理 / 投票数据</span>
+    </div>
+
+    <div class="stat-cards">
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#EEF5FF;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3F86F5" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+        <div><div class="stat-value" style="color:#3F86F5;">1,280</div><div class="stat-label">参与人数(UV)</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#E9FAF1;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#34C96E" stroke-width="2"><path d="M14 9V5a3 3 0 00-6 0v4"/><rect x="2" y="9" width="20" height="11" rx="2"/></svg></div>
+        <div><div class="stat-value" style="color:#34C96E;">3,650</div><div class="stat-label">累计票数</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#F1F2FF;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7D82F6" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div><div class="stat-value" style="color:#7D82F6;">24</div><div class="stat-label">候选作品数</div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon" style="background:#FFF3E2;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FFA424" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <div><div class="stat-value" style="color:#FFA424;">186</div><div class="stat-label">今日新增票数</div></div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div style="display:flex;gap:8px;">
+          <input placeholder="搜索作品名称" style="height:32px;border:1px solid #E5E6EB;border-radius:4px;padding:0 12px;font-size:13px;width:200px;">
+          <select style="height:32px;border:1px solid #E5E6EB;border-radius:4px;padding:0 12px;font-size:13px;"><option>全部分组</option><option>书法组</option><option>绘画组</option></select>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-default" onclick="showToast('导出Excel')">导出Excel</button>
+          <button class="btn btn-primary" onclick="showToast('请先勾选作品')">批量发放</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th>排名</th><th>作品图片</th><th>编号</th><th>作品名称</th><th>分组</th><th>参赛者</th><th>有效票数</th><th>冻结票数</th><th>奖励积分</th><th>发放状态</th><th style="min-width:180px;">操作</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="rank-1">1</td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#B8D8FF,#5395FF);"></div></td>
+            <td>01</td><td>山水画 - 春意盎然</td><td>绘画组</td><td>李大爷</td><td style="font-weight:600;">456</td><td>0</td><td>100</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#86909C;">未发放</span></td>
+            <td><a class="action-link" onclick="openDetail()">投票明细</a> <a class="action-link" onclick="showToast('冻结操作')">冻结</a> <a class="action-link" onclick="showToast('确认发放 100 积分给李大爷？')">发放</a></td>
+          </tr>
+          <tr>
+            <td class="rank-2">2</td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#C5F5DA,#34C96E);"></div></td>
+            <td>05</td><td>国画 - 荷塘月色</td><td>绘画组</td><td>赵奶奶</td><td style="font-weight:600;">412</td><td style="color:#F53F3F;">12</td><td>80</td>
+            <td><span class="status-tag" style="background:#E9FAF1;color:#34C96E;">已发放</span></td>
+            <td><a class="action-link" onclick="openDetail()">投票明细</a></td>
+          </tr>
+          <tr>
+            <td class="rank-3">3</td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#FFE5B2,#FFA424);"></div></td>
+            <td>02</td><td>书法 - 家和万事兴</td><td>书法组</td><td>王阿姨</td><td style="font-weight:600;">328</td><td>0</td><td>50</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#86909C;">未发放</span></td>
+            <td><a class="action-link" onclick="openDetail()">投票明细</a> <a class="action-link" onclick="showToast('冻结操作')">冻结</a> <a class="action-link" onclick="showToast('确认发放 50 积分给王阿姨？')">发放</a></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#C5F5DA,#34C96E);"></div></td>
+            <td>03</td><td>油画 - 社区花园</td><td>绘画组</td><td>张阿姨</td><td>289</td><td>0</td><td>30</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#86909C;">未发放</span></td>
+            <td><a class="action-link" onclick="openDetail()">投票明细</a> <a class="action-link" onclick="showToast('冻结操作')">冻结</a> <a class="action-link" onclick="showToast('确认发放？')">发放</a></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#FFE5B2,#FFA424);"></div></td>
+            <td>04</td><td>水彩 - 夕阳小径</td><td>绘画组</td><td>刘姐</td><td>245</td><td>0</td><td>30</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#86909C;">未发放</span></td>
+            <td><a class="action-link" onclick="openDetail()">投票明细</a> <a class="action-link" onclick="showToast('冻结操作')">冻结</a> <a class="action-link" onclick="showToast('确认发放？')">发放</a></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#E8EEF8,#8B96A8);"></div></td>
+            <td>06</td><td>素描 - 社区老树</td><td>绘画组</td><td>周叔叔</td><td>198</td><td>0</td><td>-</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#C9CDD4;">不适用</span></td>
+            <td><a class="action-link" onclick="openDetail()">投票明细</a></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#FFD6D6,#FF7E66);"></div></td>
+            <td>07</td><td>剪纸 - 福满邻里</td><td>手工艺组</td><td>孙小妹</td><td>176</td><td>0</td><td>-</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#C9CDD4;">不适用</span></td>
+            <td><a class="action-link" onclick="openDetail()">投票明细</a></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#C5ECFF,#47B5F2);"></div></td>
+            <td>08</td><td>版画 - 社区晨曦</td><td>绘画组</td><td>吴大哥</td><td>164</td><td>0</td><td>-</td>
+            <td><span class="status-tag" style="background:#F1F3F8;color:#C9CDD4;">不适用</span></td>
+            <td><a class="action-link" onclick="openDetail()">投票明细</a></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="pagination">
+        <span class="pagination-info">共 8 条</span>
+        <div class="pagination-pages"><span class="page-btn disabled">&lt;</span><span class="page-btn active">1</span><span class="page-btn disabled">&gt;</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="detailModal">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-header-title">投票明细 - 山水画 - 春意盎然</span>
+      <span class="modal-header-close" onclick="closeDetail()">x</span>
+    </div>
+    <div class="modal-body">
+      <table>
+        <thead><tr><th>投票用户</th><th>手机号</th><th>所属社区</th><th>投票时间</th><th>IP</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>
+          <tr><td>李大爷</td><td>138****5678</td><td>芳和花园</td><td>2026-05-08 14:32:15</td><td>120.229.**.**</td><td><span style="color:#34C96E;">有效</span></td><td><a class="action-link danger" onclick="showToast('已冻结')">冻结</a></td></tr>
+          <tr><td>王阿姨</td><td>139****1234</td><td>芳和花园</td><td>2026-05-08 13:15:42</td><td>113.108.**.**</td><td><span style="color:#34C96E;">有效</span></td><td><a class="action-link danger" onclick="showToast('已冻结')">冻结</a></td></tr>
+          <tr><td>赵奶奶</td><td>136****9876</td><td>翠竹社区</td><td>2026-05-08 11:08:33</td><td>14.23.**.**</td><td><span style="color:#34C96E;">有效</span></td><td><a class="action-link danger" onclick="showToast('已冻结')">冻结</a></td></tr>
+          <tr><td>陈先生</td><td>135****4567</td><td>芳和花园</td><td>2026-05-07 20:45:18</td><td>120.229.**.**</td><td><span style="color:#34C96E;">有效</span></td><td><a class="action-link danger" onclick="showToast('已冻结')">冻结</a></td></tr>
+          <tr><td>刘姐</td><td>137****8765</td><td>翠竹社区</td><td>2026-05-07 18:22:05</td><td>183.6.**.**</td><td><span style="color:#F53F3F;">已冻结</span></td><td><a class="action-link" onclick="showToast('已恢复')">恢复</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:rgba(34,40,53,0.88);color:#fff;padding:14px 28px;border-radius:8px;font-size:14px;font-weight:500;z-index:1000;opacity:0;transition:all 0.3s;pointer-events:none;"></div>
+
+<script>
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';t.style.transform='translate(-50%,-50%) scale(1)';setTimeout(function(){t.style.opacity='0';t.style.transform='translate(-50%,-50%) scale(0.8)';},1800);}
+function openDetail(){document.getElementById('detailModal').classList.add('show');}
+function closeDetail(){document.getElementById('detailModal').classList.remove('show');}
+</script>
+</body>
+</html>

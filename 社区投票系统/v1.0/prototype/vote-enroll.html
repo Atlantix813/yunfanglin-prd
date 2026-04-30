@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>作品报名</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif;background:#F4F8FF;color:#1F2937;font-size:14px;width:375px;overscroll-behavior:contain;min-height:812px;overflow-y:scroll;padding-bottom:80px;}
+html{overscroll-behavior:contain;}
+body::-webkit-scrollbar{display:none;}
+body{-ms-overflow-style:none;scrollbar-width:none;}
+
+.header-bg{position:absolute;top:0;left:0;right:0;height:140px;background:linear-gradient(180deg,#EAF3FF 0%,#F4F8FF 100%);z-index:0;}
+.status-bar{position:relative;z-index:50;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#1F2937;}
+.status-bar .time{font-family:Inter,sans-serif;font-weight:700;font-size:15px;}
+.nav-bar{position:relative;z-index:50;height:44px;display:flex;align-items:center;justify-content:center;}
+.nav-bar .back{position:absolute;left:16px;font-size:22px;color:#1F2937;cursor:pointer;}
+.nav-bar .title{font-size:17px;font-weight:700;color:#1F2937;}
+.nav-bar .capsule{position:absolute;right:8px;height:32px;width:87px;border-radius:16px;border:0.5px solid rgba(0,0,0,0.08);background:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;}
+.capsule-dots{flex:1;display:flex;align-items:center;justify-content:center;gap:3px;}
+.capsule-dots span{width:4px;height:4px;border-radius:2px;background:#1F2937;}
+.capsule-divider{width:0.5px;height:16px;background:rgba(0,0,0,0.15);}
+.capsule-close{flex:1;display:flex;align-items:center;justify-content:center;}
+
+.activity-tip{margin:8px 16px 0;background:#EEF5FF;border-radius:10px;padding:10px 14px;font-size:13px;color:#3F86F5;font-weight:500;display:flex;align-items:center;gap:6px;position:relative;z-index:5;}
+
+.form-section{padding:12px 16px;display:flex;flex-direction:column;gap:12px;position:relative;z-index:5;}
+.form-card{background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 6px rgba(33,71,128,0.06);}
+.form-label{font-size:14px;font-weight:600;color:#1F2937;margin-bottom:8px;display:flex;align-items:center;gap:2px;}
+.form-required{color:#F53F3F;font-size:16px;}
+.form-input{width:100%;height:44px;border:1px solid #E8EEF8;border-radius:8px;padding:0 12px;font-size:14px;color:#1F2937;outline:none;background:#fff;font-family:inherit;}
+.form-input:focus{border-color:#3F86F5;}
+.form-input::placeholder{color:#C6D0DE;}
+.form-textarea{width:100%;height:120px;border:1px solid #E8EEF8;border-radius:8px;padding:12px;font-size:14px;color:#1F2937;outline:none;resize:none;font-family:inherit;line-height:1.6;}
+.form-textarea:focus{border-color:#3F86F5;}
+.form-textarea::placeholder{color:#C6D0DE;}
+.form-counter{text-align:right;font-size:12px;color:#C6D0DE;margin-top:4px;}
+.form-hint{font-size:12px;color:#8B96A8;margin-top:4px;}
+
+.upload-grid{display:flex;flex-wrap:wrap;gap:8px;}
+.upload-item{width:72px;height:72px;border-radius:8px;overflow:hidden;flex-shrink:0;}
+.upload-filled{display:flex;align-items:center;justify-content:center;}
+.upload-add{border:1.5px dashed #D9DEE5;display:flex;align-items:center;justify-content:center;cursor:pointer;background:#F8FAFD;}
+
+.upload-video{width:100%;height:100px;border:1.5px dashed #D9DEE5;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;background:#F8FAFD;}
+.upload-video-text{font-size:13px;color:#8B96A8;}
+
+.form-select{width:100%;height:44px;border:1px solid #E8EEF8;border-radius:8px;padding:0 12px;font-size:14px;color:#1F2937;outline:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238B96A8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center;-webkit-appearance:none;appearance:none;font-family:inherit;}
+
+.submit-bar{position:fixed;bottom:0;left:0;width:375px;padding:12px 16px;background:#fff;border-top:1px solid #EEF2F8;z-index:30;}
+.submit-btn{width:100%;height:44px;border-radius:12px;border:none;background:#3F86F5;color:#fff;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 4px 12px rgba(63,134,245,0.25);}
+
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:rgba(34,40,53,0.88);color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:700;z-index:100;opacity:0;transition:all 0.3s ease;pointer-events:none;text-align:center;}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+</style>
+</head>
+<body>
+
+<div class="header-bg"></div>
+
+<div class="status-bar">
+  <span class="time">9:41</span>
+  <div style="display:flex;gap:5px;align-items:center;">
+    <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="#1F2937"/><rect x="4" y="4" width="3" height="6" rx="0.5" fill="#1F2937"/><rect x="8" y="2" width="3" height="8" rx="0.5" fill="#1F2937"/><rect x="12" y="0" width="3" height="10" rx="0.5" fill="#1F2937"/></svg>
+    <svg width="22" height="10" viewBox="0 0 22 10"><rect x="0.5" y="0.5" width="18" height="9" rx="2" fill="none" stroke="#1F2937"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#1F2937"/><rect x="20" y="3" width="1.5" height="4" rx="0.5" fill="#1F2937"/></svg>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <span class="back">&#8249;</span>
+  <span class="title">作品报名</span>
+  <div class="capsule">
+    <div class="capsule-dots"><span></span><span></span><span></span></div>
+    <div class="capsule-divider"></div>
+    <div class="capsule-close"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+  </div>
+</div>
+
+<div class="activity-tip">
+  <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#3F86F5" stroke-width="1.5"/><path d="M8 5v4M8 11h.01" stroke="#3F86F5" stroke-width="1.5" stroke-linecap="round"/></svg>
+  2026年社区书画展 - 报名中
+</div>
+
+<div class="form-section">
+  <div class="form-card">
+    <div class="form-label"><span class="form-required">*</span> 作品名称</div>
+    <input class="form-input" type="text" placeholder="请输入作品名称" maxlength="30">
+  </div>
+
+  <div class="form-card">
+    <div class="form-label"><span class="form-required">*</span> 作品介绍</div>
+    <textarea class="form-textarea" placeholder="请介绍您的作品（创作背景、材料、寓意等）" maxlength="500" oninput="updateCount(this)"></textarea>
+    <div class="form-counter"><span id="charCount">0</span>/500</div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-label"><span class="form-required">*</span> 作品图片<span style="font-weight:400;color:#8B96A8;font-size:12px;margin-left:4px;">（最多9张）</span></div>
+    <div class="upload-grid">
+      <div class="upload-item upload-filled" style="background:linear-gradient(135deg,#C5F5DA,#34C96E);"></div>
+      <div class="upload-item upload-filled" style="background:linear-gradient(135deg,#B8D8FF,#5395FF);"></div>
+      <div class="upload-item upload-add" onclick="showToast('选择图片')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><line x1="12" y1="6" x2="12" y2="18" stroke="#C6D0DE" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="12" x2="18" y2="12" stroke="#C6D0DE" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-label">作品视频<span style="font-weight:400;color:#8B96A8;font-size:12px;margin-left:4px;">（选填，最多1个）</span></div>
+    <div class="upload-video" onclick="showToast('选择视频')">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect x="4" y="6" width="18" height="20" rx="3" stroke="#C6D0DE" stroke-width="2"/><path d="M22 12l6-3v14l-6-3" stroke="#C6D0DE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="upload-video-text">点击上传视频</span>
+    </div>
+    <div class="form-hint">不超过50MB，时长不超过3分钟</div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-label"><span class="form-required">*</span> 参赛者姓名</div>
+    <input class="form-input" type="text" value="张三">
+  </div>
+
+  <div class="form-card">
+    <div class="form-label"><span class="form-required">*</span> 联系电话</div>
+    <input class="form-input" type="tel" value="138****5678">
+  </div>
+
+  <div class="form-card">
+    <div class="form-label">参赛分组</div>
+    <select class="form-select">
+      <option>书法组</option>
+      <option>绘画组</option>
+      <option>手工艺组</option>
+    </select>
+  </div>
+</div>
+
+<div class="submit-bar">
+  <button class="submit-btn" onclick="showToast('报名已提交，等待审核')">提交报名</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function updateCount(el){document.getElementById('charCount').textContent=el.value.length;}
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},1800);
+}
+</script>
+</body>
+</html>

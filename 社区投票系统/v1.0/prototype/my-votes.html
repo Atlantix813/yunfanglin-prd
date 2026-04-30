@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>我的投票</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif;background:#F4F8FF;color:#1F2937;font-size:14px;width:375px;overscroll-behavior:contain;min-height:812px;overflow-y:scroll;padding-bottom:40px;}
+html{overscroll-behavior:contain;}
+body::-webkit-scrollbar{display:none;}
+body{-ms-overflow-style:none;scrollbar-width:none;}
+
+.header-bg{position:absolute;top:0;left:0;right:0;height:140px;background:linear-gradient(180deg,#EAF3FF 0%,#F4F8FF 100%);z-index:0;}
+.status-bar{position:relative;z-index:50;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#1F2937;}
+.status-bar .time{font-family:Inter,sans-serif;font-weight:700;font-size:15px;}
+.nav-bar{position:relative;z-index:50;height:44px;display:flex;align-items:center;justify-content:center;}
+.nav-bar .back{position:absolute;left:16px;font-size:22px;color:#1F2937;cursor:pointer;}
+.nav-bar .title{font-size:17px;font-weight:700;color:#1F2937;}
+.nav-bar .capsule{position:absolute;right:8px;height:32px;width:87px;border-radius:16px;border:0.5px solid rgba(0,0,0,0.08);background:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;}
+.capsule-dots{flex:1;display:flex;align-items:center;justify-content:center;gap:3px;}
+.capsule-dots span{width:4px;height:4px;border-radius:2px;background:#1F2937;}
+.capsule-divider{width:0.5px;height:16px;background:rgba(0,0,0,0.15);}
+.capsule-close{flex:1;display:flex;align-items:center;justify-content:center;}
+
+.tab-bar{position:relative;z-index:10;display:flex;align-items:center;padding:8px 16px 0;gap:32px;position:sticky;top:0;background:#F4F8FF;padding-bottom:12px;border-bottom:1px solid #EEF2F8;}
+.tab-item{font-size:15px;color:#8B96A8;position:relative;padding-bottom:8px;cursor:pointer;user-select:none;}
+.tab-item.active{color:#1F2937;font-weight:700;}
+.tab-item.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:16px;height:3px;border-radius:2px;background:#3F86F5;}
+
+.list{padding:16px;display:flex;flex-direction:column;gap:12px;}
+.list-card{background:#fff;border-radius:16px;padding:14px;box-shadow:0 2px 6px rgba(33,71,128,0.06);display:flex;gap:12px;cursor:pointer;}
+.card-thumb{width:80px;height:60px;border-radius:8px;flex-shrink:0;}
+.card-thumb-sq{width:80px;height:80px;border-radius:8px;flex-shrink:0;}
+.card-content{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px;}
+.card-row{display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:15px;font-weight:700;color:#1F2937;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.card-sub{font-size:12px;color:#8B96A8;}
+.tag{height:20px;padding:0 8px;border-radius:10px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;flex-shrink:0;}
+.tag-green{background:#E9FAF1;color:#34C96E;}
+.tag-gray{background:#F1F3F8;color:#8B96A8;}
+.tag-orange{background:#FFF3E2;color:#FFA424;}
+.tag-red{background:#FFF0EC;color:#F53F3F;}
+.card-votes{font-size:12px;color:#3F86F5;margin-top:2px;}
+.card-reject{font-size:12px;color:#F53F3F;margin-top:2px;}
+.card-action{font-size:13px;color:#3F86F5;margin-top:4px;cursor:pointer;}
+
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:rgba(34,40,53,0.88);color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:700;z-index:100;opacity:0;transition:all 0.3s ease;pointer-events:none;}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+</style>
+</head>
+<body>
+
+<div class="header-bg"></div>
+
+<div class="status-bar">
+  <span class="time">9:41</span>
+  <div style="display:flex;gap:5px;align-items:center;">
+    <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="#1F2937"/><rect x="4" y="4" width="3" height="6" rx="0.5" fill="#1F2937"/><rect x="8" y="2" width="3" height="8" rx="0.5" fill="#1F2937"/><rect x="12" y="0" width="3" height="10" rx="0.5" fill="#1F2937"/></svg>
+    <svg width="22" height="10" viewBox="0 0 22 10"><rect x="0.5" y="0.5" width="18" height="9" rx="2" fill="none" stroke="#1F2937"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#1F2937"/><rect x="20" y="3" width="1.5" height="4" rx="0.5" fill="#1F2937"/></svg>
+  </div>
+</div>
+
+<div class="nav-bar">
+  <span class="back">&#8249;</span>
+  <span class="title">我的投票</span>
+  <div class="capsule">
+    <div class="capsule-dots"><span></span><span></span><span></span></div>
+    <div class="capsule-divider"></div>
+    <div class="capsule-close"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1F2937" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab-item active" onclick="switchTab('votes')">我的投票</div>
+  <div class="tab-item" onclick="switchTab('works')">我的参赛</div>
+</div>
+
+<div class="list" id="votesTab">
+  <div class="list-card" onclick="showToast('跳转到活动详情')">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#5395FF,#B8D8FF);"></div>
+    <div class="card-content">
+      <div class="card-row"><span class="card-title">2026年社区书画展</span><span class="tag tag-green">投票中</span></div>
+      <div class="card-sub">我投了 5 票</div>
+      <div class="card-sub">最近投票 2026-05-08</div>
+    </div>
+  </div>
+  <div class="list-card" onclick="showToast('跳转到活动详情')">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#47B5F2,#C5ECFF);"></div>
+    <div class="card-content">
+      <div class="card-row"><span class="card-title">儿童绘画大赛</span><span class="tag tag-green">投票中</span></div>
+      <div class="card-sub">我投了 3 票</div>
+      <div class="card-sub">最近投票 2026-05-07</div>
+    </div>
+  </div>
+  <div class="list-card" onclick="showToast('跳转到活动详情')">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#FFA424,#FFE5B2);"></div>
+    <div class="card-content">
+      <div class="card-row"><span class="card-title">社区才艺达人秀</span><span class="tag tag-gray">已结束</span></div>
+      <div class="card-sub">我投了 8 票</div>
+      <div class="card-sub">最近投票 2026-05-03</div>
+    </div>
+  </div>
+  <div class="list-card" onclick="showToast('跳转到活动详情')">
+    <div class="card-thumb" style="background:linear-gradient(135deg,#7D82F6,#D5D6FF);"></div>
+    <div class="card-content">
+      <div class="card-row"><span class="card-title">社区最受欢迎宠物</span><span class="tag tag-gray">已结束</span></div>
+      <div class="card-sub">我投了 10 票</div>
+      <div class="card-sub">最近投票 2026-04-13</div>
+    </div>
+  </div>
+</div>
+
+<div class="list" id="worksTab" style="display:none;">
+  <div class="list-card" onclick="showToast('跳转到作品详情')">
+    <div class="card-thumb-sq" style="background:linear-gradient(135deg,#C5F5DA,#34C96E);"></div>
+    <div class="card-content">
+      <div class="card-row"><span class="card-title">油画 - 社区花园</span><span class="tag tag-green">已通过</span></div>
+      <div class="card-votes">当前 328 票，排名第3</div>
+      <div class="card-sub">2026年社区书画展</div>
+    </div>
+  </div>
+  <div class="list-card">
+    <div class="card-thumb-sq" style="background:linear-gradient(135deg,#FFE5B2,#FFA424);"></div>
+    <div class="card-content">
+      <div class="card-row"><span class="card-title">水彩 - 夕阳下的社区</span><span class="tag tag-orange">待审核</span></div>
+      <div class="card-sub">提交于 2026-04-28</div>
+      <div class="card-sub">2026年社区书画展</div>
+    </div>
+  </div>
+  <div class="list-card">
+    <div class="card-thumb-sq" style="background:linear-gradient(135deg,#FFD6D6,#FF7E66);"></div>
+    <div class="card-content">
+      <div class="card-row"><span class="card-title">素描 - 邻居家的猫</span><span class="tag tag-red">已驳回</span></div>
+      <div class="card-reject">原因：图片不清晰，请重新上传</div>
+      <div class="card-action" onclick="showToast('跳转到修改页')">修改并重新提交</div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function switchTab(tab){
+  document.querySelectorAll('.tab-item').forEach(function(t){t.classList.remove('active');});
+  event.target.classList.add('active');
+  document.getElementById('votesTab').style.display=tab==='votes'?'flex':'none';
+  document.getElementById('worksTab').style.display=tab==='works'?'flex':'none';
+}
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},1800);
+}
+</script>
+</body>
+</html>

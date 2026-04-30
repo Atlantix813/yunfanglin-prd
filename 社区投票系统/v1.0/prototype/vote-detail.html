@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=375, initial-scale=1">
+<title>活动详情</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif;background:#F4F8FF;color:#1F2937;font-size:14px;width:375px;overscroll-behavior:contain;min-height:812px;overflow-y:scroll;padding-bottom:80px;}
+html{overscroll-behavior:contain;}
+body::-webkit-scrollbar{display:none;}
+body{-ms-overflow-style:none;scrollbar-width:none;}
+
+.cover{width:100%;height:200px;background:linear-gradient(135deg,#2F6BD6 0%,#5395FF 50%,#82B4FF 100%);position:relative;}
+.cover-overlay{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,rgba(0,0,0,0.45));}
+.cover-title{position:absolute;bottom:16px;left:16px;right:16px;font-size:20px;font-weight:700;color:#fff;z-index:2;}
+.status-bar{position:absolute;top:0;left:0;right:0;z-index:50;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#fff;}
+.status-bar .time{font-family:Inter,sans-serif;font-weight:700;font-size:15px;}
+.nav-bar{position:absolute;top:44px;left:0;right:0;z-index:50;height:44px;display:flex;align-items:center;justify-content:center;}
+.nav-bar .back{position:absolute;left:16px;font-size:22px;color:#fff;cursor:pointer;}
+.nav-bar .title{font-size:17px;font-weight:700;color:#fff;}
+.nav-bar .capsule{position:absolute;right:8px;height:32px;width:87px;border-radius:16px;border:0.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);}
+.capsule-dots{flex:1;display:flex;align-items:center;justify-content:center;gap:3px;}
+.capsule-dots span{width:4px;height:4px;border-radius:2px;background:#fff;}
+.capsule-divider{width:0.5px;height:16px;background:rgba(255,255,255,0.3);}
+.capsule-close{flex:1;display:flex;align-items:center;justify-content:center;}
+
+.stat-panel{margin:-24px 16px 0;position:relative;z-index:10;background:#fff;border-radius:16px;padding:20px 0;display:flex;box-shadow:0 6px 20px rgba(33,71,128,0.08);}
+.stat-item{flex:1;text-align:center;}
+.stat-num{font-family:Inter,sans-serif;font-size:22px;font-weight:700;color:#3F86F5;line-height:1;}
+.stat-label{font-size:12px;color:#8B96A8;margin-top:6px;}
+.stat-item+.stat-item{border-left:1px solid #EEF2F8;}
+
+.countdown{margin:12px 16px 0;background:#EEF5FF;border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:8px;font-size:13px;color:#3F86F5;font-weight:500;}
+.countdown-dot{width:6px;height:6px;border-radius:3px;background:#34C96E;flex-shrink:0;}
+
+.desc-section{margin:12px 16px 0;background:#fff;border-radius:16px;padding:16px;box-shadow:0 2px 6px rgba(33,71,128,0.06);}
+.desc-title{font-size:14px;font-weight:700;color:#1F2937;margin-bottom:8px;}
+.desc-text{font-size:13px;color:#4B5563;line-height:1.7;max-height:52px;overflow:hidden;transition:max-height 0.3s;}
+.desc-text.expanded{max-height:500px;}
+.desc-toggle{font-size:12px;color:#3F86F5;margin-top:6px;cursor:pointer;user-select:none;}
+.rule-box{margin-top:12px;padding:10px 12px;background:#F8FAFD;border-radius:8px;font-size:12px;color:#8B96A8;line-height:1.6;}
+
+.tab-bar{display:flex;align-items:center;padding:16px 16px 0;gap:24px;position:sticky;top:0;background:#F4F8FF;z-index:20;padding-bottom:12px;border-bottom:1px solid #EEF2F8;}
+.tab-item{font-size:15px;color:#8B96A8;position:relative;padding-bottom:8px;cursor:pointer;user-select:none;}
+.tab-item.active{color:#1F2937;font-weight:700;}
+.tab-item.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:16px;height:3px;border-radius:2px;background:#3F86F5;}
+
+.works-grid{padding:12px 16px;display:flex;gap:12px;}
+.works-col{flex:1;display:flex;flex-direction:column;gap:12px;}
+.work-card{background:#fff;border-radius:16px;box-shadow:0 2px 6px rgba(33,71,128,0.06);overflow:hidden;}
+.work-img{width:100%;position:relative;}
+.work-img-bg{width:100%;display:block;}
+.work-no{position:absolute;top:8px;left:8px;background:rgba(31,41,55,0.6);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;}
+.work-body{padding:10px 12px 12px;}
+.work-name{font-size:14px;font-weight:700;color:#1F2937;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.work-votes{font-family:Inter,sans-serif;font-size:16px;font-weight:700;color:#FFA424;margin-top:4px;}
+.work-votes span{font-size:12px;font-weight:400;color:#8B96A8;}
+.work-btn-row{display:flex;align-items:center;justify-content:space-between;margin-top:8px;}
+.vote-btn{height:28px;padding:0 14px;border-radius:14px;border:none;font-size:11px;font-weight:700;cursor:pointer;}
+.vote-btn.active{background:#3F86F5;color:#fff;box-shadow:0 3px 4px rgba(63,134,245,0.22);}
+.vote-btn.disabled{background:#F1F3F8;color:#C6D0DE;cursor:default;}
+.avatars{display:flex;align-items:center;}
+.avatar-circle{width:20px;height:20px;border-radius:10px;border:1.5px solid #fff;margin-left:-6px;display:flex;align-items:center;justify-content:center;font-size:8px;color:#fff;font-weight:600;}
+.avatar-circle:first-child{margin-left:0;}
+.avatar-more{font-size:10px;color:#C6D0DE;margin-left:4px;}
+
+.share-hint{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:rgba(34,40,53,0.88);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:80;opacity:0;transition:opacity 0.3s;pointer-events:none;}
+.share-hint.show{opacity:1;}
+
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:rgba(34,40,53,0.88);color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:700;z-index:100;opacity:0;transition:all 0.3s ease;pointer-events:none;text-align:center;white-space:nowrap;}
+.toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="status-bar">
+    <span class="time">9:41</span>
+    <div style="display:flex;gap:5px;align-items:center;">
+      <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx="0.5" fill="#fff"/><rect x="4" y="4" width="3" height="6" rx="0.5" fill="#fff"/><rect x="8" y="2" width="3" height="8" rx="0.5" fill="#fff"/><rect x="12" y="0" width="3" height="10" rx="0.5" fill="#fff"/></svg>
+      <svg width="22" height="10" viewBox="0 0 22 10"><rect x="0.5" y="0.5" width="18" height="9" rx="2" fill="none" stroke="#fff"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#fff"/><rect x="20" y="3" width="1.5" height="4" rx="0.5" fill="#fff"/></svg>
+    </div>
+  </div>
+  <div class="nav-bar">
+    <span class="back">&#8249;</span>
+    <span class="title">活动详情</span>
+    <div class="capsule">
+      <div class="capsule-dots"><span></span><span></span><span></span></div>
+      <div class="capsule-divider"></div>
+      <div class="capsule-close"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
+    </div>
+  </div>
+  <div class="cover-overlay"></div>
+  <div class="cover-title">2026年社区书画展</div>
+</div>
+
+<div class="stat-panel">
+  <div class="stat-item"><div class="stat-num">1,280</div><div class="stat-label">参与人数</div></div>
+  <div class="stat-item"><div class="stat-num">3,650</div><div class="stat-label">累计票数</div></div>
+  <div class="stat-item"><div class="stat-num">8,920</div><div class="stat-label">浏览量</div></div>
+</div>
+
+<div class="countdown">
+  <div class="countdown-dot"></div>
+  距投票结束 5天12时36分
+</div>
+
+<div class="desc-section">
+  <div class="desc-title">活动简介</div>
+  <div class="desc-text" id="descText">为展示社区居民的艺术才华，丰富社区文化生活，特举办2026年社区书画展。欢迎社区居民踊跃参与，展示您的书法、绘画、手工艺作品。优秀作品将获得积分奖励，并在社区文化中心展出。本次活动由社区居委会主办，旨在促进邻里交流。</div>
+  <div class="desc-toggle" onclick="toggleDesc()">展开全部</div>
+  <div class="rule-box">
+    <div style="font-weight:600;color:#4B5563;margin-bottom:4px;">投票规则</div>
+    每人每天可投 5 票，每个作品每天限投 1 票<br>
+    投票时间：2026-05-01 ~ 2026-05-15
+  </div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab-item active" onclick="switchSort('no')">按编号</div>
+  <div class="tab-item" onclick="switchSort('votes')">按票数</div>
+</div>
+
+<div class="works-grid" id="worksGrid"></div>
+
+<div class="share-hint" id="shareHint">分享给朋友一起投票吧</div>
+<div class="toast" id="toast"></div>
+
+<script>
+var works=[
+  {no:1,name:'山水画 - 春意盎然',votes:456,h:140,color:'#B8D8FF',voted:true},
+  {no:2,name:'书法 - 家和万事兴',votes:328,h:120,color:'#FFD6B8',voted:true},
+  {no:3,name:'油画 - 社区花园',votes:289,h:155,color:'#C5F5DA',voted:false},
+  {no:4,name:'水彩 - 夕阳小径',votes:245,h:130,color:'#FFE5B2',voted:false},
+  {no:5,name:'国画 - 荷塘月色',votes:412,h:145,color:'#D5D6FF',voted:false},
+  {no:6,name:'素描 - 社区老树',votes:198,h:125,color:'#E8EEF8',voted:false},
+  {no:7,name:'剪纸 - 福满邻里',votes:176,h:150,color:'#FFD6D6',voted:false},
+  {no:8,name:'版画 - 社区晨曦',votes:164,h:135,color:'#C5ECFF',voted:false}
+];
+var avatarColors=['#3F86F5','#34C96E','#FFA424','#7D82F6','#FF7E66'];
+
+function renderWorks(sortBy){
+  var arr=works.slice();
+  if(sortBy==='votes') arr.sort(function(a,b){return b.votes-a.votes;});
+  var col1='',col2='';
+  arr.forEach(function(w,i){
+    var btnClass=w.voted?'vote-btn disabled':'vote-btn active';
+    var btnText=w.voted?'已投票':'投票';
+    var avs='';
+    for(var j=0;j<3;j++){avs+='<div class="avatar-circle" style="background:'+avatarColors[(w.no+j)%5]+';"></div>';}
+    var card='<div class="work-card" id="card-'+w.no+'">'+
+      '<div class="work-img"><div class="work-img-bg" style="height:'+w.h+'px;background:'+w.color+';"></div><div class="work-no">'+String(w.no).padStart(2,'0')+'号</div></div>'+
+      '<div class="work-body"><div class="work-name">'+w.name+'</div>'+
+      '<div class="work-votes" id="votes-'+w.no+'">'+w.votes+' <span>票</span></div>'+
+      '<div class="work-btn-row"><div class="avatars">'+avs+'<span class="avatar-more">+'+Math.floor(Math.random()*20+5)+'</span></div>'+
+      '<button class="'+btnClass+'" id="btn-'+w.no+'" onclick="doVote('+w.no+')">'+btnText+'</button></div></div></div>';
+    if(i%2===0) col1+=card; else col2+=card;
+  });
+  document.getElementById('worksGrid').innerHTML='<div class="works-col">'+col1+'</div><div class="works-col">'+col2+'</div>';
+}
+
+function doVote(no){
+  var w=works.find(function(x){return x.no===no;});
+  if(w.voted) return;
+  w.voted=true;
+  w.votes++;
+  var btn=document.getElementById('btn-'+no);
+  btn.className='vote-btn disabled';
+  btn.textContent='已投票';
+  document.getElementById('votes-'+no).innerHTML=w.votes+' <span>票</span>';
+  showToast('投票成功!');
+  setTimeout(function(){
+    document.getElementById('shareHint').classList.add('show');
+    setTimeout(function(){document.getElementById('shareHint').classList.remove('show');},3000);
+  },500);
+}
+
+function switchSort(type){
+  document.querySelectorAll('.tab-item').forEach(function(t){t.classList.remove('active');});
+  event.target.classList.add('active');
+  renderWorks(type);
+}
+
+function toggleDesc(){
+  var el=document.getElementById('descText');
+  var toggle=el.nextElementSibling;
+  if(el.classList.contains('expanded')){el.classList.remove('expanded');toggle.textContent='展开全部';}
+  else{el.classList.add('expanded');toggle.textContent='收起';}
+}
+
+function showToast(msg){
+  var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},1800);
+}
+
+renderWorks('no');
+</script>
+</body>
+</html>

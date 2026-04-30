@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>作品审核 - 云芳邻管理系统</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components.css">
+<style>
+.thumb{width:48px;height:36px;border-radius:4px;display:inline-block;vertical-align:middle;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:#fff;border-radius:8px;padding:24px;width:420px;box-shadow:0 12px 40px rgba(0,0,0,0.15);}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:16px;color:#1D2129;}
+.modal-body{margin-bottom:20px;}
+.modal-body textarea{width:100%;height:80px;border:1px solid #E5E6EB;border-radius:4px;padding:8px 12px;font-size:14px;resize:none;font-family:inherit;}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;}
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<div class="header">
+  <div class="header-left"><div class="header-logo">云芳邻管理系统</div></div>
+  <div class="header-right"><div class="header-right-item"><div class="avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div><span>管理员</span></div></div>
+</div>
+
+<div class="layout">
+<div class="sidebar">
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="label">工作台</span></div>
+  <div class="sidebar-item expanded"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/><path d="M12 12l-3 3m0-6l3 3 3-3"/></svg><span class="label">投票管理</span><span class="arrow">></span></div>
+  <div class="sidebar-sub">
+    <div class="sidebar-item"><span class="label">活动管理</span></div>
+    <div class="sidebar-item active"><span class="label">作品审核</span></div>
+    <div class="sidebar-item"><span class="label">投票数据</span></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="tab-bar">
+    <div class="tab-item" style="color:#C9CDD4;">工作台</div>
+    <div class="tab-item active">作品审核 <span class="tab-close">x</span></div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <span class="page-title">作品审核 - 2026年社区书画展</span>
+      <span class="breadcrumb">投票管理 / 作品审核</span>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-row">
+        <div class="filter-field"><label>作品名称</label><input placeholder="请输入"></div>
+        <div class="filter-field"><label>参赛者</label><input placeholder="请输入"></div>
+        <div class="filter-field"><label>审核状态</label>
+          <select><option value="">全部</option><option>待审核</option><option>已通过</option><option>已驳回</option></select>
+        </div>
+        <div class="filter-field"><label>分组</label>
+          <select><option value="">全部</option><option>书法组</option><option>绘画组</option><option>手工艺组</option></select>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-primary">查询</button>
+          <button class="btn btn-default">重置</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-toolbar">
+        <button class="btn btn-primary" onclick="showToast('打开添加作品弹窗')">手动添加作品</button>
+        <button class="btn btn-default" onclick="showToast('请先勾选作品')">批量通过</button>
+      </div>
+      <div class="table-scroll">
+      <table>
+        <thead>
+          <tr><th style="width:40px;"><input type="checkbox"></th><th>作品图片</th><th>编号</th><th>作品名称</th><th>分组</th><th>参赛者</th><th>联系电话</th><th>审核状态</th><th>提交时间</th><th>票数</th><th style="min-width:160px;">操作</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#B8D8FF,#5395FF);"></div></td>
+            <td>01</td><td>山水画 - 春意盎然</td><td>绘画组</td><td>李大爷</td><td>138****5678</td>
+            <td><span class="status-tag" style="background:#E9FAF1;color:#34C96E;">已通过</span></td>
+            <td>2026-04-22 10:30</td><td>456</td>
+            <td><a class="action-link" onclick="showToast('查看作品详情')">查看</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#FFE5B2,#FFA424);"></div></td>
+            <td>02</td><td>书法 - 家和万事兴</td><td>书法组</td><td>王阿姨</td><td>139****1234</td>
+            <td><span class="status-tag" style="background:#E9FAF1;color:#34C96E;">已通过</span></td>
+            <td>2026-04-23 14:15</td><td>328</td>
+            <td><a class="action-link" onclick="showToast('查看作品详情')">查看</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#C5ECFF,#47B5F2);"></div></td>
+            <td>-</td><td>水彩 - 夕阳下的社区</td><td>绘画组</td><td>张叔叔</td><td>136****9876</td>
+            <td><span class="status-tag" style="background:#FFF3E2;color:#FFA424;">待审核</span></td>
+            <td>2026-04-28 09:45</td><td>-</td>
+            <td><a class="action-link" onclick="showToast('查看作品详情')">查看</a> <a class="action-link" onclick="showToast('已通过')">通过</a> <a class="action-link danger" onclick="openReject()">驳回</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#D5D6FF,#7D82F6);"></div></td>
+            <td>-</td><td>素描 - 邻居家的猫</td><td>绘画组</td><td>小明</td><td>137****4567</td>
+            <td><span class="status-tag" style="background:#FFF3E2;color:#FFA424;">待审核</span></td>
+            <td>2026-04-29 16:20</td><td>-</td>
+            <td><a class="action-link" onclick="showToast('查看作品详情')">查看</a> <a class="action-link" onclick="showToast('已通过')">通过</a> <a class="action-link danger" onclick="openReject()">驳回</a></td>
+          </tr>
+          <tr>
+            <td><input type="checkbox"></td>
+            <td><div class="thumb" style="background:linear-gradient(135deg,#FFD6D6,#FF7E66);"></div></td>
+            <td>-</td><td>书法 - 社区公约</td><td>书法组</td><td>陈先生</td><td>135****8765</td>
+            <td><span class="status-tag" style="background:#FFF0EC;color:#F53F3F;">已驳回</span></td>
+            <td>2026-04-25 11:00</td><td>-</td>
+            <td><a class="action-link" onclick="showToast('查看作品详情')">查看</a></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="pagination">
+        <span class="pagination-info">共 5 条</span>
+        <div class="pagination-pages"><span class="page-btn disabled">&lt;</span><span class="page-btn active">1</span><span class="page-btn disabled">&gt;</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="rejectModal">
+  <div class="modal">
+    <div class="modal-title">驳回作品</div>
+    <div class="modal-body">
+      <div style="margin-bottom:8px;font-size:14px;color:#4E5969;"><span style="color:#F53F3F;">*</span> 驳回原因</div>
+      <textarea placeholder="请输入驳回原因（必填）"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" onclick="closeReject()">取消</button>
+      <button class="btn btn-primary" onclick="closeReject();showToast('已驳回')">确定驳回</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:rgba(34,40,53,0.88);color:#fff;padding:14px 28px;border-radius:8px;font-size:14px;font-weight:500;z-index:1000;opacity:0;transition:all 0.3s;pointer-events:none;"></div>
+
+<script>
+function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.style.opacity='1';t.style.transform='translate(-50%,-50%) scale(1)';setTimeout(function(){t.style.opacity='0';t.style.transform='translate(-50%,-50%) scale(0.8)';},1800);}
+function openReject(){document.getElementById('rejectModal').classList.add('show');}
+function closeReject(){document.getElementById('rejectModal').classList.remove('show');}
+</script>
+</body>
+</html>
