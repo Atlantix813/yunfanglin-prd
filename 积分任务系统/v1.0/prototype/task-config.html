@@ -93,6 +93,7 @@
           <th>积分值</th>
           <th>上限规则</th>
           <th>自动发放</th>
+          <th>有效期</th>
           <th>上架状态</th>
           <th style="text-align:center;">操作</th>
         </tr></thead>
@@ -137,12 +138,18 @@
     </div>
     <!-- Body -->
     <div style="padding:20px 24px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:0;">
-      <!-- Readonly: 行为类型 -->
-      <div class="form-row align-center" style="margin-bottom:12px;">
+      <!-- Readonly: 行为类型 + 触发逻辑 -->
+      <div class="form-row align-center" style="margin-bottom:4px;">
         <label class="form-label">行为类型</label>
         <div class="form-field" style="display:flex;align-items:center;gap:8px;">
           <span id="roLabel" style="font-size:14px;color:#272E3B;font-weight:500;background:#F2F3F5;padding:4px 12px;border-radius:4px;"></span>
           <span style="font-size:12px;color:#FF9D19;">系统预置，不可修改</span>
+        </div>
+      </div>
+      <div class="form-row align-center" style="margin-bottom:12px;">
+        <label class="form-label"></label>
+        <div class="form-field">
+          <span id="roTrigger" style="font-size:12px;color:#86909C;line-height:1.5;"></span>
         </div>
       </div>
 
@@ -296,24 +303,24 @@
 <script>
 /* ── Task seed data ── */
 var tasks = [
-  { module:'信息公开', name:'浏览信息公开资讯', label:'浏览信息公开', desc:'浏览信息公开模块下的资讯内容，浏览内容即可获得积分', type:'内容浏览类', points:1, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架' },
-  { module:'社区宣传', name:'浏览社区宣传资讯', label:'浏览社区宣传', desc:'浏览社区宣传模块下的资讯内容，浏览内容即可获得积分', type:'内容浏览类', points:1, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架' },
-  { module:'参与活动', name:'分享社区活动', label:'分享社区活动', desc:'将社区活动分享给微信好友或微信群，助力社区传播', type:'推广分享类', points:1, unit:'单次', limitCycle:'每日', limitCount:4, autoAward:false, status:'已上架' },
-  { module:'志愿服务', name:'分享志愿服务', label:'分享志愿服务', desc:'将志愿服务分享给微信好友或微信群，传递正能量', type:'推广分享类', points:1, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架' },
-  { module:'投票', name:'参与社区投票', label:'参与投票', desc:'积极参与社区投票，为社区事务贡献你的一票', type:'行为互动类', points:1, unit:'单次', limitCycle:'每日', limitCount:5, autoAward:false, status:'已上架' },
-  { module:'问卷调查', name:'填写调查问卷', label:'提交问卷', desc:'认真填写社区问卷调查，帮助社区了解居民需求', type:'行为互动类', points:2, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架' },
-  { module:'金点子信箱', name:'金点子被公示', label:'金点子公示', desc:'提交的金点子被居委公示即可获得积分奖励', type:'行为互动类', points:2, unit:'单条', limitCycle:'', limitCount:0, autoAward:true, status:'已上架' },
-  { module:'邻里圈', name:'发布邻里圈帖子', label:'邻里圈发帖', desc:'在邻里圈发布帖子，分享生活点滴', type:'行为互动类', points:2, unit:'单条', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架' },
-  { module:'邻里圈', name:'点赞邻里圈帖子', label:'邻里圈点赞', desc:'为邻居的帖子点赞，传递社区温暖', type:'行为互动类', points:1, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架' },
-  { module:'社区达人', name:'成为社区达人', label:'成为社区达人', desc:'申请成为社区达人，居委审核通过即可获得积分', type:'行为互动类', points:5, unit:'单个', limitCycle:'仅', limitCount:1, autoAward:true, status:'已上架' },
-  { module:'社区社团', name:'创建社区社团', label:'创建社团', desc:'发起创建社区社团，居委审核通过即可获得积分', type:'行为互动类', points:8, unit:'单个', limitCycle:'仅', limitCount:1, autoAward:true, status:'已上架' },
-  { module:'社区社团', name:'加入社区社团', label:'加入社团', desc:'加入感兴趣的社区社团，结识志同道合的邻居', type:'行为互动类', points:2, unit:'单个', limitCycle:'每日', limitCount:5, autoAward:false, status:'已上架' },
-  { module:'房屋/车位租赁', name:'发布租赁信息', label:'发布租赁信息', desc:'发布房屋或车位租赁信息，居委审核通过即可获得积分', type:'行为互动类', points:1, unit:'单条', limitCycle:'', limitCount:0, autoAward:true, status:'已上架' },
-  { module:'人才广场', name:'发布人才招聘', label:'发布招聘信息', desc:'发布人才招聘信息，居委审核通过即可获得积分', type:'行为互动类', points:1, unit:'单条', limitCycle:'', limitCount:0, autoAward:true, status:'已上架' },
-  { module:'云邻市集', name:'浏览周边好店', label:'浏览周边好店', desc:'浏览周边好店商家详情，浏览内容即可获得积分', type:'内容浏览类', points:1, unit:'单个', limitCycle:'每日', limitCount:10, autoAward:false, status:'已上架' },
-  { module:'云邻市集', name:'分享周边好店', label:'分享周边好店', desc:'将周边好店分享给微信好友或微信群', type:'推广分享类', points:1, unit:'单次', limitCycle:'每日', limitCount:10, autoAward:false, status:'已上架' },
-  { module:'其他', name:'完善个人信息', label:'完善个人信息', desc:'将个人信息所有必填项全部完善即可获得积分', type:'信息完善类', points:5, unit:'单次', limitCycle:'仅', limitCount:1, autoAward:false, status:'已下架' },
-  { module:'其他', name:'开启消息订阅通知', label:'开启消息订阅', desc:'开启消息订阅通知，及时接收社区动态', type:'行为互动类', points:5, unit:'单次', limitCycle:'仅', limitCount:1, autoAward:false, status:'已上架' }
+  { module:'信息公开', name:'浏览信息公开资讯', label:'浏览信息公开', desc:'浏览信息公开模块下的资讯内容，浏览内容即可获得积分', type:'内容浏览类', points:1, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架', trigger:'用户点开信息公开模块下任意子入口时自动触发' },
+  { module:'社区宣传', name:'浏览社区宣传资讯', label:'浏览社区宣传', desc:'浏览社区宣传模块下的资讯内容，浏览内容即可获得积分', type:'内容浏览类', points:1, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架', trigger:'用户点开社区宣传模块下任意子入口时自动触发' },
+  { module:'参与活动', name:'分享社区活动', label:'分享社区活动', desc:'将社区活动分享给微信好友或微信群，助力社区传播', type:'推广分享类', points:1, unit:'单次', limitCycle:'每日', limitCount:4, autoAward:false, status:'已上架', trigger:'用户在活动详情页点击微信分享按钮时触发' },
+  { module:'志愿服务', name:'分享志愿服务', label:'分享志愿服务', desc:'将志愿服务分享给微信好友或微信群，传递正能量', type:'推广分享类', points:1, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架', trigger:'用户在志愿服务详情页点击微信分享按钮时触发' },
+  { module:'投票', name:'参与社区投票', label:'参与投票', desc:'积极参与社区投票，为社区事务贡献你的一票', type:'行为互动类', points:1, unit:'单次', limitCycle:'每日', limitCount:5, autoAward:false, status:'已上架', trigger:'用户在投票页面成功提交投票时触发' },
+  { module:'问卷调查', name:'填写调查问卷', label:'提交问卷', desc:'认真填写社区问卷调查，帮助社区了解居民需求', type:'行为互动类', points:2, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架', trigger:'用户成功提交问卷时触发' },
+  { module:'金点子信箱', name:'金点子被公示', label:'金点子公示', desc:'提交的金点子被居委公示即可获得积分奖励', type:'行为互动类', points:2, unit:'单条', limitCycle:'', limitCount:0, autoAward:true, status:'已上架', trigger:'管理员在后台将金点子状态设为公示时自动触发' },
+  { module:'邻里圈', name:'发布邻里圈帖子', label:'邻里圈发帖', desc:'在邻里圈发布帖子，分享生活点滴', type:'行为互动类', points:2, unit:'单条', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架', trigger:'用户在邻里圈成功发布帖子时触发' },
+  { module:'邻里圈', name:'点赞邻里圈帖子', label:'邻里圈点赞', desc:'为邻居的帖子点赞，传递社区温暖', type:'行为互动类', points:1, unit:'单次', limitCycle:'每日', limitCount:3, autoAward:false, status:'已上架', trigger:'用户对邻里圈帖子点赞时触发' },
+  { module:'社区达人', name:'成为社区达人', label:'成为社区达人', desc:'申请成为社区达人，居委审核通过即可获得积分', type:'行为互动类', points:5, unit:'单个', limitCycle:'仅', limitCount:1, autoAward:true, status:'已上架', trigger:'管理员在后台审核通过社区达人申请时自动触发' },
+  { module:'社区社团', name:'创建社区社团', label:'创建社团', desc:'发起创建社区社团，居委审核通过即可获得积分', type:'行为互动类', points:8, unit:'单个', limitCycle:'仅', limitCount:1, autoAward:true, status:'已上架', trigger:'管理员在后台审核通过社团创建申请时自动触发' },
+  { module:'社区社团', name:'加入社区社团', label:'加入社团', desc:'加入感兴趣的社区社团，结识志同道合的邻居', type:'行为互动类', points:2, unit:'单个', limitCycle:'每日', limitCount:5, autoAward:false, status:'已上架', trigger:'用户成功加入社区社团时触发' },
+  { module:'房屋/车位租赁', name:'发布租赁信息', label:'发布租赁信息', desc:'发布房屋或车位租赁信息，居委审核通过即可获得积分', type:'行为互动类', points:1, unit:'单条', limitCycle:'', limitCount:0, autoAward:true, status:'已上架', trigger:'管理员在后台审核通过租赁信息时自动触发' },
+  { module:'人才广场', name:'发布人才招聘', label:'发布招聘信息', desc:'发布人才招聘信息，居委审核通过即可获得积分', type:'行为互动类', points:1, unit:'单条', limitCycle:'', limitCount:0, autoAward:true, status:'已上架', trigger:'管理员在后台审核通过招聘信息时自动触发' },
+  { module:'云邻市集', name:'浏览周边好店', label:'浏览周边好店', desc:'浏览周边好店商家详情，浏览内容即可获得积分', type:'内容浏览类', points:1, unit:'单个', limitCycle:'每日', limitCount:10, autoAward:false, status:'已上架', trigger:'用户进入周边好店商家详情页时自动触发' },
+  { module:'云邻市集', name:'分享周边好店', label:'分享周边好店', desc:'将周边好店分享给微信好友或微信群', type:'推广分享类', points:1, unit:'单次', limitCycle:'每日', limitCount:10, autoAward:false, status:'已上架', trigger:'用户在商家详情页点击微信分享按钮时触发' },
+  { module:'其他', name:'完善个人信息', label:'完善个人信息', desc:'将个人信息所有必填项全部完善即可获得积分', type:'信息完善类', points:5, unit:'单次', limitCycle:'仅', limitCount:1, autoAward:false, status:'已下架', trigger:'用户首次完善全部必填个人信息并保存时触发' },
+  { module:'其他', name:'开启消息订阅通知', label:'开启消息订阅', desc:'开启消息订阅通知，及时接收社区动态', type:'行为互动类', points:5, unit:'单次', limitCycle:'仅', limitCount:1, autoAward:false, status:'已上架', trigger:'用户首次开启消息订阅总开关时触发' }
 ];
 
 var editingIndex = -1;
@@ -340,6 +347,7 @@ function renderTable(list) {
       '<td class="text-bold">' + t.points + '</td>' +
       '<td>' + formatLimit(t) + '</td>' +
       '<td>' + (t.autoAward ? '<span class="tag tag-blue">是</span>' : '<span class="tag tag-grey">否</span>') + '</td>' +
+      '<td>' + (t.validity || '永久') + '</td>' +
       '<td><span class="tag ' + statusClass + '">' + t.status + '</span></td>' +
       '<td style="text-align:center;"><a class="action-link" onclick="openModal(' + idx + ')">编辑</a><span class="action-sep">|</span><a class="action-link" onclick="toggleStatus(' + idx + ')">' + toggleText + '</a></td>' +
       '</tr>';
@@ -442,6 +450,7 @@ function openModal(idx) {
   var t = tasks[idx];
   document.getElementById('modalTitle').textContent = '编辑任务配置';
   document.getElementById('roLabel').textContent = t.label;
+  document.getElementById('roTrigger').textContent = t.trigger;
   document.getElementById('nameInput').value = t.name;
   document.getElementById('nameCount').textContent = t.name.length + ' / 20';
   document.getElementById('nameInput').classList.remove('input-error');

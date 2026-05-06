@@ -28,7 +28,6 @@ body { background: #F2F4F7; padding-bottom: 40px; }
 .biz-card {
   margin: 12px 16px 0;
   background: #fff; border-radius: 8px;
-  overflow: hidden;
 }
 .biz-row {
   height: 50px; padding: 0 16px;
@@ -40,16 +39,21 @@ body { background: #F2F4F7; padding-bottom: 40px; }
   font-size: 14px; color: #222835; font-weight: 500;
 }
 .biz-count {
-  font-size: 14px; color: #3F86F5; font-weight: 400;
+  font-size: 14px; color: #07C160; font-weight: 400;
 }
 .biz-count.zero { color: #939CAB; }
 .biz-row .right {
   display: flex; align-items: center; gap: 8px;
 }
 .chev {
-  display: inline-block; width: 6px; height: 11px;
-  border-right: 1.5px solid #C9CDD4;
-  border-top: 1.5px solid #C9CDD4;
+  display: inline-block; width: 8px; height: 8px;
+  border-right: 2px solid #C9CDD4;
+  border-bottom: 2px solid #C9CDD4;
+  transform: rotate(-45deg);
+  transition: transform 0.25s ease;
+  margin-right: 4px;
+}
+.biz-card.expanded .chev {
   transform: rotate(45deg);
 }
 .biz-new {
@@ -85,7 +89,7 @@ body { background: #F2F4F7; padding-bottom: 40px; }
   background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,0.18);
   transition: transform 0.25s ease;
 }
-.toggle.on { background: #3F86F5; }
+.toggle.on { background: #07C160; }
 .toggle.on::after { transform: translateX(21px); }
 .toggle.disabled { opacity: 0.4; pointer-events: none; }
 </style>
@@ -271,19 +275,16 @@ body { background: #F2F4F7; padding-bottom: 40px; }
   </div>
 </div>
 
-<!-- 积分提醒（NEW，默认展开） -->
-<div class="biz-card expanded" id="card-8">
+<!-- 积分提醒 -->
+<div class="biz-card" id="card-8">
   <div class="biz-row" onclick="toggleExpand('card-8')">
-    <span class="biz-title">
-      积分提醒
-      <span class="biz-new">NEW</span>
-    </span>
+    <span class="biz-title">积分提醒</span>
     <div class="right">
       <span class="biz-count" data-id="card-8">2/2</span>
       <span class="chev"></span>
     </div>
   </div>
-  <div class="sub-list">
+  <div class="sub-list" style="display:none;">
     <div class="sub-row">
       <span class="sub-label">【积分提醒】任务完成提醒</span>
       <div class="toggle on" onclick="toggleSub(event,this,'card-8')"></div>
