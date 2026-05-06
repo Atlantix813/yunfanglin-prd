@@ -358,7 +358,7 @@ function openFlowModal(num) {
   var key = String(num);
   document.getElementById('flowTitle').textContent = FLOW_NAMES[key] || '流程' + key;
   var img = new Image();
-  img.src = 'prototype/flows/flow-' + key + '.png';
+  img.src = 'prototype/flows/flow-' + key + '.png?_t=' + Date.now();
   var body = document.getElementById('flowBody');
   body.innerHTML = '<div class="no-image" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">加载中...</div>';
   img.onload = function() {
