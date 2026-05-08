@@ -12,51 +12,62 @@ html { overscroll-behavior:contain; }
 body::-webkit-scrollbar { display:none; }
 body { -ms-overflow-style:none; scrollbar-width:none; padding-bottom:40px; }
 
-/* === Full-width Header Banner === */
-.header-banner {
-  position:absolute; top:0; left:0; right:0; height:240px; z-index:0; overflow:hidden;
-  background:linear-gradient(135deg, #5395FF 0%, #296CFF 100%);
-  clip-path:ellipse(150% 100% at 50% 0%);
-}
-.banner-deco1 { position:absolute; right:-20px; top:40px; width:180px; height:180px; border-radius:50%; background:rgba(255,255,255,0.1); filter:blur(20px); pointer-events:none; }
-.banner-deco2 { position:absolute; left:-40px; bottom:-40px; width:140px; height:140px; border-radius:50%; background:rgba(255,255,255,0.1); filter:blur(15px); pointer-events:none; }
+/* === Header (no full-width banner) === */
 
 /* === Status Bar & Nav Bar (white on banner) === */
-.status-bar { position:relative; z-index:50; height:44px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; color:#fff; }
+.status-bar { position:relative; z-index:50; height:44px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; color:#222835; }
 .status-bar .time { font-family:Inter,sans-serif; font-weight:700; font-size:15px; }
 .nav-bar { position:relative; z-index:50; height:44px; display:flex; align-items:center; justify-content:center; }
-.nav-bar .back { position:absolute; left:16px; font-size:22px; color:#fff; cursor:pointer; }
-.nav-bar .title { font-size:17px; font-weight:700; color:#fff; }
-.nav-bar .capsule { position:absolute; right:8px; height:32px; width:87px; border-radius:16px; border:0.5px solid rgba(255,255,255,0.2); background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center; backdrop-filter:blur(8px); }
+.nav-bar .back { position:absolute; left:16px; font-size:22px; color:#222835; cursor:pointer; }
+.nav-bar .title { font-size:17px; font-weight:700; color:#222835; }
+.nav-bar .capsule { position:absolute; right:8px; height:32px; width:87px; border-radius:16px; border:0.5px solid rgba(0,0,0,0.1); background:rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:center; }
 .capsule-dots { flex:1; display:flex; align-items:center; justify-content:center; gap:3px; }
-.capsule-dots span { width:4px; height:4px; border-radius:2px; background:#fff; }
-.capsule-divider { width:0.5px; height:16px; background:rgba(255,255,255,0.3); }
+.capsule-dots span { width:4px; height:4px; border-radius:2px; background:#222835; }
+.capsule-divider { width:0.5px; height:16px; background:rgba(0,0,0,0.15); }
 .capsule-close { flex:1; display:flex; align-items:center; justify-content:center; }
 
-/* === Points Section (on banner) === */
-.points-section { position:relative; z-index:10; padding:12px 24px 0; }
-.points-label { font-size:14px; color:rgba(255,255,255,0.8); }
-.points-value { font-family:'Inter',sans-serif; font-size:48px; font-weight:700; color:#fff; line-height:1; letter-spacing:0.5px; margin-top:4px; text-shadow:0 4px 12px rgba(0,0,0,0.1); }
-.points-actions { display:flex; align-items:center; gap:12px; margin-top:16px; padding-left:16px; }
-.points-exchange-btn { height:30px; padding:0 18px; border-radius:15px; background:#fff; font-size:13px; font-weight:700; color:#3F86F5; cursor:pointer; display:flex; align-items:center; box-shadow:0 4px 12px rgba(41,108,255,0.3); }
-.points-detail-link { position:absolute; right:24px; top:100px; font-size:12px; color:rgba(255,255,255,0.85); cursor:pointer; display:flex; align-items:center; gap:2px; z-index:50; }
-
-/* === Invite Card === */
-.invite-card {
-  position:relative; z-index:20; margin:24px 16px 0;
-  background:#fff; border-radius:16px; padding:20px 16px;
-  display:flex; justify-content:space-between; align-items:center;
-  overflow:hidden; box-shadow:0 8px 24px rgba(33,71,128,0.08);
+/* === Main Card === */
+.main-card {
+  position:relative; z-index:20; margin:4px 8px 0;
+  background:linear-gradient(180deg, #4A90F7 0%, #3168D4 100%);
+  border-radius:12px; padding:16px 10px 8px; overflow:hidden;
 }
-.invite-card-bg { position:absolute; inset:0; z-index:0; pointer-events:none; background:linear-gradient(135deg, #FFF0E0 0%, #FFE0CC 100%); }
-.invite-sub { font-size:11px; color:#9B7B5E; margin-top:2px; }
-.invite-left { display:flex; flex-direction:column; position:relative; z-index:1; }
-.invite-title-row { display:flex; align-items:center; gap:6px; }
-.invite-title { font-size:16px; font-weight:700; color:#1F2937; }
-.invite-hot { background:#FF5A00; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:6px 2px 6px 2px; }
-.invite-desc { font-size:13px; color:#4B5563; margin-top:4px; font-weight:500; display:flex; align-items:center; }
-.invite-points { color:#FF5A00; font-size:20px; font-weight:700; font-family:'Inter',sans-serif; margin:0 4px; }
-.invite-btn { position:relative; z-index:1; flex-shrink:0; height:34px; padding:0 18px; background:linear-gradient(135deg, #FF7E66 0%, #FFA424 100%); color:#fff; font-size:14px; font-weight:700; border-radius:17px; display:flex; align-items:center; cursor:pointer; box-shadow:0 4px 10px rgba(255,164,36,0.3); }
+.main-card-deco { position:absolute; right:10px; top:20px; opacity:0.12; pointer-events:none; }
+.points-area { position:relative; color:#fff; margin-bottom:14px; }
+.points-label { font-size:12px; color:rgba(255,255,255,0.75); padding-left:8px; }
+.points-value { font-family:'Inter',sans-serif; font-size:34px; font-weight:700; line-height:1.1; margin-top:2px; padding-left:8px; }
+.points-detail-link { position:absolute; right:8px; top:2px; font-size:11px; color:rgba(255,255,255,0.7); cursor:pointer; display:inline-flex; align-items:center; gap:2px; }
+.inner-card {
+  position:relative; z-index:1;
+  background:#fff; border-radius:10px; padding:6px 8px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.08);
+}
+.inner-top { display:flex; }
+.inner-tile {
+  flex:1; padding:12px;
+  display:flex; align-items:center; gap:8px; cursor:pointer;
+}
+.inner-tile + .inner-tile { border-left:1px solid #F0F2F5; }
+.inner-tile-arrow { color:#C9CDD4; font-size:14px; margin-left:auto; flex-shrink:0; }
+.inner-divider { height:1px; background:#F0F2F5; }
+.inner-tile-icon { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.inner-tile-title { font-size:15px; font-weight:700; color:#1A1A1A; }
+.inner-tile-sub { font-size:11px; color:#939CAB; margin-top:2px; }
+.inner-banner {
+  padding:12px; display:flex; justify-content:space-between; align-items:center; cursor:pointer;
+}
+.inner-banner-left {}
+.inner-banner-title { font-size:13px; font-weight:600; color:#4B5563; }
+.inner-banner-title b { font-size:20px; font-weight:700; color:#FF5A00; font-family:'Inter',sans-serif; }
+.inner-banner-desc { font-size:11px; color:#9B7B5E; margin-top:2px; }
+.inner-banner-btn {
+  flex-shrink:0; height:28px; padding:0 14px;
+  background:linear-gradient(135deg,#FF7E66,#FFA424); color:#fff;
+  font-size:12px; font-weight:700; border-radius:14px;
+  display:flex; align-items:center; cursor:pointer;
+  box-shadow:0 3px 8px rgba(255,164,36,0.3);
+}
+
 
 /* === Tab Bar === */
 .tab-bar { position:relative; z-index:10; display:flex; align-items:center; padding:12px 20px 0; gap:24px; margin-top:12px; border-bottom:1px solid #E8EEF8; position:sticky; top:0; background:#F4F8FF; }
@@ -70,7 +81,7 @@ body { -ms-overflow-style:none; scrollbar-width:none; padding-bottom:40px; }
 .task-card { background:#fff; border-radius:16px; padding:14px; box-shadow:0 2px 6px rgba(30,50,90,0.05); display:flex; gap:12px; align-items:flex-start; transition:opacity 0.3s, transform 0.3s; }
 .task-card.disabled { opacity:0.75; box-shadow:none; border:1px solid #EFF2F8; }
 .task-card.hidden { display:none; }
-.task-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.task-icon { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .task-body { flex:1; min-width:0; display:flex; flex-direction:column; gap:4px; }
 .task-header { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
 .task-name { font-size:16px; font-weight:700; color:#222835; line-height:19px; }
@@ -96,13 +107,6 @@ body { -ms-overflow-style:none; scrollbar-width:none; padding-bottom:40px; }
 </head>
 <body>
 
-<!-- Full-width Header Banner -->
-<div class="header-banner">
-  <div class="banner-deco1"></div>
-  <div class="banner-deco2"></div>
-  <svg style="position:absolute;right:10px;top:130px;opacity:0.15;" width="140" height="100" viewBox="0 0 80 60" fill="none"><path d="M60 30a15 15 0 00-28.5-6.5A10 10 0 0015 30a10 10 0 000 20h45a10 10 0 000-20z" fill="#fff"/><circle cx="10" cy="15" r="3" fill="#fff"/><circle cx="75" cy="20" r="2" fill="#fff"/></svg>
-  <svg style="position:absolute;left:20px;top:180px;opacity:0.08;" width="100" height="70" viewBox="0 0 80 60" fill="none"><path d="M60 30a15 15 0 00-28.5-6.5A10 10 0 0015 30a10 10 0 000 20h45a10 10 0 000-20z" fill="#fff"/></svg>
-</div>
 
 <!-- Status Bar (white on banner) -->
 <div class="status-bar">
@@ -124,30 +128,42 @@ body { -ms-overflow-style:none; scrollbar-width:none; padding-bottom:40px; }
   </div>
 </div>
 
-<!-- 积分明细（右上角） -->
-<span class="points-detail-link" onclick="showToast('跳转积分明细')">积分明细 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
-
-<!-- Points Section (on banner) -->
-<div class="points-section">
-  <div class="points-label">我的积分</div>
-  <div class="points-value" id="totalPoints">1,280</div>
-  <div class="points-actions">
-    <span class="points-exchange-btn" onclick="showToast('跳转积分兑换')">积分兑换</span>
+<!-- Main Card: Blue top + White inner -->
+<div class="main-card">
+  <svg class="main-card-deco" width="100" height="65" viewBox="0 0 80 60" fill="#fff"><path d="M60 30a15 15 0 00-28.5-6.5A10 10 0 0015 30a10 10 0 000 20h45a10 10 0 000-20z"/><circle cx="10" cy="18" r="3"/><circle cx="72" cy="22" r="2.5"/></svg>
+  <div class="points-area">
+    <div class="points-label">我的积分</div>
+    <div class="points-value" id="totalPoints">1,280</div>
+    <span class="points-detail-link" onclick="showToast('跳转积分明细')">积分明细 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg></span>
   </div>
-</div>
-
-<!-- Invite Card -->
-<div class="invite-card" onclick="showToast('跳转邀请好友')">
-  <div class="invite-card-bg"></div>
-  <svg style="position:absolute;right:0;top:0;z-index:0;opacity:0.5;pointer-events:none;" width="120" height="90" viewBox="0 0 120 90" fill="none"><circle cx="100" cy="15" r="20" fill="#FF8C42" opacity="0.35"/><circle cx="75" cy="65" r="14" fill="#FF6B35" opacity="0.25"/><circle cx="110" cy="55" r="8" fill="#FFB347" opacity="0.3"/></svg>
-  <div class="invite-left">
-    <div class="invite-title-row">
-      <span class="invite-title">邀请街坊邻居</span>
-      <span class="invite-hot">HOT</span>
+  <div class="inner-card">
+    <div class="inner-top">
+      <div class="inner-tile" onclick="showToast('跳转领券中心')">
+        <img src="https://img.icons8.com/3d-fluency/96/gift-card.png" width="36" height="36" style="flex-shrink:0;">
+        <div>
+          <div class="inner-tile-title">领券中心</div>
+          <div class="inner-tile-sub">优惠券限时领</div>
+        </div>
+        <span class="inner-tile-arrow">&#8250;</span>
+      </div>
+      <div class="inner-tile" onclick="showToast('跳转积分兑换')">
+        <img src="https://img.icons8.com/3d-fluency/96/gift.png" width="36" height="36" style="flex-shrink:0;">
+        <div>
+          <div class="inner-tile-title">积分兑好物</div>
+          <div class="inner-tile-sub">积分换商品</div>
+        </div>
+        <span class="inner-tile-arrow">&#8250;</span>
+      </div>
     </div>
-    <div class="invite-desc">新用户完善信息，双方各得 <span class="invite-points">50</span> 积分</div>
+    <div class="inner-divider"></div>
+    <div class="inner-banner" onclick="showToast('跳转邀请好友')">
+      <div class="inner-banner-left">
+        <div class="inner-banner-title">邀请街坊邻居 赚<b>50</b>积分</div>
+        <div class="inner-banner-desc">新用户完善信息，双方各得积分奖励</div>
+      </div>
+      <div class="inner-banner-btn">去邀请</div>
+    </div>
   </div>
-  <div class="invite-btn">去邀请</div>
 </div>
 
 <!-- Tab Bar -->
@@ -155,7 +171,6 @@ body { -ms-overflow-style:none; scrollbar-width:none; padding-bottom:40px; }
   <div class="tab-item active" data-tab="all">全部</div>
   <div class="tab-item" data-tab="doing">待完成</div>
   <div class="tab-item" data-tab="done">已完成</div>
-
 </div>
 
 <!-- Task List -->
@@ -206,6 +221,7 @@ var tasks = [
 
 var currentTab = 'all';
 var totalPts = 1280;
+var currentMode = 'normal';
 
 function showToast(msg) {
   var t = document.getElementById('toast');
@@ -230,6 +246,17 @@ function getCycleText(t) {
   return t.cycleLabel + ' ' + t.cycleCur + '/' + t.cycleMax;
 }
 
+var PASTEL_MAP = {
+  '#FF765A': { bg:'#FFF0ED', fg:'#FF765A' },
+  '#7D82F6': { bg:'#F0F0FF', fg:'#7D82F6' },
+  '#47B5F2': { bg:'#EBF6FF', fg:'#47B5F2' },
+  '#34C96E': { bg:'#E8F9EF', fg:'#34C96E' },
+  '#3F86F5': { bg:'#EBF2FF', fg:'#3F86F5' },
+  '#FF9D19': { bg:'#FFF5E6', fg:'#FF9D19' },
+  '#D9DEE5': { bg:'#F5F6F8', fg:'#C9CDD4' }
+};
+function getPastel(color) { return PASTEL_MAP[color] || { bg:'#F0F2F5', fg:'#86909C' }; }
+
 function isVisible(t) {
   if (currentTab === 'all') return true;
   if (currentTab === 'doing') return t.status === 'go' || t.status === 'claim';
@@ -248,17 +275,22 @@ function render() {
     var vis = isVisible(t);
     if (vis) visibleCount++;
     var cls = 'task-card' + (dis ? ' disabled' : '') + (!vis ? ' hidden' : '');
-    var iconColor = dis ? '#D9DEE5' : t.color;
+    var rawColor = dis ? '#D9DEE5' : t.color;
+    var pastel = getPastel(rawColor);
+    var iconSvg = ICONS[t.icon].replace(/stroke="#fff"/g, 'stroke="' + pastel.fg + '"');
 
     html += '<div class="' + cls + '" data-id="' + t.id + '">';
-    html += '<div class="task-icon" style="background:' + iconColor + ';">' + ICONS[t.icon] + '</div>';
+    html += '<div class="task-icon" style="background:' + pastel.bg + ';">' + iconSvg + '</div>';
     html += '<div class="task-body">';
     html += '<div class="task-header"><span class="task-name">' + t.name + '</span><span class="task-badge">&#9733; ' + t.points + '积分</span></div>';
     html += '<div class="task-desc">' + t.desc + '</div>';
     html += '</div>';
 
     html += '<div class="task-right">';
-    if (t.status === 'claim') html += '<button class="btn-claim" onclick="onClaim(' + t.id + ')">领取奖励</button>';
+    if (t.status === 'claim') {
+      var claimLabel = (t.pending || 1) > 1 ? '领取奖励(' + t.pending + ')' : '领取奖励';
+      html += '<button class="btn-claim" onclick="onClaim(' + t.id + ')">' + claimLabel + '</button>';
+    }
     else if (t.status === 'go') html += '<button class="btn-go" onclick="onGo(' + t.id + ')">去完成</button>';
     else if (t.status === 'limit') html += '<button class="btn-done" onclick="onDone()">已达上限</button>';
     else html += '<button class="btn-done" onclick="onDone()">已完成</button>';
@@ -279,6 +311,13 @@ function findTask(id) {
 function onGo(id) {
   var t = findTask(id);
   if (!t || t.status !== 'go') return;
+  if (currentMode === 'multi') {
+    t.pending = (t.pending || 0) + 2;
+    var totalDone = t.cycleCur + t.pending;
+    if (t.cycleMax > 0 && totalDone >= t.cycleMax) t.pending = t.cycleMax - t.cycleCur;
+  } else {
+    t.pending = 1;
+  }
   t.status = 'claim';
   render();
 }
@@ -286,9 +325,12 @@ function onGo(id) {
 function onClaim(id) {
   var t = findTask(id);
   if (!t || t.status !== 'claim') return;
-  showToast('任务完成，获得 <b>' + t.points + '</b> 积分');
-  totalPts += t.points;
-  t.cycleCur++;
+  var n = t.pending || 1;
+  var earned = t.points * n;
+  showToast('任务完成，获得 <b>' + earned + '</b> 积分');
+  totalPts += earned;
+  t.cycleCur += n;
+  t.pending = 0;
   if (t.cycleMax > 0 && t.cycleCur >= t.cycleMax) {
     t.status = (t.cycleLabel === '仅') ? 'done' : 'limit';
   } else {
@@ -312,15 +354,22 @@ document.getElementById('tabBar').addEventListener('click', function(e) {
 
 render();
 
+var origTasks = JSON.parse(JSON.stringify(tasks));
+
 function switchState(mode) {
+  currentMode = mode;
   if (mode === 'empty') {
     document.getElementById('taskList').style.display = 'none';
     document.getElementById('emptyState').style.display = 'block';
   } else {
+    tasks = JSON.parse(JSON.stringify(origTasks));
+    totalPts = 1280;
     document.getElementById('taskList').style.display = 'flex';
     document.getElementById('emptyState').style.display = 'none';
     render();
   }
+  document.querySelectorAll('.state-btn').forEach(function(b) { b.classList.remove('active'); });
+  document.querySelector('.state-btn[data-mode="' + mode + '"]').classList.add('active');
 }
 </script>
 

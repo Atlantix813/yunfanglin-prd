@@ -114,15 +114,20 @@ body { font-family:'Noto Sans SC',-apple-system,sans-serif; color:#272E3B; font-
 .feature-proto { flex:0 0 auto; position:sticky; top:70px; }
 
 /* Feature doc inner styles */
-.feature-doc h4 {
-  font-size:17px; font-weight:700; color:#272E3B; margin:0 0 16px;
-  padding-bottom:12px; border-bottom:1px solid #E5E6EB;
-}
 .feature-doc h3 {
-  font-size:15px; font-weight:600; color:#3491FA; margin:28px 0 10px;
-  padding:16px 0 0; border:none; border-top:1px solid #EEF2F8;
+  font-size:17px; font-weight:700; color:#3491FA; margin:0 0 12px;
+  padding:0 0 10px; border:none; border-bottom:1px solid #E5E6EB;
 }
-.feature-doc h3:first-child { margin-top:0; padding-top:0; border-top:none; }
+.feature-doc h4 {
+  font-size:15px; font-weight:600; color:#272E3B; margin:20px 0 0;
+  padding:0;
+}
+.feature-doc .h4-indent {
+  border-left:2px solid #E5E6EB; padding-left:16px; margin:8px 0 16px;
+}
+.feature-doc .h3-card {
+  background:#F7F8FA; border-radius:8px; padding:20px 24px; margin:16px 0;
+}
 .feature-doc p, .feature-doc li { font-size:14px; color:#4E5969; line-height:1.9; }
 .feature-doc ul, .feature-doc ol { padding-left:40px; margin:8px 0; }
 .feature-doc li { margin-bottom:6px; }
@@ -485,7 +490,7 @@ function initFlowDrag(body) {
             '<div class="proto-embed" style="width:' + pcDisplayW + 'px;height:' + (pcDisplayH + 33) + 'px;overflow:hidden;margin:0 auto;">' +
               '<div class="proto-embed-header">' +
                 '<span>' + title + '</span>' +
-                '<span class="status"><button class="btn-refresh" onclick="this.closest(\'.proto-embed\').querySelector(\'iframe\').src=this.closest(\'.proto-embed\').querySelector(\'iframe\').src" title="刷新原型"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 105.64-12.36L1 10"/></svg></button><button class="btn-fullscreen" onclick="openProtoFullscreen(\'' + a.src + '\',' + w + ',' + h + ',\'' + title.replace(/'/g, "\\'") + '\')" title="全屏预览"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg></button>可交互预览</span>' +
+                '<span class="status"><button class="btn-refresh" onclick="var pe=this.closest(\'.feature-module\')||this.closest(\'.feature-proto\')||this.closest(\'.proto-embed\');pe.querySelector(\'iframe\').src=pe.querySelector(\'iframe\').src;var sb=pe.parentElement.querySelector(\'.proto-state-bar\');if(sb){sb.querySelectorAll(\'.proto-state-btn\').forEach(function(b,i){b.classList.toggle(\'active\',i===0)})}" title="刷新原型"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 105.64-12.36L1 10"/></svg></button><button class="btn-fullscreen" onclick="openProtoFullscreen(\'' + a.src + '\',' + w + ',' + h + ',\'' + title.replace(/'/g, "\\'") + '\')" title="全屏预览"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg></button>可交互预览</span>' +
               '</div>' +
               '<div class="proto-iframe-wrap"><iframe src="' + a.src + (a.src.indexOf('?')!==-1?'&':'?') + '_t=' + Date.now() + '" style="width:' + w + 'px;height:' + h + 'px;transform:scale(' + pcScale + ');transform-origin:top left;" sandbox="allow-scripts allow-same-origin"></iframe></div>' +
             '</div>';
@@ -510,12 +515,13 @@ function initFlowDrag(body) {
             '<div class="proto-state-bar">' +
               '<button class="proto-state-btn active" onclick="protoSwitchState(this,\'normal\')">正常状态</button>' +
               '<button class="proto-state-btn" onclick="protoSwitchState(this,\'empty\')">缺省状态</button>' +
+              '<button class="proto-state-btn" onclick="protoSwitchState(this,\'multi\')">多次叠加</button>' +
             '</div>' : '';
           proto.innerHTML =
             '<div class="proto-embed" style="width:' + displayW + 'px;height:' + (displayH + 33) + 'px;overflow:hidden;">' +
               '<div class="proto-embed-header">' +
                 '<span>' + title + '</span>' +
-                '<span class="status"><button class="btn-refresh" onclick="this.closest(\'.proto-embed\').querySelector(\'iframe\').src=this.closest(\'.proto-embed\').querySelector(\'iframe\').src" title="刷新原型"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 105.64-12.36L1 10"/></svg></button><button class="btn-fullscreen" onclick="openProtoFullscreen(\'' + a.src + '\',' + w + ',' + h + ',\'' + title.replace(/'/g, "\\'") + '\')" title="全屏预览"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg></button>可交互预览</span>' +
+                '<span class="status"><button class="btn-refresh" onclick="var pe=this.closest(\'.feature-module\')||this.closest(\'.feature-proto\')||this.closest(\'.proto-embed\');pe.querySelector(\'iframe\').src=pe.querySelector(\'iframe\').src;var sb=pe.parentElement.querySelector(\'.proto-state-bar\');if(sb){sb.querySelectorAll(\'.proto-state-btn\').forEach(function(b,i){b.classList.toggle(\'active\',i===0)})}" title="刷新原型"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 105.64-12.36L1 10"/></svg></button><button class="btn-fullscreen" onclick="openProtoFullscreen(\'' + a.src + '\',' + w + ',' + h + ',\'' + title.replace(/'/g, "\\'") + '\')" title="全屏预览"><svg viewBox="0 0 24 24" fill="none" stroke="#6B7280" stroke-width="2.5" stroke-linecap="round"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg></button>可交互预览</span>' +
               '</div>' +
               '<div class="proto-iframe-wrap" style="width:' + displayW + 'px;height:' + displayH + 'px;overflow:hidden;"><iframe src="' + a.src + (a.src.indexOf('?')!==-1?'&':'?') + '_t=' + Date.now() + '" style="width:' + (w + 20) + 'px;height:' + h + 'px;transform:scale(' + s + ');transform-origin:top left;" sandbox="allow-scripts allow-same-origin"></iframe></div>' +
             '</div>' + stateBar;
@@ -544,6 +550,37 @@ function initFlowDrag(body) {
         doc.className = 'feature-doc';
         h2.parentNode.insertBefore(doc, siblings[0]);
         siblings.forEach(function(s) { doc.appendChild(s); });
+      });
+
+      // Wrap h4 content with left border indent
+      document.querySelectorAll('.feature-doc h4').forEach(function(h4) {
+        var siblings = [];
+        var el = h4.nextElementSibling;
+        while (el && el.tagName !== 'H4' && el.tagName !== 'H3' && el.tagName !== 'H2') {
+          siblings.push(el);
+          el = el.nextElementSibling;
+        }
+        if (siblings.length === 0) return;
+        var indent = document.createElement('div');
+        indent.className = 'h4-indent';
+        h4.parentNode.insertBefore(indent, siblings[0]);
+        siblings.forEach(function(s) { indent.appendChild(s); });
+      });
+
+      // Wrap h3 sections in sub-cards within feature-doc
+      document.querySelectorAll('.feature-doc h3').forEach(function(h3) {
+        var siblings = [];
+        var el = h3.nextElementSibling;
+        while (el && el.tagName !== 'H3' && el.tagName !== 'H2') {
+          siblings.push(el);
+          el = el.nextElementSibling;
+        }
+        if (siblings.length === 0) return;
+        var card = document.createElement('div');
+        card.className = 'h3-card';
+        h3.parentNode.insertBefore(card, h3);
+        card.appendChild(h3);
+        siblings.forEach(function(s) { card.appendChild(s); });
       });
 
       document.querySelectorAll('.md-body table, .feature-doc table').forEach(function(tbl) {
@@ -719,6 +756,7 @@ function initFlowDrag(body) {
       });
     }
     cacheSectionPositions();
+    setTimeout(cacheSectionPositions, 500);
     window.addEventListener('resize', cacheSectionPositions);
     window.addEventListener('scroll', () => {
       let current = '';

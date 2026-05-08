@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>积分数据 - 云芳邻管理系统</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="components.css">
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">云芳邻管理系统</div>
+    <div class="header-hamburger"><span></span><span></span><span></span></div>
+  </div>
+  <div class="header-right">
+    <div class="header-right-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L3 7v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-9-5z"/></svg><span>使用指南</span></div>
+    <div class="header-right-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg></div>
+    <div class="header-right-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></div>
+    <div class="header-right-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg></div>
+    <div class="header-right-item">
+      <div class="avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+      <span>管理员</span><svg width="10" height="6" viewBox="0 0 10 6" fill="#fff"><path d="M0 0l5 6 5-6z"/></svg>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="label">工作台</span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="label">社区宣传</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><span class="label">信息公开</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg><span class="label">社区服务</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="label">社区共建</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2v10z"/></svg><span class="label">邻里社交</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7-10H1m22 0h-4"/></svg><span class="label">积分兑换</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg><span class="label">商城管理</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg><span class="label">任务管理</span><span class="arrow">></span></div>
+  <div class="sidebar-item expanded"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 16l4-4 4 4 5-6"/></svg><span class="label">数据看板</span><span class="arrow">></span></div>
+  <div class="sidebar-sub">
+    <div class="sidebar-item"><span class="label">用户数据</span></div>
+    <div class="sidebar-item active"><span class="label">积分数据</span></div>
+  </div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span class="label">权限管理</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06c.5-.5.68-1.2.33-1.82a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09c.7-.05 1.3-.46 1.51-1 .35-.62.17-1.32-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06c.5.5 1.2.68 1.82.33a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09c.05.7.46 1.3 1 1.51.62.35 1.32.17 1.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06c-.5.5-.68 1.2-.33 1.82.28.55.86.93 1.51 1H21a2 2 0 010 4h-.09c-.65.05-1.23.43-1.51 1z"/></svg><span class="label">系统管理</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span class="label">公共管理</span><span class="arrow">></span></div>
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><path d="M20 8v6m3-3h-6"/></svg><span class="label">选民登记管理</span><span class="arrow">></span></div>
+</div>
+
+<!-- Org Tree Panel -->
+<div class="org-tree-panel">
+  <div class="tree-search">
+    <input type="text" placeholder="搜索组织" id="treeSearchInput">
+  </div>
+  <div class="tree-node active" data-id="all" onclick="selectTreeNode(this)">
+    <span class="arrow"></span>全部
+  </div>
+  <div class="tree-node" data-id="baiyun" onclick="toggleTreeExpand(this)" style="font-weight:500;">
+    <span class="arrow" style="transform:rotate(90deg);">></span>白云区
+  </div>
+  <div class="tree-children" data-parent="baiyun">
+    <div class="tree-node level-1" data-id="jianggao" onclick="selectTreeNode(this)">
+      <span class="arrow"></span>江高镇
+    </div>
+    <div class="tree-node level-1" data-id="renhe" onclick="selectTreeNode(this)">
+      <span class="arrow"></span>人和镇
+    </div>
+    <div class="tree-node level-1" data-id="taihe" onclick="selectTreeNode(this)">
+      <span class="arrow"></span>太和镇
+    </div>
+    <div class="tree-node level-1" data-id="zhongluotan" onclick="selectTreeNode(this)">
+      <span class="arrow"></span>钟落潭镇
+    </div>
+    <div class="tree-node level-1" data-id="sanyuanli" onclick="selectTreeNode(this)">
+      <span class="arrow"></span>三元里街道
+    </div>
+    <div class="tree-node level-1" data-id="songzhou" onclick="selectTreeNode(this)">
+      <span class="arrow"></span>松洲街道
+    </div>
+    <div class="tree-node level-1" data-id="jingtai" onclick="selectTreeNode(this)">
+      <span class="arrow"></span>景泰街道
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="tab-bar">
+    <div class="tab-item" style="color:#C9CDD4;">工作台</div>
+    <div class="tab-item active">积分数据 <span class="tab-close">x</span></div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <span class="page-title">积分数据</span>
+      <span class="breadcrumb">数据看板 / 积分数据</span>
+    </div>
+
+    <!-- Main Tabs -->
+    <div class="filter-tabs" id="mainTabs">
+      <div class="filter-tab active" data-tab="resident" onclick="switchMainTab('resident')">居民积分排行</div>
+      <div class="filter-tab" data-tab="merchant" onclick="switchMainTab('merchant')">商家核销排行</div>
+    </div>
+
+    <!-- Tab1: 居民积分排行 -->
+    <div id="tabResident">
+      <!-- Stat Cards -->
+      <div class="stat-cards">
+        <div class="stat-card" style="">
+          <div class="stat-icon blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3491FA" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">累计发放积分 <span class="stat-tip" data-tip="平台历史所有积分发放总和">!</span></div>
+            <div class="stat-value">128,450</div>
+          </div>
+        </div>
+        <div class="stat-card" style="">
+          <div class="stat-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00B365" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">累计消耗积分 <span class="stat-tip" data-tip="所有积分支出总和">!</span></div>
+            <div class="stat-value">45,230</div>
+          </div>
+        </div>
+        <div class="stat-card" style="">
+          <div class="stat-icon purple">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#722ED1" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">活跃用户数 <span class="stat-tip" data-tip="选定范围内有积分变动的用户数">!</span></div>
+            <div class="stat-value">1,286</div>
+          </div>
+        </div>
+        <div class="stat-card" style="">
+          <div class="stat-icon orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">即将过期积分 <span class="stat-tip" data-tip="30天内即将过期积分总量，不受时间范围影响">!</span></div>
+            <div class="stat-value">12,800</div>
+            <div style="font-size:11px;color:#FF9800;margin-top:2px;">过期时间 2026-06-01 00:00:00</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-field"><label>时间范围</label><input placeholder="2026-05-01 ~ 2026-05-08" style="width:200px;"></div>
+          <div class="filter-field"><label>姓名</label><input id="residentName" placeholder="请输入"></div>
+          <div class="filter-field"><label>手机号</label><input id="residentPhone" placeholder="请输入"></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary" onclick="applyResidentFilter()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg> 查询</button>
+            <button class="btn btn-default" onclick="resetResidentFilter()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.5 9A9 9 0 005.6 5.6L1 10m22 4l-4.6 4.4A9 9 0 013.5 15"/></svg> 重置</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <div class="op-bar" style="display:flex;justify-content:space-between;align-items:center;"><button class="btn btn-default" onclick="showToast('导出功能开发中')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4E5969" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> 导出Excel</button><span style="font-size:12px;color:#86909C;">统计范围：2026-05-01 ~ 2026-05-08</span></div>
+        <table>
+          <thead><tr>
+            <th style="width:60px;">排名</th>
+            <th>用户姓名</th>
+            <th>手机号</th>
+            <th>所属社区</th>
+            <th class="sortable-th" onclick="toggleSort('residentGet')" style="cursor:pointer;">累计获取 <span class="sort-arrows" id="sortResidentGet"><span class="sort-up">&#9650;</span><span class="sort-down">&#9660;</span></span></th>
+            <th class="sortable-th" onclick="toggleSort('residentUse')" style="cursor:pointer;">累计消耗 <span class="sort-arrows" id="sortResidentUse"><span class="sort-up">&#9650;</span><span class="sort-down">&#9660;</span></span></th>
+            <th class="sortable-th" onclick="toggleSort('residentBalance')" style="cursor:pointer;">当前余额(实时) <span class="sort-arrows" id="sortResidentBalance"><span class="sort-up">&#9650;</span><span class="sort-down">&#9660;</span></span></th>
+            <th>即将过期(实时)</th>
+            <th style="text-align:center;">操作</th>
+          </tr></thead>
+          <tbody id="residentBody"></tbody>
+        </table>
+        <div class="pagination">
+          <span class="total">共 1,286 条</span>
+          <span class="pg">&lt;</span>
+          <span class="pg active">1</span>
+          <span class="pg">2</span>
+          <span class="pg">3</span>
+          <span class="pg">...</span>
+          <span class="pg">161</span>
+          <span class="pg">&gt;</span>
+          <select class="pg-select"><option>10条/页</option><option>20条/页</option><option>50条/页</option></select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab2: 商家核销排行 -->
+    <div id="tabMerchant" style="display:none;">
+      <!-- Stat Cards -->
+      <div class="stat-cards">
+        <div class="stat-card" style="">
+          <div class="stat-icon blue">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#3491FA" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">累计核销积分 <span class="stat-tip" data-tip="所有商家历史核销积分总量">!</span></div>
+            <div class="stat-value">45,230</div>
+          </div>
+        </div>
+        <div class="stat-card" style="">
+          <div class="stat-icon green">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#00B365" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/><path d="M9 14l2 2 4-4"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">累计核销笔数 <span class="stat-tip" data-tip="所有核销订单总数">!</span></div>
+            <div class="stat-value">3,456</div>
+          </div>
+        </div>
+        <div class="stat-card" style="">
+          <div class="stat-icon orange">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path d="M9 22V12h6v10"/></svg>
+          </div>
+          <div>
+            <div class="stat-label">活跃商家数 <span class="stat-tip" data-tip="选定范围内有核销记录的商家数">!</span></div>
+            <div class="stat-value">42</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div class="filter-card">
+        <div class="filter-row">
+          <div class="filter-field"><label>时间范围</label><input placeholder="2026-05-01 ~ 2026-05-08" style="width:200px;"></div>
+          <div class="filter-field"><label>商家名称</label><input id="merchantName" placeholder="请输入"></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-primary" onclick="applyMerchantFilter()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg> 查询</button>
+            <button class="btn btn-default" onclick="resetMerchantFilter()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#86909C" stroke-width="2"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.5 9A9 9 0 005.6 5.6L1 10m22 4l-4.6 4.4A9 9 0 013.5 15"/></svg> 重置</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-wrap">
+        <div class="op-bar" style="display:flex;justify-content:space-between;align-items:center;"><button class="btn btn-default" onclick="showToast('导出功能开发中')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4E5969" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> 导出Excel</button><span style="font-size:12px;color:#86909C;">统计范围：2026-05-01 ~ 2026-05-08</span></div>
+        <table>
+          <thead><tr>
+            <th style="width:60px;">排名</th>
+            <th>商家名称</th>
+            <th>所属社区</th>
+            <th class="sortable-th" onclick="toggleSort('merchantTotal')" style="cursor:pointer;">累计核销积分 <span class="sort-arrows" id="sortMerchantTotal"><span class="sort-up">&#9650;</span><span class="sort-down">&#9660;</span></span></th>
+            <th class="sortable-th" onclick="toggleSort('merchantCount')" style="cursor:pointer;">核销笔数 <span class="sort-arrows" id="sortMerchantCount"><span class="sort-up">&#9650;</span><span class="sort-down">&#9660;</span></span></th>
+            <th class="sortable-th" onclick="toggleSort('merchantMonth')" style="cursor:pointer;">本月核销(实时) <span class="sort-arrows" id="sortMerchantMonth"><span class="sort-up">&#9650;</span><span class="sort-down">&#9660;</span></span></th>
+            <th class="sortable-th" onclick="toggleSort('merchantMonthCount')" style="cursor:pointer;">本月笔数(实时) <span class="sort-arrows" id="sortMerchantMonthCount"><span class="sort-up">&#9650;</span><span class="sort-down">&#9660;</span></span></th>
+            <th style="text-align:center;">操作</th>
+          </tr></thead>
+          <tbody id="merchantBody"></tbody>
+        </table>
+        <div class="pagination">
+          <span class="total">共 42 条</span>
+          <span class="pg">&lt;</span>
+          <span class="pg active">1</span>
+          <span class="pg">2</span>
+          <span class="pg">3</span>
+          <span class="pg">&gt;</span>
+          <select class="pg-select"><option>10条/页</option><option>20条/页</option><option>50条/页</option></select>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+</div>
+
+<!-- Toast -->
+<div class="modal-toast" id="modalToast"></div>
+
+<!-- Resident Detail Modal -->
+<div id="residentDetailOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;justify-content:center;align-items:center;">
+  <div style="background:#fff;border-radius:8px;width:720px;box-shadow:0 8px 20px rgba(0,0,0,0.15);max-height:90vh;display:flex;flex-direction:column;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 24px 17px;border-bottom:1px solid #E5E6EB;">
+      <span style="font-size:16px;font-weight:700;color:#272E3B;">居民积分详情</span>
+      <span onclick="closeResidentDetail()" style="cursor:pointer;font-size:20px;color:#86909C;width:24px;height:24px;display:flex;align-items:center;justify-content:center;">&times;</span>
+    </div>
+    <div style="padding:20px 24px;overflow-y:auto;flex:1;">
+      <!-- Info card -->
+      <div style="background:#F7F8FA;border-radius:8px;padding:16px 20px;margin-bottom:20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+          <div><span style="font-size:13px;color:#86909C;">姓名：</span><span id="rdName" style="font-size:14px;color:#272E3B;font-weight:500;"></span></div>
+          <div><span style="font-size:13px;color:#86909C;">手机号：</span><span id="rdPhone" style="font-size:14px;color:#272E3B;"></span></div>
+          <div><span style="font-size:13px;color:#86909C;">所属社区：</span><span id="rdCommunity" style="font-size:14px;color:#272E3B;"></span></div>
+        </div>
+      </div>
+      <!-- Stat cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+        <div style="background:#fff;border:1px solid #E5E6EB;border-radius:8px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:#86909C;margin-bottom:4px;">累计获取</div>
+          <div id="rdGet" style="font-size:22px;font-weight:700;color:#3491FA;font-family:'Inter','Noto Sans SC',sans-serif;"></div>
+        </div>
+        <div style="background:#fff;border:1px solid #E5E6EB;border-radius:8px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:#86909C;margin-bottom:4px;">累计消耗</div>
+          <div id="rdUse" style="font-size:22px;font-weight:700;color:#00B365;font-family:'Inter','Noto Sans SC',sans-serif;"></div>
+        </div>
+        <div style="background:#fff;border:1px solid #E5E6EB;border-radius:8px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:#86909C;margin-bottom:4px;">当前余额</div>
+          <div id="rdBalance" style="font-size:22px;font-weight:700;color:#272E3B;font-family:'Inter','Noto Sans SC',sans-serif;"></div>
+        </div>
+        <div style="background:#fff;border:1px solid #E5E6EB;border-radius:8px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:#86909C;margin-bottom:4px;">即将过期</div>
+          <div id="rdExpire" style="font-size:22px;font-weight:700;color:#FF9800;font-family:'Inter','Noto Sans SC',sans-serif;"></div>
+        </div>
+      </div>
+      <!-- Bucket table -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <div style="width:3px;height:16px;background:#3491FA;border-radius:2px;"></div>
+        <span style="font-size:15px;font-weight:600;color:#272E3B;">积分桶明细</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr>
+          <th style="background:#F2F3F5;height:40px;padding:0 12px;text-align:left;font-size:13px;font-weight:600;color:#4E5969;border-bottom:1px solid #E5E6EB;">桶月份</th>
+          <th style="background:#F2F3F5;height:40px;padding:0 12px;text-align:left;font-size:13px;font-weight:600;color:#4E5969;border-bottom:1px solid #E5E6EB;">桶内积分</th>
+          <th style="background:#F2F3F5;height:40px;padding:0 12px;text-align:left;font-size:13px;font-weight:600;color:#4E5969;border-bottom:1px solid #E5E6EB;">过期时间</th>
+          <th style="background:#F2F3F5;height:40px;padding:0 12px;text-align:left;font-size:13px;font-weight:600;color:#4E5969;border-bottom:1px solid #E5E6EB;">状态</th>
+        </tr></thead>
+        <tbody id="bucketBody"></tbody>
+      </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;padding:13px 24px 12px;border-top:1px solid #E5E6EB;">
+      <button onclick="closeResidentDetail()" style="height:32px;padding:0 17px;border:1px solid #E5E6EB;border-radius:4px;background:#fff;font-size:14px;color:#4E5969;cursor:pointer;">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- Merchant Detail Modal -->
+<div id="merchantDetailOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;justify-content:center;align-items:center;">
+  <div style="background:#fff;border-radius:8px;width:720px;box-shadow:0 8px 20px rgba(0,0,0,0.15);max-height:90vh;display:flex;flex-direction:column;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 24px 17px;border-bottom:1px solid #E5E6EB;">
+      <span style="font-size:16px;font-weight:700;color:#272E3B;">商家核销详情</span>
+      <span onclick="closeMerchantDetail()" style="cursor:pointer;font-size:20px;color:#86909C;width:24px;height:24px;display:flex;align-items:center;justify-content:center;">&times;</span>
+    </div>
+    <div style="padding:20px 24px;overflow-y:auto;flex:1;">
+      <!-- Info card -->
+      <div style="background:#F7F8FA;border-radius:8px;padding:16px 20px;margin-bottom:20px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+          <div><span style="font-size:13px;color:#86909C;">商家名称：</span><span id="mdName" style="font-size:14px;color:#272E3B;font-weight:500;"></span></div>
+          <div><span style="font-size:13px;color:#86909C;">所属社区：</span><span id="mdCommunity" style="font-size:14px;color:#272E3B;"></span></div>
+          <div><span style="font-size:13px;color:#86909C;">联系电话：</span><span id="mdPhone" style="font-size:14px;color:#272E3B;"></span></div>
+        </div>
+      </div>
+      <!-- Stat cards -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:20px;">
+        <div style="background:#fff;border:1px solid #E5E6EB;border-radius:8px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:#86909C;margin-bottom:4px;">累计核销积分</div>
+          <div id="mdTotal" style="font-size:22px;font-weight:700;color:#3491FA;font-family:'Inter','Noto Sans SC',sans-serif;"></div>
+        </div>
+        <div style="background:#fff;border:1px solid #E5E6EB;border-radius:8px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:#86909C;margin-bottom:4px;">核销笔数</div>
+          <div id="mdCount" style="font-size:22px;font-weight:700;color:#00B365;font-family:'Inter','Noto Sans SC',sans-serif;"></div>
+        </div>
+        <div style="background:#fff;border:1px solid #E5E6EB;border-radius:8px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:#86909C;margin-bottom:4px;">本月核销</div>
+          <div id="mdMonth" style="font-size:22px;font-weight:700;color:#722ED1;font-family:'Inter','Noto Sans SC',sans-serif;"></div>
+        </div>
+        <div style="background:#fff;border:1px solid #E5E6EB;border-radius:8px;padding:16px;text-align:center;">
+          <div style="font-size:12px;color:#86909C;margin-bottom:4px;">本月笔数</div>
+          <div id="mdMonthCount" style="font-size:22px;font-weight:700;color:#FF9800;font-family:'Inter','Noto Sans SC',sans-serif;"></div>
+        </div>
+      </div>
+      <!-- Recent records table -->
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+        <div style="width:3px;height:16px;background:#3491FA;border-radius:2px;"></div>
+        <span style="font-size:15px;font-weight:600;color:#272E3B;">近期核销记录</span>
+      </div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr>
+          <th style="background:#F2F3F5;height:40px;padding:0 12px;text-align:left;font-size:13px;font-weight:600;color:#4E5969;border-bottom:1px solid #E5E6EB;">核销时间</th>
+          <th style="background:#F2F3F5;height:40px;padding:0 12px;text-align:left;font-size:13px;font-weight:600;color:#4E5969;border-bottom:1px solid #E5E6EB;">用户</th>
+          <th style="background:#F2F3F5;height:40px;padding:0 12px;text-align:left;font-size:13px;font-weight:600;color:#4E5969;border-bottom:1px solid #E5E6EB;">核销积分</th>
+          <th style="background:#F2F3F5;height:40px;padding:0 12px;text-align:left;font-size:13px;font-weight:600;color:#4E5969;border-bottom:1px solid #E5E6EB;">兑换商品</th>
+        </tr></thead>
+        <tbody id="merchantRecordBody"></tbody>
+      </table>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;padding:13px 24px 12px;border-top:1px solid #E5E6EB;">
+      <button onclick="closeMerchantDetail()" style="height:32px;padding:0 17px;border:1px solid #E5E6EB;border-radius:4px;background:#fff;font-size:14px;color:#4E5969;cursor:pointer;">关闭</button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Org tree panel */
+.org-tree-panel {
+  width:200px;
+  background:#fff;
+  border-left:1px solid #E5E6EB;
+  border-right:1px solid #E5E6EB;
+  flex-shrink:0;
+  overflow-y:auto;
+  padding:12px 0;
+}
+.org-tree-panel .tree-search {
+  margin:0 12px 10px;
+}
+.org-tree-panel .tree-search input {
+  width:100%;
+  height:32px;
+  border:1px solid #E5E6EB;
+  border-radius:4px;
+  padding:0 10px 0 30px;
+  font-size:13px;
+  color:#272E3B;
+  font-family:inherit;
+  outline:none;
+  background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23C9CDD4' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cpath d='M21 21l-4.35-4.35'/%3E%3C/svg%3E") no-repeat 8px center;
+}
+.org-tree-panel .tree-search input::placeholder { color:#C9CDD4; }
+.org-tree-panel .tree-search input:focus { border-color:#3491FA; }
+
+.org-tree-panel .tree-node {
+  display:flex;
+  align-items:center;
+  height:34px;
+  padding:0 12px 0 16px;
+  cursor:pointer;
+  font-size:13px;
+  color:#4E5969;
+  gap:6px;
+  transition:background 0.15s;
+}
+.org-tree-panel .tree-node:hover { background:#F7F8FA; }
+.org-tree-panel .tree-node.active { color:#3491FA; background:#EBF5FF; font-weight:500; }
+.org-tree-panel .tree-node .arrow { font-size:10px; color:#C9CDD4; width:14px; flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; transition:transform 0.2s; }
+.org-tree-panel .tree-node.level-1 { padding-left:36px; }
+.tree-children { overflow:hidden; }
+
+/* Sort arrows */
+.sort-arrows { display:inline-flex; flex-direction:column; vertical-align:middle; margin-left:4px; line-height:1; gap:0; }
+.sort-up, .sort-down { font-size:8px; color:#C9CDD4; line-height:8px; transition:color 0.15s; }
+.sort-up.active { color:#3491FA; }
+.sort-down.active { color:#3491FA; }
+
+/* Stat card left border */
+.stat-card { position:relative; }
+.stat-tip { display:inline-flex; align-items:center; justify-content:center; width:14px; height:14px; border-radius:50%; background:#E5E6EB; color:#86909C; font-size:10px; font-weight:700; cursor:help; margin-left:4px; position:relative; }
+.stat-tip:hover::after { content:attr(data-tip); position:absolute; left:50%; top:100%; transform:translateX(-50%); margin-top:6px; background:#272E3B; color:#fff; font-size:11px; font-weight:400; padding:6px 10px; border-radius:6px; white-space:nowrap; z-index:50; }
+
+/* Modal toast */
+.modal-toast { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.9); background:rgba(34,40,53,0.88); color:#fff; padding:12px 24px; border-radius:8px; font-size:14px; font-weight:500; z-index:200; opacity:0; transition:all 0.25s; pointer-events:none; }
+.modal-toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+/* Rank number styling */
+.rank-badge { display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:50%; font-size:12px; font-weight:600; }
+.rank-1 { background:#FFD700; color:#fff; }
+.rank-2 { background:#C0C0C0; color:#fff; }
+.rank-3 { background:#CD7F32; color:#fff; }
+.rank-normal { color:#86909C; }
+</style>
+
+<script>
+/* ── Resident data ── */
+var residents = [
+  { name:'张三', phone:'138****5678', community:'江高镇阳光社区', get:2680, use:1200, balance:1480, expire:320 },
+  { name:'李秀英', phone:'139****2345', community:'人和镇和谐社区', get:2450, use:980, balance:1470, expire:280 },
+  { name:'王大明', phone:'136****8901', community:'太和镇民安社区', get:2120, use:1560, balance:560, expire:150 },
+  { name:'陈芳', phone:'137****3456', community:'钟落潭镇翠竹社区', get:1980, use:750, balance:1230, expire:420 },
+  { name:'刘伟', phone:'135****6789', community:'三元里街道兴隆社区', get:1850, use:620, balance:1230, expire:0 },
+  { name:'赵敏', phone:'158****1234', community:'松洲街道松南社区', get:1720, use:890, balance:830, expire:200 },
+  { name:'黄建国', phone:'133****4567', community:'景泰街道景泰社区', get:1650, use:450, balance:1200, expire:180 },
+  { name:'周小红', phone:'159****7890', community:'江高镇金沙社区', get:1580, use:380, balance:1200, expire:90 }
+];
+
+var residentBuckets = [
+  { month:'2026-05', points:480, expire:'2027-05-31', status:'正常' },
+  { month:'2026-04', points:520, expire:'2027-04-30', status:'正常' },
+  { month:'2026-03', points:320, expire:'2026-06-30', status:'即将过期' },
+  { month:'2026-02', points:160, expire:'2026-05-31', status:'即将过期' },
+  { month:'2026-01', points:0, expire:'2026-04-30', status:'已过期' },
+  { month:'2025-12', points:0, expire:'2026-03-31', status:'已过期' }
+];
+
+/* ── Merchant data ── */
+var merchants = [
+  { name:'阳光便利店', community:'江高镇阳光社区', phone:'020-8765****', total:8920, count:680, month:1850, monthCount:142 },
+  { name:'和谐生鲜超市', community:'人和镇和谐社区', phone:'020-8234****', total:7650, count:523, month:1420, monthCount:98 },
+  { name:'民安药房', community:'太和镇民安社区', phone:'020-8901****', total:6280, count:412, month:980, monthCount:76 },
+  { name:'翠竹茶庄', community:'钟落潭镇翠竹社区', phone:'020-8567****', total:5430, count:389, month:860, monthCount:65 },
+  { name:'兴隆五金', community:'三元里街道兴隆社区', phone:'020-8123****', total:4890, count:356, month:720, monthCount:54 },
+  { name:'松南文具店', community:'松洲街道松南社区', phone:'020-8345****', total:4120, count:298, month:650, monthCount:48 }
+];
+
+var merchantRecords = [
+  { time:'2026-05-07 14:32', user:'张三', points:50, product:'日用品礼包' },
+  { time:'2026-05-07 11:20', user:'李秀英', points:30, product:'洗衣液' },
+  { time:'2026-05-06 16:45', user:'王大明', points:80, product:'食用油套装' },
+  { time:'2026-05-06 10:15', user:'陈芳', points:20, product:'纸巾抽纸' },
+  { time:'2026-05-05 15:30', user:'赵敏', points:45, product:'牙膏套装' },
+  { time:'2026-05-05 09:50', user:'刘伟', points:60, product:'大米5kg' }
+];
+
+/* ── Sort state ── */
+var sortState = {};
+
+function toggleSort(field) {
+  var current = sortState[field] || 'none';
+  // Reset all sort indicators
+  document.querySelectorAll('.sort-up, .sort-down').forEach(function(el) {
+    el.classList.remove('active');
+  });
+  // Cycle: none -> desc -> asc -> none
+  if (current === 'none') {
+    sortState = {};
+    sortState[field] = 'desc';
+  } else if (current === 'desc') {
+    sortState = {};
+    sortState[field] = 'asc';
+  } else {
+    sortState = {};
+    sortState[field] = 'none';
+  }
+
+  var state = sortState[field];
+  var el = document.getElementById('sort' + capitalize(field));
+  if (el && state !== 'none') {
+    if (state === 'asc') el.querySelector('.sort-up').classList.add('active');
+    if (state === 'desc') el.querySelector('.sort-down').classList.add('active');
+  }
+
+  showToast('排序: ' + (state === 'asc' ? '升序' : state === 'desc' ? '降序' : '默认'));
+}
+
+function capitalize(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+/* ── Render resident table ── */
+function renderResidentTable() {
+  var tbody = document.getElementById('residentBody');
+  var html = '';
+  for (var i = 0; i < residents.length; i++) {
+    var r = residents[i];
+    var rankHtml;
+    if (i < 3) {
+      var cls = ['rank-1','rank-2','rank-3'][i];
+      rankHtml = '<span class="rank-badge ' + cls + '">' + (i + 1) + '</span>';
+    } else {
+      rankHtml = '<span class="rank-normal">' + (i + 1) + '</span>';
+    }
+    html += '<tr>' +
+      '<td style="text-align:center;">' + rankHtml + '</td>' +
+      '<td>' + r.name + '</td>' +
+      '<td>' + r.phone + '</td>' +
+      '<td>' + r.community + '</td>' +
+      '<td class="text-bold">' + r.get.toLocaleString() + '</td>' +
+      '<td>' + r.use.toLocaleString() + '</td>' +
+      '<td class="text-bold">' + r.balance.toLocaleString() + '</td>' +
+      '<td>' + (r.expire > 0 ? '<span class="text-warning">' + r.expire.toLocaleString() + '</span>' : '<span class="text-muted">-</span>') + '</td>' +
+      '<td style="text-align:center;"><a class="action-link" onclick="showToast(\'打开居民积分详情\')">详情</a><span class="action-sep">|</span><a class="action-link" onclick="showToast(\'跳转积分流水页\')">查看流水</a></td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+/* ── Render merchant table ── */
+function renderMerchantTable() {
+  var tbody = document.getElementById('merchantBody');
+  var html = '';
+  for (var i = 0; i < merchants.length; i++) {
+    var m = merchants[i];
+    var rankHtml;
+    if (i < 3) {
+      var cls = ['rank-1','rank-2','rank-3'][i];
+      rankHtml = '<span class="rank-badge ' + cls + '">' + (i + 1) + '</span>';
+    } else {
+      rankHtml = '<span class="rank-normal">' + (i + 1) + '</span>';
+    }
+    html += '<tr>' +
+      '<td style="text-align:center;">' + rankHtml + '</td>' +
+      '<td>' + m.name + '</td>' +
+      '<td>' + m.community + '</td>' +
+      '<td class="text-bold">' + m.total.toLocaleString() + '</td>' +
+      '<td>' + m.count.toLocaleString() + '</td>' +
+      '<td class="text-bold">' + m.month.toLocaleString() + '</td>' +
+      '<td>' + m.monthCount.toLocaleString() + '</td>' +
+      '<td style="text-align:center;"><a class="action-link" onclick="showToast(\'打开商家核销详情\')">详情</a></td>' +
+      '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+/* ── Tab switch ── */
+function switchMainTab(tab) {
+  document.querySelectorAll('#mainTabs .filter-tab').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.tab === tab);
+  });
+  document.getElementById('tabResident').style.display = tab === 'resident' ? '' : 'none';
+  document.getElementById('tabMerchant').style.display = tab === 'merchant' ? '' : 'none';
+}
+
+/* ── Org tree ── */
+function selectTreeNode(el) {
+  document.querySelectorAll('.org-tree-panel .tree-node').forEach(function(n) {
+    n.classList.remove('active');
+  });
+  el.classList.add('active');
+  showToast('已切换至: ' + el.textContent.trim());
+}
+
+function toggleTreeExpand(el) {
+  var children = el.nextElementSibling;
+  if (children && children.classList.contains('tree-children')) {
+    var isHidden = children.style.display === 'none';
+    children.style.display = isHidden ? '' : 'none';
+    var arrow = el.querySelector('.arrow');
+    if (arrow) {
+      arrow.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)';
+    }
+  }
+}
+
+/* ── Resident detail modal ── */
+function openResidentDetail(idx) {
+  var r = residents[idx];
+  document.getElementById('rdName').textContent = r.name;
+  document.getElementById('rdPhone').textContent = r.phone;
+  document.getElementById('rdCommunity').textContent = r.community;
+  document.getElementById('rdGet').textContent = r.get.toLocaleString();
+  document.getElementById('rdUse').textContent = r.use.toLocaleString();
+  document.getElementById('rdBalance').textContent = r.balance.toLocaleString();
+  document.getElementById('rdExpire').textContent = r.expire > 0 ? r.expire.toLocaleString() : '0';
+
+  var bucketHtml = '';
+  for (var i = 0; i < residentBuckets.length; i++) {
+    var b = residentBuckets[i];
+    var tagClass, tagText;
+    if (b.status === '正常') { tagClass = 'tag-green'; tagText = '正常'; }
+    else if (b.status === '即将过期') { tagClass = 'tag-orange'; tagText = '即将过期'; }
+    else { tagClass = 'tag-grey'; tagText = '已过期'; }
+    bucketHtml += '<tr>' +
+      '<td style="height:40px;padding:0 12px;font-size:13px;color:#272E3B;border-bottom:1px solid #F2F3F5;">' + b.month + '</td>' +
+      '<td style="height:40px;padding:0 12px;font-size:13px;color:#272E3B;border-bottom:1px solid #F2F3F5;font-weight:600;">' + b.points + '</td>' +
+      '<td style="height:40px;padding:0 12px;font-size:13px;color:#272E3B;border-bottom:1px solid #F2F3F5;">' + b.expire + '</td>' +
+      '<td style="height:40px;padding:0 12px;font-size:13px;border-bottom:1px solid #F2F3F5;"><span class="tag ' + tagClass + '">' + tagText + '</span></td>' +
+      '</tr>';
+  }
+  document.getElementById('bucketBody').innerHTML = bucketHtml;
+  document.getElementById('residentDetailOverlay').style.display = 'flex';
+}
+
+function closeResidentDetail() {
+  document.getElementById('residentDetailOverlay').style.display = 'none';
+}
+
+/* ── Merchant detail modal ── */
+function openMerchantDetail(idx) {
+  var m = merchants[idx];
+  document.getElementById('mdName').textContent = m.name;
+  document.getElementById('mdCommunity').textContent = m.community;
+  document.getElementById('mdPhone').textContent = m.phone;
+  document.getElementById('mdTotal').textContent = m.total.toLocaleString();
+  document.getElementById('mdCount').textContent = m.count.toLocaleString();
+  document.getElementById('mdMonth').textContent = m.month.toLocaleString();
+  document.getElementById('mdMonthCount').textContent = m.monthCount.toLocaleString();
+
+  var recordHtml = '';
+  for (var i = 0; i < merchantRecords.length; i++) {
+    var rec = merchantRecords[i];
+    recordHtml += '<tr>' +
+      '<td style="height:40px;padding:0 12px;font-size:13px;color:#272E3B;border-bottom:1px solid #F2F3F5;">' + rec.time + '</td>' +
+      '<td style="height:40px;padding:0 12px;font-size:13px;color:#272E3B;border-bottom:1px solid #F2F3F5;">' + rec.user + '</td>' +
+      '<td style="height:40px;padding:0 12px;font-size:13px;color:#272E3B;border-bottom:1px solid #F2F3F5;font-weight:600;">' + rec.points + '</td>' +
+      '<td style="height:40px;padding:0 12px;font-size:13px;color:#272E3B;border-bottom:1px solid #F2F3F5;">' + rec.product + '</td>' +
+      '</tr>';
+  }
+  document.getElementById('merchantRecordBody').innerHTML = recordHtml;
+  document.getElementById('merchantDetailOverlay').style.display = 'flex';
+}
+
+function closeMerchantDetail() {
+  document.getElementById('merchantDetailOverlay').style.display = 'none';
+}
+
+/* ── Filter ── */
+function applyResidentFilter() {
+  showToast('已应用筛选');
+}
+function resetResidentFilter() {
+  document.getElementById('residentName').value = '';
+  document.getElementById('residentPhone').value = '';
+  showToast('已重置筛选');
+}
+function applyMerchantFilter() {
+  showToast('已应用筛选');
+}
+function resetMerchantFilter() {
+  document.getElementById('merchantName').value = '';
+  showToast('已重置筛选');
+}
+
+/* ── Toast ── */
+function showToast(msg) {
+  var t = document.getElementById('modalToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2000);
+}
+
+/* ── Init ── */
+renderResidentTable();
+renderMerchantTable();
+</script>
+
+</body>
+</html>
