@@ -510,13 +510,19 @@ function initFlowDrag(body) {
 
           const proto = document.createElement('div');
           proto.className = 'feature-proto';
-          var hasStates = a.src.indexOf('task-center') !== -1;
-          var stateBar = hasStates ?
-            '<div class="proto-state-bar">' +
+          var stateBar = '';
+          if (a.src.indexOf('task-center') !== -1) {
+            stateBar = '<div class="proto-state-bar">' +
               '<button class="proto-state-btn active" onclick="protoSwitchState(this,\'normal\')">正常状态</button>' +
               '<button class="proto-state-btn" onclick="protoSwitchState(this,\'empty\')">缺省状态</button>' +
               '<button class="proto-state-btn" onclick="protoSwitchState(this,\'multi\')">多次叠加</button>' +
-            '</div>' : '';
+            '</div>';
+          } else if (a.src.indexOf('points-exchange') !== -1) {
+            stateBar = '<div class="proto-state-bar">' +
+              '<button class="proto-state-btn active" onclick="protoSwitchState(this,\'insufficient\')">积分不足</button>' +
+              '<button class="proto-state-btn" onclick="protoSwitchState(this,\'community\')">非本社区</button>' +
+            '</div>';
+          }
           proto.innerHTML =
             '<div class="proto-embed" style="width:' + displayW + 'px;height:' + (displayH + 33) + 'px;overflow:hidden;">' +
               '<div class="proto-embed-header">' +

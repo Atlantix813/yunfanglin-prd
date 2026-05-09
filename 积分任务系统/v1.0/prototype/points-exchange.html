@@ -170,27 +170,52 @@ body::-webkit-scrollbar { display:none; }
 </div>
 
 <!-- Dialog: 积分不足 -->
-<div class="dialog-overlay" id="dialogOverlay" onclick="if(event.target===this)closeDialog()">
+<div class="dialog-overlay" id="dialogInsufficient" onclick="if(event.target===this)closeAllDialogs()">
   <div class="dialog-box">
     <div class="dialog-body">您的积分不够，先去赚积分吧</div>
     <div class="dialog-actions">
-      <button onclick="closeDialog()">取消</button>
-      <button onclick="closeDialog()">去赚积分</button>
+      <button onclick="closeAllDialogs()">取消</button>
+      <button onclick="closeAllDialogs()">去赚积分</button>
+    </div>
+  </div>
+</div>
+
+<!-- Dialog: 非本社区 -->
+<div class="dialog-overlay" id="dialogCommunity" onclick="if(event.target===this)closeAllDialogs()">
+  <div class="dialog-box">
+    <div class="dialog-title" style="font-size:16px;font-weight:700;color:#222835;text-align:center;margin-bottom:8px;padding-top:12px;">该物品仅限本社区居民兑换</div>
+    <div class="dialog-body">您不属于该社区，无法兑换此商品，可前往领券中心领取优惠券</div>
+    <div class="dialog-actions">
+      <button onclick="closeAllDialogs()">知道了</button>
+      <button onclick="closeAllDialogs()">去领券中心</button>
     </div>
   </div>
 </div>
 
 <script>
 var userPoints = 260;
+var currentMode = 'normal';
 
 function tryExchange(cost) {
-  if (userPoints < cost) {
-    document.getElementById('dialogOverlay').classList.add('show');
+  if (currentMode === 'community') {
+    document.getElementById('dialogCommunity').classList.add('show');
+  } else if (userPoints < cost) {
+    document.getElementById('dialogInsufficient').classList.add('show');
   }
 }
 
-function closeDialog() {
-  document.getElementById('dialogOverlay').classList.remove('show');
+function closeAllDialogs() {
+  document.querySelectorAll('.dialog-overlay').forEach(function(d) { d.classList.remove('show'); });
+}
+
+function switchState(mode) {
+  currentMode = mode;
+  closeAllDialogs();
+  if (mode === 'insufficient') {
+    document.getElementById('dialogInsufficient').classList.add('show');
+  } else if (mode === 'community') {
+    document.getElementById('dialogCommunity').classList.add('show');
+  }
 }
 </script>
 
