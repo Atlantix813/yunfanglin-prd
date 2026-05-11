@@ -58,6 +58,7 @@ body { font-family:'Noto Sans SC',-apple-system,sans-serif; color:#272E3B; font-
   display:flex; align-items:center; gap:8px;
 }
 .md-body h2::before { content:''; width:4px; height:22px; background:#3491FA; border-radius:2px; flex-shrink:0; }
+.md-body h2 { scroll-margin-top:20px; }
 .md-body h2:first-of-type { margin-top:0; }
 .md-body h2 {
   position:sticky; top:0; z-index:5;
@@ -66,8 +67,9 @@ body { font-family:'Noto Sans SC',-apple-system,sans-serif; color:#272E3B; font-
 .md-body h3 {
   font-size:16px; font-weight:600; color:#272E3B; margin:24px 0 12px;
   padding-left:12px; border-left:3px solid #3491FA;
+  scroll-margin-top:60px;
 }
-.md-body h4 { font-size:15px; font-weight:600; color:#4E5969; margin:16px 0 10px; }
+.md-body h4 { font-size:15px; font-weight:600; color:#4E5969; margin:16px 0 10px; scroll-margin-top:60px; }
 
 /* ═══ Text elements ═══ */
 .md-body p { margin:10px 0; color:#4E5969; font-size:15px; line-height:1.8; }
@@ -744,7 +746,7 @@ function initFlowDrag(body) {
           el.style.position = 'relative';
           const y = el.offsetTop;
           el.style.position = '';
-          window.scrollTo({ top: Math.max(0, y - 10), behavior: 'smooth' });
+          window.scrollTo({ top: Math.max(0, y - 60) });
         }
       });
     });
