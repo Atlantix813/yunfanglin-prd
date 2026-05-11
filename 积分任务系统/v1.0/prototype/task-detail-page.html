@@ -168,15 +168,12 @@ function openDetail(idx) {
   var d = detailData[idx];
   if (!d) return;
   var statusTag = d.status === '已领取奖励' ? 'tag-green' : 'tag-orange';
-  var autoClass = d.autoAward === '是' ? 'warn' : '';
-
   document.getElementById('detailBody').innerHTML =
     '<div class="detail-section">' +
       '<div class="detail-section-title">任务快照</div>' +
       '<div class="detail-snapshot-card">' +
         '<div class="detail-row">' + cell('行为类型', d.type) + cell('任务名称', d.name) + '</div>' +
         '<div class="detail-row">' + cell('积分值', d.points + ' 积分') + cell('上限规则', d.limit) + '</div>' +
-        '<div class="detail-row">' + cell('自动发放', d.autoAward, autoClass) + '</div>' +
         '<div class="detail-row"><div class="detail-cell" style="flex-direction:column;"><span class="dl" style="margin-bottom:6px;">任务描述：</span><div style="font-size:14px;color:#4E5969;line-height:1.6;">' + d.desc + '</div></div></div>' +
       '</div>' +
       '<div class="detail-snapshot-hint">以上数据为明细创建时冻结的配置快照，可能与当前配置不一致</div>' +

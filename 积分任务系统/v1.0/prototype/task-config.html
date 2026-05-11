@@ -92,7 +92,6 @@
           <th>任务描述</th>
           <th>积分值</th>
           <th>上限规则</th>
-          <th>自动发放</th>
           <th>有效期</th>
           <th>上架状态</th>
           <th style="text-align:center;">操作</th>
@@ -231,17 +230,6 @@
         </div>
       </div>
 
-      <!-- Editable: 自动发放 -->
-      <div class="form-row align-center">
-        <label class="form-label">自动发放</label>
-        <div class="form-field" style="display:flex;align-items:center;gap:8px;">
-          <div id="toggleAuto" onclick="this.classList.toggle('on')" class="toggle-switch">
-            <div class="toggle-dot"></div>
-          </div>
-          <span style="font-size:12px;color:#86909C;">开启后完成任务自动发放积分，无需手动领取</span>
-        </div>
-      </div>
-
       <!-- Editable: 是否上架 -->
       <div class="form-row align-center">
         <label class="form-label">是否上架</label>
@@ -346,7 +334,6 @@ function renderTable(list) {
       '<td style="max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="' + t.desc + '">' + t.desc + '</td>' +
       '<td class="text-bold">' + t.points + '</td>' +
       '<td>' + formatLimit(t) + '</td>' +
-      '<td>' + (t.autoAward ? '<span class="tag tag-blue">是</span>' : '<span class="tag tag-grey">否</span>') + '</td>' +
       '<td>' + (t.validity || '永久') + '</td>' +
       '<td><span class="tag ' + statusClass + '">' + t.status + '</span></td>' +
       '<td style="text-align:center;"><a class="action-link" onclick="openModal(' + idx + ')">编辑</a><span class="action-sep">|</span><a class="action-link" onclick="toggleStatus(' + idx + ')">' + toggleText + '</a></td>' +
@@ -475,9 +462,6 @@ function openModal(idx) {
 
   document.querySelector('input[name="validMode"][value="permanent"]').checked = true;
   document.getElementById('timePicker').style.display = 'none';
-
-  var toggleAuto = document.getElementById('toggleAuto');
-  if (t.autoAward) { toggleAuto.classList.add('on'); } else { toggleAuto.classList.remove('on'); }
 
   var toggle = document.getElementById('toggleShelf');
   if (t.status === '已上架') { toggle.classList.add('on'); } else { toggle.classList.remove('on'); }
