@@ -12,15 +12,17 @@ html{overscroll-behavior:contain;}
 body::-webkit-scrollbar{display:none;}
 body{-ms-overflow-style:none;scrollbar-width:none;}
 
-/* === Cover === */
-.cover{width:100%;height:220px;position:relative;overflow:hidden;}
-.cover>img{width:100%;height:100%;object-fit:cover;display:block;}
-.cover-overlay{position:absolute;bottom:0;left:0;right:0;height:100px;background:linear-gradient(transparent,rgba(0,0,0,0.5));z-index:1;}
-.cover-title{position:absolute;bottom:14px;left:14px;right:100px;font-size:19px;font-weight:700;color:#fff;z-index:2;text-shadow:0 1px 4px rgba(0,0,0,0.3);}
-.cover-badges{position:absolute;top:96px;left:12px;z-index:3;display:flex;gap:6px;}
-.cover-badge{height:22px;padding:0 9px;border-radius:11px;font-size:11px;font-weight:600;display:flex;align-items:center;gap:3px;backdrop-filter:blur(6px);}
-.badge-scope{background:rgba(255,255,255,0.22);color:#fff;border:0.5px solid rgba(255,255,255,0.3);}
-.badge-status{background:rgba(52,201,110,0.9);color:#fff;}
+/* === Cover Swiper === */
+.cover{width:100%;height:200px;position:relative;overflow:hidden;}
+.cover-track{display:flex;width:300%;height:100%;transition:transform 0.3s ease;}
+.cover-slide{width:375px;height:200px;flex-shrink:0;}
+.cover-slide img{width:100%;height:100%;object-fit:cover;display:block;}
+.cover-dots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:10;}
+.cover-dot{width:6px;height:6px;border-radius:3px;background:rgba(255,255,255,0.5);}
+.cover-dot.active{background:#fff;width:14px;}
+.cover-badge{height:22px;padding:0 9px;border-radius:11px;font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:3px;}
+.badge-scope{background:rgba(63,134,245,0.12);color:#3F86F5;}
+.badge-status{background:rgba(52,201,110,0.12);color:#34C96E;}
 .status-bar{position:absolute;top:0;left:0;right:0;z-index:50;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;color:#fff;}
 .status-bar .time{font-family:Inter,sans-serif;font-weight:700;font-size:15px;}
 .nav-bar{position:absolute;top:44px;left:0;right:0;z-index:50;height:44px;display:flex;align-items:center;justify-content:center;}
@@ -32,61 +34,45 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 .capsule-divider{width:0.5px;height:16px;background:rgba(255,255,255,0.3);}
 .capsule-close{flex:1;display:flex;align-items:center;justify-content:center;}
 
-/* === Stat Panel (blue gradient, overlaps cover) === */
-.stat-panel{margin:-18px 12px 0;position:relative;z-index:10;background:linear-gradient(135deg,#3F86F5 0%,#5B9FFF 100%);border-radius:12px;padding:14px 0;display:flex;box-shadow:0 4px 12px rgba(63,134,245,0.25);}
+/* === Stat Panel (inside white area) === */
+.stat-panel{margin:0;background:linear-gradient(135deg,#3F86F5 0%,#5B9FFF 100%);border-radius:10px;padding:14px 0;display:flex;box-shadow:0 4px 12px rgba(63,134,245,0.25);}
 .stat-item{flex:1;text-align:center;}
 .stat-num{font-family:Inter,sans-serif;font-size:22px;font-weight:700;color:#fff;line-height:1;}
 .stat-label{font-size:11px;color:rgba(255,255,255,0.75);margin-top:4px;}
 .stat-item+.stat-item{border-left:1px solid rgba(255,255,255,0.2);}
 
-/* === Info Section (single white panel, no separate cards) === */
-.info-section{margin:8px 0 0;background:#fff;padding:0 12px;}
-.info-row{padding:10px 0;display:flex;align-items:center;gap:6px;border-bottom:1px solid #F0F3F8;}
-.info-row:last-child{border-bottom:none;}
-.info-row.countdown{font-size:12px;color:#E67E00;font-weight:600;}
-.info-row.scope{font-size:12px;color:#3F86F5;font-weight:500;}
+/* === Info Section (flush with cover, no gap) === */
+.info-section{margin:0;background:#fff;padding:12px 12px 12px;border-radius:0 0 12px 12px;}
 .countdown-dot{width:6px;height:6px;border-radius:3px;background:#FF8C00;flex-shrink:0;animation:pulse 1.5s ease infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.4;}}
-.scope-icon{flex-shrink:0;}
-
-/* === Desc (inside same white flow) === */
-.desc-block{padding:10px 12px 12px;background:#fff;}
-.desc-title{font-size:14px;font-weight:700;color:#1F2937;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
-.desc-title::before{content:'';width:3px;height:14px;border-radius:2px;background:#3F86F5;}
-.desc-text{font-size:13px;color:#4B5563;line-height:1.6;max-height:46px;overflow:hidden;transition:max-height 0.3s;}
-.desc-text.expanded{max-height:500px;}
-.desc-toggle{font-size:12px;color:#3F86F5;margin-top:4px;cursor:pointer;user-select:none;}
-.rule-box{margin-top:8px;padding:8px 10px;background:linear-gradient(135deg,#F8FAFD,#EEF3FB);border-radius:6px;font-size:12px;color:#6B7B90;line-height:1.5;border-left:3px solid #3F86F5;}
+.rule-box{margin-top:0;padding:10px 12px;background:#F0F3F8;border-radius:8px;font-size:12px;color:#6B7B90;line-height:1.5;}
 .rule-box strong{color:#4B5563;}
 
-/* === Tab Bar (sits on bg, not in card) === */
-.section-title{padding:14px 12px 0;font-size:15px;font-weight:700;color:#1F2937;display:flex;align-items:center;justify-content:space-between;}
-.tab-bar{display:flex;align-items:center;padding:8px 12px 0;gap:20px;position:sticky;top:0;background:#F2F5FA;z-index:20;padding-bottom:8px;}
-.tab-item{font-size:14px;color:#8B96A8;position:relative;padding-bottom:6px;cursor:pointer;user-select:none;}
-.tab-item.active{color:#1F2937;font-weight:700;}
-.tab-item.active::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:20px;height:3px;border-radius:2px;background:linear-gradient(90deg,#3F86F5,#6EAAFF);}
+/* === Section Header (title + sort in one row) === */
+.section-header{display:flex;align-items:center;justify-content:space-between;padding:12px 12px 8px;position:sticky;top:0;background:#F2F5FA;z-index:20;}
+.section-left{display:flex;align-items:baseline;gap:6px;}
+.section-title-text{font-size:16px;font-weight:700;color:#1F2937;}
+.section-count{font-size:12px;color:#8B96A8;font-weight:400;}
+.sort-tabs{display:flex;align-items:center;gap:0;background:#F0F3F8;border-radius:6px;padding:2px;}
+.sort-item{font-size:12px;color:#8B96A8;padding:4px 10px;border-radius:4px;cursor:pointer;user-select:none;font-weight:500;transition:all 0.15s;}
+.sort-item.active{background:#fff;color:#1F2937;font-weight:600;box-shadow:0 1px 2px rgba(0,0,0,0.06);}
+.sort-divider{display:none;}
 
-/* === Works Grid === */
-.works-grid{padding:6px 12px 12px;display:flex;gap:8px;}
-.works-col{flex:1;display:flex;flex-direction:column;gap:8px;}
-.work-card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(33,71,128,0.04);transition:transform 0.15s;}
-.work-card:active{transform:scale(0.98);}
+/* === Works Grid (Pinterest/XHS style) === */
+.works-grid{padding:4px 12px 12px;display:flex;gap:6px;}
+.works-col{flex:1;display:flex;flex-direction:column;gap:6px;}
+.work-card{background:#fff;border-radius:8px;overflow:hidden;box-shadow:0 1px 2px rgba(33,71,128,0.04);}
 .work-img{width:100%;position:relative;}
 .work-img img{width:100%;display:block;}
-.work-no{position:absolute;top:0;left:0;background:rgba(31,41,55,0.65);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:0 0 8px 0;}
-.work-body{padding:8px 10px 10px;}
-.work-name{font-size:13px;font-weight:600;color:#1F2937;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
-.work-meta{display:flex;align-items:center;justify-content:space-between;margin-top:6px;}
-.work-votes{font-family:Inter,sans-serif;font-size:15px;font-weight:700;color:#FF8C00;}
-.work-votes span{font-size:11px;font-weight:400;color:#8B96A8;}
-.vote-btn{height:26px;padding:0 12px;border-radius:6px;border:none;font-size:11px;font-weight:700;cursor:pointer;transition:all 0.15s;}
-.vote-btn.active{background:linear-gradient(135deg,#3F86F5,#5B9FFF);color:#fff;box-shadow:0 2px 6px rgba(63,134,245,0.2);}
-.vote-btn.active:active{transform:scale(0.95);}
+.work-no{position:absolute;top:0;left:0;background:rgba(31,41,55,0.6);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:0 0 6px 0;}
+.work-body{padding:6px 8px 8px;}
+.work-name{font-size:13px;font-weight:600;color:#1F2937;line-height:1.35;}
+.work-meta{display:flex;align-items:center;justify-content:space-between;margin-top:4px;}
+.work-votes{font-family:Inter,sans-serif;font-size:13px;font-weight:700;color:#FF8C00;}
+.work-votes span{font-size:10px;font-weight:400;color:#8B96A8;}
+.vote-btn{height:22px;padding:0 10px;border-radius:4px;border:none;font-size:10px;font-weight:700;cursor:pointer;}
+.vote-btn.active{background:linear-gradient(135deg,#3F86F5,#5B9FFF);color:#fff;}
 .vote-btn.disabled{background:#F1F3F8;color:#C6D0DE;cursor:default;}
-.work-avatars{display:flex;align-items:center;margin-top:4px;}
-.avatar-circle{width:16px;height:16px;border-radius:8px;border:1.5px solid #fff;margin-left:-4px;font-size:0;}
-.avatar-circle:first-child{margin-left:0;}
-.avatar-more{font-size:10px;color:#C6D0DE;margin-left:3px;}
 
 /* === Toast & Hints === */
 .share-hint{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:rgba(34,40,53,0.88);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:80;opacity:0;transition:opacity 0.3s;pointer-events:none;}
@@ -97,9 +83,8 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 </head>
 <body>
 
-<!-- Cover (full bleed) -->
-<div class="cover">
-  <img src="https://images.unsplash.com/photo-1546638008-efbe0b62c730?w=375&h=220&fit=crop&q=80" alt="">
+<!-- Cover Swiper -->
+<div class="cover" id="coverSwiper">
   <div class="status-bar">
     <span class="time">9:41</span>
     <div style="display:flex;gap:5px;align-items:center;">
@@ -116,50 +101,59 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
       <div class="capsule-close"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
     </div>
   </div>
-  <div class="cover-badges">
-    <div class="cover-badge badge-scope"><svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 5h5l-4 3.5 1.5 5L8 11.5 3.5 14.5 5 9.5 1 6h5z" fill="#fff"/></svg>芳和花园</div>
-    <div class="cover-badge badge-status"><svg width="8" height="8" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="3" fill="#fff"/></svg>投票中</div>
+  <div class="cover-track" id="coverTrack">
+    <div class="cover-slide"><img src="https://images.unsplash.com/photo-1546638008-efbe0b62c730?w=375&h=200&fit=crop&q=80"></div>
+    <div class="cover-slide"><img src="https://images.unsplash.com/photo-1684871430772-569936b1a0ae?w=375&h=200&fit=crop&q=80"></div>
+    <div class="cover-slide"><img src="https://images.unsplash.com/photo-1486303954368-398fea0e72cd?w=375&h=200&fit=crop&q=80"></div>
   </div>
-  <div class="cover-overlay"></div>
-  <div class="cover-title">2026年社区书画展</div>
+  <div class="cover-dots">
+    <div class="cover-dot active"></div>
+    <div class="cover-dot"></div>
+    <div class="cover-dot"></div>
+  </div>
 </div>
 
-<!-- Stat Panel (blue gradient card) -->
-<div class="stat-panel">
-  <div class="stat-item"><div class="stat-num">1,280</div><div class="stat-label">参与人数</div></div>
-  <div class="stat-item"><div class="stat-num">3,650</div><div class="stat-label">累计票数</div></div>
-  <div class="stat-item"><div class="stat-num">8,920</div><div class="stat-label">浏览量</div></div>
-</div>
-
-<!-- Info Section (single white panel with divider rows) -->
+<!-- White panel flush with cover -->
 <div class="info-section">
-  <div class="info-row countdown">
-    <div class="countdown-dot"></div>
-    距投票结束 5天12时36分
+  <!-- Stat Panel -->
+  <div class="stat-panel">
+    <div class="stat-item"><div class="stat-num">1,280</div><div class="stat-label">参与人数</div></div>
+    <div class="stat-item"><div class="stat-num">3,650</div><div class="stat-label">累计票数</div></div>
+    <div class="stat-item"><div class="stat-num">8,920</div><div class="stat-label">浏览量</div></div>
   </div>
-  <div class="info-row scope">
-    <svg class="scope-icon" width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#3F86F5" stroke-width="1.5"/><path d="M8 5v4M8 11h.01" stroke="#3F86F5" stroke-width="1.5" stroke-linecap="round"/></svg>
+  <!-- Title + status badge -->
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:10px 0 0;">
+    <div style="font-size:18px;font-weight:700;color:#1F2937;line-height:1.4;flex:1;">2026年社区书画展</div>
+    <span class="cover-badge badge-status" style="flex-shrink:0;margin-top:2px;"><svg width="6" height="6" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" fill="#34C96E"/></svg>投票中</span>
+  </div>
+  <!-- Desc -->
+  <div style="font-size:13px;color:#4B5563;line-height:1.6;padding:6px 0 10px;">为展示社区居民的艺术才华，丰富社区文化生活，特举办2026年社区书画展。欢迎社区居民踊跃参与，展示您的书法、绘画、手工艺作品。优秀作品将获得积分奖励，并在社区文化中心展出。本次活动由社区居委会主办，旨在促进邻里交流。</div>
+  <!-- Rule box -->
+  <div class="rule-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <strong>投票规则</strong>
+      <span style="font-size:11px;color:#E67E00;font-weight:600;display:flex;align-items:center;gap:4px;"><span class="countdown-dot"></span>距结束 5天12时36分</span>
+    </div>
+    <div style="margin-top:4px;">每人每天可投 5 票，每个作品每天限投 1 票</div>
+  </div>
+  <!-- Scope tip inside white panel -->
+  <div style="display:flex;align-items:center;gap:5px;margin-top:8px;font-size:12px;color:#3F86F5;font-weight:500;">
+    <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="7" stroke="#3F86F5" stroke-width="1.5"/><path d="M8 5v4M8 11h.01" stroke="#3F86F5" stroke-width="1.5" stroke-linecap="round"/></svg>
     仅限 芳和花园 居民参与
   </div>
 </div>
 
-<!-- Desc (continues white bg, no separate card) -->
-<div class="desc-block">
-  <div class="desc-title">活动简介</div>
-  <div class="desc-text" id="descText">为展示社区居民的艺术才华，丰富社区文化生活，特举办2026年社区书画展。欢迎社区居民踊跃参与，展示您的书法、绘画、手工艺作品。优秀作品将获得积分奖励，并在社区文化中心展出。本次活动由社区居委会主办，旨在促进邻里交流。</div>
-  <div class="desc-toggle" onclick="toggleDesc()">展开全部</div>
-  <div class="rule-box">
-    <strong>投票规则</strong><br>
-    每人每天可投 5 票，每个作品每天限投 1 票<br>
-    投票时间：2026-05-01 ~ 2026-05-15
+<!-- Section header: title left + sort right (single row) -->
+<div class="section-header">
+  <div class="section-left">
+    <span class="section-title-text">候选作品</span>
+    <span class="section-count">共 8 个</span>
   </div>
-</div>
-
-<!-- Section title + Tab (on background, not in card) -->
-<div class="section-title">候选作品 <span style="font-size:12px;font-weight:400;color:#8B96A8;">共 8 件</span></div>
-<div class="tab-bar">
-  <div class="tab-item active" onclick="switchSort('no')">按编号</div>
-  <div class="tab-item" onclick="switchSort('votes')">按票数</div>
+  <div class="sort-tabs">
+    <span class="sort-item active" onclick="switchSort('no',this)">按编号</span>
+    <span class="sort-divider"></span>
+    <span class="sort-item" onclick="switchSort('votes',this)">按票数</span>
+  </div>
 </div>
 
 <!-- Works Grid -->
@@ -170,16 +164,15 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 
 <script>
 var works=[
-  {no:1,name:'山水画 - 春意盎然',votes:456,h:130,img:'https://images.unsplash.com/photo-1684871430772-569936b1a0ae?w=170&h=130&fit=crop&q=80',voted:true},
-  {no:2,name:'书法 - 家和万事兴',votes:328,h:110,img:'https://images.unsplash.com/photo-1486303954368-398fea0e72cd?w=170&h=110&fit=crop&q=80',voted:true},
-  {no:3,name:'油画 - 社区花园',votes:289,h:140,img:'https://images.unsplash.com/photo-1632770464350-e73ae4aaa11c?w=170&h=140&fit=crop&q=80',voted:false},
-  {no:4,name:'水彩 - 夕阳小径',votes:245,h:115,img:'https://images.unsplash.com/photo-1713118774750-e1878e76b067?w=170&h=115&fit=crop&q=80',voted:false},
-  {no:5,name:'国画 - 荷塘月色',votes:412,h:135,img:'https://images.unsplash.com/photo-1699003788740-5f2df501bdcf?w=170&h=135&fit=crop&q=80',voted:false},
-  {no:6,name:'素描 - 社区老树',votes:198,h:105,img:'https://images.unsplash.com/photo-1545038522-9bb451739ab9?w=170&h=105&fit=crop&q=80',voted:false},
-  {no:7,name:'剪纸 - 福满邻里',votes:176,h:130,img:'https://images.unsplash.com/photo-1583389409210-0234eee7cdce?w=170&h=130&fit=crop&q=80',voted:false},
-  {no:8,name:'版画 - 社区晨曦',votes:164,h:120,img:'https://images.unsplash.com/photo-1689259103820-a375e5a30e00?w=170&h=120&fit=crop&q=80',voted:false}
+  {no:1,name:'山水画 - 春意盎然',votes:456,h:225,img:'https://images.unsplash.com/photo-1684871430772-569936b1a0ae?w=170&h=225&fit=crop&q=80',voted:true},
+  {no:2,name:'书法 - 家和万事兴',votes:328,h:128,img:'https://images.unsplash.com/photo-1486303954368-398fea0e72cd?w=170&h=128&fit=crop&q=80',voted:true},
+  {no:3,name:'油画 - 社区花园',votes:289,h:128,img:'https://images.unsplash.com/photo-1632770464350-e73ae4aaa11c?w=170&h=128&fit=crop&q=80',voted:false},
+  {no:4,name:'水彩 - 夕阳小径',votes:245,h:225,img:'https://images.unsplash.com/photo-1713118774750-e1878e76b067?w=170&h=225&fit=crop&q=80',voted:false},
+  {no:5,name:'国画 - 荷塘月色',votes:412,h:225,img:'https://images.unsplash.com/photo-1699003788740-5f2df501bdcf?w=170&h=225&fit=crop&q=80',voted:false},
+  {no:6,name:'素描 - 社区老树',votes:198,h:128,img:'https://images.unsplash.com/photo-1545038522-9bb451739ab9?w=170&h=128&fit=crop&q=80',voted:false},
+  {no:7,name:'剪纸 - 福满邻里',votes:176,h:128,img:'https://images.unsplash.com/photo-1583389409210-0234eee7cdce?w=170&h=128&fit=crop&q=80',voted:false},
+  {no:8,name:'版画 - 社区晨曦',votes:164,h:225,img:'https://images.unsplash.com/photo-1689259103820-a375e5a30e00?w=170&h=225&fit=crop&q=80',voted:false}
 ];
-var avatarColors=['#3F86F5','#34C96E','#FFA424','#7D82F6','#FF7E66'];
 
 function renderWorks(sortBy){
   var arr=works.slice();
@@ -188,14 +181,11 @@ function renderWorks(sortBy){
   arr.forEach(function(w,i){
     var btnClass=w.voted?'vote-btn disabled':'vote-btn active';
     var btnText=w.voted?'已投票':'投票';
-    var avs='';
-    for(var j=0;j<3;j++){avs+='<div class="avatar-circle" style="background:'+avatarColors[(w.no+j)%5]+';"></div>';}
     var card='<div class="work-card" id="card-'+w.no+'">'+
       '<div class="work-img"><img src="'+w.img+'" style="height:'+w.h+'px;width:100%;object-fit:cover;display:block;"><div class="work-no">'+String(w.no).padStart(2,'0')+'号</div></div>'+
       '<div class="work-body"><div class="work-name">'+w.name+'</div>'+
       '<div class="work-meta"><div class="work-votes" id="votes-'+w.no+'">'+w.votes+' <span>票</span></div>'+
       '<button class="'+btnClass+'" id="btn-'+w.no+'" onclick="doVote('+w.no+')">'+btnText+'</button></div>'+
-      '<div class="work-avatars">'+avs+'<span class="avatar-more">+'+Math.floor(Math.random()*20+5)+'</span></div>'+
       '</div></div>';
     if(i%2===0) col1+=card; else col2+=card;
   });
@@ -213,17 +203,17 @@ function doVote(no){
   setTimeout(function(){document.getElementById('shareHint').classList.add('show');setTimeout(function(){document.getElementById('shareHint').classList.remove('show');},3000);},500);
 }
 
-function switchSort(type){
-  document.querySelectorAll('.tab-item').forEach(function(t){t.classList.remove('active');});
-  event.target.classList.add('active');
+function switchSort(type,el){
+  document.querySelectorAll('.sort-item').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
   renderWorks(type);
 }
 
-function toggleDesc(){
-  var el=document.getElementById('descText');var toggle=el.nextElementSibling;
-  if(el.classList.contains('expanded')){el.classList.remove('expanded');toggle.textContent='展开全部';}
-  else{el.classList.add('expanded');toggle.textContent='收起';}
-}
+var coverIdx=0,coverTrack=document.getElementById('coverTrack'),coverDots=document.querySelectorAll('.cover-dot');
+function slideCover(dir){coverIdx=Math.max(0,Math.min(2,coverIdx+dir));coverTrack.style.transform='translateX(-'+coverIdx*375+'px)';coverDots.forEach(function(d,i){d.classList.toggle('active',i===coverIdx);});}
+var csx=0;document.getElementById('coverSwiper').addEventListener('touchstart',function(e){csx=e.touches[0].clientX;});
+document.getElementById('coverSwiper').addEventListener('touchend',function(e){var d=e.changedTouches[0].clientX-csx;if(Math.abs(d)>40){slideCover(d<0?1:-1);}});
+setInterval(function(){coverIdx=(coverIdx+1)%3;coverTrack.style.transform='translateX(-'+coverIdx*375+'px)';coverDots.forEach(function(d,i){d.classList.toggle('active',i===coverIdx);});},4000);
 
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},1800);}
 
