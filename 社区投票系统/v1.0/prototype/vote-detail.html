@@ -74,9 +74,7 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 .vote-btn.active{background:linear-gradient(135deg,#3F86F5,#5B9FFF);color:#fff;}
 .vote-btn.disabled{background:#F1F3F8;color:#C6D0DE;cursor:default;}
 
-/* === Toast & Hints === */
-.share-hint{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);background:rgba(34,40,53,0.88);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;z-index:80;opacity:0;transition:opacity 0.3s;pointer-events:none;}
-.share-hint.show{opacity:1;}
+/* === Toast === */
 .toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.8);background:rgba(34,40,53,0.88);color:#fff;padding:14px 24px;border-radius:12px;font-size:14px;font-weight:700;z-index:100;opacity:0;transition:all 0.3s ease;pointer-events:none;text-align:center;white-space:nowrap;}
 .toast.show{opacity:1;transform:translate(-50%,-50%) scale(1);}
 </style>
@@ -164,7 +162,6 @@ body{-ms-overflow-style:none;scrollbar-width:none;}
 <!-- Works Grid -->
 <div class="works-grid" id="worksGrid"></div>
 
-<div class="share-hint" id="shareHint">分享给朋友一起投票吧</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -197,15 +194,19 @@ function renderWorks(sortBy){
   document.getElementById('worksGrid').innerHTML='<div class="works-col">'+col1+'</div><div class="works-col">'+col2+'</div>';
 }
 
+var dailyLimit=5;
+var votedToday=2;
+
 function doVote(no){
   var w=works.find(function(x){return x.no===no;});
-  if(w.voted) return;
-  w.voted=true;w.votes++;
+  if(w.voted){showToast('您已投过此作品');return;}
+  if(votedToday>=dailyLimit){showToast('您今天的投票次数已用完');return;}
+  w.voted=true;w.votes++;votedToday++;
   document.getElementById('btn-'+no).className='vote-btn disabled';
   document.getElementById('btn-'+no).textContent='已投票';
   document.getElementById('votes-'+no).innerHTML=w.votes+' <span>票</span>';
-  showToast('投票成功!');
-  setTimeout(function(){document.getElementById('shareHint').classList.add('show');setTimeout(function(){document.getElementById('shareHint').classList.remove('show');},3000);},500);
+  var remain=dailyLimit-votedToday;
+  showToast(remain>0?'投票成功，今天还可投'+remain+'票':'投票成功，今日票数已用完');
 }
 
 function switchSort(type,el){
