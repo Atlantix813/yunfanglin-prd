@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375, initial-scale=1">
+  <title>领券中心 - 六一活动专场</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; width:375px; min-height:100%; overflow-x:hidden; overscroll-behavior:contain; background:#dfe7f3; font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Noto Sans SC",sans-serif; color:#222835; }
+    body::-webkit-scrollbar { display:none; }
+    body { scrollbar-width:none; }
+    .m-demo { width:375px; min-height:812px; margin:0 auto; background:#F3F6FA; position:relative; overflow:hidden; box-shadow:0 0 10px rgba(0,0,0,.18); }
+    .m-status-bar { height:44px; display:flex; align-items:center; justify-content:space-between; padding:0 14px 0 22px; background:#DCEBFF; }
+    .m-status-bar .time { font-family:Inter,sans-serif; font-weight:700; font-size:15px; color:#111827; }
+    .m-status-icons { display:flex; gap:5px; align-items:center; height:10px; }
+    .m-nav-bar { height:44px; position:relative; background:#DCEBFF; }
+    .m-nav-bar .back { position:absolute; left:16px; top:50%; transform:translateY(-50%); z-index:2; width:22px; height:22px; }
+    .m-nav-bar .back:before { content:""; display:block; width:14px; height:14px; border-left:3px solid #111; border-bottom:3px solid #111; transform:rotate(45deg); margin:3px 0 0 5px; border-radius:1px; }
+    .m-nav-bar .title { position:absolute; left:50%; top:0; width:185px; height:44px; transform:translateX(-50%); display:flex; align-items:center; justify-content:center; text-align:center; font-size:17px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; z-index:1; color:#111827; }
+    .m-nav-bar .capsule { position:absolute; right:10px; top:6px; width:87px; height:32px; border-radius:17px; display:flex; align-items:center; justify-content:center; z-index:2; border:1px solid rgba(0,0,0,.08); background:rgba(255,255,255,.42); color:#757B85; }
+    .capsule-dots { flex:1; display:flex; align-items:center; justify-content:center; gap:3px; }
+    .capsule-dots span { width:5px; height:5px; border-radius:50%; background:#757B85; }
+    .capsule-dots span:nth-child(2) { width:7px; height:7px; }
+    .capsule-divider { width:1px; height:19px; background:#B8C5D8; }
+    .capsule-close { flex:1; display:flex; align-items:center; justify-content:center; }
+    .capsule-target { width:17px; height:17px; border:3px solid currentColor; border-radius:50%; display:block; position:relative; }
+    .capsule-target:after { content:""; position:absolute; left:50%; top:50%; width:6px; height:6px; border-radius:50%; background:currentColor; transform:translate(-50%,-50%); }
+    .m-page-content { height:724px; overflow-y:auto; overflow-x:hidden; padding-bottom:28px; }
+    .m-page-content::-webkit-scrollbar { display:none; }
+    .tabs-wrap { position:sticky; top:0; z-index:5; background:#F3F6FA; padding:0 0 8px; box-shadow:0 8px 18px rgba(20,52,96,.04); }
+    .tabs { display:flex; align-items:center; gap:24px; overflow-x:auto; overflow-y:hidden; overscroll-behavior-x:contain; padding:12px 16px 8px; white-space:nowrap; }
+    .tabs::-webkit-scrollbar { display:none; }
+    .tab { position:relative; flex:0 0 auto; font-size:18px; font-weight:500; color:#33353A; padding:2px 0 10px; }
+    .tab.active { color:#087CFF; }
+    .tab.active:after { content:""; position:absolute; left:50%; bottom:0; width:34px; height:4px; border-radius:3px; background:#087CFF; transform:translateX(-50%); }
+    .tab.event-tab { padding:2px 10px 10px; margin:0 -4px; color:#087CFF; font-weight:700; letter-spacing:.2px; }
+    .tab.event-tab .event-text { position:relative; z-index:1; background:linear-gradient(90deg,#087CFF 0%,#13B66B 48%,#FF7A00 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+    .tab.event-tab:before { content:""; position:absolute; left:2px; right:2px; top:0; bottom:8px; border-radius:12px; background:linear-gradient(90deg,rgba(8,124,255,.10),rgba(31,190,119,.10),rgba(255,122,0,.10)); transform:skewX(-8deg); opacity:0; transition:opacity .18s ease; }
+    .tab.event-tab.active:before { opacity:1; }
+    .tab.event-tab.active:after { width:42px; height:4px; background:linear-gradient(90deg,#087CFF,#13B66B,#FFB020); }
+    .tab.event-tab .spark { position:absolute; z-index:2; width:5px; height:5px; border-radius:50%; background:#FFB020; right:3px; top:-1px; box-shadow:-10px 6px 0 #13B66B; animation:spark-bounce 1.3s ease-in-out infinite; }
+    @keyframes spark-bounce { 0%,100% { transform:translateY(0) scale(1); opacity:.9; } 50% { transform:translateY(-3px) scale(1.12); opacity:1; } }
+    .search-row { display:flex; align-items:center; padding:0 16px 4px; }
+    .search-box { height:38px; width:100%; display:flex; align-items:center; gap:7px; padding:0 14px; background:#fff; border-radius:19px; box-shadow:0 2px 8px rgba(28,69,130,.06); border:1px solid #EAF0F8; }
+    .search-icon { width:15px; height:15px; border:2px solid #9AA7B8; border-radius:50%; position:relative; flex:0 0 auto; }
+    .search-icon:after { content:""; position:absolute; width:7px; height:2px; background:#9AA7B8; right:-5px; bottom:-3px; transform:rotate(45deg); border-radius:2px; }
+    .search-box input { border:0; outline:0; flex:1; min-width:0; font-size:14px; color:#222835; background:transparent; }
+    .clear-btn { border:0; background:#EEF2F7; color:#8A95A5; width:18px; height:18px; border-radius:50%; font-size:14px; line-height:18px; display:none; padding:0; }
+    .clear-btn.show { display:block; }
+    .hint-line { padding:0 18px; font-size:12px; color:#7B8796; min-height:0; }
+    .hint-line:not(:empty) { padding:3px 18px 2px; min-height:21px; }
+    .list { padding:8px 14px 30px; }
+    .coupon-card { width:347px; min-height:174px; margin:0 auto 12px; display:flex; background:#fff; border-radius:14px; overflow:hidden; box-shadow:0 8px 20px rgba(28,52,91,.08); }
+    .coupon-main { width:248px; padding:18px 14px 14px; }
+    .coupon-title { font-size:16px; line-height:22px; font-weight:600; margin:0 0 12px; color:#2E3138; min-height:22px; }
+    .tags { display:flex; gap:6px; flex-wrap:wrap; min-height:26px; margin-bottom:10px; }
+    .tag { height:24px; padding:0 9px; border-radius:4px; display:inline-flex; align-items:center; font-size:12px; font-weight:500; }
+    .tag.green { color:#20B85A; background:#E9F9F0; }
+    .tag.blue { color:#087CFF; background:#E8F2FF; }
+    .tag.red { color:#F05A45; background:#FFECE8; }
+    .date { font-size:13px; color:#626A75; line-height:18px; margin-bottom:14px; }
+    .stock { display:flex; align-items:center; gap:8px; margin-bottom:15px; }
+    .stock-bar { width:166px; height:7px; background:#E4E6EA; border-radius:7px; overflow:hidden; }
+    .stock-fill { height:100%; background:#72AEFF; border-radius:7px; }
+    .stock-text { font-size:12px; color:#9BA2AD; white-space:nowrap; }
+    .merchant-line { display:flex; align-items:flex-start; justify-content:space-between; gap:8px; color:#9BA1AA; font-size:13px; font-weight:500; line-height:18px; }
+    .merchant { width:128px; }
+    .distance { display:flex; align-items:center; gap:3px; white-space:nowrap; font-weight:500; }
+    .pin { width:14px; height:14px; border:2px solid #A9AFB8; border-radius:50% 50% 50% 0; transform:rotate(-45deg); display:inline-block; position:relative; top:2px; }
+    .pin:after { content:""; position:absolute; width:4px; height:4px; border-radius:50%; background:#A9AFB8; left:3px; top:3px; }
+    .coupon-side { width:99px; background:#ECF6FF; border-left:1px solid #E0E7F1; display:flex; align-items:center; justify-content:center; padding:14px 8px; text-align:center; color:#087CFF; }
+    .side-inner { width:100%; }
+    .side-title { font-size:16px; line-height:20px; font-weight:600; margin-bottom:8px; word-break:break-all; }
+    .side-value { font-size:13px; font-weight:500; margin-bottom:12px; }
+    .side-money { font-family:Inter,sans-serif; font-size:34px; font-weight:600; line-height:38px; margin:2px 0 18px; }
+    .side-money small { font-size:14px; margin-right:2px; }
+    .action { min-width:76px; min-height:36px; border:0; border-radius:8px; background:#087CFF; color:#fff; padding:6px 10px; font-size:15px; font-weight:600; line-height:18px; }
+    .action span { display:block; font-size:11px; font-weight:500; margin-top:2px; }
+    .action.disabled { background:#D9DEE7; color:#fff; }
+    .empty { display:none; text-align:center; padding:58px 22px; color:#8A94A5; }
+    .empty.show { display:block; }
+    .empty-icon { width:72px; height:72px; margin:0 auto 14px; border-radius:24px; background:#EAF2FF; display:flex; align-items:center; justify-content:center; color:#087CFF; font-size:34px; font-weight:800; }
+    .toast { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); max-width:260px; padding:12px 16px; border-radius:12px; background:rgba(34,40,53,.88); color:#fff; font-size:14px; font-weight:700; opacity:0; pointer-events:none; transition:.2s; z-index:20; text-align:center; }
+    .toast.show { opacity:1; }
+  </style>
+</head>
+<body>
+  <div class="m-demo">
+    <div class="m-status-bar">
+      <span class="time">9:41</span>
+      <div class="m-status-icons">
+        <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx=".5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx=".5" fill="#222835"/></svg>
+        <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="#222835"/></svg>
+      </div>
+    </div>
+    <div class="m-nav-bar">
+      <span class="back"></span>
+      <span class="title">领券中心</span>
+      <div class="capsule">
+        <div class="capsule-dots"><span></span><span></span><span></span></div>
+        <div class="capsule-divider"></div>
+        <div class="capsule-close"><span class="capsule-target"></span></div>
+      </div>
+    </div>
+    <main class="m-page-content">
+      <section class="tabs-wrap">
+        <div class="tabs" id="tabs">
+          <div class="tab active" data-type="all">全部</div>
+          <div class="tab event-tab" data-type="children"><span class="event-text">六一活动专场</span><span class="spark"></span></div>
+          <div class="tab" data-type="free">免费领</div>
+          <div class="tab" data-type="points">积分换</div>
+          <div class="tab" data-type="new">新客专享</div>
+        </div>
+        <div class="search-row">
+          <div class="search-box">
+            <span class="search-icon"></span>
+            <input id="keyword" placeholder="搜索优惠券名称" maxlength="20">
+            <button class="clear-btn" id="clearBtn">×</button>
+          </div>
+        </div>
+        <div class="hint-line" id="hintLine"></div>
+      </section>
+      <section class="list" id="couponList"></section>
+      <section class="empty" id="emptyBox">
+        <div class="empty-icon">券</div>
+        <div id="emptyText">暂无符合条件的优惠券</div>
+      </section>
+    </main>
+    <div class="toast" id="toast">已处理</div>
+  </div>
+  <script>
+    const coupons = [
+      { title:"向日葵成长驿站课程抵扣券", tags:["兑换券"], tagTypes:["green"], type:"points", children:false, date:"2026-05-08 ~ 2026-06-07 领取", stock:10, total:80, merchant:"京溪南方医科大社区向日葵成长驿站", distance:"12.9km", sideTitle:"免费参加四种课程", value:"价值60元", action:"兑换", points:600 },
+      { title:"200代金券", tags:["满减券"], tagTypes:["blue"], type:"free", children:false, date:"满200元可用 · 2026-05-12 ~ 2026-06-10 领取", stock:4, total:18, merchant:"晨星体育", distance:"12.0km", money:"40", action:"免费领", points:0 },
+      { title:"篮球体验课一节", tags:["兑换券","新客专享"], tagTypes:["green","red"], type:"free", children:false, date:"2026-05-12 ~ 2026-08-10 领取", stock:16, total:40, merchant:"晨星体育", distance:"12.0km", sideTitle:"篮球体验课", value:"价值200元", action:"免费领", points:0, isNew:true },
+      { title:"六一专场-亲子烘焙体验券", tags:["兑换券"], tagTypes:["green"], type:"points", children:true, date:"2026-05-21 ~ 2026-06-01 领取", stock:20, total:50, merchant:"糖小满亲子烘焙", distance:"3.2km", sideTitle:"亲子烘焙课", value:"价值128元", action:"兑换", points:300 },
+      { title:"六一专场-儿童蛋糕体验券", tags:["兑换券","新客专享"], tagTypes:["green","red"], type:"points", children:true, date:"2026-05-21 ~ 2026-06-01 领取", stock:8, total:30, merchant:"糖小满亲子烘焙", distance:"3.2km", sideTitle:"儿童蛋糕体验", value:"价值168元", action:"兑换", points:500, isNew:true },
+      { title:"六一专场-篮球体验课一节", tags:["兑换券"], tagTypes:["green"], type:"free", children:true, date:"2026-05-21 ~ 2026-06-01 领取", stock:16, total:35, merchant:"晨星体育", distance:"12.0km", sideTitle:"篮球体验课", value:"价值200元", action:"免费领", points:0 },
+      { title:"六一专场-平衡车体验课一节", tags:["兑换券"], tagTypes:["green"], type:"free", children:true, date:"2026-05-21 ~ 2026-06-01 领取", stock:12, total:24, merchant:"晨星体育", distance:"12.0km", sideTitle:"平衡车体验课一节", value:"价值120元", action:"免费领", points:0 }
+    ];
+    let currentType = "all";
+    const listEl = document.getElementById("couponList");
+    const emptyBox = document.getElementById("emptyBox");
+    const emptyText = document.getElementById("emptyText");
+    const hintLine = document.getElementById("hintLine");
+    const keywordEl = document.getElementById("keyword");
+    const clearBtn = document.getElementById("clearBtn");
+    const toast = document.getElementById("toast");
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 1600);
+    }
+    function matchesType(item) {
+      if (currentType === "all") return true;
+      if (currentType === "free") return item.points === 0;
+      if (currentType === "points") return item.points > 0;
+      if (currentType === "new") return !!item.isNew;
+      if (currentType === "children") return item.children && item.title.includes("六一专场");
+      return true;
+    }
+    function render() {
+      const keyword = keywordEl.value.trim();
+      clearBtn.classList.toggle("show", !!keyword);
+      let data = coupons.filter(matchesType);
+      if (keyword) data = data.filter(item => item.title.includes(keyword));
+      if (currentType === "children") {
+        hintLine.textContent = "";
+      } else {
+        hintLine.textContent = "";
+      }
+      listEl.innerHTML = data.map(cardHtml).join("");
+      emptyBox.classList.toggle("show", data.length === 0);
+      emptyText.textContent = currentType === "children" ? "暂无六一活动优惠券" : "暂无符合条件的优惠券";
+      document.querySelectorAll(".action").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const item = data[Number(btn.dataset.index)];
+          if (item.points > 0) {
+            btn.classList.add("disabled");
+            btn.textContent = "已兑换";
+            showToast("兑换成功，已放入我的卡包");
+          } else {
+            btn.classList.add("disabled");
+            btn.textContent = "已领取";
+            showToast("领取成功，已放入我的卡包");
+          }
+        });
+      });
+    }
+    function cardHtml(item, index) {
+      const percent = Math.max(4, Math.round(((item.total - item.stock) / item.total) * 100));
+      const tags = item.tags.map((tag, i) => `<span class="tag ${item.tagTypes[i]}">${tag}</span>`).join("");
+      const right = item.money
+        ? `<div class="side-money"><small>¥</small>${item.money}</div>`
+        : `<div class="side-title">${item.sideTitle}</div><div class="side-value">${item.value}</div>`;
+      const button = item.points > 0 ? `${item.action}<span>${item.points}积分</span>` : item.action;
+      return `<article class="coupon-card">
+        <div class="coupon-main">
+          <h3 class="coupon-title">${item.title}</h3>
+          <div class="tags">${tags}</div>
+          <div class="date">${item.date}</div>
+          <div class="stock">
+            <div class="stock-bar"><div class="stock-fill" style="width:${percent}%"></div></div>
+            <div class="stock-text">剩余${item.stock}张</div>
+          </div>
+          <div class="merchant-line">
+            <div class="merchant">${item.merchant}</div>
+            <div class="distance"><span class="pin"></span>距您 ${item.distance}</div>
+          </div>
+        </div>
+        <div class="coupon-side">
+          <div class="side-inner">
+            ${right}
+            <button class="action" data-index="${index}">${button}</button>
+          </div>
+        </div>
+      </article>`;
+    }
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.addEventListener("click", () => {
+        currentType = tab.dataset.type;
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        const tabs = document.getElementById("tabs");
+        const targetLeft = tab.offsetLeft - (tabs.clientWidth - tab.offsetWidth) / 2;
+        tabs.scrollTo({ left: Math.max(0, targetLeft), behavior:"smooth" });
+        document.documentElement.scrollLeft = 0;
+        document.body.scrollLeft = 0;
+        render();
+      });
+    });
+    keywordEl.addEventListener("keydown", event => { if (event.key === "Enter") render(); });
+    keywordEl.addEventListener("input", () => {
+      clearBtn.classList.toggle("show", !!keywordEl.value.trim());
+      render();
+    });
+    clearBtn.addEventListener("click", () => { keywordEl.value = ""; render(); });
+    render();
+  </script>
+</body>
+</html>
