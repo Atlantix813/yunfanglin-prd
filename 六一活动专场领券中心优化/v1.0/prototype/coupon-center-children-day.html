@@ -82,6 +82,24 @@
     .empty-icon { width:72px; height:72px; margin:0 auto 14px; border-radius:24px; background:#EAF2FF; display:flex; align-items:center; justify-content:center; color:#087CFF; font-size:34px; font-weight:800; }
     .toast { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); max-width:260px; padding:12px 16px; border-radius:12px; background:rgba(34,40,53,.88); color:#fff; font-size:14px; font-weight:700; opacity:0; pointer-events:none; transition:.2s; z-index:20; text-align:center; }
     .toast.show { opacity:1; }
+    .sheet-overlay { position:absolute; left:0; right:0; top:0; bottom:0; width:375px; background:rgba(17,24,39,.58); z-index:15; opacity:0; pointer-events:none; transition:opacity .18s ease; display:flex; align-items:flex-end; }
+    .sheet-overlay.show { opacity:1; pointer-events:auto; }
+    .exchange-sheet { width:375px; background:#fff; border-radius:18px 18px 0 0; padding:12px 22px 24px; box-shadow:0 -8px 22px rgba(17,24,39,.16); transform:translateY(100%); transition:transform .2s ease; }
+    .sheet-overlay.show .exchange-sheet { transform:translateY(0); }
+    .sheet-grabber { width:48px; height:5px; border-radius:5px; background:#DCE3EC; margin:0 auto 20px; }
+    .sheet-title { text-align:center; font-size:21px; line-height:29px; font-weight:700; color:#252A33; margin-bottom:20px; }
+    .sheet-coupon { border-radius:12px; border:1px solid #DDEBFF; background:#EDF5FF; padding:14px 16px; color:#2E3541; margin-bottom:14px; }
+    .sheet-coupon-title { font-size:18px; line-height:24px; font-weight:700; margin-bottom:8px; }
+    .sheet-coupon-desc { font-size:14px; line-height:22px; color:#5B6573; font-weight:500; }
+    .sheet-points { border-radius:12px; border:1px solid #F6E6B5; background:#FFF9EC; padding:14px 16px; margin-bottom:10px; display:flex; align-items:center; justify-content:space-between; }
+    .sheet-points-label { font-size:16px; font-weight:700; color:#2F3138; margin-bottom:6px; }
+    .sheet-balance { font-size:13px; color:#4D5562; font-weight:500; }
+    .sheet-points-value { color:#F2A400; font-size:31px; line-height:34px; font-weight:700; }
+    .sheet-points-value span { font-size:14px; margin-left:4px; }
+    .sheet-warning { color:#E53935; font-size:12px; line-height:18px; font-weight:600; margin:0 2px 18px; }
+    .sheet-actions { display:flex; gap:14px; }
+    .sheet-btn { height:48px; flex:1; border-radius:8px; font-size:18px; font-weight:700; border:1px solid #CCD2DC; background:#fff; color:#2F343D; }
+    .sheet-btn.primary { background:#087CFF; border-color:#087CFF; color:#fff; }
   </style>
 </head>
 <body>
@@ -127,6 +145,28 @@
       </section>
     </main>
     <div class="toast" id="toast">已处理</div>
+    <div class="sheet-overlay" id="exchangeOverlay">
+      <div class="exchange-sheet">
+        <div class="sheet-grabber"></div>
+        <div class="sheet-title">积分兑换确认</div>
+        <div class="sheet-coupon">
+          <div class="sheet-coupon-title" id="sheetCouponTitle">优惠券名称</div>
+          <div class="sheet-coupon-desc" id="sheetCouponDesc">兑换券 · 2026-05-21 ~ 2026-06-01 可用</div>
+        </div>
+        <div class="sheet-points">
+          <div>
+            <div class="sheet-points-label">本次消耗积分</div>
+            <div class="sheet-balance">当前余额：1288</div>
+          </div>
+          <div class="sheet-points-value"><span id="sheetPoints">300</span><span>积分</span></div>
+        </div>
+        <div class="sheet-warning">温馨提示：积分兑换后不可退回，优惠券过期未使用将自动作废，请确认可使用后再兑换。</div>
+        <div class="sheet-actions">
+          <button class="sheet-btn" id="cancelExchange">取消</button>
+          <button class="sheet-btn primary" id="confirmExchange">确认兑换</button>
+        </div>
+      </div>
+    </div>
   </div>
   <script>
     const coupons = [
@@ -146,10 +186,27 @@
     const keywordEl = document.getElementById("keyword");
     const clearBtn = document.getElementById("clearBtn");
     const toast = document.getElementById("toast");
+    const exchangeOverlay = document.getElementById("exchangeOverlay");
+    const sheetCouponTitle = document.getElementById("sheetCouponTitle");
+    const sheetCouponDesc = document.getElementById("sheetCouponDesc");
+    const sheetPoints = document.getElementById("sheetPoints");
+    const redeemedCoupons = new Set();
+    let pendingCoupon = null;
     function showToast(text) {
       toast.textContent = text;
       toast.classList.add("show");
       setTimeout(() => toast.classList.remove("show"), 1600);
+    }
+    function openExchangeSheet(item) {
+      pendingCoupon = item;
+      sheetCouponTitle.textContent = item.title;
+      sheetCouponDesc.textContent = `${item.tags[0]} · ${item.date.replace("领取", "可用")}`;
+      sheetPoints.textContent = item.points;
+      exchangeOverlay.classList.add("show");
+    }
+    function closeExchangeSheet() {
+      exchangeOverlay.classList.remove("show");
+      pendingCoupon = null;
     }
     function matchesType(item) {
       if (currentType === "all") return true;
@@ -176,10 +233,9 @@
         btn.addEventListener("click", () => {
           const item = data[Number(btn.dataset.index)];
           if (item.points > 0) {
-            btn.classList.add("disabled");
-            btn.textContent = "已兑换";
-            showToast("兑换成功，已放入我的卡包");
+            openExchangeSheet(item);
           } else {
+            redeemedCoupons.add(item.title);
             btn.classList.add("disabled");
             btn.textContent = "已领取";
             showToast("领取成功，已放入我的卡包");
@@ -193,7 +249,9 @@
       const right = item.money
         ? `<div class="side-money"><small>¥</small>${item.money}</div>`
         : `<div class="side-title">${item.sideTitle}</div><div class="side-value">${item.value}</div>`;
-      const button = item.points > 0 ? `${item.action}<span>${item.points}积分</span>` : item.action;
+      const done = redeemedCoupons.has(item.title);
+      const button = done ? (item.points > 0 ? "已兑换" : "已领取") : (item.points > 0 ? `${item.action}<span>${item.points}积分</span>` : item.action);
+      const disabledClass = done ? " disabled" : "";
       return `<article class="coupon-card">
         <div class="coupon-main">
           <h3 class="coupon-title">${item.title}</h3>
@@ -211,7 +269,7 @@
         <div class="coupon-side">
           <div class="side-inner">
             ${right}
-            <button class="action" data-index="${index}">${button}</button>
+            <button class="action${disabledClass}" data-index="${index}" ${done ? "disabled" : ""}>${button}</button>
           </div>
         </div>
       </article>`;
@@ -235,6 +293,17 @@
       render();
     });
     clearBtn.addEventListener("click", () => { keywordEl.value = ""; render(); });
+    document.getElementById("cancelExchange").addEventListener("click", closeExchangeSheet);
+    document.getElementById("confirmExchange").addEventListener("click", () => {
+      if (!pendingCoupon) return;
+      redeemedCoupons.add(pendingCoupon.title);
+      closeExchangeSheet();
+      render();
+      showToast("兑换成功，已放入我的卡包");
+    });
+    exchangeOverlay.addEventListener("click", event => {
+      if (event.target === exchangeOverlay) closeExchangeSheet();
+    });
     render();
   </script>
 </body>
