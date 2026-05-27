@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>云新声 - 移交其他部门处理</title>
+  <link rel="stylesheet" href="./pc-admin-components.css">
+  <style>
+    html, body {
+      width: 1920px;
+      min-height: 1080px;
+      overflow: hidden;
+      background: #F7F8FA;
+    }
+    .page-wrapper {
+      min-height: 1080px;
+      position: relative;
+      background: #F7F8FA;
+    }
+    .layout {
+      height: 1032px;
+    }
+    .content {
+      padding: 12px 16px;
+      overflow: hidden;
+    }
+    .workbench {
+      display: block;
+      height: 968px;
+    }
+    .list-panel {
+      background: transparent;
+    }
+    .filter-card {
+      background: #fff;
+      border-radius: 6px;
+      margin: 0 0 14px;
+      padding: 18px 20px 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .filter-row {
+      gap: 16px 48px;
+      align-items: center;
+    }
+    .filter-field label {
+      min-width: 110px;
+      text-align: right;
+    }
+    .filter-field input,
+    .filter-field select {
+      width: 172px;
+    }
+    .status-select {
+      min-width: 190px;
+    }
+    .date-range {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 250px;
+    }
+    .date-range input {
+      width: 106px !important;
+    }
+    .filter-actions {
+      width: 100%;
+      display: flex;
+      gap: 10px;
+      padding-left: 0;
+    }
+    .table-wrap {
+      background: #fff;
+      border-radius: 6px;
+      height: 690px;
+      padding: 0 18px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+      position: relative;
+    }
+    .table-toolbar {
+      height: 64px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .feedback-table {
+      table-layout: fixed;
+    }
+    .feedback-table th,
+    .feedback-table td {
+      padding: 0 10px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .feedback-table th:nth-child(1), .feedback-table td:nth-child(1) { width: 42px; text-align: center; }
+    .feedback-table th:nth-child(2), .feedback-table td:nth-child(2) { width: 70px; text-align: center; }
+    .feedback-table th:nth-child(3), .feedback-table td:nth-child(3) { width: 220px; }
+    .feedback-table th:nth-child(4), .feedback-table td:nth-child(4) { width: 190px; }
+    .feedback-table th:nth-child(5), .feedback-table td:nth-child(5) { width: 230px; }
+    .feedback-table th:nth-child(6), .feedback-table td:nth-child(6) { width: 210px; }
+    .feedback-table th:nth-child(7), .feedback-table td:nth-child(7) { width: 150px; }
+    .feedback-table th:nth-child(8), .feedback-table td:nth-child(8) { width: 180px; }
+    .feedback-table th:nth-child(9), .feedback-table td:nth-child(9) { width: 120px; text-align: center; }
+    .pagination {
+      position: absolute;
+      left: 16px;
+      right: 16px;
+      bottom: 0;
+      padding-left: 0;
+      padding-right: 0;
+    }
+    .handle-overlay {
+      position: absolute;
+      inset: 0;
+      width: 1920px;
+      height: 1080px;
+      background: rgba(29, 33, 41, 0.48);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .handle-overlay.show {
+      display: flex;
+    }
+    .handle-modal {
+      width: 1460px;
+      height: 860px;
+      background: #fff;
+      border-radius: 4px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      display: flex;
+      flex-direction: column;
+    }
+    .handle-header {
+      height: 56px;
+      padding: 0 22px;
+      border-bottom: 1px solid #E5E6EB;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .handle-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #272E3B;
+    }
+    .handle-body {
+      flex: 1;
+      padding: 24px 32px 16px;
+      overflow-y: auto;
+    }
+    .info-grid-large {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 80px;
+      row-gap: 14px;
+      margin-bottom: 24px;
+    }
+    .info-line {
+      display: flex;
+      align-items: baseline;
+      min-height: 24px;
+      font-size: 13px;
+    }
+    .info-line.full {
+      grid-column: 1 / -1;
+    }
+    .info-name {
+      color: #4E5969;
+      flex-shrink: 0;
+    }
+    .info-name::after {
+      content: "：";
+    }
+    .info-text {
+      color: #272E3B;
+    }
+    .process-form {
+      margin-top: 10px;
+    }
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .field-title {
+      width: 112px;
+      color: #4E5969;
+      text-align: right;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .field-title.required::before {
+      content: "*";
+      color: #F53F3F;
+      margin-right: 3px;
+    }
+    .radio-group {
+      gap: 28px;
+    }
+    .transfer-panel {
+      margin-left: 0;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .transfer-panel.show {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .select-area {
+      width: 360px;
+      position: relative;
+    }
+    .select-trigger {
+      width: 100%;
+      height: 34px;
+      border: 1px solid #E5E6EB;
+      background: #fff;
+      border-radius: 4px;
+      padding: 0 34px 0 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      color: #272E3B;
+      font-size: 13px;
+      position: relative;
+    }
+    .select-trigger.placeholder {
+      color: #C9CDD4;
+    }
+    .select-trigger::after {
+      content: "";
+      position: absolute;
+      right: 12px;
+      top: 14px;
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 6px solid #A9AEB8;
+    }
+    .select-trigger.open {
+      border-color: #3491FA;
+    }
+    .option-panel {
+      display: none;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 38px;
+      background: #fff;
+      border: 1px solid #E5E6EB;
+      border-radius: 4px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      z-index: 5;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+    .option-panel.show {
+      display: block;
+    }
+    .option-item {
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      color: #272E3B;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .option-item:hover,
+    .option-item.selected {
+      background: #EBF5FF;
+      color: #3491FA;
+    }
+    .option-type {
+      color: #86909C;
+      font-size: 12px;
+    }
+    .option-item.selected .option-type {
+      color: #3491FA;
+    }
+    .transfer-help {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #86909C;
+    }
+    .transfer-help strong {
+      color: #272E3B;
+      font-weight: 500;
+    }
+    .textarea-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .textarea-wrap {
+      flex: 1;
+    }
+    .textarea-wrap textarea {
+      width: 100%;
+      height: 92px;
+      border: 1px solid #E5E6EB;
+      border-radius: 4px;
+      padding: 10px 12px;
+      font-size: 13px;
+      line-height: 20px;
+      resize: none;
+      outline: none;
+      font-family: inherit;
+      color: #272E3B;
+    }
+    .textarea-wrap textarea::placeholder {
+      color: #C9CDD4;
+    }
+    .textarea-wrap textarea:focus {
+      border-color: #3491FA;
+    }
+    .char-count {
+      text-align: right;
+      color: #C9CDD4;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+    .handle-footer {
+      padding: 12px 32px 22px 154px;
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .handle-footer.hide {
+      display: none;
+    }
+    .detail-process {
+      display: none;
+    }
+    .detail-process.show {
+      display: block;
+    }
+    .detail-process-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 80px;
+      row-gap: 18px;
+      padding-bottom: 18px;
+      border-bottom: 1px dashed #C9CDD4;
+    }
+    .toast {
+      position: absolute;
+      top: 84px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 220px;
+      padding: 10px 16px;
+      background: rgba(29, 33, 41, 0.9);
+      color: #fff;
+      border-radius: 6px;
+      font-size: 13px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease;
+      z-index: 200;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-left">
+        <div class="header-logo">云芳邻管理系统</div>
+        <div class="header-hamburger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="header-right">
+        <div class="header-right-item">使用指南</div>
+        <div class="header-right-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8a6 6 0 00-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <div class="header-right-item"><span class="avatar">俊</span><span>俊杰</span></div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="label">工作台</span></div>
+        <div class="sidebar-item expanded"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="label">社区服务</span><span class="arrow">›</span></div>
+        <div class="sidebar-sub">
+          <div class="sidebar-item active"><span class="label">云新声管理</span></div>
+          <div class="sidebar-item"><span class="label">云新户管理</span></div>
+          <div class="sidebar-item"><span class="label">活动管理</span></div>
+        </div>
+        <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg><span class="label">社区宣传</span><span class="arrow">›</span></div>
+        <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><span class="label">信息公开</span><span class="arrow">›</span></div>
+        <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span class="label">社区共建</span><span class="arrow">›</span></div>
+        <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v4m0 12v4m-7-10H1m22 0h-4"/></svg><span class="label">积分兑换</span><span class="arrow">›</span></div>
+        <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg><span class="label">商城管理</span><span class="arrow">›</span></div>
+        <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg><span class="label">权限管理</span><span class="arrow">›</span></div>
+        <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33A1.65 1.65 0 0012 21a2 2 0 01-4 0 1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82A1.65 1.65 0 003 12a2 2 0 010-4 1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 008.83 2H9a2 2 0 014 0h.17a1.65 1.65 0 001.82.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9H21a2 2 0 010 4h-1.6z"/></svg><span class="label">系统管理</span><span class="arrow">›</span></div>
+      </aside>
+
+      <main class="main">
+        <div class="tab-bar">
+          <div class="tab-item">工作台</div>
+          <div class="tab-item active">云新声管理<span class="tab-close">×</span></div>
+        </div>
+
+        <section class="content">
+          <div class="workbench">
+            <section class="list-panel">
+              <div class="filter-card">
+                <div class="filter-row">
+                  <div class="filter-field"><label>反馈的问题</label><input placeholder="请输入反馈的问题"></div>
+                  <div class="filter-field"><label>反馈人所在单位类型</label><select><option>全部</option><option>非公企业</option><option>社会组织</option></select></div>
+                  <div class="filter-field"><label>反馈人所在单位名称</label><input placeholder="请输入单位名称"></div>
+                  <div class="filter-field"><label>问题状态</label><select class="status-select"><option>全部</option><option selected>待部门解决</option><option>转接上级部门</option><option>移交其他部门处理</option><option>已解决</option></select></div>
+                  <div class="filter-field"><label>反馈时间</label><div class="date-range"><input placeholder="开始时间"><span>~</span><input placeholder="结束时间"></div></div>
+                  <div class="filter-field"><label>解决时间</label><div class="date-range"><input placeholder="开始时间"><span>~</span><input placeholder="结束时间"></div></div>
+                  <div class="filter-field"><label>姓名</label><input placeholder="请输入姓名"></div>
+                  <div class="filter-field"><label>手机号</label><input placeholder="请输入手机号"></div>
+                  <div class="filter-actions">
+                    <button class="btn btn-primary" id="queryBtn">查询</button>
+                    <button class="btn btn-default" id="resetBtn">重置</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="table-wrap">
+                <div class="table-toolbar">
+                  <button class="btn btn-outline">以二维码形式分享小程序填写页</button>
+                  <button class="btn btn-outline">导出</button>
+                  <button class="btn btn-danger">删除</button>
+                </div>
+                <table class="feedback-table">
+                  <thead>
+                    <tr>
+                      <th><input type="checkbox"></th>
+                      <th>序号</th>
+                      <th>反馈的问题</th>
+                      <th>反馈人所在单位类型</th>
+                      <th>反馈人所在单位名称</th>
+                      <th>问题解决部门</th>
+                      <th>问题状态</th>
+                      <th>反馈时间</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr data-row="1">
+                      <td><input type="checkbox"></td>
+                      <td>1</td>
+                      <td>测试222</td>
+                      <td>非公企业</td>
+                      <td>测试</td>
+                      <td>白云区-江高镇</td>
+                      <td class="row-status">待部门解决</td>
+                      <td>2026-05-27 14:58:17</td>
+                      <td><a class="action-link detail-link" data-row="1">详情</a><span class="action-sep">|</span><a class="action-link handle-link" data-row="1">办理</a></td>
+                    </tr>
+                    <tr data-row="2">
+                      <td><input type="checkbox"></td>
+                      <td>2</td>
+                      <td>6</td>
+                      <td>社会组织</td>
+                      <td>消息订阅01</td>
+                      <td>白云区-钟落潭镇</td>
+                      <td class="row-status">待部门解决</td>
+                      <td>2026-02-27 11:34:46</td>
+                      <td><a class="action-link detail-link" data-row="2">详情</a><span class="action-sep">|</span><a class="action-link handle-link" data-row="2">办理</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="pagination">
+                  <span class="total">共 2 条</span>
+                  <select class="pg-select"><option>10条/页</option></select>
+                  <span class="pg">‹</span>
+                  <span class="pg active">1</span>
+                  <span class="pg">›</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="handle-overlay" id="handleOverlay">
+      <div class="handle-modal">
+        <div class="handle-header">
+          <div class="handle-title" id="handleTitle">办理</div>
+          <div class="modal-close" id="closeModal">×</div>
+        </div>
+
+        <div class="handle-body">
+          <section class="section">
+            <div class="section-title">反馈信息</div>
+            <div class="info-grid-large">
+              <div class="info-line"><span class="info-name">反馈人</span><span class="info-text">拉普</span></div>
+              <div class="info-line"><span class="info-name">反馈人所在社区</span><span class="info-text">江高镇</span></div>
+              <div class="info-line"><span class="info-name">反馈人电话</span><span class="info-text">15622105743</span></div>
+              <div class="info-line"><span class="info-name">反馈人所在单位类型</span><span class="info-text">非公企业</span></div>
+              <div class="info-line"><span class="info-name">问题解决部门</span><span class="info-text">江高镇</span></div>
+              <div class="info-line"><span class="info-name">反馈时间</span><span class="info-text">2026-05-27 14:58:17</span></div>
+              <div class="info-line"><span class="info-name">反馈人所在单位名称</span><span class="info-text">测试</span></div>
+              <div class="info-line full"><span class="info-name">反馈的问题</span><span class="info-text">测试222</span></div>
+              <div class="info-line full"><span class="info-name">图片/视频</span><span class="info-text">-</span></div>
+            </div>
+          </section>
+
+          <section class="section process-form" id="processFormSection">
+            <div class="section-title">处理情况</div>
+            <div class="status-row">
+              <div class="field-title required">问题状态</div>
+              <div class="radio-group" id="statusGroup">
+                <div class="radio-item" data-status="solved">
+                  <span class="radio-circle"><span class="radio-dot"></span></span>
+                  <span>已解决</span>
+                </div>
+                <div class="radio-item checked" data-status="transfer">
+                  <span class="radio-circle"><span class="radio-dot"></span></span>
+                  <span>移交其他部门处理</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="transfer-panel show" id="transferPanel">
+              <div class="field-title required">目标处理组织</div>
+              <div class="select-area">
+                <div class="select-trigger placeholder" id="orgSelectTrigger">请选择街道层级组织</div>
+                <div class="option-panel" id="orgOptionPanel">
+                  <div class="option-item" data-org="三元里街道"><span>三元里街道</span><span class="option-type">街道</span></div>
+                  <div class="option-item" data-org="景泰街道"><span>景泰街道</span><span class="option-type">街道</span></div>
+                  <div class="option-item" data-org="云城街道"><span>云城街道</span><span class="option-type">街道</span></div>
+                  <div class="option-item" data-org="棠景街道"><span>棠景街道</span><span class="option-type">街道</span></div>
+                  <div class="option-item" data-org="江高镇党委"><span>江高镇党委</span><span class="option-type">党委</span></div>
+                  <div class="option-item" data-org="新市街道党委"><span>新市街道党委</span><span class="option-type">党委</span></div>
+                  <div class="option-item" data-org="白云湖街道党委"><span>白云湖街道党委</span><span class="option-type">党委</span></div>
+                  <div class="option-item" data-org="黄石街道党委"><span>黄石街道党委</span><span class="option-type">党委</span></div>
+                </div>
+                <div class="transfer-help" id="transferHelp">可选街道层级组织，不默认移交白云区。</div>
+              </div>
+            </div>
+
+            <div class="textarea-row">
+              <div class="field-title required" id="reasonLabel">移交原因</div>
+              <div class="textarea-wrap">
+                <textarea id="reasonText" placeholder="请输入移交原因，方便目标组织继续处理"></textarea>
+                <div class="char-count">0/500</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section detail-process" id="detailProcessSection">
+            <div class="section-title">处理情况</div>
+            <div class="detail-process-grid">
+              <div class="info-line"><span class="info-name">问题状态</span><span class="info-text" id="detailStatus">移交其他部门处理</span></div>
+              <div class="info-line full"><span class="info-name" id="detailReasonLabel">原因/情况说明</span><span class="info-text">测试</span></div>
+              <div class="info-line"><span class="info-name">操作人</span><span class="info-text">拉普</span></div>
+              <div class="info-line"><span class="info-name">操作人所属组织</span><span class="info-text">江高镇</span></div>
+              <div class="info-line"><span class="info-name">操作人电话</span><span class="info-text">15622105743</span></div>
+              <div class="info-line"><span class="info-name">操作时间</span><span class="info-text">2026-05-27 16:13:41</span></div>
+            </div>
+          </section>
+        </div>
+
+        <div class="handle-footer" id="handleFooter">
+          <button class="btn btn-primary" id="submitBtn">提交</button>
+          <button class="btn btn-default" id="cancelBtn">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">请选择目标处理组织</div>
+  </div>
+
+  <script>
+    const overlay = document.getElementById('handleOverlay');
+    const toast = document.getElementById('toast');
+    const handleTitle = document.getElementById('handleTitle');
+    const processFormSection = document.getElementById('processFormSection');
+    const detailProcessSection = document.getElementById('detailProcessSection');
+    const handleFooter = document.getElementById('handleFooter');
+    const detailStatus = document.getElementById('detailStatus');
+    const detailReasonLabel = document.getElementById('detailReasonLabel');
+    const transferPanel = document.getElementById('transferPanel');
+    const orgSelectTrigger = document.getElementById('orgSelectTrigger');
+    const orgOptionPanel = document.getElementById('orgOptionPanel');
+    const transferHelp = document.getElementById('transferHelp');
+    const reasonLabel = document.getElementById('reasonLabel');
+    const reasonText = document.getElementById('reasonText');
+    let status = 'transfer';
+    let selectedOrg = '';
+    let currentRow = '1';
+    const rowProcessMap = { '1': false, '2': false };
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add('show');
+      window.setTimeout(() => toast.classList.remove('show'), 1600);
+    }
+
+    function openModal(rowId = '1') {
+      currentRow = rowId;
+      handleTitle.textContent = '办理';
+      selectedOrg = '';
+      orgSelectTrigger.textContent = '请选择街道层级组织';
+      orgSelectTrigger.classList.add('placeholder');
+      orgOptionPanel.classList.remove('show');
+      document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+      transferHelp.textContent = '可选街道层级组织，不默认移交白云区。';
+      reasonText.value = '';
+      setStatus('transfer');
+      processFormSection.style.display = 'block';
+      detailProcessSection.classList.remove('show');
+      handleFooter.classList.remove('hide');
+      overlay.classList.add('show');
+    }
+
+    function openDetailModal(rowId = '1') {
+      handleTitle.textContent = '详情';
+      processFormSection.style.display = 'none';
+      handleFooter.classList.add('hide');
+      if (rowProcessMap[rowId]) {
+        detailProcessSection.classList.add('show');
+        detailStatus.textContent = '移交其他部门处理';
+        detailReasonLabel.textContent = '原因/情况说明';
+      } else {
+        detailProcessSection.classList.remove('show');
+      }
+      overlay.classList.add('show');
+    }
+
+    function closeModal() {
+      overlay.classList.remove('show');
+    }
+
+    function setStatus(nextStatus) {
+      status = nextStatus;
+      document.querySelectorAll('#statusGroup .radio-item').forEach(item => {
+        item.classList.toggle('checked', item.dataset.status === nextStatus);
+      });
+      const isTransfer = nextStatus === 'transfer';
+      transferPanel.classList.toggle('show', isTransfer);
+      reasonLabel.textContent = isTransfer ? '移交原因' : '解决说明';
+      reasonText.placeholder = isTransfer ? '请输入移交原因，方便目标组织继续处理' : '请输入解决办法或处理情况说明';
+    }
+
+    document.querySelectorAll('.handle-link').forEach(link => {
+      link.addEventListener('click', () => openModal(link.dataset.row || '1'));
+    });
+
+    document.querySelectorAll('.detail-link').forEach(link => {
+      link.addEventListener('click', () => openDetailModal(link.dataset.row || '1'));
+    });
+
+    document.getElementById('closeModal').addEventListener('click', closeModal);
+    document.getElementById('cancelBtn').addEventListener('click', closeModal);
+
+    document.querySelectorAll('#statusGroup .radio-item').forEach(item => {
+      item.addEventListener('click', () => setStatus(item.dataset.status));
+    });
+
+    orgSelectTrigger.addEventListener('click', () => {
+      orgSelectTrigger.classList.toggle('open');
+      orgOptionPanel.classList.toggle('show');
+    });
+
+    document.querySelectorAll('.option-item').forEach(option => {
+      option.addEventListener('click', () => {
+        document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
+        option.classList.add('selected');
+        selectedOrg = option.dataset.org;
+        orgSelectTrigger.textContent = selectedOrg;
+        orgSelectTrigger.classList.remove('placeholder', 'open');
+        orgOptionPanel.classList.remove('show');
+        transferHelp.innerHTML = `将移交给 <strong>${selectedOrg}</strong> 管理员继续处理。`;
+      });
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      if (status === 'transfer' && !selectedOrg) {
+        showToast('请选择目标处理组织');
+        return;
+      }
+      if (status === 'transfer') {
+        rowProcessMap[currentRow] = true;
+        const row = document.querySelector(`tr[data-row="${currentRow}"]`);
+        if (row) {
+          row.querySelector('.row-status').textContent = '移交其他部门处理';
+        }
+      }
+      closeModal();
+      showToast(status === 'transfer' ? `已移交给${selectedOrg}处理` : '已提交处理结果');
+    });
+
+    document.getElementById('queryBtn').addEventListener('click', () => showToast('已按当前条件查询'));
+    document.getElementById('resetBtn').addEventListener('click', () => showToast('筛选条件已重置'));
+  </script>
+</body>
+</html>
