@@ -92,14 +92,16 @@
       text-overflow: ellipsis;
     }
     .feedback-table th:nth-child(1), .feedback-table td:nth-child(1) { width: 42px; text-align: center; }
-    .feedback-table th:nth-child(2), .feedback-table td:nth-child(2) { width: 70px; text-align: center; }
-    .feedback-table th:nth-child(3), .feedback-table td:nth-child(3) { width: 220px; }
-    .feedback-table th:nth-child(4), .feedback-table td:nth-child(4) { width: 190px; }
-    .feedback-table th:nth-child(5), .feedback-table td:nth-child(5) { width: 230px; }
-    .feedback-table th:nth-child(6), .feedback-table td:nth-child(6) { width: 210px; }
+    .feedback-table th:nth-child(2), .feedback-table td:nth-child(2) { width: 60px; text-align: center; }
+    .feedback-table th:nth-child(3), .feedback-table td:nth-child(3) { width: 170px; }
+    .feedback-table th:nth-child(4), .feedback-table td:nth-child(4) { width: 150px; }
+    .feedback-table th:nth-child(5), .feedback-table td:nth-child(5) { width: 175px; }
+    .feedback-table th:nth-child(6), .feedback-table td:nth-child(6) { width: 150px; }
     .feedback-table th:nth-child(7), .feedback-table td:nth-child(7) { width: 150px; }
-    .feedback-table th:nth-child(8), .feedback-table td:nth-child(8) { width: 180px; }
-    .feedback-table th:nth-child(9), .feedback-table td:nth-child(9) { width: 120px; text-align: center; }
+    .feedback-table th:nth-child(8), .feedback-table td:nth-child(8) { width: 220px; }
+    .feedback-table th:nth-child(9), .feedback-table td:nth-child(9) { width: 145px; }
+    .feedback-table th:nth-child(10), .feedback-table td:nth-child(10) { width: 170px; }
+    .feedback-table th:nth-child(11), .feedback-table td:nth-child(11) { width: 110px; text-align: center; }
     .pagination {
       position: absolute;
       left: 16px;
@@ -341,13 +343,22 @@
     .detail-process.show {
       display: block;
     }
-    .detail-process-grid {
+    .process-history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-bottom: 20px;
+    }
+    .process-history-item {
+      padding: 0 0 18px;
+      margin-bottom: 18px;
+      border-bottom: 1px dashed #C9CDD4;
+    }
+    .process-history-grid {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       column-gap: 80px;
       row-gap: 18px;
-      padding-bottom: 18px;
-      border-bottom: 1px dashed #C9CDD4;
     }
     .toast {
       position: absolute;
@@ -419,7 +430,7 @@
                   <div class="filter-field"><label>反馈的问题</label><input placeholder="请输入反馈的问题"></div>
                   <div class="filter-field"><label>反馈人所在单位类型</label><select><option>全部</option><option>非公企业</option><option>社会组织</option></select></div>
                   <div class="filter-field"><label>反馈人所在单位名称</label><input placeholder="请输入单位名称"></div>
-                  <div class="filter-field"><label>问题状态</label><select class="status-select"><option>全部</option><option selected>待部门解决</option><option>转接上级部门</option><option>移交其他部门处理</option><option>已解决</option></select></div>
+                  <div class="filter-field"><label>问题状态</label><select class="status-select"><option selected>全部</option><option>待部门解决</option><option>转接上级部门</option><option>移交其他部门处理</option><option>已解决</option></select></div>
                   <div class="filter-field"><label>反馈时间</label><div class="date-range"><input placeholder="开始时间"><span>~</span><input placeholder="结束时间"></div></div>
                   <div class="filter-field"><label>解决时间</label><div class="date-range"><input placeholder="开始时间"><span>~</span><input placeholder="结束时间"></div></div>
                   <div class="filter-field"><label>姓名</label><input placeholder="请输入姓名"></div>
@@ -446,6 +457,8 @@
                       <th>反馈人所在单位类型</th>
                       <th>反馈人所在单位名称</th>
                       <th>问题解决部门</th>
+                      <th>当前处理部门</th>
+                      <th>可处理部门</th>
                       <th>问题状态</th>
                       <th>反馈时间</th>
                       <th>操作</th>
@@ -459,6 +472,8 @@
                       <td>非公企业</td>
                       <td>测试</td>
                       <td>白云区-江高镇</td>
+                      <td class="current-dept">江高镇</td>
+                      <td class="processable-depts">江高镇</td>
                       <td class="row-status">待部门解决</td>
                       <td>2026-05-27 14:58:17</td>
                       <td><a class="action-link detail-link" data-row="1">详情</a><span class="action-sep">|</span><a class="action-link handle-link" data-row="1">办理</a></td>
@@ -470,7 +485,9 @@
                       <td>社会组织</td>
                       <td>消息订阅01</td>
                       <td>白云区-钟落潭镇</td>
-                      <td class="row-status">待部门解决</td>
+                      <td class="current-dept">白云区</td>
+                      <td class="processable-depts">钟落潭镇、白云区</td>
+                      <td class="row-status">转接上级部门</td>
                       <td>2026-02-27 11:34:46</td>
                       <td><a class="action-link detail-link" data-row="2">详情</a><span class="action-sep">|</span><a class="action-link handle-link" data-row="2">办理</a></td>
                     </tr>
@@ -505,16 +522,23 @@
               <div class="info-line"><span class="info-name">反馈人所在社区</span><span class="info-text">江高镇</span></div>
               <div class="info-line"><span class="info-name">反馈人电话</span><span class="info-text">15622105743</span></div>
               <div class="info-line"><span class="info-name">反馈人所在单位类型</span><span class="info-text">非公企业</span></div>
-              <div class="info-line"><span class="info-name">问题解决部门</span><span class="info-text">江高镇</span></div>
+              <div class="info-line"><span class="info-name">问题解决部门</span><span class="info-text" id="modalProblemDept">江高镇</span></div>
               <div class="info-line"><span class="info-name">反馈时间</span><span class="info-text">2026-05-27 14:58:17</span></div>
+              <div class="info-line"><span class="info-name">当前处理部门</span><span class="info-text" id="modalCurrentDept">江高镇</span></div>
+              <div class="info-line"><span class="info-name">可处理部门</span><span class="info-text" id="modalProcessableDepts">江高镇</span></div>
               <div class="info-line"><span class="info-name">反馈人所在单位名称</span><span class="info-text">测试</span></div>
               <div class="info-line full"><span class="info-name">反馈的问题</span><span class="info-text">测试222</span></div>
               <div class="info-line full"><span class="info-name">图片/视频</span><span class="info-text">-</span></div>
             </div>
           </section>
 
-          <section class="section process-form" id="processFormSection">
+          <section class="section detail-process" id="detailProcessSection">
             <div class="section-title">处理情况</div>
+            <div class="process-history-list" id="processHistoryList"></div>
+          </section>
+
+          <section class="section process-form" id="processFormSection">
+            <div class="section-title">本次办理</div>
             <div class="status-row">
               <div class="field-title required">问题状态</div>
               <div class="radio-group" id="statusGroup">
@@ -543,7 +567,7 @@
                   <div class="option-item" data-org="白云湖街道党委"><span>白云湖街道党委</span><span class="option-type">党委</span></div>
                   <div class="option-item" data-org="黄石街道党委"><span>黄石街道党委</span><span class="option-type">党委</span></div>
                 </div>
-                <div class="transfer-help" id="transferHelp">可选街道层级组织，不默认移交白云区。</div>
+                <div class="transfer-help" id="transferHelp">目标组织将成为当前处理部门，并加入可处理部门。</div>
               </div>
             </div>
 
@@ -553,18 +577,6 @@
                 <textarea id="reasonText" placeholder="请输入移交原因，方便目标组织继续处理"></textarea>
                 <div class="char-count">0/500</div>
               </div>
-            </div>
-          </section>
-
-          <section class="section detail-process" id="detailProcessSection">
-            <div class="section-title">处理情况</div>
-            <div class="detail-process-grid">
-              <div class="info-line"><span class="info-name">问题状态</span><span class="info-text" id="detailStatus">移交其他部门处理</span></div>
-              <div class="info-line full"><span class="info-name" id="detailReasonLabel">原因/情况说明</span><span class="info-text">测试</span></div>
-              <div class="info-line"><span class="info-name">操作人</span><span class="info-text">拉普</span></div>
-              <div class="info-line"><span class="info-name">操作人所属组织</span><span class="info-text">江高镇</span></div>
-              <div class="info-line"><span class="info-name">操作人电话</span><span class="info-text">15622105743</span></div>
-              <div class="info-line"><span class="info-name">操作时间</span><span class="info-text">2026-05-27 16:13:41</span></div>
             </div>
           </section>
         </div>
@@ -586,8 +598,10 @@
     const processFormSection = document.getElementById('processFormSection');
     const detailProcessSection = document.getElementById('detailProcessSection');
     const handleFooter = document.getElementById('handleFooter');
-    const detailStatus = document.getElementById('detailStatus');
-    const detailReasonLabel = document.getElementById('detailReasonLabel');
+    const modalProblemDept = document.getElementById('modalProblemDept');
+    const modalCurrentDept = document.getElementById('modalCurrentDept');
+    const modalProcessableDepts = document.getElementById('modalProcessableDepts');
+    const processHistoryList = document.getElementById('processHistoryList');
     const transferPanel = document.getElementById('transferPanel');
     const orgSelectTrigger = document.getElementById('orgSelectTrigger');
     const orgOptionPanel = document.getElementById('orgOptionPanel');
@@ -597,7 +611,39 @@
     let status = 'transfer';
     let selectedOrg = '';
     let currentRow = '1';
-    const rowProcessMap = { '1': false, '2': false };
+    const rows = {
+      '1': {
+        problemDept: '江高镇',
+        currentDept: '江高镇',
+        processableDepts: ['江高镇'],
+        status: '待部门解决',
+        history: []
+      },
+      '2': {
+        problemDept: '钟落潭镇',
+        currentDept: '白云区',
+        processableDepts: ['钟落潭镇', '白云区'],
+        status: '转接上级部门',
+        history: [
+          {
+            status: '转接上级部门',
+            reason: '11',
+            operator: '拉普',
+            operatorOrg: '钟落潭镇',
+            operatorPhone: '15622105743',
+            operationTime: '2026-05-27 17:48:24'
+          },
+          {
+            status: '转接上级部门',
+            reason: '333',
+            operator: '拉普',
+            operatorOrg: '白云区',
+            operatorPhone: '15622105743',
+            operationTime: '2026-05-27 17:57:53'
+          }
+        ]
+      }
+    };
 
     function showToast(text) {
       toast.textContent = text;
@@ -605,34 +651,83 @@
       window.setTimeout(() => toast.classList.remove('show'), 1600);
     }
 
+    function formatDepts(depts) {
+      return depts.join('、');
+    }
+
+    function escapeHtml(text) {
+      return String(text || '').replace(/[&<>"']/g, char => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[char]));
+    }
+
+    function fillModalInfo(rowId) {
+      const data = rows[rowId];
+      modalProblemDept.textContent = data.problemDept;
+      modalCurrentDept.textContent = data.currentDept;
+      modalProcessableDepts.textContent = formatDepts(data.processableDepts);
+    }
+
+    function renderProcessHistory(rowId) {
+      const history = rows[rowId].history || [];
+      if (!history.length) {
+        processHistoryList.innerHTML = '';
+        detailProcessSection.classList.remove('show');
+        return;
+      }
+      processHistoryList.innerHTML = history.map(item => `
+        <div class="process-history-item">
+          <div class="process-history-grid">
+            <div class="info-line"><span class="info-name">问题状态</span><span class="info-text">${escapeHtml(item.status)}</span></div>
+            <div class="info-line full"><span class="info-name">原因/情况说明</span><span class="info-text">${escapeHtml(item.reason || '-')}</span></div>
+            <div class="info-line"><span class="info-name">操作人</span><span class="info-text">${escapeHtml(item.operator)}</span></div>
+            <div class="info-line"><span class="info-name">操作人所属组织</span><span class="info-text">${escapeHtml(item.operatorOrg)}</span></div>
+            <div class="info-line"><span class="info-name">操作人电话</span><span class="info-text">${escapeHtml(item.operatorPhone)}</span></div>
+            <div class="info-line"><span class="info-name">操作时间</span><span class="info-text">${escapeHtml(item.operationTime)}</span></div>
+          </div>
+        </div>
+      `).join('');
+      detailProcessSection.classList.add('show');
+    }
+
+    function renderRow(rowId) {
+      const data = rows[rowId];
+      const row = document.querySelector(`tr[data-row="${rowId}"]`);
+      if (!row) return;
+      row.querySelector('.current-dept').textContent = data.currentDept;
+      row.querySelector('.processable-depts').textContent = formatDepts(data.processableDepts);
+      row.querySelector('.row-status').textContent = data.status;
+    }
+
     function openModal(rowId = '1') {
       currentRow = rowId;
       handleTitle.textContent = '办理';
+      fillModalInfo(rowId);
+      renderProcessHistory(rowId);
       selectedOrg = '';
       orgSelectTrigger.textContent = '请选择街道层级组织';
       orgSelectTrigger.classList.add('placeholder');
       orgOptionPanel.classList.remove('show');
       document.querySelectorAll('.option-item').forEach(item => item.classList.remove('selected'));
-      transferHelp.textContent = '可选街道层级组织，不默认移交白云区。';
+      transferHelp.textContent = '目标组织将成为当前处理部门，并加入可处理部门。';
       reasonText.value = '';
       setStatus('transfer');
       processFormSection.style.display = 'block';
-      detailProcessSection.classList.remove('show');
       handleFooter.classList.remove('hide');
       overlay.classList.add('show');
     }
 
     function openDetailModal(rowId = '1') {
+      currentRow = rowId;
+      fillModalInfo(rowId);
       handleTitle.textContent = '详情';
       processFormSection.style.display = 'none';
       handleFooter.classList.add('hide');
-      if (rowProcessMap[rowId]) {
-        detailProcessSection.classList.add('show');
-        detailStatus.textContent = '移交其他部门处理';
-        detailReasonLabel.textContent = '原因/情况说明';
-      } else {
-        detailProcessSection.classList.remove('show');
-      }
+      renderProcessHistory(rowId);
       overlay.classList.add('show');
     }
 
@@ -679,7 +774,7 @@
         orgSelectTrigger.textContent = selectedOrg;
         orgSelectTrigger.classList.remove('placeholder', 'open');
         orgOptionPanel.classList.remove('show');
-        transferHelp.innerHTML = `将移交给 <strong>${selectedOrg}</strong> 管理员继续处理。`;
+        transferHelp.innerHTML = `提交后当前处理部门变为 <strong>${selectedOrg}</strong>。`;
       });
     });
 
@@ -688,13 +783,28 @@
         showToast('请选择目标处理组织');
         return;
       }
+      const data = rows[currentRow];
+      const operatorOrg = data.currentDept;
+      const operationTime = status === 'transfer' ? '2026-05-28 10:30:00' : '2026-05-28 10:35:00';
+      const historyItem = {
+        status: status === 'transfer' ? '移交其他部门处理' : '已解决',
+        reason: reasonText.value || (status === 'transfer' ? '移交其他部门处理' : '已解决'),
+        operator: '拉普',
+        operatorOrg,
+        operatorPhone: '15622105743',
+        operationTime
+      };
       if (status === 'transfer') {
-        rowProcessMap[currentRow] = true;
-        const row = document.querySelector(`tr[data-row="${currentRow}"]`);
-        if (row) {
-          row.querySelector('.row-status').textContent = '移交其他部门处理';
+        data.status = '移交其他部门处理';
+        data.currentDept = selectedOrg;
+        if (!data.processableDepts.includes(selectedOrg)) {
+          data.processableDepts.push(selectedOrg);
         }
+      } else {
+        data.status = '已解决';
       }
+      data.history.push(historyItem);
+      renderRow(currentRow);
       closeModal();
       showToast(status === 'transfer' ? `已移交给${selectedOrg}处理` : '已提交处理结果');
     });
