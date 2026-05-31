@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+  <title>在学</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+      background: #fff;
+      color: #171923;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .page {
+      position: relative;
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      margin: 0;
+      background: #fff;
+      overflow: hidden;
+    }
+    .content {
+      min-height: 100vh;
+      padding: 0 15px 86px;
+      overflow-y: auto;
+      background: #fff;
+    }
+    .top-tabs {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      height: 47px;
+      align-items: flex-start;
+      padding-top: 15px;
+      background: #fff;
+    }
+    .tab-title {
+      position: relative;
+      color: #3ca7fa;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 14px;
+    }
+    .tab-title::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -9px;
+      width: 28px;
+      height: 3px;
+      border-radius: 2px;
+      background: #3ca7fa;
+    }
+    .summary {
+      margin: 10px 0 18px;
+      border-radius: 4px;
+      background: #eef7ff;
+      padding: 14px 12px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    .summary-item {
+      text-align: center;
+      min-width: 0;
+    }
+    .summary-num {
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 700;
+      color: #171923;
+    }
+    .summary-label {
+      margin-top: 4px;
+      font-size: 12px;
+      line-height: 17px;
+      color: #666;
+      white-space: nowrap;
+    }
+    .course-list { padding-top: 0; }
+    .course-item {
+      display: flex;
+      width: 100%;
+      min-height: 108px;
+      margin-bottom: 18px;
+      text-align: left;
+      cursor: pointer;
+    }
+    .cover {
+      position: relative;
+      flex: 0 0 120px;
+      width: 120px;
+      height: 90px;
+      margin-right: 10px;
+      overflow: hidden;
+      border-radius: 4px;
+      background: linear-gradient(180deg, var(--c1), var(--c2));
+    }
+    .cover::before {
+      content: "";
+      position: absolute;
+      left: 12px;
+      top: 14px;
+      width: 30px;
+      height: 2px;
+      border-radius: 2px;
+      background: rgba(255, 255, 255, .85);
+      box-shadow: 0 8px 0 rgba(255, 255, 255, .85), 10px 16px 0 rgba(255, 255, 255, .72);
+    }
+    .cover::after {
+      content: "";
+      position: absolute;
+      right: -14px;
+      top: -8px;
+      width: 58px;
+      height: 62px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .62);
+    }
+    .cover-badge {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 70px;
+      height: 25px;
+      border-radius: 0 18px 0 0;
+      background: rgba(18, 24, 32, .68);
+      color: rgba(255, 255, 255, .88);
+      font-size: 11px;
+      line-height: 25px;
+      text-align: center;
+    }
+    .course-info {
+      min-width: 0;
+      flex: 1;
+      padding-top: 5px;
+    }
+    .course-title {
+      height: 40px;
+      color: #171923;
+      font-size: 15px;
+      font-weight: 600;
+      line-height: 20px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      word-break: break-word;
+    }
+    .progress {
+      margin-top: 12px;
+      color: #666;
+      font-size: 13px;
+      line-height: 13px;
+    }
+    .progress-bar {
+      margin-top: 10px;
+      width: 100%;
+      height: 5px;
+      border-radius: 5px;
+      overflow: hidden;
+      background: #edf2f7;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 5px;
+      background: #3ca7fa;
+      width: var(--p);
+    }
+    .continue {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 72px;
+      height: 26px;
+      margin-top: 10px;
+      padding: 0 10px;
+      border-radius: 4px;
+      background: #3ca7fa;
+      color: #fff;
+      font-size: 12px;
+      line-height: 26px;
+    }
+    .drop {
+      padding: 8px 0 110px;
+      color: #c7c7c7;
+      font-size: 14px;
+      text-align: center;
+    }
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 30;
+      width: 100%;
+      max-width: 430px;
+      height: 58px;
+      border-top: 1px solid #f1f1f1;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .footer button {
+      width: 50%;
+      border: 0;
+      background: transparent;
+      color: #333;
+      font-size: 11px;
+      line-height: 14px;
+      cursor: pointer;
+    }
+    .footer img {
+      display: block;
+      width: 28px;
+      height: 28px;
+      margin: 0 auto 3px;
+    }
+    .footer .active { color: #3ca7fa; }
+    .footer button:active, .course-item:active { opacity: .72; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="content">
+      <nav class="top-tabs" aria-label="学习分类">
+        <div class="tab-title">在学</div>
+      </nav>
+
+      <section class="summary" aria-label="学习概览">
+        <div class="summary-item">
+          <div class="summary-num">6</div>
+          <div class="summary-label">学习中</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-num">12</div>
+          <div class="summary-label">已学课时</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-num">63%</div>
+          <div class="summary-label">平均进度</div>
+        </div>
+      </section>
+
+      <div class="course-list">
+        <article class="course-item">
+          <div class="cover" style="--c1:#208cff;--c2:#12b3b3"><span class="cover-badge">学习中</span></div>
+          <div class="course-info">
+            <h2 class="course-title">社区养老服务体系构建</h2>
+            <div class="progress">已学 1/2 课时</div>
+            <div class="progress-bar"><div class="progress-fill" style="--p:50%"></div></div>
+            <div class="continue">继续学习</div>
+          </div>
+        </article>
+        <article class="course-item">
+          <div class="cover" style="--c1:#2b63ff;--c2:#4b236d"><span class="cover-badge">学习中</span></div>
+          <div class="course-info">
+            <h2 class="course-title">社区矛盾调解沟通技巧</h2>
+            <div class="progress">已学 2/2 课时</div>
+            <div class="progress-bar"><div class="progress-fill" style="--p:100%"></div></div>
+            <div class="continue">继续学习</div>
+          </div>
+        </article>
+        <article class="course-item">
+          <div class="cover" style="--c1:#208cff;--c2:#13b1ba"><span class="cover-badge">学习中</span></div>
+          <div class="course-info">
+            <h2 class="course-title">习近平新时代中国特色社会主义思想学习</h2>
+            <div class="progress">已学 1/5 课时</div>
+            <div class="progress-bar"><div class="progress-fill" style="--p:20%"></div></div>
+            <div class="continue">继续学习</div>
+          </div>
+        </article>
+        <article class="course-item">
+          <div class="cover" style="--c1:#f42b2b;--c2:#fb7b00"><span class="cover-badge">学习中</span></div>
+          <div class="course-info">
+            <h2 class="course-title">网格化管理实务</h2>
+            <div class="progress">已学 2/4 课时</div>
+            <div class="progress-bar"><div class="progress-fill" style="--p:50%"></div></div>
+            <div class="continue">继续学习</div>
+          </div>
+        </article>
+        <article class="course-item">
+          <div class="cover" style="--c1:#16bd58;--c2:#00a3a5"><span class="cover-badge">学习中</span></div>
+          <div class="course-info">
+            <h2 class="course-title">党的二十大精神解读</h2>
+            <div class="progress">已学 1/3 课时</div>
+            <div class="progress-bar"><div class="progress-fill" style="--p:33%"></div></div>
+            <div class="continue">继续学习</div>
+          </div>
+        </article>
+        <article class="course-item">
+          <div class="cover" style="--c1:#ff9500;--c2:#ff5a1f"><span class="cover-badge">学习中</span></div>
+          <div class="course-info">
+            <h2 class="course-title">民法典与社区治理</h2>
+            <div class="progress">已学 5/6 课时</div>
+            <div class="progress-bar"><div class="progress-fill" style="--p:83%"></div></div>
+            <div class="continue">继续学习</div>
+          </div>
+        </article>
+      </div>
+      <div class="drop">已经到底了</div>
+    </section>
+
+    <nav class="footer" aria-label="底部导航">
+      <button type="button"><img src="meedu-assets/icon-home-n@2x.png" alt=""><span>首页</span></button>
+      <button class="active" type="button"><img src="meedu-assets/icon-study-h@2x.png" alt=""><span>在学</span></button>
+    </nav>
+  </main>
+</body>
+</html>

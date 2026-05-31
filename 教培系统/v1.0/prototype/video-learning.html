@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>课时学习</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background: #fff;
+      color: #333;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    body { overflow-x: hidden; }
+    .page {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      margin: 0;
+      background: #fff;
+      padding-bottom: 58px;
+    }
+    .navheader {
+      width: 100%;
+      height: 50px;
+      background: #fff;
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #f3f3f3;
+    }
+    .back {
+      width: 19px;
+      height: 19px;
+      display: block;
+    }
+    .play-box {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      min-height: 211px;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+    }
+    .player-stage {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 44%, rgba(60, 167, 250, .2), transparent 82px),
+        linear-gradient(180deg, #050505 0%, #111 100%);
+    }
+    .center-play {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 56px;
+      height: 56px;
+      margin: -34px 0 0 -28px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .18);
+      border: 1px solid rgba(255, 255, 255, .26);
+    }
+    .center-play::after {
+      content: "";
+      position: absolute;
+      left: 22px;
+      top: 17px;
+      width: 0;
+      height: 0;
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      border-left: 16px solid rgba(255, 255, 255, .92);
+    }
+    .dplayer-controller {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 42px;
+      color: #fff;
+      font-size: 14px;
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .58));
+    }
+    .dplayer-bar-wrap {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 0;
+      height: 7px;
+      display: flex;
+      align-items: center;
+    }
+    .dplayer-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, .22);
+      position: relative;
+    }
+    .dplayer-bar::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 38%;
+      height: 3px;
+      background: #3ca7fa;
+    }
+    .dplayer-icons {
+      height: 42px;
+      padding: 9px 20px 0 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .play-button {
+      width: 17px;
+      height: 20px;
+      margin-top: 1px;
+      background: #dfe3ea;
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+      flex: 0 0 17px;
+    }
+    .volume {
+      width: 20px;
+      height: 21px;
+      position: relative;
+      margin-top: 1px;
+      flex: 0 0 20px;
+    }
+    .volume::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      width: 7px;
+      height: 9px;
+      background: #dfe3ea;
+      border-radius: 1px;
+    }
+    .volume::after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 3px;
+      width: 10px;
+      height: 15px;
+      border: 3px solid #dfe3ea;
+      border-left: 0;
+      border-top-color: transparent;
+      border-bottom-color: transparent;
+      border-radius: 50%;
+    }
+    .time {
+      min-width: 96px;
+      color: #fff;
+      font-size: 13px;
+      line-height: 22px;
+      white-space: nowrap;
+    }
+    .quality {
+      margin-left: auto;
+      color: #fff;
+      font-size: 13px;
+      line-height: 22px;
+      white-space: nowrap;
+    }
+    .fullscreen {
+      width: 19px;
+      height: 19px;
+      margin-top: 1px;
+      position: relative;
+      flex: 0 0 19px;
+    }
+    .fullscreen i {
+      position: absolute;
+      width: 7px;
+      height: 7px;
+      border-color: #dfe3ea;
+      border-style: solid;
+    }
+    .fullscreen i:nth-child(1) { left: 0; top: 0; border-width: 3px 0 0 3px; }
+    .fullscreen i:nth-child(2) { right: 0; top: 0; border-width: 3px 3px 0 0; }
+    .fullscreen i:nth-child(3) { right: 0; bottom: 0; border-width: 0 3px 3px 0; }
+    .fullscreen i:nth-child(4) { left: 0; bottom: 0; border-width: 0 0 3px 3px; }
+    .lesson-summary {
+      padding: 16px 15px 14px;
+      background: #fff;
+      border-bottom: 10px solid #f5f5f5;
+    }
+    .lesson-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 25px;
+      font-weight: 600;
+      color: #171923;
+    }
+    .lesson-meta {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      line-height: 18px;
+      color: #666;
+    }
+    .progress-wrap {
+      margin-top: 13px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+    .progress-track {
+      height: 6px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: #edf2f7;
+    }
+    .progress-fill {
+      width: 68%;
+      height: 100%;
+      border-radius: 6px;
+      background: #3ca7fa;
+    }
+    .progress-text {
+      color: #3ca7fa;
+      font-size: 13px;
+      line-height: 18px;
+      white-space: nowrap;
+    }
+    .tabs {
+      width: 100%;
+      height: 55px;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(204, 204, 204, .2);
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 80px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    .item-tab {
+      height: 15px;
+      border: 0;
+      background: transparent;
+      padding: 0;
+      font-size: 15px;
+      font-weight: 400;
+      color: #333;
+      line-height: 15px;
+      position: relative;
+      cursor: pointer;
+    }
+    .item-tab.active {
+      font-weight: 600;
+      color: #3ca7fa;
+    }
+    .item-tab.active::after {
+      content: "";
+      width: 20px;
+      height: 3px;
+      background: #3ca7fa;
+      border-radius: 3px;
+      position: absolute;
+      left: 5px;
+      top: 25px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .course-chapter-box {
+      width: 100%;
+      color: #333;
+      padding: 10px 15px 15px;
+      background: #fff;
+    }
+    .chapter-item {
+      width: 100%;
+      text-align: left;
+    }
+    .chapter-name {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 18px;
+      align-items: center;
+      font-size: 15px;
+      color: #333;
+      font-weight: 700;
+      margin: 10px 0 20px;
+      user-select: none;
+      cursor: pointer;
+    }
+    .chevron {
+      width: 18px;
+      height: 18px;
+      color: #666;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 18px;
+      text-align: center;
+    }
+    .chapter-videos-box { display: none; width: 100%; }
+    .chapter-item.open .chapter-videos-box { display: block; }
+    .video-item {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      line-height: 36px;
+      padding: 8px 10px 9px;
+      background: #f6f6f6;
+      border-radius: 4px;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+    .video-item.active {
+      background: #eef7ff;
+    }
+    .video-title {
+      width: 100%;
+      font-size: 14px;
+      color: #333;
+      line-height: 20px;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+    .video-item.active .video-title { color: #3ca7fa; }
+    .video-info {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 20px;
+      font-size: 12px;
+      line-height: 20px;
+      color: #999;
+    }
+    .video-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #3ca7fa;
+    }
+    .tiny-play {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #3ca7fa;
+      position: relative;
+      display: inline-block;
+    }
+    .tiny-play::after {
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 3px;
+      width: 0;
+      height: 0;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid #fff;
+    }
+    .attach-box {
+      padding: 20px 15px 15px;
+      background: #fff;
+    }
+    .attach-item {
+      width: 100%;
+      min-height: 58px;
+      border-radius: 4px;
+      background: #f6f6f6;
+      display: flex;
+      align-items: center;
+      padding: 12px 10px;
+      margin-bottom: 10px;
+    }
+    .attach-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 4px;
+      background: #3ca7fa;
+      color: #fff;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      flex: 0 0 34px;
+    }
+    .attach-name {
+      flex: 1;
+      min-width: 0;
+      font-size: 14px;
+      line-height: 20px;
+      color: #333;
+    }
+    .attach-size {
+      margin-top: 3px;
+      font-size: 12px;
+      line-height: 17px;
+      color: #999;
+    }
+    .footer {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      z-index: 30;
+      width: 100%;
+      max-width: 430px;
+      height: 58px;
+      border-top: 1px solid #f1f1f1;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .footer button {
+      width: 50%;
+      border: 0;
+      background: transparent;
+      color: #333;
+      font-size: 11px;
+      line-height: 14px;
+      cursor: pointer;
+    }
+    .footer img {
+      display: block;
+      width: 28px;
+      height: 28px;
+      margin: 0 auto 3px;
+    }
+    .footer .active { color: #3ca7fa; }
+    button:active, .video-item:active, .chapter-name:active { opacity: .72; }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="navheader">
+      <img class="back" src="meedu-assets/icon-back.png" alt="返回">
+    </header>
+
+    <section class="play-box" aria-label="视频播放器">
+      <div class="player-stage"></div>
+      <div class="center-play" aria-hidden="true"></div>
+      <div class="dplayer-controller">
+        <div class="dplayer-bar-wrap"><div class="dplayer-bar"></div></div>
+        <div class="dplayer-icons">
+          <div class="play-button" aria-hidden="true"></div>
+          <div class="volume" aria-hidden="true"></div>
+          <div class="time">12:35 / 18:30</div>
+          <div class="quality">默认</div>
+          <div class="fullscreen" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="lesson-summary">
+      <h1 class="lesson-title">1.1 社区养老服务体系构建</h1>
+      <div class="lesson-meta">
+        <span>网格员基础培训</span>
+        <span>已创建学习记录</span>
+      </div>
+      <div class="progress-wrap" aria-label="学习进度 68%">
+        <div class="progress-track"><div class="progress-fill"></div></div>
+        <div class="progress-text">已学 68%</div>
+      </div>
+    </section>
+
+    <section class="tabs" aria-label="课时内容">
+      <button class="item-tab active" type="button" data-tab="catalog">目录</button>
+      <button class="item-tab" type="button" data-tab="attach">课件</button>
+    </section>
+
+    <section class="tab-panel course-chapter-box active" data-panel="catalog">
+      <div class="chapter-item open">
+        <div class="chapter-name" role="button" tabindex="0">
+          <span>第一章 养老服务基础</span>
+          <span class="chevron">⌄</span>
+        </div>
+        <div class="chapter-videos-box">
+          <div class="video-item active">
+            <div class="video-title">1.1 社区养老服务体系构建</div>
+            <div class="video-info">
+              <span>18:30</span>
+              <span class="video-status"><span class="tiny-play" aria-hidden="true"></span>学习中 68%</span>
+            </div>
+          </div>
+          <div class="video-item">
+            <div class="video-title">1.2 居家探访与服务记录</div>
+            <div class="video-info">
+              <span>22:10</span>
+              <span>已学 0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chapter-item">
+        <div class="chapter-name" role="button" tabindex="0">
+          <span>第二章 风险识别</span>
+          <span class="chevron">›</span>
+        </div>
+        <div class="chapter-videos-box">
+          <div class="video-item">
+            <div class="video-title">2.1 高龄独居居民风险识别</div>
+            <div class="video-info">
+              <span>16:45</span>
+              <span>已学 0%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel attach-box" data-panel="attach">
+      <div class="attach-item">
+        <div class="attach-icon">PDF</div>
+        <div class="attach-name">
+          社区养老服务检查清单
+          <div class="attach-size">2.4 MB</div>
+        </div>
+      </div>
+      <div class="attach-item">
+        <div class="attach-icon">DOC</div>
+        <div class="attach-name">
+          居家探访记录表模板
+          <div class="attach-size">860 KB</div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="footer" aria-label="底部导航">
+      <button type="button"><img src="meedu-assets/icon-home-n@2x.png" alt=""><span>首页</span></button>
+      <button class="active" type="button"><img src="meedu-assets/icon-study-h@2x.png" alt=""><span>在学</span></button>
+    </nav>
+  </main>
+
+  <script>
+    document.querySelectorAll(".chapter-name").forEach(function (node) {
+      function toggleChapter() {
+        var item = node.closest(".chapter-item");
+        var icon = node.querySelector(".chevron");
+        item.classList.toggle("open");
+        icon.textContent = item.classList.contains("open") ? "⌄" : "›";
+      }
+      node.addEventListener("click", toggleChapter);
+      node.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          toggleChapter();
+        }
+      });
+    });
+
+    document.querySelectorAll(".item-tab").forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        var key = tab.dataset.tab;
+        document.querySelectorAll(".item-tab").forEach(function (item) {
+          item.classList.toggle("active", item === tab);
+        });
+        document.querySelectorAll(".tab-panel").forEach(function (panel) {
+          panel.classList.toggle("active", panel.dataset.panel === key);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+/*
+ * 云芳邻 C端（移动端）组件库
+ * 所有移动端页面通过 <link rel="stylesheet" href="mobile-components.css"> 引用
+ * 宽度固定 375px，配合 <meta name="viewport" content="width=375, initial-scale=1">
+ */
+
+/* ═══ Reset & Base ═══ */
+* { margin:0; padding:0; box-sizing:border-box; }
+html { overscroll-behavior:contain; }
+body {
+  font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif;
+  background:#F2F6FF; color:#222835; font-size:14px; width:375px;
+  overscroll-behavior:contain; -ms-overflow-style:none; scrollbar-width:none;
+}
+body::-webkit-scrollbar { display:none; }
+
+/* ═══ Status Bar (44px) ═══ */
+.m-status-bar {
+  height:44px; display:flex; align-items:center;
+  justify-content:space-between; padding:0 22px;
+}
+.m-status-bar .time {
+  font-family:Inter,sans-serif; font-weight:700; font-size:15px;
+}
+
+/* ═══ Nav Bar (44px) ═══ */
+.m-nav-bar {
+  height:44px; display:flex; align-items:center;
+  justify-content:center; position:relative;
+}
+.m-nav-bar .back {
+  position:absolute; left:16px; font-size:24px; color:#222835; font-weight:500;
+}
+.m-nav-bar .title { font-size:17px; font-weight:700; }
+.m-nav-bar .capsule {
+  position:absolute; right:8px; height:32px; width:87px;
+  border-radius:16px; border:0.5px solid rgba(0,0,0,0.1);
+  background:rgba(255,255,255,0.55);
+  display:flex; align-items:center; justify-content:center;
+}
+.capsule-dots {
+  flex:1; display:flex; align-items:center; justify-content:center; gap:3px;
+}
+.capsule-dots span { width:4px; height:4px; border-radius:2px; background:#222835; }
+.capsule-divider { width:0.5px; height:16px; background:rgba(0,0,0,0.15); }
+.capsule-close {
+  flex:1; display:flex; align-items:center; justify-content:center;
+}
+
+/* ═══ Cards ═══ */
+.m-card {
+  background:#fff; border-radius:16px; padding:14px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04); margin:12px 16px 0;
+}
+.m-card.disabled {
+  opacity:0.75; box-shadow:none; border:1px solid #EFF2F8;
+}
+
+/* ═══ Points Card (蓝色渐变积分卡) ═══ */
+.m-points-card {
+  margin:12px 16px 0; border-radius:16px; padding:20px;
+  position:relative; overflow:hidden; color:#fff;
+  background:linear-gradient(151deg, #488CF8 8%, #346EEB 92%);
+  box-shadow:0 6px 20px rgba(63,134,245,0.22);
+}
+.m-points-card .deco1 {
+  position:absolute; right:-17px; top:-30px; width:140px; height:140px;
+  border-radius:70px; background:rgba(255,255,255,0.08);
+}
+.m-points-card .deco2 {
+  position:absolute; right:10px; top:50px; width:60px; height:60px;
+  border-radius:30px; background:rgba(255,255,255,0.06);
+}
+
+/* ═══ Tab Bar ═══ */
+.m-tab-bar {
+  display:flex; align-items:center; padding:12px 20px 10px; gap:28px;
+  position:sticky; top:0; z-index:10; background:#F2F6FF;
+}
+.m-tab-item {
+  font-size:15px; color:#939CAB; position:relative;
+  padding-bottom:8px; cursor:pointer; user-select:none;
+}
+.m-tab-item.active { color:#222835; font-weight:700; }
+.m-tab-item.active::after {
+  content:''; position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:20px; height:3px; border-radius:2px;
+  background:linear-gradient(90deg, #3F86F5, #346EEB);
+}
+
+/* ═══ Buttons ═══ */
+.m-btn {
+  height:30px; padding:0 12px; border-radius:15px; border:none;
+  font-size:12px; font-weight:700; white-space:nowrap; cursor:pointer;
+}
+.m-btn-primary { color:#fff; background:#3F86F5; box-shadow:0 4px 5px rgba(63,134,245,0.22); }
+.m-btn-warning { color:#fff; background:#FF9D19; box-shadow:0 4px 5px rgba(255,157,25,0.28); }
+.m-btn-disabled { color:#CAD1DD; background:#F1F3F8; cursor:default; box-shadow:none; }
+
+/* ═══ Icon Container ═══ */
+.m-icon-44 {
+  width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.m-icon-48 {
+  width:48px; height:48px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+
+/* ═══ Badge (积分徽章) ═══ */
+.m-badge {
+  height:18px; padding:0 6px; border-radius:9px;
+  background:#FFF0DD; font-size:10px; font-weight:700; color:#FF9D19;
+  display:inline-flex; align-items:center; gap:3px; flex-shrink:0; width:fit-content;
+}
+.m-badge svg { width:9px; height:9px; }
+
+/* ═══ Progress Bar ═══ */
+.m-progress-wrap { display:flex; align-items:center; gap:8px; margin-top:3px; }
+.m-progress-bar { flex:1; height:5px; background:#EAEFF7; border-radius:3px; overflow:hidden; }
+.m-progress-fill {
+  height:100%; border-radius:3px;
+  background:linear-gradient(90deg, #3F86F5, #76B4FC);
+  transition:width 0.4s ease;
+}
+.m-progress-text {
+  font-size:11px; color:#3F86F5; font-family:Inter,sans-serif; font-weight:600;
+}
+.m-card.disabled .m-progress-fill { background:#D9DEE5; }
+.m-card.disabled .m-progress-text { color:#CAD1DD; }
+
+/* ═══ Expiry Warning Bar ═══ */
+.m-expiry-bar {
+  margin:10px 16px 0; background:#FFF3E2; border-radius:12px;
+  padding:10px 14px; display:flex; align-items:center; gap:8px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.m-expiry-bar.hidden { display:none; }
+.m-expiry-icon {
+  width:20px; height:20px; border-radius:10px; background:#FFA424;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.m-expiry-text { font-size:13px; color:#FF8C00; font-weight:500; flex:1; }
+.m-expiry-close {
+  flex-shrink:0; width:18px; height:18px; border:none;
+  background:none; cursor:pointer; display:flex; align-items:center; justify-content:center;
+}
+
+/* ═══ Function Grid ═══ */
+.m-func-grid {
+  margin:12px 16px 0; background:#fff; border-radius:16px;
+  padding:20px 24px; display:flex; gap:32px;
+  box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.m-func-item {
+  display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer;
+}
+.m-func-label { font-size:12px; color:#4B5563; }
+
+/* ═══ Toast ═══ */
+.m-toast {
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0.8);
+  background:rgba(34,40,53,0.88); color:#fff;
+  padding:14px 24px; border-radius:12px;
+  font-size:14px; font-weight:700; z-index:100;
+  opacity:0; transition:all 0.3s ease;
+  pointer-events:none; text-align:center; white-space:nowrap;
+}
+.m-toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+/* ═══ Bottom Sheet ═══ */
+.m-sheet-overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.4);
+  z-index:50; opacity:0; pointer-events:none; transition:opacity 0.25s;
+}
+.m-sheet-overlay.show { opacity:1; pointer-events:auto; }
+.m-sheet {
+  position:fixed; bottom:0; left:0; width:375px;
+  background:#fff; border-radius:16px 16px 0 0; z-index:51;
+  transform:translateY(100%); transition:transform 0.3s ease;
+  padding-bottom:env(safe-area-inset-bottom, 20px);
+}
+.m-sheet.show { transform:translateY(0); }
+.m-sheet-handle {
+  width:36px; height:4px; border-radius:2px; background:#E5E6EB; margin:10px auto 6px;
+}
+.m-sheet-title {
+  font-size:15px; font-weight:600; color:#222835; text-align:center; padding:8px 16px 12px;
+}
+.m-sheet-item {
+  padding:14px 20px; font-size:15px; color:#4B5563;
+  border-top:1px solid #F4F6F9; cursor:pointer;
+}
+.m-sheet-item:active { background:#F7F8FA; }
+.m-sheet-item.active { color:#3F86F5; font-weight:600; }
+.m-sheet-cancel {
+  padding:14px 20px; font-size:15px; color:#939CAB;
+  text-align:center; border-top:6px solid #F4F6F9; cursor:pointer;
+}
+
+/* ═══ List Section ═══ */
+.m-list-section {
+  margin:12px 16px 24px; background:#fff; border-radius:16px;
+  overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.04);
+}
+.m-list-header {
+  display:flex; align-items:center; padding:14px 16px; gap:10px;
+  border-bottom:1px solid #EEF2F8;
+}
+.m-list-filter {
+  height:30px; padding:0 12px; border:1px solid #E8EEF8; border-radius:15px;
+  font-size:13px; color:#4B5563; display:flex; align-items:center; gap:4px;
+  background:#fff; cursor:pointer;
+}
+.m-list-search {
+  height:30px; padding:0 12px; border-radius:15px; font-size:13px;
+  color:#fff; background:#3F86F5; display:flex; align-items:center; gap:4px;
+}
+
+/* ═══ Transaction Item ═══ */
+.m-tx-item { padding:14px 16px; border-bottom:1px solid #F4F6F9; }
+.m-tx-row1 { display:flex; justify-content:space-between; align-items:flex-start; }
+.m-tx-title { font-size:14px; color:#222835; font-weight:500; flex:1; line-height:1.4; }
+.m-tx-amount { font-size:16px; font-weight:600; text-align:right; flex-shrink:0; margin-left:12px; color:#222835; }
+.m-tx-row2 { display:flex; justify-content:space-between; margin-top:4px; }
+.m-tx-time { font-size:12px; color:#B0B8C8; }
+.m-tx-remark { font-size:12px; color:#B0B8C8; text-align:right; }
+.m-tx-link { font-size:12px; color:#3F86F5; }
+.m-tx-refund { font-size:12px; color:#F53F3F; font-weight:500; }
+
+/* ═══ Month Group Header ═══ */
+.m-month-header {
+  display:flex; align-items:center; padding:14px 16px 10px;
+  border-bottom:1px solid #EEF2F8;
+}
+.m-month-label {
+  font-size:15px; font-weight:600; color:#222835;
+  display:flex; align-items:center; gap:4px; cursor:pointer;
+}
+.m-month-summary { margin-left:auto; font-size:12px; display:flex; gap:8px; }
+.m-month-income { color:#34C96E; }
+.m-month-expense { color:#F53F3F; }
+
+/* ═══ Empty State ═══ */
+.m-empty { padding:30px; text-align:center; font-size:14px; color:#C6D0DE; }
+
+/* ═══ Color Tokens ═══ */
+/*
+  --primary: #3F86F5;
+  --warning: #FF9D19;
+  --success: #34C96E / #2DC167;
+  --danger: #F53F3F;
+  --text-primary: #222835;
+  --text-secondary: #939CAB;
+  --text-light: #B0B8C8;
+  --text-disabled: #CAD1DD;
+  --bg-page: #F2F6FF;
+  --bg-card: #FFFFFF;
+  --border-light: #F4F6F9;
+  --border-medium: #EEF2F8;
+  --badge-bg: #FFF0DD;
+  --badge-text: #FF9D19;
+  --expiry-bg: #FFF3E2;
+  --expiry-text: #FF8C00;
+  --disabled-bg: #F1F3F8;
+  --disabled-icon: #D9DEE5;
+*/

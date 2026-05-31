@@ -1,0 +1,1083 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>云芳邻嵌入教培系统 课程管理复刻</title>
+  <link rel="stylesheet" href="组件库样式.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { width: 1920px; min-height: 1080px; background: #eef2f7; overflow: hidden; }
+
+    .yfl-shell {
+      width: 1920px;
+      min-height: 1080px;
+      background: #f7f8fa;
+      color: #272e3b;
+    }
+
+    .yfl-top {
+      height: 48px;
+      background: #3491fa;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+
+    .yfl-brand {
+      width: 180px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+
+    .yfl-hamburger {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+    }
+
+    .yfl-hamburger span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      border-radius: 1px;
+    }
+
+    .yfl-user {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 13px;
+    }
+
+    .yfl-user span {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 4px;
+    }
+
+    .yfl-user span:hover {
+      background: rgba(255,255,255,.15);
+    }
+
+    .yfl-body {
+      display: flex;
+      min-height: 1032px;
+    }
+
+    .yfl-sidebar {
+      width: 180px;
+      background: #fff;
+      border-right: 1px solid #e5e6eb;
+      flex-shrink: 0;
+      padding: 10px 0;
+    }
+
+    .yfl-menu-title {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: #a9aeb8;
+      font-size: 12px;
+    }
+
+    .yfl-menu-item {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px 0 16px;
+      color: #4e5969;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .yfl-menu-item:hover { background: #f7f8fa; }
+    .yfl-menu-item.active {
+      background: #3491fa;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    .yfl-menu-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+
+    .embed-area {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .embed-bar {
+      display: none;
+    }
+
+    .embed-bar-left { display: none; }
+
+    .green-dot { display: none; }
+
+    .embed-tip { display: none; }
+
+    .meedu-frame {
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+      background: #f1f2f9;
+    }
+
+    .meedu-left {
+      width: 200px;
+      height: 1032px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      border-right: 1px solid #f2f3f5;
+    }
+
+    .meedu-logo-wrap {
+      position: sticky;
+      top: 0;
+      height: 56px;
+      z-index: 10;
+      background: #fff;
+      display: flex;
+      align-items: center;
+    }
+
+    .meedu-logo {
+      width: 128px;
+      height: auto;
+      max-height: 52px;
+      object-fit: contain;
+      margin-left: 20px;
+    }
+
+    .meedu-menu-box {
+      width: 200px;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-top: 22px;
+    }
+
+    .ant-menu {
+      width: 200px;
+      background: #fff;
+      text-align: left;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+    }
+
+    .ant-menu-item,
+    .ant-submenu-title {
+      height: 56px;
+      line-height: 56px;
+      padding-left: 24px;
+      padding-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      color: rgba(0,0,0,.88);
+      border-radius: 0;
+    }
+
+    .ant-submenu-title {
+      justify-content: space-between;
+    }
+
+    .ant-menu-icon-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .menu-icon {
+      width: 16px;
+      height: 16px;
+      color: #606266;
+      flex-shrink: 0;
+    }
+
+    .ant-menu-item.child {
+      padding-left: 74px;
+      font-size: 14px;
+    }
+
+    .ant-menu-item:hover,
+    .ant-submenu-title:hover {
+      color: #3ca7fa;
+    }
+
+    .ant-menu-item.selected {
+      color: #fff;
+      background: #3ca7fa;
+      font-weight: 500;
+    }
+
+    .ant-menu-arrow {
+      font-size: 10px;
+      color: rgba(0,0,0,.45);
+    }
+
+    .meedu-right {
+      width: calc(100% - 200px);
+      display: flex;
+      flex-direction: column;
+      background: #f1f2f9;
+      min-width: 0;
+    }
+
+    .meedu-header {
+      width: 100%;
+      height: 56px;
+      background: #fff;
+      z-index: 10;
+    }
+
+    .meedu-main-header {
+      width: 100%;
+      height: 56px;
+      display: flex;
+      align-items: center;
+    }
+
+    .meedu-page-name {
+      flex: 1;
+      padding-left: 30px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      line-height: 56px;
+      text-align: left;
+    }
+
+    .meedu-device-bar {
+      display: flex;
+      align-items: center;
+    }
+
+    .meedu-device-item {
+      width: 95px;
+      height: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-size: 14px;
+      color: #666;
+      line-height: 20px;
+      cursor: pointer;
+    }
+
+    .meedu-device-item img {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
+
+    .meedu-column {
+      width: 1px;
+      height: 20px;
+      background: #d8d8d8;
+      margin: 0 15px;
+    }
+
+    .meedu-user-info {
+      padding-right: 30px;
+      color: #606266;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .meedu-main {
+      height: calc(1032px - 56px);
+      padding: 20px;
+      overflow-x: auto;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .meedu-main-body {
+      width: 100%;
+      min-width: 1180px;
+      background-color: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 24px;
+      min-height: calc(100% - 40px);
+      box-shadow: 0 2px 4px rgba(102,102,102,.05);
+      text-align: left;
+    }
+
+    .float-left { width: 100%; float: left; }
+    .j-b-flex { display: flex; align-items: center; justify-content: space-between; }
+    .d-flex { display: flex; align-items: center; }
+    .mb-30 { margin-bottom: 30px; }
+    .ml-10 { margin-left: 10px; }
+    .c-primary { color: #409eff; }
+    .c-green { color: #04c877; }
+    .c-red { color: #ff4d4f; }
+
+    .ant-btn {
+      height: 32px;
+      padding: 4px 15px;
+      border-radius: 3px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0,0,0,.88);
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .ant-btn:hover {
+      color: #409eff;
+      border-color: #409eff;
+    }
+
+    .ant-btn-primary {
+      border: none;
+      background: #3ca7fa;
+      color: #fff;
+      box-shadow: none;
+    }
+
+    .ant-btn-primary:hover {
+      background: #3ca7fa;
+      color: #fff;
+      opacity: .82;
+    }
+
+    .meedu-course-actions {
+      min-height: 32px;
+      justify-content: space-between;
+    }
+
+    .option-link {
+      display: inline-block;
+      vertical-align: middle;
+      width: auto;
+      height: 30px;
+      box-sizing: border-box;
+      padding: 0 0 0 20px;
+      border-left: 1px solid #d8d8d8;
+      margin-left: 30px;
+    }
+
+    .option-link .link {
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 400;
+      color: #606266;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .option-link .link:hover {
+      color: #409eff;
+    }
+
+    .option-link img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+    }
+
+    .ant-btn-link {
+      border: 0;
+      padding: 0;
+      height: auto;
+      background: transparent;
+      color: #409eff;
+    }
+
+    .ant-input {
+      width: 150px;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 4px 11px;
+      color: rgba(0,0,0,.88);
+      outline: none;
+      font-size: 14px;
+      font-family: inherit;
+      background: #fff;
+    }
+
+    .ant-input:focus {
+      border-color: #409eff;
+      box-shadow: 0 0 0 2px rgba(5,145,255,.1);
+    }
+
+    .drawer-more {
+      height: 14px;
+      font-size: 14px;
+      color: #666;
+      line-height: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+    }
+
+    .drawer-more img {
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+    }
+
+    .drawer-more .act {
+      color: #3ca7fa;
+    }
+
+    .ant-table-wrapper {
+      width: 100%;
+      overflow: auto;
+    }
+
+    .ant-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+    }
+
+    .ant-table th {
+      height: 55px;
+      padding: 16px;
+      background: #fafafa;
+      color: rgba(0,0,0,.88);
+      font-weight: 600;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .ant-table td {
+      height: 123px;
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: middle;
+      background: #fff;
+    }
+
+    .ant-table tr:hover td {
+      background: #fafafa;
+    }
+
+    .thumb-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .thumb {
+      width: 120px;
+      height: 90px;
+      border-radius: 4px;
+      background: #f2f3f5;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 14px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb-title {
+      min-width: 0;
+      font-weight: 500;
+      color: #333;
+      line-height: 22px;
+    }
+
+    .thumb-sub {
+      display: none;
+    }
+
+    .ant-space {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ant-pagination {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      padding-top: 16px;
+      color: rgba(0,0,0,.65);
+      font-size: 14px;
+    }
+
+    .page-btn {
+      min-width: 32px;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-btn.active {
+      background: #409eff;
+      color: #fff;
+      border-color: #409eff;
+    }
+
+    .page-size {
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 0 8px;
+      background: #fff;
+    }
+
+    .dropdown-wrap {
+      position: relative;
+      display: inline-block;
+    }
+
+    .more-menu {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 26px;
+      width: 92px;
+      background: #fff;
+      border: 1px solid #f0f0f0;
+      border-radius: 6px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.08);
+      z-index: 8;
+      overflow: hidden;
+    }
+
+    .dropdown-wrap:hover .more-menu {
+      display: block;
+    }
+
+    .more-menu button {
+      width: 100%;
+      height: 36px;
+      justify-content: flex-start;
+      padding: 0 12px;
+      border-radius: 0;
+    }
+
+    .meedu-drawer-mask {
+      display: none;
+      position: fixed;
+      inset: 48px 0 0 180px;
+      background: rgba(0,0,0,.45);
+      z-index: 20;
+    }
+
+    .meedu-drawer-mask.show { display: block; }
+
+    .meedu-drawer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 360px;
+      height: 100%;
+      background: #fff;
+      box-shadow: -6px 0 16px rgba(0,0,0,.08);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .drawer-head {
+      height: 55px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .drawer-close {
+      font-size: 20px;
+      color: #999;
+      cursor: pointer;
+    }
+
+    .drawer-body {
+      padding: 24px;
+      flex: 1;
+    }
+
+    .drawer-body .ant-input,
+    .drawer-body select {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+
+    .drawer-body select {
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 0 11px;
+      background: #fff;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+    }
+
+    .drawer-footer {
+      height: 53px;
+      border-top: 1px solid #f0f0f0;
+      padding: 10px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .confirm-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 30;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .confirm-mask.show {
+      display: flex;
+    }
+
+    .confirm-box {
+      width: 420px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 26px 24px 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    }
+
+    .confirm-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(0,0,0,.88);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .confirm-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #faad14;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .confirm-content {
+      padding-left: 32px;
+      color: rgba(0,0,0,.65);
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 24px;
+    }
+
+    .toast {
+      position: fixed;
+      top: 70px;
+      right: 34px;
+      min-width: 150px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: rgba(31,41,55,.92);
+      color: #fff;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: .18s;
+      z-index: 50;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* yfl-menu-bg-normalize:start */
+    .yfl-body { min-height: 1032px; align-items: stretch; }
+    .embed-area { min-height: 1032px; }
+    .embed, .meedu-frame { height: 1032px; min-height: 1032px; align-items: stretch; background: #f1f2f9; overflow: hidden; }
+    .meedu-side, .meedu-left { width: 200px !important; min-width: 200px; height: 1032px !important; min-height: 1032px; background: #fff; flex-shrink: 0; }
+    .meedu-logo, .meedu-logo-wrap { height: 56px !important; min-height: 56px; display: flex; align-items: center; background: #fff; }
+    .meedu-menu, .meedu-menu-box { width: 200px !important; height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); overflow-y: auto; overflow-x: hidden; padding-top: 24px !important; background: #fff; font-size: 14px; }
+    .ant-menu, .meedu-menu { width: 200px !important; background: #fff; }
+    .ant-menu-item, .ant-submenu-title, .meedu-item, .meedu-sub-title, .meedu-sub { height: 56px !important; min-height: 56px; line-height: 56px !important; padding: 0 16px 0 24px !important; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(0,0,0,.88); border-radius: 0; font-size: 14px; }
+    .ant-menu-item.child, .meedu-item.child { height: 50px !important; min-height: 50px; line-height: 50px !important; padding-left: 74px !important; padding-right: 16px !important; justify-content: flex-start; color: rgba(0,0,0,.88); }
+    .ant-menu-item.selected, .meedu-item.selected, .ant-menu-item.child.selected, .meedu-item.child.selected { background: #3ca7fa !important; color: #fff !important; font-weight: 500; }
+    .ant-submenu-title.open, .meedu-sub-title.open, .meedu-sub.open { color: #409eff; }
+    .ant-menu-icon-label, .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .menu-icon, .meedu-icon { width: 16px; height: 16px; flex: 0 0 auto; color: #606266; }
+    .ant-menu-arrow, .arrow { font-size: 12px; color: rgba(0,0,0,.45); }
+    .meedu-frame > .meedu-main, .embed > .meedu-main, .meedu-right { height: 1032px !important; min-height: 1032px; background: #f1f2f9; display: flex; flex-direction: column; min-width: 0; }
+    .meedu-content, .content, .meedu-right > .meedu-main { height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); background: #f1f2f9; overflow: auto; flex: 1 1 auto; }
+    .panel, .meedu-main-body, .work-grid { margin-bottom: 80px; }
+    .panel, .meedu-main-body { display: flow-root; }
+    /* yfl-menu-bg-normalize:end */
+  </style>
+</head>
+<body>
+  <div class="yfl-shell">
+    <header class="yfl-top">
+      <div class="yfl-brand">
+        <span>云芳邻管理后台</span>
+        <div class="yfl-hamburger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="yfl-user">
+        <span>白云区运营中心</span>
+        <span>消息</span>
+        <span>平台管理员</span>
+      </div>
+    </header>
+
+    <div class="yfl-body">
+      <aside class="yfl-sidebar">
+        <div class="yfl-menu-title">云芳邻后台</div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          <span>工作台</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-8h6v8"/></svg>
+          <span>组织管理</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg>
+          <span>用户管理</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+          <span>内容服务</span>
+        </div>
+        <div class="yfl-menu-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg>
+          <span>教培系统</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
+          <span>数据看板</span>
+        </div>
+      </aside>
+
+      <section class="embed-area">
+        <div class="meedu-frame">
+          <aside class="meedu-left">
+            <div class="meedu-logo-wrap">
+              <img class="meedu-logo" src="./meedu-admin-assets/logo.png" alt="YUWAY">
+            </div>
+            <div class="meedu-menu-box">
+              <div class="ant-menu">
+                <div class="ant-menu-item"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="ant-menu-arrow">›</span></div>
+                <div class="ant-submenu-title open"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="ant-menu-arrow">⌄</span></div>
+                <div class="ant-menu-item child selected">录播课</div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="ant-menu-arrow">›</span></div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="ant-menu-arrow">›</span></div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="ant-menu-arrow">›</span></div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="ant-menu-arrow">›</span></div>
+              </div>
+            </div>
+          </aside>
+
+          <section class="meedu-right">
+            <header class="meedu-header">
+              <div class="meedu-main-header">
+                <div class="meedu-page-name">录播课</div>
+                <div class="meedu-device-bar">
+                  <div class="meedu-device-item" onclick="toast('打开学员端访问二维码')">
+                    <img src="./meedu-admin-assets/focus-device.png" alt="">
+                    访问学员端
+                  </div>
+                  <i class="meedu-column"></i>
+                  <div class="meedu-user-info">YUWAY ▾</div>
+                </div>
+              </div>
+            </header>
+
+            <main class="meedu-main">
+              <div class="meedu-main-body">
+                <div class="float-left j-b-flex mb-30 meedu-course-actions">
+                  <div class="d-flex">
+                    <button class="ant-btn ant-btn-primary" onclick="toast('跳转：/course/vod/create')">新建录播课</button>
+                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('跳转：/course/vod/category/index')">录播课分类</button>
+                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('跳转：/course/vod/video-import')">课时批量导入</button>
+                    <div class="option-link" onclick="toast('跳转：播放器配置')">
+                      <div class="link">
+                        <img src="./meedu-admin-assets/icon-option.png" alt="">
+                        播放器配置
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex">
+                    <input class="ant-input" placeholder="课程名称关键字">
+                    <button class="ant-btn ml-10" onclick="toast('清空筛选')">清空</button>
+                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('执行筛选')">筛选</button>
+                    <div class="drawer-more ml-10" onclick="openDrawer()">
+                      <img src="./meedu-admin-assets/icon-filter.png" alt="">
+                      <span>更多</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="float-left ant-table-wrapper">
+                  <table class="ant-table">
+                    <colgroup>
+                      <col style="width:6%">
+                      <col style="width:30%">
+                      <col style="width:12%">
+                      <col style="width:14%">
+                      <col style="width:8%">
+                      <col style="width:20%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>ID</th>
+                        <th>课程</th>
+                        <th>分类</th>
+                        <th>上架时间</th>
+                        <th>是否显示</th>
+                        <th>操作</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>19</td>
+                        <td>
+                          <div class="thumb-bar">
+                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-19.png" alt=""></div>
+                            <div><div class="thumb-title">社区矛盾调解沟通技巧</div></div>
+                          </div>
+                        </td>
+                        <td>心理健康</td>
+                        <td>2026-05-06 02:00</td>
+                        <td><span class="c-green">· 显示</span></td>
+                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                      </tr>
+                      <tr>
+                        <td>18</td>
+                        <td>
+                          <div class="thumb-bar">
+                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-18.png" alt=""></div>
+                            <div><div class="thumb-title">社区工作者情绪管理与职业倦怠预防</div></div>
+                          </div>
+                        </td>
+                        <td>心理健康</td>
+                        <td>2026-05-06 02:00</td>
+                        <td><span class="c-green">· 显示</span></td>
+                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                      </tr>
+                      <tr>
+                        <td>17</td>
+                        <td>
+                          <div class="thumb-bar">
+                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-17.png" alt=""></div>
+                            <div><div class="thumb-title">社区居民心理健康服务</div></div>
+                          </div>
+                        </td>
+                        <td>心理健康</td>
+                        <td>2026-05-06 02:00</td>
+                        <td><span class="c-green">· 显示</span></td>
+                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                      </tr>
+                      <tr>
+                        <td>16</td>
+                        <td>
+                          <div class="thumb-bar">
+                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-16.png" alt=""></div>
+                            <div><div class="thumb-title">社区反诈防骗宣传教育</div></div>
+                          </div>
+                        </td>
+                        <td>安全应急</td>
+                        <td>2026-05-06 02:00</td>
+                        <td><span class="c-green">· 显示</span></td>
+                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                      </tr>
+                      <tr>
+                        <td>15</td>
+                        <td>
+                          <div class="thumb-bar">
+                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-15.png" alt=""></div>
+                            <div><div class="thumb-title">自然灾害应急预案编制</div></div>
+                          </div>
+                        </td>
+                        <td>安全应急</td>
+                        <td>2026-05-06 02:00</td>
+                        <td><span class="c-green">· 显示</span></td>
+                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                      </tr>
+                      <tr>
+                        <td>14</td>
+                        <td>
+                          <div class="thumb-bar">
+                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-14.png" alt=""></div>
+                            <div><div class="thumb-title">社区消防安全管理</div></div>
+                          </div>
+                        </td>
+                        <td>安全应急</td>
+                        <td>2026-05-06 02:00</td>
+                        <td><span class="c-green">· 显示</span></td>
+                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                      </tr>
+                      <tr>
+                        <td>13</td>
+                        <td>
+                          <div class="thumb-bar">
+                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-13.png" alt=""></div>
+                            <div><div class="thumb-title">社区活动策划与执行</div></div>
+                          </div>
+                        </td>
+                        <td>便民服务</td>
+                        <td>2026-05-06 02:00</td>
+                        <td><span class="c-green">· 显示</span></td>
+                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="ant-pagination">
+                    <span>共 18 条</span>
+                    <span class="page-btn">‹</span>
+                    <span class="page-btn active">1</span>
+                    <span class="page-btn">2</span>
+                    <span class="page-btn">›</span>
+                    <select class="page-size"><option>10 条/页</option><option>20 条/页</option></select>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </section>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="drawerMask" class="meedu-drawer-mask">
+    <div class="meedu-drawer">
+      <div class="drawer-head">
+        <span>更多筛选</span>
+        <span class="drawer-close" onclick="closeDrawer()">×</span>
+      </div>
+      <div class="drawer-body">
+        <input class="ant-input" placeholder="课程名称关键字">
+        <select>
+          <option value="">分类</option>
+          <option>合伙人培训</option>
+          <option>社区工作人员</option>
+          <option>居民课堂</option>
+        </select>
+        <input class="ant-input" placeholder="课程ID">
+      </div>
+      <div class="drawer-footer">
+        <button class="ant-btn" onclick="toast('清空筛选');closeDrawer()">清空</button>
+        <button class="ant-btn ant-btn-primary" onclick="toast('执行筛选');closeDrawer()">筛选</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirmMask" class="confirm-mask">
+    <div class="confirm-box">
+      <div class="confirm-title">
+        <span class="confirm-icon">!</span>
+        <span>操作确认</span>
+      </div>
+      <div class="confirm-content">确认删除此课程？删除前应检查是否存在课时和学习记录。</div>
+      <div class="confirm-actions">
+        <button class="ant-btn" onclick="closeConfirm()">取消</button>
+        <button class="ant-btn ant-btn-primary" onclick="closeConfirm();toast('删除成功')">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+
+  <script>
+    const drawer = document.getElementById("drawerMask");
+    const confirmMask = document.getElementById("confirmMask");
+    const toastNode = document.getElementById("toast");
+    let toastTimer = null;
+
+    function openDrawer() {
+      drawer.classList.add("show");
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove("show");
+    }
+
+    function openConfirm() {
+      confirmMask.classList.add("show");
+    }
+
+    function closeConfirm() {
+      confirmMask.classList.remove("show");
+    }
+
+    function toast(text) {
+      toastNode.textContent = text;
+      toastNode.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastNode.classList.remove("show"), 1300);
+    }
+  </script>
+</body>
+</html>

@@ -9,12 +9,13 @@
 body { font-family:-apple-system,'PingFang SC','Noto Sans SC',sans-serif; background:#F7F8FA; color:#272E3B; min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:60px 20px; }
 h1 { font-size:24px; font-weight:700; color:#3491FA; margin-bottom:8px; }
 .sub { font-size:14px; color:#86909C; margin-bottom:40px; }
-.card-list { display:flex; flex-direction:column; gap:16px; width:100%; max-width:480px; }
-.card { background:#fff; border-radius:12px; padding:20px 24px; box-shadow:0 2px 8px rgba(0,0,0,0.04); cursor:pointer; text-decoration:none; color:inherit; transition:box-shadow 0.2s, transform 0.2s; display:flex; justify-content:space-between; align-items:center; }
+.card-list { display:flex; flex-direction:column; gap:16px; width:100%; max-width:640px; }
+.card { background:#fff; border-radius:12px; padding:20px 24px; box-shadow:0 2px 8px rgba(0,0,0,0.04); cursor:pointer; text-decoration:none; color:inherit; transition:box-shadow 0.2s, transform 0.2s; display:flex; justify-content:space-between; align-items:center; gap:20px; }
 .card:hover { box-shadow:0 6px 20px rgba(52,145,250,0.12); transform:translateY(-2px); }
-.card-info { display:flex; flex-direction:column; gap:4px; }
+.card-info { flex:1; display:flex; flex-direction:column; gap:6px; min-width:0; }
 .card-title { font-size:16px; font-weight:600; }
 .card-ver { font-size:12px; color:#86909C; }
+.card-desc { font-size:13px; line-height:1.7; color:#4E5969; }
 .card-arrow { color:#C9CDD4; font-size:20px; }
 </style>
 </head>
@@ -22,10 +23,19 @@ h1 { font-size:24px; font-weight:700; color:#3491FA; margin-bottom:8px; }
 <h1>云芳邻 PRD</h1>
 <p class="sub">产品需求文档索引</p>
 <div class="card-list">
+  <a class="card" href="教培系统/v1.0/prd-viewer.html">
+    <div class="card-info">
+      <span class="card-title">教培系统接入方案</span>
+      <span class="card-ver">v1.0 - 2026-06-01</span>
+      <span class="card-desc">接入 MeEdu 教培能力，保留课程上传、课时学习、学习记录和学员统计；剔除支付、会员、订单、装修等非 MVP 能力，补云芳邻账号映射和组织统计。</span>
+    </div>
+    <span class="card-arrow">&#8250;</span>
+  </a>
   <a class="card" href="六一活动专场领券中心优化/v1.0/prd/prd-viewer.html">
     <div class="card-info">
       <span class="card-title">六一活动专场领券中心优化</span>
       <span class="card-ver">v1.0 - 2026-05-21</span>
+      <span class="card-desc">C端领券中心新增六一活动专场和券名搜索；PC商家管理补管理员手机号、最后登录时间；云新声处理从上级接管调整为同层级组织流转。</span>
     </div>
     <span class="card-arrow">&#8250;</span>
   </a>
@@ -33,6 +43,7 @@ h1 { font-size:24px; font-weight:700; color:#3491FA; margin-bottom:8px; }
     <div class="card-info">
       <span class="card-title">积分任务系统</span>
       <span class="card-ver">v1.0 - 2026-05-11</span>
+      <span class="card-desc">建立积分月度桶、任务中心、PC任务配置/明细/数据统计；调整为手动领取奖励加周期兜底发放，并下线居民账户支付积分入口。</span>
     </div>
     <span class="card-arrow">&#8250;</span>
   </a>
@@ -40,6 +51,7 @@ h1 { font-size:24px; font-weight:700; color:#3491FA; margin-bottom:8px; }
     <div class="card-info">
       <span class="card-title">社区投票系统</span>
       <span class="card-ver">v1.0 - 2026-04-30</span>
+      <span class="card-desc">补投票活动、作品报名审核、投票防刷、排行榜和奖励发放；强化社区归属、活动范围、社区排名和社区奖规则。</span>
     </div>
     <span class="card-arrow">&#8250;</span>
   </a>

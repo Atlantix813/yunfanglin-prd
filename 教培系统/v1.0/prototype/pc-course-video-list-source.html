@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>课时管理</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { width: 1920px; min-height: 1080px; margin: 0; overflow: hidden; background: #eef2f7; color: rgba(0,0,0,.88); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; }
+    .yfl-shell { width: 1920px; min-height: 1080px; background: #f7f8fa; }
+    .yfl-top { height: 48px; background: #3491fa; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .yfl-brand { width: 180px; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; letter-spacing: .5px; }
+    .hamburger { width: 20px; height: 20px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+    .hamburger span { display: block; width: 18px; height: 2px; background: #fff; border-radius: 1px; }
+    .yfl-user { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+    .yfl-user span { display: inline-flex; align-items: center; height: 28px; padding: 0 8px; border-radius: 4px; }
+    .yfl-body { display: flex; min-height: 1032px; }
+    .yfl-sidebar { width: 180px; background: #fff; border-right: 1px solid #e5e6eb; padding: 10px 0; flex-shrink: 0; }
+    .yfl-menu-title { height: 32px; display: flex; align-items: center; padding: 0 16px; color: #a9aeb8; font-size: 12px; }
+    .yfl-menu-item { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; color: #4e5969; cursor: pointer; }
+    .yfl-menu-item.active { background: #3491fa; color: #fff; font-weight: 500; }
+    .yfl-menu-item svg { width: 18px; height: 18px; flex: 0 0 auto; }
+    .embed { flex: 1; min-width: 0; display: flex; background: #f1f2f9; }
+    .meedu-side { width: 200px; height: 1032px; background: #fff; border-right: 1px solid #f2f3f5; flex-shrink: 0; }
+    .meedu-logo { height: 56px; display: flex; align-items: center; background: #fff; }
+    .meedu-logo img { width: 128px; max-height: 52px; object-fit: contain; margin-left: 20px; }
+    .meedu-menu { padding-top: 22px; color: rgba(0,0,0,.88); }
+    .meedu-item, .meedu-sub { height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 16px 0 24px; cursor: pointer; }
+    .meedu-sub { justify-content: space-between; }
+    .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .meedu-item.child { height: 50px; padding-left: 74px; }
+    .meedu-item.selected { background: #3ca7fa; color: #fff; font-weight: 500; }
+    .meedu-icon { width: 16px; height: 16px; color: #555566; flex: 0 0 auto; }
+    .arrow { font-size: 12px; color: rgba(0,0,0,.45); }
+    .meedu-main { width: calc(100% - 200px); display: flex; flex-direction: column; min-width: 0; background: #f1f2f9; }
+    .meedu-head { height: 56px; background: #fff; display: flex; align-items: center; justify-content: space-between; }
+    .meedu-title { padding-left: 30px; font-size: 20px; font-weight: 600; color: #333; }
+    .meedu-actions { display: flex; align-items: center; gap: 18px; padding-right: 30px; color: #606266; }
+    .content { height: calc(1032px - 56px); padding: 20px; overflow: auto; }
+    .panel { width: 100%; min-width: 1180px; min-height: calc(100% - 40px); background: #fff; border-radius: 15px; padding: 30px; box-shadow: 0 2px 4px rgba(102,102,102,.05); }
+    .back-bar { display: flex; align-items: center; gap: 15px; height: 32px; }
+    .back-link { border: 0; background: transparent; color: #409eff; padding: 0; font-size: 14px; cursor: pointer; }
+    .divider { width: 1px; height: 14px; background: #d8d8d8; }
+    .back-name { font-weight: 600; color: #333; }
+    .back-sub { color: #86909c; }
+    .toolbar { width: 100%; display: flex; align-items: center; margin-top: 30px; }
+    .btn { height: 32px; padding: 4px 15px; border-radius: 3px; border: 1px solid #d9d9d9; background: #fff; color: rgba(0,0,0,.88); cursor: pointer; font: inherit; display: inline-flex; align-items: center; justify-content: center; }
+    .btn + .btn { margin-left: 10px; }
+    .btn.primary { border: 0; background: #3ca7fa; color: #fff; }
+    .btn.danger { border: 0; background: #ff4d4f; color: #fff; }
+    .btn.link { border: 0; background: transparent; color: #409eff; padding: 0; height: auto; }
+    .table-wrap { margin-top: 30px; width: 100%; overflow: auto; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 14px; }
+    th { height: 55px; padding: 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; text-align: left; font-weight: 600; }
+    td { height: 72px; padding: 16px; border-bottom: 1px solid #f0f0f0; background: #fff; vertical-align: middle; }
+    tr:hover td { background: #fafafa; }
+    .checkbox { width: 16px; height: 16px; border: 1px solid #d9d9d9; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; background: #fff; color: #fff; font-size: 12px; cursor: pointer; }
+    .checkbox.checked { background: #3ca7fa; border-color: #3ca7fa; }
+    .checkbox.checked::after { content: "✓"; }
+    .lesson-main { color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .lesson-sub { margin-top: 6px; color: #9aa4b2; font-size: 12px; }
+    .green { color: #04c877; }
+    .red { color: #ff4d4f; }
+    .ops { display: inline-flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+    .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 18px; color: rgba(0,0,0,.65); }
+    .page { min-width: 32px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; display: inline-flex; align-items: center; justify-content: center; }
+    .page.active { background: #409eff; border-color: #409eff; color: #fff; }
+    .page-size { height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 0 8px; background: #fff; }
+    .toast { position: fixed; top: 70px; right: 34px; min-width: 160px; padding: 10px 14px; border-radius: 6px; background: rgba(31,41,55,.92); color: #fff; opacity: 0; transform: translateY(-10px); transition: .18s; z-index: 50; text-align: center; font-size: 13px; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    /* yfl-menu-bg-normalize:start */
+    .yfl-body { min-height: 1032px; align-items: stretch; }
+    .embed-area { min-height: 1032px; }
+    .embed, .meedu-frame { height: 1032px; min-height: 1032px; align-items: stretch; background: #f1f2f9; overflow: hidden; }
+    .meedu-side, .meedu-left { width: 200px !important; min-width: 200px; height: 1032px !important; min-height: 1032px; background: #fff; flex-shrink: 0; }
+    .meedu-logo, .meedu-logo-wrap { height: 56px !important; min-height: 56px; display: flex; align-items: center; background: #fff; }
+    .meedu-menu, .meedu-menu-box { width: 200px !important; height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); overflow-y: auto; overflow-x: hidden; padding-top: 24px !important; background: #fff; font-size: 14px; }
+    .ant-menu, .meedu-menu { width: 200px !important; background: #fff; }
+    .ant-menu-item, .ant-submenu-title, .meedu-item, .meedu-sub-title, .meedu-sub { height: 56px !important; min-height: 56px; line-height: 56px !important; padding: 0 16px 0 24px !important; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(0,0,0,.88); border-radius: 0; font-size: 14px; }
+    .ant-menu-item.child, .meedu-item.child { height: 50px !important; min-height: 50px; line-height: 50px !important; padding-left: 74px !important; padding-right: 16px !important; justify-content: flex-start; color: rgba(0,0,0,.88); }
+    .ant-menu-item.selected, .meedu-item.selected, .ant-menu-item.child.selected, .meedu-item.child.selected { background: #3ca7fa !important; color: #fff !important; font-weight: 500; }
+    .ant-submenu-title.open, .meedu-sub-title.open, .meedu-sub.open { color: #409eff; }
+    .ant-menu-icon-label, .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .menu-icon, .meedu-icon { width: 16px; height: 16px; flex: 0 0 auto; color: #606266; }
+    .ant-menu-arrow, .arrow { font-size: 12px; color: rgba(0,0,0,.45); }
+    .meedu-frame > .meedu-main, .embed > .meedu-main, .meedu-right { height: 1032px !important; min-height: 1032px; background: #f1f2f9; display: flex; flex-direction: column; min-width: 0; }
+    .meedu-content, .content, .meedu-right > .meedu-main { height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); background: #f1f2f9; overflow: auto; flex: 1 1 auto; }
+    .panel, .meedu-main-body, .work-grid { margin-bottom: 80px; }
+    .panel, .meedu-main-body { display: flow-root; }
+    /* yfl-menu-bg-normalize:end */
+  </style>
+</head>
+<body>
+  <div class="yfl-shell">
+    <header class="yfl-top">
+      <div class="yfl-brand"><span>云芳邻管理后台</span><div class="hamburger"><span></span><span></span><span></span></div></div>
+      <div class="yfl-user"><span>白云区运营中心</span><span>消息</span><span>平台管理员</span></div>
+    </header>
+    <div class="yfl-body">
+      <aside class="yfl-sidebar">
+        <div class="yfl-menu-title">云芳邻后台</div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>工作台</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-8h6v8"/></svg><span>组织管理</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>用户管理</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>内容服务</span></div>
+        <div class="yfl-menu-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>教培系统</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据看板</span></div>
+      </aside>
+      <section class="embed">
+        <aside class="meedu-side">
+          <div class="meedu-logo"><img src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
+          <nav class="meedu-menu">
+  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title open"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="arrow">⌄</span></div>
+  <div class="meedu-item child selected">录播课</div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="arrow">›</span></div>
+</nav>
+        </aside>
+        <main class="meedu-main">
+          <header class="meedu-head"><div class="meedu-title">课时管理</div><div class="meedu-actions"><span>访问学员端</span><span>YUWAY ▾</span></div></header>
+          <div class="content">
+            <div class="panel">
+              <div class="back-bar"><button class="back-link" onclick="toast('返回录播课列表')">‹ 返回</button><span class="divider"></span><span class="back-name">社区合伙人成长课</span><span class="back-sub">/ 课时管理</span></div>
+              <div class="toolbar">
+                <button class="btn primary" onclick="toast('跳转：新建课时')">新建课时</button>
+                <button class="btn primary" onclick="toast('跳转：章节管理')">章节管理</button>
+                <button class="btn danger" onclick="toast('确认删除选中的课时')">删除</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <colgroup>
+                    <col style="width:48px"><col style="width:34%"><col style="width:14%"><col style="width:18%"><col style="width:16%"><col style="width:8%"><col style="width:10%">
+                  </colgroup>
+                  <thead>
+                    <tr>
+                      <th><span class="checkbox" id="checkAll"></span></th>
+                      <th>课时</th>
+                      <th>课时时长</th>
+                      <th>所属章节</th>
+                      <th>上架时间</th>
+                      <th>是否显示</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><span class="checkbox row-check"></span></td>
+                      <td><div class="lesson-main">合伙人准入规则讲解</div><div class="lesson-sub">腾讯云视频 ID：vod-2026052601</div></td>
+                      <td>00:21:35</td>
+                      <td>政策与准入</td>
+                      <td>2026-05-26 09:00</td>
+                      <td><span class="green">· 显示</span></td>
+                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="checkbox row-check checked"></span></td>
+                      <td><div class="lesson-main">服务工单跟进流程</div><div class="lesson-sub">视频 URL：training/yfl/work-order.mp4</div></td>
+                      <td>00:18:42</td>
+                      <td>运营实务</td>
+                      <td>2026-05-27 10:30</td>
+                      <td><span class="green">· 显示</span></td>
+                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="checkbox row-check"></span></td>
+                      <td><div class="lesson-main">社区拜访前的信息准备</div><div class="lesson-sub">阿里云视频 ID：ali-lesson-032</div></td>
+                      <td>00:12:18</td>
+                      <td>社区走访</td>
+                      <td>2026-05-27 15:00</td>
+                      <td><span class="green">· 显示</span></td>
+                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="checkbox row-check"></span></td>
+                      <td><div class="lesson-main">试点小区活动复盘方法</div><div class="lesson-sub">腾讯云视频 ID：vod-2026052804</div></td>
+                      <td>00:25:06</td>
+                      <td>运营实务</td>
+                      <td>2026-05-28 09:40</td>
+                      <td><span class="red">· 隐藏</span></td>
+                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
+                    </tr>
+                    <tr>
+                      <td><span class="checkbox row-check"></span></td>
+                      <td><div class="lesson-main">合伙人常见问题答疑</div><div class="lesson-sub">视频 URL：training/yfl/faq.mp4</div></td>
+                      <td>00:15:27</td>
+                      <td>答疑回看</td>
+                      <td>2026-05-28 16:20</td>
+                      <td><span class="green">· 显示</span></td>
+                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="pagination"><span>共 5 条</span><span class="page">‹</span><span class="page active">1</span><span class="page">›</span><select class="page-size"><option>100 条/页</option><option>50 条/页</option></select></div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </section>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script>
+    const toastNode = document.getElementById("toast");
+    const checkAll = document.getElementById("checkAll");
+    const rowChecks = Array.from(document.querySelectorAll(".row-check"));
+    let toastTimer = null;
+    function toast(text) {
+      toastNode.textContent = text;
+      toastNode.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastNode.classList.remove("show"), 1300);
+    }
+    checkAll.addEventListener("click", function () {
+      const next = !checkAll.classList.contains("checked");
+      checkAll.classList.toggle("checked", next);
+      rowChecks.forEach(item => item.classList.toggle("checked", next));
+    });
+    rowChecks.forEach(item => item.addEventListener("click", function () {
+      item.classList.toggle("checked");
+      checkAll.classList.toggle("checked", rowChecks.every(i => i.classList.contains("checked")));
+    }));
+  </script>
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>录播课程</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: #fff;
+      color: #171923;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    .meedu-page {
+      width: min(100vw, 430px);
+      min-height: 100vh;
+      background: #fff;
+      padding-bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+      overflow-x: hidden;
+    }
+
+    .meedu-filter-box {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      width: 100%;
+      background: #fff;
+      padding: 0 15px;
+      line-height: 30px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-box {
+      width: 100%;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #fff;
+    }
+
+    .filter-back {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+
+    .filter-back img {
+      width: 24px;
+      height: 24px;
+      display: block;
+    }
+
+    .filter-title {
+      width: 72%;
+      height: 18px;
+      color: #171923;
+      font-size: 18px;
+      line-height: 18px;
+      font-weight: 500;
+      text-align: center;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .filter-button {
+      position: relative;
+      width: auto;
+      height: auto;
+    }
+
+    .button-text {
+      border: 0;
+      background: transparent;
+      color: #333;
+      display: flex;
+      align-items: center;
+      font: inherit;
+      font-size: 14px;
+      line-height: 30px;
+      cursor: pointer;
+    }
+
+    .button-text.active {
+      color: #3ca7fa;
+    }
+
+    .button-text img {
+      width: 24px;
+      height: 24px;
+      margin-left: 5px;
+    }
+
+    .category1-box {
+      width: 100%;
+      height: 50px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .category1-box::-webkit-scrollbar {
+      display: none;
+    }
+
+    .category1-box .item {
+      flex: 0 0 auto;
+      margin-right: 16px;
+      border: 0;
+      background: transparent;
+      color: #666;
+      font: inherit;
+      font-size: 16px;
+      line-height: 30px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .category1-box .item.active {
+      color: #3ca7fa;
+      font-weight: 700;
+    }
+
+    .category2-box {
+      position: absolute;
+      right: 0;
+      top: 30px;
+      z-index: 100;
+      width: 166px;
+      padding: 0 15px;
+      border-radius: 5px;
+      background: #fff;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, .12);
+      text-align: left;
+    }
+
+    .category2-box.hide {
+      display: none;
+    }
+
+    .category2-box .item {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: #333;
+      font: inherit;
+      font-size: 14px;
+      line-height: 40px;
+      text-align: left;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      cursor: pointer;
+    }
+
+    .category2-box .item.active {
+      color: #3ca7fa;
+      font-weight: 700;
+    }
+
+    .gray {
+      width: 100%;
+      height: 10px;
+      background: #f3f6f9;
+    }
+
+    .course-list {
+      width: 100%;
+      background: #fff;
+    }
+
+    .vod-course-item {
+      width: 100%;
+      padding: 15px;
+    }
+
+    .vod-course-item-comp {
+      width: 100%;
+      display: flex;
+      cursor: pointer;
+    }
+
+    .vod-course-thumb {
+      position: relative;
+      flex: 0 0 120px;
+      width: 120px;
+      height: 90px;
+      margin-right: 10px;
+      border-radius: 4px;
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--c1), var(--c2));
+    }
+
+    .vod-course-thumb::before {
+      content: "";
+      position: absolute;
+      right: -5px;
+      top: -6px;
+      width: 49px;
+      height: 58px;
+      border-radius: 0 0 28px 28px;
+      background: rgba(220, 242, 237, .82);
+    }
+
+    .vod-course-thumb::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 36px;
+      background: linear-gradient(180deg, rgba(21, 70, 104, .18) 0%, rgba(27, 30, 48, .72) 100%);
+    }
+
+    .thumb-lines {
+      position: absolute;
+      left: 12px;
+      top: 13px;
+      z-index: 2;
+      width: 47px;
+      height: 18px;
+    }
+
+    .thumb-lines span {
+      display: block;
+      height: 2px;
+      margin-bottom: 6px;
+      background: rgba(255, 255, 255, .82);
+    }
+
+    .thumb-lines span:nth-child(2) {
+      width: 34px;
+    }
+
+    .thumb-badge {
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      z-index: 2;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(25, 25, 32, .42);
+      color: rgba(255, 255, 255, .68);
+      font-size: 5px;
+      line-height: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .vod-course-body {
+      flex: 1;
+      min-width: 0;
+      padding-top: 5px;
+    }
+
+    .vod-course-title {
+      width: 100%;
+      min-height: 40px;
+      color: #171923;
+      font-size: 15px;
+      line-height: 20px;
+      font-weight: 500;
+      text-align: left;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+
+    .course-tag-row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 11px;
+    }
+
+    .course-tag {
+      height: 20px;
+      padding: 0 8px;
+      border-radius: 10px;
+      background: #f0f7ff;
+      color: #2f80ed;
+      font-size: 11px;
+      line-height: 20px;
+      white-space: nowrap;
+    }
+
+    .course-tag.green {
+      background: #effaf2;
+      color: #36a852;
+    }
+
+    .course-tag.orange {
+      background: #fff7e8;
+      color: #d98500;
+    }
+
+    .vod-course-info {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .vod-course-sub {
+      flex: 1;
+      color: #999;
+      font-size: 12px;
+      line-height: 12px;
+      text-align: left;
+    }
+
+    .vod-course-action {
+      flex: 0 0 auto;
+      color: #52c41a;
+      font-size: 14px;
+      line-height: 18px;
+      font-weight: 600;
+      text-align: right;
+    }
+
+    .drop {
+      width: 100%;
+      padding: 15px 0 30px;
+      color: #ccc;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .footer {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      width: min(100vw, 430px);
+      min-height: calc(58px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      border-top: 1px solid #f1f1f1;
+      background: #fff;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .footer button {
+      flex: 1;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      color: #333;
+      font: inherit;
+      font-size: 11px;
+      line-height: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .footer img {
+      width: 28px;
+      height: 28px;
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 72px;
+      z-index: 80;
+      max-width: 320px;
+      padding: 9px 14px;
+      border-radius: 18px;
+      background: rgba(0, 0, 0, .72);
+      color: #fff;
+      font-size: 13px;
+      line-height: 18px;
+      transform: translateX(-50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .18s ease;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <main class="meedu-page">
+    <section class="meedu-filter-box">
+      <div class="filter-box">
+        <button class="filter-back" type="button" aria-label="返回">
+          <img src="meedu-assets/icon-back.png" alt="">
+        </button>
+        <div class="filter-title">录播课程</div>
+        <div class="filter-button">
+          <button class="button-text" type="button" id="filterBtn">
+            <span>筛选</span>
+            <img src="meedu-assets/icon-filter.png" alt="">
+          </button>
+          <div class="category2-box hide" id="filterMenu">
+            <button class="item active" type="button">全部</button>
+            <button class="item" type="button">党建学习</button>
+            <button class="item" type="button">基层治理</button>
+            <button class="item" type="button">法律法规</button>
+            <button class="item" type="button">志愿服务</button>
+          </div>
+        </div>
+      </div>
+      <div class="category1-box" aria-label="课程范围">
+        <button class="item active" type="button">全部</button>
+        <button class="item" type="button">可学习</button>
+      </div>
+    </section>
+
+    <div class="gray"></div>
+
+    <section class="course-list">
+      <article class="vod-course-item">
+        <div class="vod-course-item-comp" data-title="社区矛盾调解沟通技巧">
+          <div class="vod-course-thumb" style="--c1:#2b63ff;--c2:#4b236d">
+            <div class="thumb-lines"><span></span><span></span></div>
+            <div class="thumb-badge">YFL<br>COURSE</div>
+          </div>
+          <div class="vod-course-body">
+            <h2 class="vod-course-title">社区矛盾调解沟通技巧</h2>
+            <div class="course-tag-row"><span class="course-tag">基层治理</span><span class="course-tag green">直接学习</span></div>
+            <div class="vod-course-info"><div class="vod-course-sub">2 章 / 6 课时</div><div class="vod-course-action">继续学习</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vod-course-item">
+        <div class="vod-course-item-comp" data-title="习近平新时代中国特色社会主义思想学习">
+          <div class="vod-course-thumb" style="--c1:#46b6ff;--c2:#19b7aa">
+            <div class="thumb-lines"><span></span><span></span></div>
+            <div class="thumb-badge">YFL<br>COURSE</div>
+          </div>
+          <div class="vod-course-body">
+            <h2 class="vod-course-title">习近平新时代中国特色社会主义思想学习</h2>
+            <div class="course-tag-row"><span class="course-tag">党建学习</span><span class="course-tag green">直接学习</span></div>
+            <div class="vod-course-info"><div class="vod-course-sub">3 章 / 5 课时</div><div class="vod-course-action">开始学习</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vod-course-item">
+        <div class="vod-course-item-comp" data-title="党的二十大精神解读">
+          <div class="vod-course-thumb" style="--c1:#18c46a;--c2:#143350">
+            <div class="thumb-lines"><span></span><span></span></div>
+            <div class="thumb-badge">YFL<br>COURSE</div>
+          </div>
+          <div class="vod-course-body">
+            <h2 class="vod-course-title">党的二十大精神解读</h2>
+            <div class="course-tag-row"><span class="course-tag">党建学习</span><span class="course-tag green">直接学习</span></div>
+            <div class="vod-course-info"><div class="vod-course-sub">2 章 / 3 课时</div><div class="vod-course-action">开始学习</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vod-course-item">
+        <div class="vod-course-item-comp" data-title="民法典与社区治理">
+          <div class="vod-course-thumb" style="--c1:#ffa617;--c2:#4a1b2b">
+            <div class="thumb-lines"><span></span><span></span></div>
+            <div class="thumb-badge">YFL<br>COURSE</div>
+          </div>
+          <div class="vod-course-body">
+            <h2 class="vod-course-title">民法典与社区治理</h2>
+            <div class="course-tag-row"><span class="course-tag orange">法律法规</span><span class="course-tag green">直接学习</span></div>
+            <div class="vod-course-info"><div class="vod-course-sub">2 章 / 4 课时</div><div class="vod-course-action">开始学习</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vod-course-item">
+        <div class="vod-course-item-comp" data-title="网格化管理实务">
+          <div class="vod-course-thumb" style="--c1:#16b7c2;--c2:#183b68">
+            <div class="thumb-lines"><span></span><span></span></div>
+            <div class="thumb-badge">YFL<br>COURSE</div>
+          </div>
+          <div class="vod-course-body">
+            <h2 class="vod-course-title">网格化管理实务</h2>
+            <div class="course-tag-row"><span class="course-tag">基层治理</span><span class="course-tag green">直接学习</span></div>
+            <div class="vod-course-info"><div class="vod-course-sub">3 章 / 7 课时</div><div class="vod-course-action">开始学习</div></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="vod-course-item">
+        <div class="vod-course-item-comp" data-title="志愿服务活动组织">
+          <div class="vod-course-thumb" style="--c1:#7348ff;--c2:#4b153d">
+            <div class="thumb-lines"><span></span><span></span></div>
+            <div class="thumb-badge">YFL<br>COURSE</div>
+          </div>
+          <div class="vod-course-body">
+            <h2 class="vod-course-title">志愿服务活动组织</h2>
+            <div class="course-tag-row"><span class="course-tag">志愿服务</span><span class="course-tag green">直接学习</span></div>
+            <div class="vod-course-info"><div class="vod-course-sub">1 章 / 4 课时</div><div class="vod-course-action">开始学习</div></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <div class="drop">已经到底了</div>
+  </main>
+
+  <nav class="footer" aria-label="底部导航">
+    <button type="button"><img src="meedu-assets/icon-home-h@2x.png" alt=""><span>首页</span></button>
+    <button type="button"><img src="meedu-assets/icon-study-n@2x.png" alt=""><span>在学</span></button>
+  </nav>
+  <div class="toast" id="toast">已创建学习记录，进入课程</div>
+
+  <script>
+    const filterBtn = document.getElementById("filterBtn");
+    const filterMenu = document.getElementById("filterMenu");
+    const toast = document.getElementById("toast");
+    let toastTimer = null;
+
+    function showToast(text) {
+      toast.textContent = text;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 1500);
+    }
+
+    filterBtn.addEventListener("click", () => {
+      filterMenu.classList.toggle("hide");
+      filterBtn.classList.toggle("active", !filterMenu.classList.contains("hide"));
+    });
+
+    document.querySelectorAll(".category1-box .item, .category2-box .item").forEach((item) => {
+      item.addEventListener("click", () => {
+        const group = item.parentElement;
+        group.querySelectorAll(".item").forEach((btn) => btn.classList.remove("active"));
+        item.classList.add("active");
+        filterMenu.classList.add("hide");
+        filterBtn.classList.remove("active");
+      });
+    });
+
+    document.querySelectorAll(".vod-course-item-comp").forEach((card) => {
+      card.addEventListener("click", () => {
+        showToast("已创建学习记录，进入「" + card.dataset.title + "」");
+      });
+    });
+  </script>
+</body>
+</html>

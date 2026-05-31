@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>云芳邻嵌入教培系统 学员详情</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 100%; min-width: 1920px; min-height: 1080px; background: #eef2f7; color: #272e3b; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; overflow-x: hidden; }
+    .yfl-shell { width: 100%; min-height: 1080px; background: #f7f8fa; }
+    .yfl-top { height: 48px; background: #3491fa; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .yfl-brand { width: 210px; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; }
+    .yfl-hamburger { width: 20px; height: 20px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+    .yfl-hamburger span { display: block; width: 18px; height: 2px; background: #fff; border-radius: 1px; }
+    .yfl-user { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+    .yfl-user span { height: 28px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 4px; }
+    .yfl-body { display: flex; min-height: 1032px; }
+    .yfl-sidebar { width: 180px; background: #fff; border-right: 1px solid #e5e6eb; padding: 10px 0; flex-shrink: 0; }
+    .yfl-menu-title { height: 32px; display: flex; align-items: center; padding: 0 16px; color: #a9aeb8; font-size: 12px; }
+    .yfl-menu-item { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; color: #4e5969; font-size: 14px; }
+    .yfl-menu-item.active { background: #3491fa; color: #fff; font-weight: 500; }
+    .embed-area { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .embed-bar { display: none; }
+    .embed-bar-left { display: flex; align-items: center; gap: 8px; }
+    .green-dot { width: 8px; height: 8px; border-radius: 50%; background: #00b365; }
+    .tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 6px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+    .tag-blue { color: #3ca7fa; background: #e6f4ff; }
+    .tag-green { color: #0f7a3d; background: #e8f8ef; }
+    .tag-orange { color: #b54708; background: #fff4df; }
+    .tag-red { color: #b42318; background: #fff0ee; }
+    .tag-gray { color: #667085; background: #f2f4f7; }
+    .meedu-frame { flex: 1; min-height: 0; display: flex; overflow: hidden; background: #f1f2f9; }
+    .meedu-left { width: 200px; height: 1032px; background: #fff; border-right: 1px solid #f2f3f5; flex-shrink: 0; }
+    .meedu-logo-wrap { height: 56px; display: flex; align-items: center; }
+    .meedu-logo { width: 128px; max-height: 52px; object-fit: contain; margin-left: 20px; }
+    .meedu-menu-box { width: 200px; height: calc(100% - 56px); overflow-y: auto; padding-top: 24px; }
+    .ant-menu-item, .ant-submenu-title { height: 56px; padding: 0 16px 0 24px; display: flex; align-items: center; justify-content: space-between; color: rgba(0,0,0,.88); }
+    .ant-menu-item.child { height: 50px; padding-left: 74px; justify-content: flex-start; }
+    .ant-menu-item.selected { color: #fff; background: #3ca7fa; font-weight: 500; }
+    .meedu-right { width: calc(100% - 200px); min-width: 0; display: flex; flex-direction: column; }
+    .meedu-header { height: 56px; background: #fff; }
+    .meedu-main-header { height: 56px; display: flex; align-items: center; }
+    .meedu-page-name { flex: 1; padding-left: 30px; font-size: 20px; font-weight: 600; color: #333; }
+    .meedu-device-bar { display: flex; align-items: center; }
+    .meedu-device-item { width: 95px; height: 20px; display: flex; align-items: center; font-size: 14px; color: #666; }
+    .meedu-device-item img { width: 20px; height: 20px; margin-right: 5px; }
+    .meedu-column { width: 1px; height: 20px; background: #d8d8d8; margin: 0 15px; }
+    .meedu-user-info { padding-right: 30px; color: #606266; }
+    .meedu-main { flex: 1; min-height: 0; overflow: auto; padding: 20px; }
+    .work-grid { display: block; min-width: 1180px; }
+    .panel { background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 2px 4px rgba(102,102,102,.05); text-align: left; margin-bottom: 20px; width: 100%; }
+    .back-title { height: 24px; display: flex; align-items: center; gap: 8px; font-size: 18px; font-weight: 600; color: #333; }
+    .back-title:before { content: "‹"; width: 20px; height: 20px; border-radius: 50%; background: #f1f2f9; display: inline-flex; align-items: center; justify-content: center; color: #606266; }
+    .user-info-box { width: 100%; display: flex; justify-content: center; margin-top: 10px; flex-direction: column; }
+    .user-base-info-box { width: 100%; padding-bottom: 20px; border-bottom: 1px solid #f3f6f9; display: flex; align-items: center; }
+    .user-avatar { width: 80px; height: 80px; margin-right: 20px; border-radius: 50%; flex-shrink: 0; overflow: hidden; background: #dcecff; }
+    .user-avatar img { width: 80px; height: 80px; display: block; border-radius: 50%; }
+    .user-info { display: flex; flex-direction: column; }
+    .user-nickname { height: 20px; font-size: 20px; font-weight: 600; color: #333; line-height: 20px; }
+    .buttons { display: flex; flex-direction: row; margin-top: 20px; gap: 20px; color: #86909c; }
+    .link-btn { border: 0; background: transparent; color: #409eff; font-size: 14px; font-family: inherit; cursor: pointer; }
+    .panel-info-box { width: 100%; padding: 0 0 20px; display: flex; flex-wrap: wrap; }
+    .panel-info-item { display: flex; width: 360px; min-height: 20px; font-size: 14px; color: #333; padding: 0 5px; margin-top: 30px; flex-wrap: wrap; }
+    .panel-info-item.large { width: 720px; }
+    .info-value { color: #606266; margin-left: 4px; }
+    .c-green { color: #04c877; }
+    .c-red { color: #ff4d4f; }
+    .remark-text { flex: 1; line-height: 20px; color: #666; }
+    .overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+    .overview-item { height: 92px; border: 1px solid #f0f0f0; border-radius: 6px; padding: 18px 20px; background: #fff; }
+    .overview-label { color: #86909c; font-size: 13px; line-height: 18px; }
+    .overview-value { margin-top: 10px; color: #333; font-size: 24px; font-weight: 600; line-height: 28px; }
+    .section-title { height: 40px; display: flex; align-items: center; font-size: 16px; font-weight: 600; color: #333; }
+    .section-desc { margin-top: 4px; color: #86909c; line-height: 22px; }
+    .radio-group { display: inline-flex; border: 1px solid #d9d9d9; border-radius: 6px; overflow: hidden; }
+    .radio-btn { height: 40px; padding: 0 16px; border-right: 1px solid #d9d9d9; display: inline-flex; align-items: center; justify-content: center; color: rgba(0,0,0,.88); background: #fff; cursor: pointer; }
+    .radio-btn:last-child { border-right: 0; }
+    .radio-btn.active { background: #3ca7fa; color: #fff; border-color: #3ca7fa; }
+    .tab-body { margin-top: 30px; }
+    .ant-table { width: 100%; border-collapse: collapse; table-layout: fixed; color: rgba(0,0,0,.88); font-size: 14px; }
+    .ant-table th { height: 55px; padding: 16px; background: #fafafa; color: rgba(0,0,0,.88); font-weight: 600; text-align: left; border-bottom: 1px solid #f0f0f0; }
+    .ant-table td { min-height: 76px; padding: 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; background: #fff; }
+    .thumb-bar { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .thumb { width: 120px; height: 90px; border-radius: 4px; background: #f5f7fa; display: flex; align-items: center; justify-content: center; color: #b8c0cc; flex-shrink: 0; overflow: hidden; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .thumb-title { min-width: 0; font-weight: 500; color: #333; line-height: 22px; }
+    .thumb-sub { margin-top: 8px; color: #86909c; font-size: 12px; line-height: 18px; }
+    .progress { width: 148px; height: 8px; border-radius: 999px; background: #eef2f7; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
+    .progress span { display: block; height: 100%; background: #3ca7fa; border-radius: 999px; }
+    .ant-pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 16px; color: rgba(0,0,0,.65); font-size: 14px; }
+    .page-btn { min-width: 32px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; display: inline-flex; align-items: center; justify-content: center; }
+    .page-btn.active { background: #409eff; color: #fff; border-color: #409eff; }
+    .empty-box { height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #c0c4cc; border-bottom: 1px solid #f0f0f0; }
+    .empty-icon { width: 54px; height: 40px; margin-bottom: 8px; border: 1px solid #edf0f5; border-radius: 8px; background: linear-gradient(#fff,#f7f8fa); position: relative; }
+    .empty-icon::before { content: ""; position: absolute; left: 14px; top: 12px; width: 24px; height: 8px; border: 1px solid #d9dee7; border-radius: 0 0 5px 5px; }
+    .modal-mask { display: none; position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.45); align-items: center; justify-content: center; }
+    .modal-mask.show { display: flex; }
+    .modal-box { width: 1000px; min-height: 520px; background: #fff; border-radius: 6px; box-shadow: 0 10px 36px rgba(0,0,0,.18); overflow: hidden; }
+    .modal-head { height: 56px; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; color: #333; font-size: 16px; font-weight: 600; }
+    .modal-close { border: 0; background: transparent; color: #909399; font-size: 22px; cursor: pointer; line-height: 1; }
+    .modal-body { padding: 30px; min-height: 400px; }
+    .progress-table th, .progress-table td { padding: 14px 16px; }
+    .toast { position: fixed; top: 70px; right: 34px; min-width: 150px; padding: 10px 14px; border-radius: 6px; background: rgba(31,41,55,.92); color: #fff; font-size: 13px; opacity: 0; transform: translateY(-10px); transition: .18s; z-index: 50; text-align: center; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    /* yfl-menu-bg-normalize:start */
+    .yfl-body { min-height: 1032px; align-items: stretch; }
+    .embed-area { min-height: 1032px; }
+    .embed, .meedu-frame { height: 1032px; min-height: 1032px; align-items: stretch; background: #f1f2f9; overflow: hidden; }
+    .meedu-side, .meedu-left { width: 200px !important; min-width: 200px; height: 1032px !important; min-height: 1032px; background: #fff; flex-shrink: 0; }
+    .meedu-logo, .meedu-logo-wrap { height: 56px !important; min-height: 56px; display: flex; align-items: center; background: #fff; }
+    .meedu-menu, .meedu-menu-box { width: 200px !important; height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); overflow-y: auto; overflow-x: hidden; padding-top: 24px !important; background: #fff; font-size: 14px; }
+    .ant-menu, .meedu-menu { width: 200px !important; background: #fff; }
+    .ant-menu-item, .ant-submenu-title, .meedu-item, .meedu-sub-title, .meedu-sub { height: 56px !important; min-height: 56px; line-height: 56px !important; padding: 0 16px 0 24px !important; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(0,0,0,.88); border-radius: 0; font-size: 14px; }
+    .ant-menu-item.child, .meedu-item.child { height: 50px !important; min-height: 50px; line-height: 50px !important; padding-left: 74px !important; padding-right: 16px !important; justify-content: flex-start; color: rgba(0,0,0,.88); }
+    .ant-menu-item.selected, .meedu-item.selected, .ant-menu-item.child.selected, .meedu-item.child.selected { background: #3ca7fa !important; color: #fff !important; font-weight: 500; }
+    .ant-submenu-title.open, .meedu-sub-title.open, .meedu-sub.open { color: #409eff; }
+    .ant-menu-icon-label, .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .menu-icon, .meedu-icon { width: 16px; height: 16px; flex: 0 0 auto; color: #606266; }
+    .ant-menu-arrow, .arrow { font-size: 12px; color: rgba(0,0,0,.45); }
+    .meedu-frame > .meedu-main, .embed > .meedu-main, .meedu-right { height: 1032px !important; min-height: 1032px; background: #f1f2f9; display: flex; flex-direction: column; min-width: 0; }
+    .meedu-content, .content, .meedu-right > .meedu-main { height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); background: #f1f2f9; overflow: auto; flex: 1 1 auto; }
+    .panel, .meedu-main-body, .work-grid { margin-bottom: 80px; }
+    .panel, .meedu-main-body { display: flow-root; }
+    /* yfl-menu-bg-normalize:end */
+  </style>
+</head>
+<body>
+  <div class="yfl-shell">
+    <header class="yfl-top">
+      <div class="yfl-brand"><span>云芳邻管理后台</span><div class="yfl-hamburger"><span></span><span></span><span></span></div></div>
+      <div class="yfl-user"><span>白云区运营中心</span><span>消息</span><span>平台管理员</span></div>
+    </header>
+    <div class="yfl-body">
+      <aside class="yfl-sidebar">
+        <div class="yfl-menu-title">云芳邻后台</div>
+        <div class="yfl-menu-item">工作台</div>
+        <div class="yfl-menu-item">组织管理</div>
+        <div class="yfl-menu-item">用户管理</div>
+        <div class="yfl-menu-item">内容服务</div>
+        <div class="yfl-menu-item active">教培系统</div>
+        <div class="yfl-menu-item">数据看板</div>
+      </aside>
+
+      <section class="embed-area">
+        <div class="meedu-frame">
+          <aside class="meedu-left">
+            <div class="meedu-logo-wrap"><img class="meedu-logo" src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
+            <div class="meedu-menu-box">
+              <div class="ant-menu">
+                <div class="ant-menu-item"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="ant-menu-arrow">›</span></div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="ant-menu-arrow">›</span></div>
+                <div class="ant-submenu-title open"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="ant-menu-arrow">⌄</span></div>
+                <div class="ant-menu-item child selected">学员列表</div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="ant-menu-arrow">›</span></div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="ant-menu-arrow">›</span></div>
+                <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="ant-menu-arrow">›</span></div>
+              </div>
+            </div>
+          </aside>
+
+          <section class="meedu-right">
+            <header class="meedu-header">
+              <div class="meedu-main-header">
+                <div class="meedu-page-name">学员详情</div>
+                <div class="meedu-device-bar">
+                  <div class="meedu-device-item"><img src="./meedu-admin-assets/focus-device.png" alt="">访问学员端</div>
+                  <i class="meedu-column"></i>
+                  <div class="meedu-user-info">YUWAY ▾</div>
+                </div>
+              </div>
+            </header>
+
+            <main class="meedu-main">
+              <div class="work-grid">
+                <div>
+                  <div class="panel">
+                    <div class="back-title">学员详情</div>
+                    <div class="user-info-box">
+                      <div class="user-base-info-box">
+                        <div class="user-info">
+                          <div class="user-nickname">陈晓敏</div>
+                        </div>
+                      </div>
+                      <div class="panel-info-box">
+                        <div class="panel-info-item">教培系统学员ID：<span class="info-value">10018</span></div>
+                        <div class="panel-info-item">云芳邻用户ID：<span class="info-value">YFL-U-000238</span></div>
+                        <div class="panel-info-item">手机号：<span class="info-value">13800000018</span></div>
+                        <div class="panel-info-item">所属区县：<span class="info-value">白云区</span></div>
+                        <div class="panel-info-item">所属街道：<span class="info-value">同和街道</span></div>
+                        <div class="panel-info-item">所属社区：<span class="info-value">榕树社区</span></div>
+                        <div class="panel-info-item">用户角色：<span class="info-value">普通用户</span></div>
+                        <div class="panel-info-item">首次进入教培：<span class="info-value">2026-05-20 09:16</span></div>
+                        <div class="panel-info-item">最近学习：<span class="info-value">2026-05-28 16:20</span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="panel">
+                    <div class="section-title">学习概览</div>
+                    <div class="overview-grid">
+                      <div class="overview-item"><div class="overview-label">已学习课程</div><div class="overview-value">4</div></div>
+                      <div class="overview-item"><div class="overview-label">已完成课程</div><div class="overview-value">2</div></div>
+                      <div class="overview-item"><div class="overview-label">累计观看</div><div class="overview-value">186 分钟</div></div>
+                      <div class="overview-item"><div class="overview-label">最近一次学习</div><div class="overview-value">05-28</div></div>
+                    </div>
+                  </div>
+
+                  <div class="panel">
+                    <div class="radio-group">
+                      <div class="radio-btn active">录播课学习记录</div>
+                    </div>
+                    <div class="tab-body">
+                      <table class="ant-table">
+                        <colgroup><col><col style="width:18%"><col style="width:20%"><col style="width:20%"><col style="width:16%"></colgroup>
+                        <thead><tr><th>录播课程</th><th>课程学习进度</th><th>开始学习时间</th><th>最近一次学习</th><th>课时学习进度</th></tr></thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <div class="thumb-bar">
+                                <div class="thumb"><img src="./meedu-admin-assets/course-cover-18.png" alt="课程封面"></div>
+                                <div><div class="thumb-title">社区合伙人政策与准入规则</div><div class="thumb-sub">共 6 个课时 · 白云区</div></div>
+                              </div>
+                            </td>
+                            <td><span class="progress"><span style="width:86%"></span></span>86%</td>
+                            <td>2026-05-20 09:16</td>
+                            <td>2026-05-28 16:20</td>
+                            <td><button class="link-btn" onclick="openProgressModal('社区合伙人政策与准入规则')">学习进度</button></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="thumb-bar">
+                                <div class="thumb"><img src="./meedu-admin-assets/course-cover-19.png" alt="课程封面"></div>
+                                <div><div class="thumb-title">社区服务站日常巡查与记录规范</div><div class="thumb-sub">共 4 个课时 · 街道社区</div></div>
+                              </div>
+                            </td>
+                            <td><span class="progress"><span style="width:100%"></span></span>100%</td>
+                            <td>2026-05-22 14:03</td>
+                            <td>2026-05-24 18:02</td>
+                            <td><button class="link-btn" onclick="openProgressModal('社区服务站日常巡查与记录规范')">学习进度</button></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="thumb-bar">
+                                <div class="thumb"><img src="./meedu-admin-assets/course-cover-16.png" alt="课程封面"></div>
+                                <div><div class="thumb-title">教培系统后台操作培训</div><div class="thumb-sub">共 5 个课时 · 运营人员</div></div>
+                              </div>
+                            </td>
+                            <td><span class="progress"><span style="width:42%"></span></span>42%</td>
+                            <td>2026-05-27 10:31</td>
+                            <td>2026-05-27 11:18</td>
+                            <td><button class="link-btn" onclick="openProgressModal('教培系统后台操作培训')">学习进度</button></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="ant-pagination"><span>共 4 条</span><span class="page-btn">‹</span><span class="page-btn active">1</span><span class="page-btn">›</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </section>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div id="progressModal" class="modal-mask">
+    <div class="modal-box">
+      <div class="modal-head">
+        <span id="progressTitle">学习进度</span>
+        <button class="modal-close" onclick="closeProgressModal()">×</button>
+      </div>
+      <div class="modal-body">
+        <table class="ant-table progress-table">
+          <colgroup>
+            <col style="width:22%">
+            <col style="width:13%">
+            <col style="width:13%">
+            <col style="width:10%">
+            <col style="width:21%">
+            <col style="width:21%">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>课时名称</th>
+              <th>课时时长</th>
+              <th>已学时长</th>
+              <th>是否学完</th>
+              <th>开始学习时间</th>
+              <th>最近一次学习</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>政策背景与培训目标</td>
+              <td>18分钟</td>
+              <td>18分钟</td>
+              <td><span class="c-green">已学完</span></td>
+              <td>2026-05-20 09:16</td>
+              <td>2026-05-20 09:34</td>
+            </tr>
+            <tr>
+              <td>社区合伙人准入规则</td>
+              <td>22分钟</td>
+              <td>22分钟</td>
+              <td><span class="c-green">已学完</span></td>
+              <td>2026-05-20 09:40</td>
+              <td>2026-05-20 10:02</td>
+            </tr>
+            <tr>
+              <td>服务记录与异常上报</td>
+              <td>25分钟</td>
+              <td>18分钟</td>
+              <td>未学完</td>
+              <td>2026-05-28 15:50</td>
+              <td>2026-05-28 16:20</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <script>
+    const progressModal = document.getElementById("progressModal");
+    const progressTitle = document.getElementById("progressTitle");
+    const toastNode = document.getElementById("toast");
+    let toastTimer = null;
+    function openProgressModal(courseTitle) {
+      progressTitle.textContent = courseTitle;
+      progressModal.classList.add("show");
+    }
+    function closeProgressModal() {
+      progressModal.classList.remove("show");
+    }
+    function toast(text) {
+      toastNode.textContent = text;
+      toastNode.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastNode.classList.remove("show"), 1300);
+    }
+  </script>
+</body>
+</html>
