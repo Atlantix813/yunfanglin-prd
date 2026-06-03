@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>教培系统嵌入云芳邻后台 Demo</title>
+  <link rel="stylesheet" href="组件库样式.css">
+  <style>
+    body { background:#EEF2F7; }
+    .demo-shell { width:1920px; min-height:1080px; background:#F7F8FA; }
+    .yfl-layout { display:flex; height:1032px; }
+    .yfl-sidebar { width:188px; background:#FFFFFF; border-right:1px solid #E5E6EB; flex-shrink:0; padding:10px 0; }
+    .yfl-menu-title { height:32px; display:flex; align-items:center; padding:0 16px; color:#A9AEB8; font-size:12px; }
+    .yfl-menu-item { height:44px; display:flex; align-items:center; gap:10px; padding:0 14px 0 16px; color:#4E5969; cursor:pointer; font-size:14px; }
+    .yfl-menu-item:hover { background:#F7F8FA; }
+    .yfl-menu-item.active { background:#3491FA; color:#FFFFFF; font-weight:600; }
+    .yfl-menu-item svg { width:17px; height:17px; flex-shrink:0; }
+    .embed-page { flex:1; display:flex; flex-direction:column; min-width:0; }
+    .embed-notice { height:38px; background:#FFFFFF; border-bottom:1px solid #E5E6EB; display:flex; align-items:center; justify-content:space-between; padding:0 20px; color:#4E5969; font-size:13px; }
+    .notice-left { display:flex; align-items:center; gap:8px; }
+    .notice-dot { width:8px; height:8px; border-radius:50%; background:#00B365; }
+    .notice-right { color:#86909C; }
+    .training-frame { flex:1; display:flex; min-height:0; }
+    .training-sidebar { width:224px; background:#FFFFFF; border-right:1px solid #E5E6EB; flex-shrink:0; display:flex; flex-direction:column; }
+    .training-brand { height:64px; display:flex; align-items:center; padding:0 18px; border-bottom:1px solid #F2F3F5; }
+    .training-logo { width:34px; height:34px; border-radius:8px; background:#EBF5FF; color:#3491FA; display:flex; align-items:center; justify-content:center; font-weight:700; margin-right:10px; }
+    .training-name { font-size:15px; font-weight:700; color:#272E3B; line-height:20px; }
+    .training-sub { font-size:12px; color:#86909C; margin-top:1px; }
+    .training-menus { flex:1; overflow-y:auto; padding:10px 0 14px; }
+    .training-group { margin-bottom:8px; }
+    .training-group-title { height:28px; display:flex; align-items:center; padding:0 18px; color:#A9AEB8; font-size:12px; }
+    .training-menu { height:38px; display:flex; align-items:center; gap:9px; padding:0 14px 0 18px; color:#4E5969; cursor:pointer; font-size:13px; border-left:3px solid transparent; }
+    .training-menu:hover { background:#F7F8FA; }
+    .training-menu.active { background:#EBF5FF; color:#3491FA; border-left-color:#3491FA; font-weight:600; }
+    .training-menu.disabled { color:#C9CDD4; background:#FAFBFC; }
+    .training-menu.disabled .mini-badge { background:#F2F3F5; color:#A9AEB8; }
+    .training-menu svg { width:16px; height:16px; flex-shrink:0; }
+    .training-menu span.label { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .mini-badge { display:inline-flex; height:18px; align-items:center; padding:0 6px; border-radius:4px; background:#FFF7E6; color:#FF9800; font-size:11px; }
+    .training-main { flex:1; display:flex; flex-direction:column; min-width:0; }
+    .training-topbar { height:54px; background:#FFFFFF; border-bottom:1px solid #E5E6EB; display:flex; align-items:center; justify-content:space-between; padding:0 20px; }
+    .top-title { display:flex; align-items:center; gap:10px; min-width:0; }
+    .top-title strong { font-size:16px; color:#272E3B; }
+    .top-title span { color:#86909C; font-size:13px; }
+    .top-actions { display:flex; align-items:center; gap:10px; color:#4E5969; font-size:13px; }
+    .training-content { flex:1; overflow:auto; padding:16px 20px 24px; }
+    .stats-line { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-bottom:14px; }
+    .mini-stat { background:#FFFFFF; border-radius:6px; padding:16px 18px; box-shadow:0 1px 3px rgba(0,0,0,.04); border:1px solid #F2F3F5; }
+    .mini-stat .num { font-size:26px; line-height:34px; font-weight:700; color:#272E3B; }
+    .mini-stat .name { color:#86909C; font-size:13px; margin-top:4px; }
+    .mini-stat .trend { color:#00B365; font-size:12px; margin-top:8px; }
+    .module-grid { display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+    .module-card { background:#FFFFFF; border-radius:6px; padding:18px; box-shadow:0 1px 3px rgba(0,0,0,.04); border:1px solid #F2F3F5; min-height:142px; }
+    .module-card h3 { font-size:15px; margin-bottom:10px; }
+    .module-card p { color:#86909C; font-size:13px; line-height:22px; }
+    .quick-links { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+    .course-name { font-weight:600; }
+    .sub { font-size:12px; color:#86909C; margin-top:2px; }
+    .center { text-align:center; }
+    .right { text-align:right; }
+    .wide-table { min-width:1180px; }
+    .section-card { background:#fff; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,.04); padding:18px; margin-bottom:14px; }
+    .section-card h3 { font-size:15px; margin-bottom:12px; }
+    .placeholder-box { height:260px; border:1px dashed #D8DDE6; border-radius:6px; background:#FAFBFC; display:flex; align-items:center; justify-content:center; color:#86909C; }
+    .overlay { position:fixed; inset:0; width:auto; height:auto; display:none; align-items:center; justify-content:center; z-index:20; }
+    .overlay.show { display:flex; }
+    .modal-lg { width:820px; }
+    .modal-xl { width:980px; max-height:880px; }
+    .toast { position:fixed; right:36px; top:70px; background:rgba(39,46,59,.92); color:#fff; padding:10px 16px; border-radius:6px; opacity:0; transition:.18s; z-index:30; }
+    .toast.show { opacity:1; }
+    .chapter-row { min-height:44px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F2F3F5; gap:12px; }
+    .chapter-row:last-child { border-bottom:0; }
+    .video-thumb { width:78px; height:44px; border-radius:4px; background:linear-gradient(135deg,#3491FA,#00B365); display:inline-flex; align-items:center; justify-content:center; color:#fff; font-size:12px; margin-right:10px; vertical-align:middle; }
+    .muted-note { background:#FAFBFC; border:1px solid #F2F3F5; border-radius:6px; padding:12px 14px; color:#86909C; font-size:13px; line-height:22px; margin-bottom:14px; }
+    .data-split { display:grid; grid-template-columns:1.15fr .85fr; gap:14px; }
+    .bar-list { display:flex; flex-direction:column; gap:12px; }
+    .bar-row { display:grid; grid-template-columns:120px 1fr 54px; align-items:center; gap:10px; color:#4E5969; font-size:13px; }
+    .bar-track { height:8px; background:#F2F3F5; border-radius:99px; overflow:hidden; }
+    .bar-fill { height:100%; background:#3491FA; border-radius:99px; }
+    .tabs-lite { display:flex; gap:6px; margin-bottom:12px; }
+    .tab-lite { height:30px; display:inline-flex; align-items:center; padding:0 12px; border:1px solid #E5E6EB; background:#fff; border-radius:4px; cursor:pointer; color:#4E5969; font-size:13px; }
+    .tab-lite.active { color:#3491FA; border-color:#B8D4FA; background:#EBF5FF; font-weight:600; }
+  </style>
+</head>
+<body>
+  <div class="demo-shell">
+    <header class="header">
+      <div class="header-left">
+        <div class="header-logo">云芳邻管理后台</div>
+        <div class="header-hamburger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="header-right">
+        <div class="header-right-item">白云区运营中心</div>
+        <div class="header-right-item">消息</div>
+        <div class="header-right-item"><span class="avatar">管</span><span>平台管理员</span></div>
+      </div>
+    </header>
+
+    <div class="yfl-layout">
+      <aside class="yfl-sidebar">
+        <div class="yfl-menu-title">云芳邻后台</div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          <span>工作台</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M21 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          <span>用户管理</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-8h6v8"/></svg>
+          <span>组织管理</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>
+          <span>内容服务</span>
+        </div>
+        <div class="yfl-menu-item active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg>
+          <span>教培系统</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7H14a3.5 3.5 0 0 1 0 7H6"/></svg>
+          <span>积分商城</span>
+        </div>
+        <div class="yfl-menu-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg>
+          <span>数据看板</span>
+        </div>
+      </aside>
+
+      <section class="embed-page">
+        <div class="embed-notice">
+          <div class="notice-left">
+            <span class="notice-dot"></span>
+            <span>云芳邻后台账号已进入教培系统：平台管理员 / 白云区运营中心</span>
+            <span class="tag tag-blue">免登录演示</span>
+          </div>
+          <div class="notice-right">外层只保留「教培系统」一级入口，内层功能先完整保留用于裁减</div>
+        </div>
+
+        <div class="training-frame">
+          <aside class="training-sidebar">
+            <div class="training-brand">
+              <div class="training-logo">培</div>
+              <div>
+                <div class="training-name">教培系统</div>
+                <div class="training-sub">嵌入云芳邻后台</div>
+              </div>
+            </div>
+            <div class="training-menus" id="trainingMenus"></div>
+          </aside>
+
+          <main class="training-main">
+            <div class="training-topbar">
+              <div class="top-title">
+                <strong id="pageTitle">学习概览</strong>
+                <span id="pageSub">教培系统 / 学习概览</span>
+              </div>
+              <div class="top-actions">
+                <span class="tag tag-green">已接入云芳邻身份</span>
+                <button class="btn btn-default" onclick="toast('正式接入后隐藏教培系统独立退出')">退出入口隐藏</button>
+              </div>
+            </div>
+            <div class="training-content" id="content"></div>
+          </main>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="overlay" id="courseModal">
+    <div class="modal modal-xl">
+      <div class="modal-header">
+        <h3>编辑课程</h3>
+        <div class="modal-close" onclick="closeModal('courseModal')">×</div>
+      </div>
+      <div class="modal-body">
+        <div class="muted-note">这里复刻 MeEdu 录播课表单，但把组织范围、适用对象、完成规则加进云芳邻语义，方便后续接入社区、街道和岗位。</div>
+        <div class="section">
+          <div class="section-title">基础信息</div>
+          <div class="form-row"><div class="form-label"><span class="required">*</span>课程名称</div><div class="form-control"><input type="text" value="社区合伙人政策与准入规则"></div></div>
+          <div class="form-row"><div class="form-label">课程分类</div><div class="form-control"><select><option>合伙人培训</option><option>社区工作人员培训</option><option>居民课堂</option></select></div></div>
+          <div class="form-row"><div class="form-label">课程简介</div><div class="form-control"><textarea>面向社区工作人员和社区合伙人，了解准入、备案、服务履约和退出要求。</textarea></div></div>
+        </div>
+        <div class="section">
+          <div class="section-title">云芳邻适用范围</div>
+          <div class="form-row"><div class="form-label"><span class="required">*</span>组织范围</div><div class="form-control"><input type="text" value="白云区 / 东湖街道 / 松柏社区"></div></div>
+          <div class="form-row"><div class="form-label"><span class="required">*</span>适用对象</div><div class="form-control"><input type="text" value="社区工作人员、社区合伙人"></div></div>
+        </div>
+        <div class="section">
+          <div class="section-title">学习规则</div>
+          <div class="form-row"><div class="form-label">完成比例</div><div class="form-control"><div class="input-suffix"><input type="number" value="80"><span class="suffix">%</span></div><div class="form-help">达到比例且必学课时完成后，课程计为已完成。</div></div></div>
+          <div class="form-row"><div class="form-label">截止时间</div><div class="form-control"><input type="text" value="2026-06-30 23:59:59"></div></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" onclick="closeModal('courseModal')">取消</button>
+        <button class="btn btn-primary" onclick="closeModal('courseModal');toast('课程已保存')">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="chapterModal">
+    <div class="modal modal-lg">
+      <div class="modal-header">
+        <h3>章节课时维护</h3>
+        <div class="modal-close" onclick="closeModal('chapterModal')">×</div>
+      </div>
+      <div class="modal-body">
+        <div class="op-bar" style="padding-top:0"><button class="btn btn-outline" onclick="toast('新增课时')">新增课时</button><button class="btn btn-default" onclick="toast('调整排序')">调整排序</button></div>
+        <div class="chapter-row"><strong>第一章 政策背景</strong><span><a class="action-link">编辑</a><span class="action-sep">|</span><a class="action-link">上移</a></span></div>
+        <div class="chapter-row"><span><span class="video-thumb">视频</span>1. 政策背景与目标 <span class="tag tag-green">必学</span></span><span><a class="action-link">更换视频</a><span class="action-sep">|</span><a class="action-link">下架</a></span></div>
+        <div class="chapter-row"><span><span class="video-thumb">视频</span>2. 准入与备案要求 <span class="tag tag-blue">必学</span></span><span><a class="action-link">更换视频</a><span class="action-sep">|</span><a class="action-link">下架</a></span></div>
+        <div class="chapter-row"><strong>第二章 服务履约</strong><span><a class="action-link">编辑</a><span class="action-sep">|</span><a class="action-link">下移</a></span></div>
+        <div class="chapter-row"><span><span class="video-thumb">视频</span>3. 履约记录与风险处理</span><span><a class="action-link">绑定视频</a><span class="action-sep">|</span><a class="action-link">删除</a></span></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" onclick="closeModal('chapterModal')">取消</button>
+        <button class="btn btn-primary" onclick="closeModal('chapterModal');toast('课时已保存')">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="confirm">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3 id="confirmTitle">确认操作</h3>
+        <div class="modal-close" onclick="closeModal('confirm')">×</div>
+      </div>
+      <div class="modal-body">
+        <div class="confirm-dialog">
+          <div class="confirm-icon warn">!</div>
+          <div class="confirm-content">
+            <div class="confirm-title" id="confirmSub">请确认</div>
+            <div class="confirm-desc" id="confirmText"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" onclick="closeModal('confirm')">取消</button>
+        <button class="btn btn-primary" onclick="closeModal('confirm');toast('操作已提交')">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const icon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>';
+    const menuGroups = [
+      { title: '概览', items: [{ key: 'dashboard', label: '学习概览' }] },
+      { title: '课程学习', items: [
+        { key: 'course', label: '录播课' },
+        { key: 'category', label: '课程分类' },
+        { key: 'chapter', label: '章节课时' },
+        { key: 'attachment', label: '课件资料' }
+      ]},
+      { title: '学员管理', items: [
+        { key: 'member', label: '学员列表' },
+        { key: 'learning', label: '学习记录' },
+        { key: 'tag', label: '学员标签' }
+      ]},
+      { title: '内容与资源', items: [
+        { key: 'image', label: '图片库' },
+        { key: 'video', label: '视频库' },
+      ]},
+      { title: '统计', items: [
+        { key: 'courseStats', label: '课程数据' },
+        { key: 'memberStats', label: '学员数据' }
+      ]},
+      { title: '系统', items: [
+        { key: 'administrator', label: '管理人员' },
+        { key: 'setting', label: '系统配置' },
+        { key: 'log', label: '系统日志' }
+      ]}
+    ];
+    const pageNames = {
+      dashboard: '学习概览', course: '录播课', category: '课程分类', chapter: '章节课时', attachment: '课件资料',
+      member: '学员列表', learning: '学习记录', tag: '学员标签', image: '图片库', video: '视频库',
+      courseStats: '课程数据', memberStats: '学员数据',
+      administrator: '管理人员', setting: '系统配置', log: '系统日志'
+    };
+    let activePage = 'dashboard';
+
+    function renderMenus() {
+      const box = document.getElementById('trainingMenus');
+      box.innerHTML = menuGroups.map(group => `
+        <div class="training-group">
+          <div class="training-group-title">${group.title}</div>
+          ${group.items.map(item => `
+            <div class="training-menu ${item.key === activePage ? 'active' : ''} ${item.disabled ? 'disabled' : ''}" onclick="switchPage('${item.key}')">
+              ${icon}
+              <span class="label">${item.label}</span>
+              ${item.disabled ? '<span class="mini-badge">待裁减</span>' : ''}
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function switchPage(key) {
+      activePage = key;
+      renderMenus();
+      document.getElementById('pageTitle').textContent = pageNames[key];
+      document.getElementById('pageSub').textContent = '教培系统 / ' + pageNames[key];
+      document.getElementById('content').innerHTML = renderPage(key);
+    }
+
+    function renderPage(key) {
+      if (key === 'dashboard') return dashboardPage();
+      if (key === 'course') return coursePage();
+      if (key === 'member') return memberPage();
+      if (key === 'learning') return learningPage();
+      if (key === 'courseStats' || key === 'memberStats') return statsPage(key);
+      if (key === 'order' || key === 'vip' || key === 'coupon') return sealedPage(key);
+      if (key === 'setting') return settingPage();
+      if (key === 'chapter') return chapterPage();
+      if (key === 'image' || key === 'video') return resourcePage(key);
+      return genericPage(key);
+    }
+
+    function dashboardPage() {
+      return `
+        <div class="stats-line">
+          <div class="mini-stat"><div class="num">214</div><div class="name">课程总数</div><div class="trend">本月新增 18 门</div></div>
+          <div class="mini-stat"><div class="num">4,862</div><div class="name">学习人次</div><div class="trend">较上月 +12.8%</div></div>
+          <div class="mini-stat"><div class="num">72%</div><div class="name">课程完成率</div><div class="trend">必修完成率 68%</div></div>
+          <div class="mini-stat"><div class="num">39</div><div class="name">待提醒人员</div><div class="trend">今日需触达</div></div>
+        </div>
+        <div class="module-grid">
+          <div class="module-card"><h3>课程管理</h3><p>复用 MeEdu 的录播课、章节、课时、视频绑定能力。云芳邻新增组织范围和适用对象。</p><div class="quick-links"><button class="btn btn-outline" onclick="switchPage('course')">查看课程</button><button class="btn btn-default" onclick="openModal('courseModal')">新增课程</button></div></div>
+          <div class="module-card"><h3>学员学习</h3><p>保留学员列表、学习记录、观看进度。后续与云芳邻居民、岗位、合伙人身份打通。</p><div class="quick-links"><button class="btn btn-outline" onclick="switchPage('member')">学员列表</button><button class="btn btn-default" onclick="switchPage('learning')">学习记录</button></div></div>
+          <div class="module-card"><h3>统计提醒</h3><p>按组织查看应学、已学、未完成。未完成人员支持站内信或订阅消息提醒。</p><div class="quick-links"><button class="btn btn-outline" onclick="switchPage('courseStats')">课程数据</button><button class="btn btn-default" onclick="toast('发送提醒弹窗')">发送提醒</button></div></div>
+        </div>
+        <div class="data-split" style="margin-top:14px">
+          <div class="section-card"><h3>课程完成排行</h3><div class="bar-list">
+            ${bar('社区合伙人政策与准入规则', 86)}
+            ${bar('社区造血项目运营基础', 72)}
+            ${bar('民法典与社区治理', 68)}
+            ${bar('网格化管理实务', 54)}
+          </div></div>
+          <div class="section-card"><h3>待处理事项</h3>
+            <div class="chapter-row"><span>松柏社区 12 人未完成必修课</span><a class="action-link" onclick="toast('进入提醒名单')">处理</a></div>
+            <div class="chapter-row"><span>3 门课程超过 30 天未更新</span><a class="action-link" onclick="switchPage('course')">查看</a></div>
+            <div class="chapter-row"><span>8 个视频待绑定课程</span><a class="action-link" onclick="switchPage('video')">绑定</a></div>
+          </div>
+        </div>
+      `;
+    }
+
+    function coursePage() {
+      return `
+        <div class="filter-card">
+          <div class="filter-row">
+            <div class="filter-field"><label>课程名称</label><input placeholder="请输入课程名称"></div>
+            <div class="filter-field"><label>课程分类</label><select><option>全部分类</option><option>合伙人培训</option><option>社区工作人员培训</option></select></div>
+            <div class="filter-field"><label>发布状态</label><select><option>全部</option><option>已上架</option><option>草稿</option><option>已下架</option></select></div>
+            <div class="filter-field"><label>组织范围</label><input value="白云区" readonly></div>
+            <button class="btn btn-primary" onclick="toast('已查询')">查询</button>
+            <button class="btn btn-default" onclick="toast('已重置')">重置</button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <div class="op-bar">
+            <button class="btn btn-outline" onclick="openModal('courseModal')">新增课程</button>
+            <button class="btn btn-default" onclick="openConfirm('批量上架','确认上架已勾选课程？')">批量上架</button>
+            <button class="btn btn-default" onclick="openConfirm('批量下架','下架后 C 端不再展示，历史学习记录保留。')">批量下架</button>
+            <button class="btn btn-default" onclick="toast('正在导出课程')">导出课程</button>
+          </div>
+          <table class="wide-table">
+            <thead><tr><th><input type="checkbox"></th><th>课程名称</th><th>分类</th><th>适用对象</th><th>课时数</th><th>必学课时</th><th>学习人数</th><th>完成率</th><th>状态</th><th>截止时间</th><th class="center">操作</th></tr></thead>
+            <tbody>
+              ${courseRow('社区合伙人政策与准入规则','合伙人培训','东湖街道 / 合伙人','6','5','128','86%','已上架','2026-06-30','green')}
+              ${courseRow('社区造血项目运营基础','运营培训','全区 / 社区工作人员','4','4','86','72%','草稿','长期可学','orange')}
+              ${courseRow('民法典与社区治理','政策法规','松柏社区 / 网格员','8','6','214','68%','已上架','2026-07-15','green')}
+              ${courseRow('社区消防安全管理','应急培训','全区 / 志愿者','5','3','93','54%','已下架','2026-05-31','grey')}
+            </tbody>
+          </table>
+          ${pagination()}
+        </div>
+      `;
+    }
+
+    function memberPage() {
+      return `
+        <div class="filter-card"><div class="filter-row">
+          <div class="filter-field"><label>姓名/手机号</label><input placeholder="请输入"></div>
+          <div class="filter-field"><label>组织</label><input value="白云区" readonly></div>
+          <div class="filter-field"><label>身份</label><select><option>全部</option><option>社区工作人员</option><option>社区合伙人</option><option>居民</option></select></div>
+          <button class="btn btn-primary" onclick="toast('已查询')">查询</button><button class="btn btn-default" onclick="toast('已重置')">重置</button>
+        </div></div>
+        <div class="table-wrap">
+          <div class="op-bar"><button class="btn btn-outline" onclick="toast('导入学员')">导入学员</button><button class="btn btn-default" onclick="toast('同步云芳邻用户')">同步云芳邻用户</button><button class="btn btn-default" onclick="toast('导出学员')">导出学员</button></div>
+          <table><thead><tr><th>学员</th><th>手机号</th><th>组织</th><th>身份</th><th>已学课程</th><th>完成课程</th><th>最近学习</th><th class="center">操作</th></tr></thead><tbody>
+            ${memberRow('张华','138****7120','松柏社区','社区合伙人','8','5','05-28 10:22')}
+            ${memberRow('李敏','139****1208','东湖街道','社区工作人员','11','9','05-27 16:45')}
+            ${memberRow('陈鹏','136****8831','云苑社区','网格员','6','3','05-26 09:18')}
+            ${memberRow('王倩','137****2910','松柏社区','志愿者','3','1','05-25 18:04')}
+          </tbody></table>${pagination()}
+        </div>
+      `;
+    }
+
+    function learningPage() {
+      return `
+        <div class="filter-card"><div class="filter-row">
+          <div class="filter-field"><label>课程</label><input placeholder="请输入课程名称"></div>
+          <div class="filter-field"><label>学习状态</label><select><option>全部</option><option>未开始</option><option>学习中</option><option>已完成</option></select></div>
+          <div class="filter-field"><label>时间</label><input value="2026-05-01 至 2026-05-28"></div>
+          <button class="btn btn-primary" onclick="toast('已查询')">查询</button>
+          <button class="btn btn-default" onclick="toast('已重置')">重置</button>
+        </div></div>
+        <div class="table-wrap">
+          <div class="op-bar"><button class="btn btn-outline" onclick="toast('发送学习提醒')">发送提醒</button><button class="btn btn-default" onclick="toast('导出学习记录')">导出记录</button></div>
+          <table><thead><tr><th>学员</th><th>课程</th><th>已学时长</th><th>总时长</th><th>进度</th><th>状态</th><th>最后学习</th><th class="center">操作</th></tr></thead><tbody>
+            ${learningRow('张华','社区合伙人政策与准入规则','128分钟','150分钟','85%','已完成','05-28 10:22','green')}
+            ${learningRow('李敏','民法典与社区治理','42分钟','180分钟','23%','学习中','05-27 16:45','blue')}
+            ${learningRow('陈鹏','网格化管理实务','0分钟','90分钟','0%','未开始','-','grey')}
+            ${learningRow('王倩','社区消防安全管理','36分钟','110分钟','33%','学习中','05-25 18:04','blue')}
+          </tbody></table>${pagination()}
+        </div>
+      `;
+    }
+
+    function statsPage(key) {
+      const member = key === 'memberStats';
+      return `
+        <div class="stats-line">
+          <div class="mini-stat"><div class="num">${member ? '4,862' : '214'}</div><div class="name">${member ? '学习人次' : '课程总数'}</div><div class="trend">本月 +12.8%</div></div>
+          <div class="mini-stat"><div class="num">${member ? '1,246' : '39'}</div><div class="name">${member ? '学习人数' : '未完成课程'}</div><div class="trend">覆盖 18 个社区</div></div>
+          <div class="mini-stat"><div class="num">72%</div><div class="name">完成率</div><div class="trend">较上月 +4.2%</div></div>
+          <div class="mini-stat"><div class="num">39</div><div class="name">待提醒</div><div class="trend">今日需处理</div></div>
+        </div>
+        <div class="data-split">
+          <div class="section-card"><h3>${member ? '组织学习排行' : '课程完成排行'}</h3><div class="bar-list">
+            ${bar(member ? '松柏社区' : '社区合伙人政策与准入规则', 86)}
+            ${bar(member ? '东湖街道' : '社区造血项目运营基础', 72)}
+            ${bar(member ? '云苑社区' : '民法典与社区治理', 68)}
+            ${bar(member ? '翠湖社区' : '网格化管理实务', 54)}
+          </div></div>
+          <div class="section-card"><h3>数据说明</h3><p style="color:#86909C;line-height:24px">统计需要按云芳邻组织范围过滤。平台能看全量，街道能看下辖社区，社区只能看本社区人员。正式接入时，MeEdu 学习记录要补上云芳邻用户 ID 和组织归属。</p><div class="quick-links"><button class="btn btn-outline" onclick="toast('导出统计')">导出统计</button><button class="btn btn-default" onclick="toast('发送未完成提醒')">提醒未完成</button></div></div>
+        </div>
+      `;
+    }
+
+    function settingPage() {
+      return `
+        <div class="muted-note">这里保留 MeEdu 系统配置的样子，但正式接入后，站点名称、Logo、登录、支付等配置不建议让教培系统独立维护。</div>
+        <div class="section-card"><h3>基础配置</h3>
+          <div class="form-row"><div class="form-label">站点名称</div><div class="form-control"><input type="text" value="云芳邻培训中心"></div></div>
+          <div class="form-row"><div class="form-label">PC地址</div><div class="form-control"><input type="text" value="由云芳邻后台统一承载" readonly></div></div>
+          <div class="form-row"><div class="form-label">H5地址</div><div class="form-control"><input type="text" value="由云芳邻小程序入口承载" readonly></div></div>
+          <div class="form-row"><div class="form-label">学习提醒</div><div class="form-control"><div class="switch-row"><div class="switch-track on" onclick="this.classList.toggle('on');this.classList.toggle('off')"><div class="switch-thumb"></div></div><span class="switch-hint">开启未完成提醒</span></div></div></div>
+          <button class="btn btn-primary" onclick="toast('配置已保存')">保存配置</button>
+        </div>
+      `;
+    }
+
+    function chapterPage() {
+      return `
+        <div class="section-card">
+          <h3>章节课时</h3>
+          <div class="muted-note">课程和课时仍按 MeEdu 的章节结构维护，后续只补云芳邻组织范围和学习完成规则。</div>
+          <button class="btn btn-outline" onclick="openModal('chapterModal')">维护章节课时</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>课程</th><th>章节数</th><th>课时数</th><th>必学课时</th><th>绑定视频</th><th>状态</th><th class="center">操作</th></tr></thead><tbody>
+          <tr><td>社区合伙人政策与准入规则</td><td>2</td><td>6</td><td>5</td><td>6</td><td><span class="tag tag-green">完整</span></td><td class="center"><a class="action-link" onclick="openModal('chapterModal')">维护</a></td></tr>
+          <tr><td>社区造血项目运营基础</td><td>1</td><td>4</td><td>4</td><td>3</td><td><span class="tag tag-orange">待补视频</span></td><td class="center"><a class="action-link" onclick="openModal('chapterModal')">维护</a></td></tr>
+        </tbody></table></div>
+      `;
+    }
+
+    function resourcePage(key) {
+      const isVideo = key === 'video';
+      return `
+        <div class="filter-card"><div class="filter-row">
+          <div class="filter-field"><label>${isVideo ? '视频名称' : '图片名称'}</label><input placeholder="请输入"></div>
+          <div class="filter-field"><label>分类</label><select><option>全部</option><option>课程封面</option><option>课程视频</option><option>系统配置</option></select></div>
+          <button class="btn btn-primary" onclick="toast('已查询')">查询</button><button class="btn btn-default" onclick="toast('已重置')">重置</button>
+        </div></div>
+        <div class="table-wrap"><div class="op-bar"><button class="btn btn-outline" onclick="toast('上传${isVideo ? '视频' : '图片'}')">上传${isVideo ? '视频' : '图片'}</button><button class="btn btn-default" onclick="toast('批量移动')">批量移动</button></div>
+          <table><thead><tr><th>资源</th><th>分类</th><th>大小</th><th>使用状态</th><th>上传时间</th><th class="center">操作</th></tr></thead><tbody>
+            <tr><td><span class="video-thumb">${isVideo ? '视频' : '图片'}</span>${isVideo ? '政策背景与目标.mp4' : '课程封面-合伙人培训.jpg'}</td><td>${isVideo ? '课程视频' : '课程封面'}</td><td>${isVideo ? '128MB' : '320KB'}</td><td><span class="tag tag-green">已使用</span></td><td>05-26 14:20</td><td class="center"><a class="action-link">预览</a><span class="action-sep">|</span><a class="action-link">移动</a><span class="action-sep">|</span><a class="action-link">删除</a></td></tr>
+            <tr><td><span class="video-thumb">${isVideo ? '视频' : '图片'}</span>${isVideo ? '准入与备案要求.mp4' : '默认头像.jpg'}</td><td>系统配置</td><td>${isVideo ? '96MB' : '42KB'}</td><td><span class="tag tag-grey">未使用</span></td><td>05-24 09:12</td><td class="center"><a class="action-link">预览</a><span class="action-sep">|</span><a class="action-link">移动</a><span class="action-sep">|</span><a class="action-link">删除</a></td></tr>
+          </tbody></table>${pagination()}</div>
+      `;
+    }
+
+    function sealedPage(key) {
+      return `
+        <div class="section-card">
+          <h3>${pageNames[key]}</h3>
+          <div class="muted-note">这是 MeEdu 自带商业化能力。当前教培接入云芳邻的主线不使用购买、会员和优惠码。</div>
+          <div class="placeholder-box">待确认：隐藏菜单、保留数据表，还是从演示版完全移除。</div>
+        </div>
+      `;
+    }
+
+    function genericPage(key) {
+      return `
+        <div class="section-card">
+          <h3>${pageNames[key]}</h3>
+          <p style="color:#86909C;line-height:24px">该页先按 MeEdu 原功能占位。后续看 demo 时可以决定保留、隐藏或改造成云芳邻能力。</p>
+          <div class="quick-links"><button class="btn btn-outline" onclick="toast('新增')">新增</button><button class="btn btn-default" onclick="toast('导出')">导出</button><button class="btn btn-default" onclick="toast('刷新')">刷新</button></div>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>名称</th><th>分类</th><th>状态</th><th>更新时间</th><th class="center">操作</th></tr></thead><tbody>
+          <tr><td>${pageNames[key]}示例一</td><td>默认分类</td><td><span class="tag tag-green">启用</span></td><td>05-28 10:22</td><td class="center"><a class="action-link">编辑</a><span class="action-sep">|</span><a class="action-link">停用</a></td></tr>
+          <tr><td>${pageNames[key]}示例二</td><td>默认分类</td><td><span class="tag tag-grey">停用</span></td><td>05-27 16:45</td><td class="center"><a class="action-link">编辑</a><span class="action-sep">|</span><a class="action-link">启用</a></td></tr>
+        </tbody></table></div>
+      `;
+    }
+
+    function courseRow(name, category, scope, lessons, required, users, rate, state, deadline, color) {
+      return `<tr><td><input type="checkbox"></td><td><div class="course-name">${name}</div><div class="sub">复用录播课能力，补云芳邻组织范围</div></td><td>${category}</td><td>${scope}</td><td>${lessons}</td><td>${required}</td><td>${users}</td><td>${rate}</td><td><span class="tag tag-${color}">${state}</span></td><td>${deadline}</td><td class="center"><a class="action-link" onclick="openModal('courseModal')">编辑</a><span class="action-sep">|</span><a class="action-link" onclick="openModal('chapterModal')">章节课时</a><span class="action-sep">|</span><a class="action-link" onclick="switchPage('learning')">学习记录</a><span class="action-sep">|</span><a class="action-link" onclick="openConfirm('下架课程','确认下架该课程？')">下架</a></td></tr>`;
+    }
+
+    function memberRow(name, phone, org, role, learned, finished, time) {
+      return `<tr><td><div class="course-name">${name}</div><div class="sub">云芳邻用户</div></td><td>${phone}</td><td>${org}</td><td>${role}</td><td>${learned}</td><td>${finished}</td><td>${time}</td><td class="center"><a class="action-link" onclick="switchPage('learning')">学习记录</a><span class="action-sep">|</span><a class="action-link">详情</a></td></tr>`;
+    }
+
+    function learningRow(name, course, learned, total, rate, state, time, color) {
+      return `<tr><td>${name}</td><td>${course}</td><td>${learned}</td><td>${total}</td><td>${rate}</td><td><span class="tag tag-${color}">${state}</span></td><td>${time}</td><td class="center"><a class="action-link">查看明细</a><span class="action-sep">|</span><a class="action-link" onclick="toast('已发送提醒')">提醒</a></td></tr>`;
+    }
+
+    function pagination() {
+      return `<div class="pagination"><span class="total">共 214 条</span><span class="pg active">1</span><span class="pg">2</span><span class="pg">3</span><select class="pg-select"><option>10条/页</option><option>20条/页</option></select></div>`;
+    }
+
+    function bar(name, pct) {
+      return `<div class="bar-row"><span>${name}</span><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><span>${pct}%</span></div>`;
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+    function openConfirm(title, text) {
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmSub').textContent = title;
+      document.getElementById('confirmText').textContent = text;
+      openModal('confirm');
+    }
+    function toast(text) {
+      const t = document.getElementById('toast');
+      t.textContent = text;
+      t.classList.add('show');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => t.classList.remove('show'), 1500);
+    }
+
+    renderMenus();
+    switchPage('dashboard');
+  </script>
+</body>
+</html>

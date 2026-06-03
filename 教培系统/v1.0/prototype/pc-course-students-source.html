@@ -3,118 +3,499 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1920, initial-scale=1">
-  <title>云芳邻嵌入教培系统 课程学员</title>
-  <link rel="stylesheet" href="组件库样式.css">
+  <title>课程中心-课程学员</title>
   <style>
     * { box-sizing: border-box; }
-    body { width: 1920px; min-height: 1080px; margin: 0; background: #eef2f7; overflow: hidden; font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #333; }
+    body {
+      width: 1920px;
+      min-height: 1080px;
+      margin: 0;
+      background: #eef2f7;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #333;
+      font-size: 14px;
+    }
     .yfl-shell { width: 1920px; min-height: 1080px; background: #f7f8fa; color: #272e3b; }
-    .yfl-top { height: 48px; background: #3491fa; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-    .yfl-brand { width: 180px; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; letter-spacing: .5px; }
-    .yfl-hamburger { width: 20px; height: 20px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
-    .yfl-hamburger span { display: block; width: 18px; height: 2px; background: #fff; border-radius: 1px; }
-    .yfl-user { display: flex; align-items: center; gap: 20px; font-size: 13px; }
-    .yfl-user span { display: inline-flex; align-items: center; height: 28px; padding: 0 8px; border-radius: 4px; }
+    .yfl-top {
+      height: 48px;
+      background: #3491fa;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      color: #fff;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .yfl-brand {
+      width: 180px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+    .yfl-hamburger {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+    }
+    .yfl-hamburger span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      border-radius: 1px;
+    }
+    .yfl-user {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 13px;
+    }
+    .yfl-user span {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 4px;
+    }
     .yfl-body { display: flex; min-height: 1032px; }
-    .yfl-sidebar { width: 180px; background: #fff; border-right: 1px solid #e5e6eb; flex-shrink: 0; padding: 10px 0; }
-    .yfl-menu-title { height: 32px; display: flex; align-items: center; padding: 0 16px; color: #a9aeb8; font-size: 12px; }
-    .yfl-menu-item { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; color: #4e5969; font-size: 14px; cursor: pointer; }
-    .yfl-menu-item.active { background: #3491fa; color: #fff; font-weight: 500; }
-    .yfl-menu-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .yfl-sidebar {
+      width: 180px;
+      background: #fff;
+      border-right: 1px solid #e5e6eb;
+      flex-shrink: 0;
+      padding: 10px 0;
+    }
+    .yfl-menu-title {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: #a9aeb8;
+      font-size: 12px;
+    }
+    .yfl-menu-item {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px 0 16px;
+      color: #4e5969;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .yfl-menu-item.active {
+      background: #3491fa;
+      color: #fff;
+      font-weight: 500;
+    }
+    .yfl-menu-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
     .embed-area { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-    .embed-bar { display: none; }
-    .embed-bar-left { display: flex; align-items: center; gap: 8px; }
-    .green-dot { width: 8px; height: 8px; border-radius: 50%; background: #00b365; }
-    .embed-tip { color: #86909c; }
-    .tag { height: 22px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 3px; font-size: 12px; line-height: 22px; }
-    .tag-blue { background: #e8f3ff; color: #1677ff; }
     .meedu-frame { flex: 1; min-height: 0; overflow: hidden; display: flex; background: #f1f2f9; }
-    .meedu-left { width: 200px; height: 1032px; background: #fff; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #f2f3f5; }
-    .meedu-logo-wrap { position: sticky; top: 0; height: 56px; z-index: 10; background: #fff; display: flex; align-items: center; }
-    .meedu-logo { width: 128px; max-height: 52px; object-fit: contain; margin-left: 20px; }
-    .meedu-menu-box { width: 200px; height: 100%; overflow-y: auto; overflow-x: hidden; padding-top: 24px; }
-    .ant-menu { width: 200px; background: #fff; text-align: left; color: rgba(0,0,0,.88); font-size: 14px; }
-    .ant-menu-item, .ant-submenu-title { height: 56px; line-height: 56px; padding-left: 24px; padding-right: 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; color: rgba(0,0,0,.88); border-radius: 0; }
+    .meedu-left {
+      width: 200px;
+      height: 1032px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      border-right: 1px solid #f2f3f5;
+    }
+    .meedu-logo-wrap {
+      position: sticky;
+      top: 0;
+      height: 56px;
+      z-index: 10;
+      background: #fff;
+      display: flex;
+      align-items: center;
+    }
+    .meedu-logo {
+      width: 128px;
+      max-height: 52px;
+      object-fit: contain;
+      margin-left: 20px;
+    }
+    .meedu-menu-box {
+      width: 200px;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-top: 24px;
+    }
+    .ant-menu {
+      width: 200px;
+      background: #fff;
+      text-align: left;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+    }
+    .ant-menu-item,
+    .ant-submenu-title {
+      height: 56px;
+      line-height: 56px;
+      padding-left: 24px;
+      padding-right: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      color: rgba(0,0,0,.88);
+    }
     .ant-submenu-title { justify-content: space-between; }
-    .ant-menu-icon-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .menu-icon { width: 16px; height: 16px; color: #555566; flex-shrink: 0; }
-    .ant-menu-item.child { padding-left: 74px; height: 50px; font-size: 14px; }
-    .ant-menu-item.selected { color: #fff; background: #409eff; font-weight: 500; }
+    .ant-menu-icon-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .menu-icon {
+      width: 16px;
+      height: 16px;
+      color: #555566;
+      flex-shrink: 0;
+    }
+    .ant-menu-item.child {
+      padding-left: 74px;
+      height: 50px;
+      font-size: 14px;
+    }
+    .ant-menu-item.selected {
+      color: #fff;
+      background: #409eff;
+      font-weight: 500;
+    }
     .ant-submenu-title.open { color: #409eff; }
     .ant-menu-arrow { font-size: 12px; color: rgba(0,0,0,.45); }
-    .meedu-right { width: calc(100% - 200px); display: flex; flex-direction: column; background: #f1f2f9; min-width: 0; }
-    .meedu-header { width: 100%; height: 56px; background: #fff; z-index: 10; }
-    .meedu-main-header { width: 100%; height: 56px; display: flex; align-items: center; }
-    .meedu-page-name { flex: 1; padding-left: 30px; font-size: 20px; font-weight: 600; color: #333; line-height: 56px; text-align: left; }
+    .meedu-right {
+      width: calc(100% - 200px);
+      display: flex;
+      flex-direction: column;
+      background: #f1f2f9;
+      min-width: 0;
+    }
+    .meedu-header {
+      width: 100%;
+      height: 56px;
+      background: #fff;
+      z-index: 10;
+    }
+    .meedu-main-header {
+      width: 100%;
+      height: 56px;
+      display: flex;
+      align-items: center;
+    }
+    .meedu-page-name {
+      flex: 1;
+      padding-left: 30px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      line-height: 56px;
+      text-align: left;
+    }
     .meedu-device-bar { display: flex; align-items: center; }
-    .meedu-device-item { width: 95px; height: 20px; display: flex; align-items: center; font-size: 14px; color: #666; line-height: 20px; cursor: pointer; }
-    .meedu-device-item img { width: 20px; height: 20px; margin-right: 5px; }
-    .meedu-column { width: 1px; height: 20px; background: #d8d8d8; margin: 0 15px; }
-    .meedu-user-info { padding-right: 30px; color: #606266; font-size: 14px; cursor: pointer; }
-    .meedu-main { height: calc(1032px - 56px); padding: 20px; overflow: auto; flex: 1; }
-    .meedu-main-body { width: 100%; min-width: 1180px; background: #fff; padding: 30px; border-radius: 15px; margin-bottom: 90px; box-shadow: 0 2px 4px rgba(102,102,102,.05); text-align: left; }
+    .meedu-device-item {
+      width: 95px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: #666;
+      line-height: 20px;
+      cursor: pointer;
+    }
+    .meedu-device-item img {
+      width: 20px;
+      height: 20px;
+      margin-right: 5px;
+    }
+    .meedu-column {
+      width: 1px;
+      height: 20px;
+      background: #d8d8d8;
+      margin: 0 15px;
+    }
+    .meedu-user-info {
+      padding-right: 30px;
+      color: #606266;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .meedu-main {
+      height: calc(1032px - 56px);
+      padding: 20px;
+      overflow: auto;
+      flex: 1;
+    }
+    .meedu-main-body {
+      width: 100%;
+      min-width: 1180px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      margin-bottom: 90px;
+      box-shadow: 0 2px 4px rgba(102,102,102,.05);
+      text-align: left;
+    }
     .float-left { width: 100%; float: left; }
     .j-b-flex { display: flex; align-items: center; justify-content: space-between; }
     .d-flex { display: flex; align-items: center; }
     .ml-10 { margin-left: 10px; }
     .mt-30 { margin-top: 30px; }
     .mb-30 { margin-bottom: 30px; }
-    .c-primary { color: #409eff; }
-    .c-red { color: #ff4d4f; }
-    .ant-btn { height: 32px; padding: 4px 15px; border-radius: 3px; border: 1px solid #d9d9d9; background: #fff; color: rgba(0,0,0,.88); cursor: pointer; font-size: 14px; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; gap: 4px; }
-    .ant-btn-primary { border: none; background: #3ca7fa; color: #fff; }
-    .ant-btn-danger { border: none; background: #ff4d4f; color: #fff; }
-    .ant-btn-link { border: 0; padding: 0; height: auto; background: transparent; color: #409eff; }
-    .ant-input, .ant-select { width: 150px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 4px 11px; color: rgba(0,0,0,.88); outline: none; font-size: 14px; font-family: inherit; background: #fff; }
-    .range-picker { width: 270px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 4px 11px; color: rgba(0,0,0,.45); background: #fff; font-size: 14px; display: inline-flex; align-items: center; justify-content: space-between; }
-    .back-bar-box { width: 100%; float: left; display: flex; align-items: center; }
-    .back-bar-box .line { width: 1px; height: 14px; background: #d8d8d8; margin-right: 15px; }
-    .back-bar-box .name { font-size: 14px; font-weight: 600; color: #333; }
+    .c-blue { color: #409eff; }
+    .c-green { color: #04c877; }
+    .ant-btn {
+      height: 32px;
+      padding: 4px 15px;
+      border-radius: 3px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      color: rgba(0,0,0,.88);
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .ant-btn-primary {
+      border: none;
+      background: #3ca7fa;
+      color: #fff;
+    }
+    .ant-btn-link {
+      border: 0;
+      padding: 0;
+      height: auto;
+      background: transparent;
+      color: #409eff;
+    }
+    .ant-input {
+      width: 160px;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 4px 11px;
+      color: rgba(0,0,0,.88);
+      outline: none;
+      font-size: 14px;
+      font-family: inherit;
+      background: #fff;
+    }
+    .back-bar-box {
+      width: 100%;
+      float: left;
+      display: flex;
+      align-items: center;
+    }
+    .back-bar-box .line {
+      width: 1px;
+      height: 14px;
+      background: #d8d8d8;
+      margin-right: 15px;
+    }
+    .back-bar-box .name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
     .ant-table-wrapper { width: 100%; overflow: auto; }
-    .ant-table { width: 100%; border-collapse: collapse; table-layout: fixed; color: rgba(0,0,0,.88); font-size: 14px; }
-    .ant-table th { height: 55px; padding: 16px; background: #fafafa; color: rgba(0,0,0,.88); font-weight: 600; text-align: left; border-bottom: 1px solid #f0f0f0; }
-    .ant-table td { min-height: 72px; padding: 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; background: #fff; }
+    .ant-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+    }
+    .ant-table th {
+      height: 55px;
+      padding: 16px;
+      background: #fafafa;
+      color: rgba(0,0,0,.88);
+      font-weight: 600;
+      text-align: left;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .ant-table td {
+      min-height: 72px;
+      padding: 16px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: middle;
+      background: #fff;
+    }
     .ant-table tr:hover td { background: #fafafa; }
-    .checkbox { width: 16px; height: 16px; border: 1px solid #d9d9d9; border-radius: 2px; display: inline-block; background: #fff; }
-    .user-item { display: flex; align-items: center; }
-    .avatar img { width: 40px; height: 40px; border-radius: 50%; display: block; }
-    .ant-space { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .ant-pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 16px; color: rgba(0,0,0,.65); font-size: 14px; }
-    .page-btn { min-width: 32px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; display: inline-flex; align-items: center; justify-content: center; }
-    .page-btn.active { background: #409eff; color: #fff; border-color: #409eff; }
-    .page-size { height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 0 8px; background: #fff; }
-    .toast { position: fixed; top: 70px; right: 34px; min-width: 150px; padding: 10px 14px; border-radius: 6px; background: rgba(31,41,55,.92); color: #fff; font-size: 13px; opacity: 0; transform: translateY(-10px); transition: .18s; z-index: 50; text-align: center; }
-    .toast.show { opacity: 1; transform: translateY(0); }
-    .progress-pill { width: 104px; height: 8px; background: #eef2f7; border-radius: 99px; overflow: hidden; display: inline-block; vertical-align: middle; margin-right: 8px; }
-    .progress-pill span { display: block; height: 100%; background: #3ca7fa; border-radius: 99px; }
-    .modal-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 99; align-items: center; justify-content: center; }
+    .checkbox {
+      width: 16px;
+      height: 16px;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
+      display: inline-block;
+      background: #fff;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+    .checkbox.checked {
+      background: #409eff;
+      border-color: #409eff;
+      position: relative;
+    }
+    .checkbox.checked::after {
+      content: "✓";
+      position: absolute;
+      inset: 0;
+      color: #fff;
+      font-size: 12px;
+      line-height: 16px;
+      text-align: center;
+    }
+    .user-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #cde1ff;
+      color: #2f8df6;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .progress-pill {
+      width: 104px;
+      height: 8px;
+      background: #eef2f7;
+      border-radius: 99px;
+      overflow: hidden;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+    .progress-pill span {
+      display: block;
+      height: 100%;
+      background: #3ca7fa;
+      border-radius: 99px;
+    }
+    .org-line {
+      color: #4e5969;
+      line-height: 22px;
+    }
+    .ant-pagination {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      padding-top: 16px;
+      color: rgba(0,0,0,.65);
+      font-size: 14px;
+    }
+    .page-btn {
+      min-width: 32px;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .page-btn.active {
+      background: #409eff;
+      color: #fff;
+      border-color: #409eff;
+    }
+    .page-size {
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 0 8px;
+      background: #fff;
+    }
+    .modal-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 99;
+      align-items: center;
+      justify-content: center;
+    }
     .modal-mask.show { display: flex; }
-    .detail-modal { width: 1000px; background: #fff; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,.2); overflow: hidden; }
-    .modal-head { height: 52px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
-    .modal-close { font-size: 22px; color: #909399; cursor: pointer; }
-    .modal-body { padding: 30px; }
-    .detail-summary { display: flex; align-items: center; gap: 24px; margin-bottom: 18px; color: rgba(0,0,0,.65); }
-    .detail-summary strong { color: rgba(0,0,0,.88); }
-    /* yfl-menu-bg-normalize:start */
-    .yfl-body { min-height: 1032px; align-items: stretch; }
-    .embed-area { min-height: 1032px; }
-    .embed, .meedu-frame { height: 1032px; min-height: 1032px; align-items: stretch; background: #f1f2f9; overflow: hidden; }
-    .meedu-side, .meedu-left { width: 200px !important; min-width: 200px; height: 1032px !important; min-height: 1032px; background: #fff; flex-shrink: 0; }
-    .meedu-logo, .meedu-logo-wrap { height: 56px !important; min-height: 56px; display: flex; align-items: center; background: #fff; }
-    .meedu-menu, .meedu-menu-box { width: 200px !important; height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); overflow-y: auto; overflow-x: hidden; padding-top: 24px !important; background: #fff; font-size: 14px; }
-    .ant-menu, .meedu-menu { width: 200px !important; background: #fff; }
-    .ant-menu-item, .ant-submenu-title, .meedu-item, .meedu-sub-title, .meedu-sub { height: 56px !important; min-height: 56px; line-height: 56px !important; padding: 0 16px 0 24px !important; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(0,0,0,.88); border-radius: 0; font-size: 14px; }
-    .ant-menu-item.child, .meedu-item.child { height: 50px !important; min-height: 50px; line-height: 50px !important; padding-left: 74px !important; padding-right: 16px !important; justify-content: flex-start; color: rgba(0,0,0,.88); }
-    .ant-menu-item.selected, .meedu-item.selected, .ant-menu-item.child.selected, .meedu-item.child.selected { background: #3ca7fa !important; color: #fff !important; font-weight: 500; }
-    .ant-submenu-title.open, .meedu-sub-title.open, .meedu-sub.open { color: #409eff; }
-    .ant-menu-icon-label, .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .menu-icon, .meedu-icon { width: 16px; height: 16px; flex: 0 0 auto; color: #606266; }
-    .ant-menu-arrow, .arrow { font-size: 12px; color: rgba(0,0,0,.45); }
-    .meedu-frame > .meedu-main, .embed > .meedu-main, .meedu-right { height: 1032px !important; min-height: 1032px; background: #f1f2f9; display: flex; flex-direction: column; min-width: 0; }
-    .meedu-content, .content, .meedu-right > .meedu-main { height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); background: #f1f2f9; overflow: auto; flex: 1 1 auto; }
-    .panel, .meedu-main-body, .work-grid { margin-bottom: 80px; }
-    .panel, .meedu-main-body { display: flow-root; }
-    /* yfl-menu-bg-normalize:end */
+    .confirm-card {
+      width: 420px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 26px 24px 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    }
+    .confirm-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(0,0,0,.88);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .confirm-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #faad14;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .confirm-content {
+      padding-left: 32px;
+      color: rgba(0,0,0,.65);
+      line-height: 22px;
+    }
+    .confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .toast {
+      position: fixed;
+      top: 70px;
+      right: 34px;
+      min-width: 150px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: rgba(31,41,55,.92);
+      color: #fff;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: .18s;
+      z-index: 120;
+      text-align: center;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
   </style>
 </head>
 <body>
@@ -146,8 +527,8 @@
               <div class="ant-menu">
                 <div class="ant-menu-item"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
                 <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="ant-menu-arrow">›</span></div>
-                <div class="ant-submenu-title open"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="ant-menu-arrow">⌄</span></div>
-                <div class="ant-menu-item child selected">录播课</div>
+                <div class="ant-submenu-title open"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程中心</span></span><span class="ant-menu-arrow">⌄</span></div>
+                <div class="ant-menu-item child selected">线上课</div>
                 <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="ant-menu-arrow">›</span></div>
                 <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="ant-menu-arrow">›</span></div>
                 <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="ant-menu-arrow">›</span></div>
@@ -159,7 +540,7 @@
           <section class="meedu-right">
             <header class="meedu-header">
               <div class="meedu-main-header">
-                <div class="meedu-page-name">录播学员</div>
+                <div class="meedu-page-name">课程学员</div>
                 <div class="meedu-device-bar">
                   <div class="meedu-device-item" onclick="toast('打开学员端访问二维码')"><img src="./meedu-admin-assets/focus-device.png" alt="">访问学员端</div>
                   <i class="meedu-column"></i>
@@ -173,23 +554,24 @@
                 <div class="back-bar-box">
                   <button class="ant-btn ant-btn-link" onclick="toast('返回上一页')">‹ 返回</button>
                   <div class="line"></div>
-                  <div class="name">录播学员</div>
+                  <div class="name">课程学员</div>
                 </div>
 
                 <div class="float-left j-b-flex mt-30 mb-30">
                   <div class="d-flex">
-                    <button class="ant-btn ant-btn-danger" onclick="toast('确认删除选中的学员学习记录')">删除</button>
+                    <button class="ant-btn ant-btn-primary" id="resetBtn">重置学习记录</button>
                   </div>
                   <div class="d-flex">
-                    <select class="ant-select">
-                      <option>看完</option>
-                      <option>未看完</option>
-                      <option>已看完</option>
-                    </select>
-                    <div class="range-picker ml-10"><span>看完时间-开始</span><span>看完时间-结束</span></div>
-                    <button class="ant-btn ml-10" onclick="toast('清空筛选')">清空</button>
-                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('执行筛选')">筛选</button>
-                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('导出课程学习记录')">导出表格</button>
+                    <div class="d-flex">
+                      <span style="margin-right:8px;">学员姓名：</span>
+                      <input class="ant-input" placeholder="请输入姓名关键字">
+                    </div>
+                    <div class="d-flex ml-10">
+                      <span style="margin-right:8px;">云芳邻账号：</span>
+                      <input class="ant-input" placeholder="请输入账号关键字">
+                    </div>
+                    <button class="ant-btn ml-10" onclick="toast('清空筛选')">重置</button>
+                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('执行查询')">查询</button>
                   </div>
                 </div>
 
@@ -197,66 +579,85 @@
                   <table class="ant-table">
                     <colgroup>
                       <col style="width:48px">
-                      <col style="width:120px">
                       <col>
-                      <col style="width:150px">
-                      <col style="width:200px">
-                      <col style="width:200px">
-                      <col style="width:80px">
-                      <col style="width:100px">
+                      <col style="width:160px">
+                      <col style="width:220px">
+                      <col style="width:180px">
+                      <col style="width:180px">
+                      <col style="width:120px">
                     </colgroup>
                     <thead>
                       <tr>
-                        <th><span class="checkbox"></span></th>
-                        <th>ID</th>
+                        <th><span class="checkbox" id="checkAll"></span></th>
                         <th>学员</th>
-                        <th>观看进度</th>
-                        <th>开始时间</th>
-                        <th>看完时间</th>
-                        <th>看完</th>
-                        <th>操作</th>
+                        <th>云芳邻账号</th>
+                        <th>所属组织</th>
+                        <th>课程进度</th>
+                        <th>第一次学习时间</th>
+                        <th>学习完成时间</th>
+                        <th>学习进度</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td><span class="checkbox"></span></td>
-                        <td>28</td>
-                        <td><div class="user-item"><div class="avatar"><img src="./meedu-assets/live-member-avatar.png" alt=""></div><div class="ml-10">林秀兰</div></div></td>
-                        <td><span class="progress-pill"><span style="width:100%"></span></span>100%</td>
+                        <td><span class="checkbox row-check"></span></td>
+                        <td>
+                          <div class="user-item">
+                            <div class="avatar">林</div>
+                            <div>林秀兰</div>
+                          </div>
+                        </td>
+                        <td>13800000001</td>
+                        <td><div class="org-line">白云区 / 同和街道 / 榕树社区</div></td>
+                        <td>已完成课时：6 / 6</td>
                         <td>2026-05-27 09:18</td>
                         <td>2026-05-27 11:06</td>
-                        <td><span class="c-red">是</span></td>
-                        <td><button class="ant-btn ant-btn-link" onclick="openDetail('林秀兰', '100%')">详情</button></td>
+                        <td><span class="progress-pill"><span style="width:100%"></span></span><span class="c-blue">100%</span></td>
                       </tr>
                       <tr>
-                        <td><span class="checkbox"></span></td>
-                        <td>27</td>
-                        <td><div class="user-item"><div class="avatar"><img src="./meedu-assets/live-member-avatar.png" alt=""></div><div class="ml-10">陈伟明</div></div></td>
-                        <td><span class="progress-pill"><span style="width:76%"></span></span>76%</td>
+                        <td><span class="checkbox row-check"></span></td>
+                        <td>
+                          <div class="user-item">
+                            <div class="avatar">陈</div>
+                            <div>陈伟明</div>
+                          </div>
+                        </td>
+                        <td>13900000002</td>
+                        <td><div class="org-line">白云区 / 京溪街道 / 云景社区</div></td>
+                        <td>已完成课时：4 / 6</td>
                         <td>2026-05-26 19:42</td>
                         <td>-</td>
-                        <td>否</td>
-                        <td><button class="ant-btn ant-btn-link" onclick="openDetail('陈伟明', '76%')">详情</button></td>
+                        <td><span class="progress-pill"><span style="width:76%"></span></span>76%</td>
                       </tr>
                       <tr>
-                        <td><span class="checkbox"></span></td>
-                        <td>26</td>
-                        <td><div class="user-item"><div class="avatar"><img src="./meedu-assets/live-member-avatar.png" alt=""></div><div class="ml-10">越秀志愿服务队</div></div></td>
-                        <td><span class="progress-pill"><span style="width:48%"></span></span>48%</td>
-                        <td>2026-05-26 14:20</td>
-                        <td>-</td>
-                        <td>否</td>
-                        <td><button class="ant-btn ant-btn-link" onclick="openDetail('越秀志愿服务队', '48%')">详情</button></td>
-                      </tr>
-                      <tr>
-                        <td><span class="checkbox"></span></td>
-                        <td>25</td>
-                        <td><div class="user-item"><div class="avatar"><img src="./meedu-assets/live-member-avatar.png" alt=""></div><div class="ml-10">张海燕</div></div></td>
-                        <td><span class="progress-pill"><span style="width:92%"></span></span>92%</td>
+                        <td><span class="checkbox row-check checked"></span></td>
+                        <td>
+                          <div class="user-item">
+                            <div class="avatar">张</div>
+                            <div>张海燕</div>
+                          </div>
+                        </td>
+                        <td>13700000003</td>
+                        <td><div class="org-line">白云区 / 石井街道 / 汇侨社区</div></td>
+                        <td>已完成课时：5 / 6</td>
                         <td>2026-05-25 10:08</td>
                         <td>-</td>
-                        <td>否</td>
-                        <td><button class="ant-btn ant-btn-link" onclick="openDetail('张海燕', '92%')">详情</button></td>
+                        <td><span class="progress-pill"><span style="width:92%"></span></span>92%</td>
+                      </tr>
+                      <tr>
+                        <td><span class="checkbox row-check"></span></td>
+                        <td>
+                          <div class="user-item">
+                            <div class="avatar">王</div>
+                            <div>王佳</div>
+                          </div>
+                        </td>
+                        <td>13600000004</td>
+                        <td><div class="org-line">白云区 / 三元里街道 / 白云里社区</div></td>
+                        <td>已完成课时：1 / 6</td>
+                        <td>2026-05-24 14:11</td>
+                        <td>-</td>
+                        <td><span class="progress-pill"><span style="width:18%"></span></span>18%</td>
                       </tr>
                     </tbody>
                   </table>
@@ -276,51 +677,13 @@
     </div>
   </div>
 
-  <div id="detailModal" class="modal-mask">
-    <div class="detail-modal">
-      <div class="modal-head"><span>学习进度</span><span class="modal-close" onclick="closeDetail()">×</span></div>
-      <div class="modal-body">
-        <div class="detail-summary">
-          <span>学员：<strong id="detailUser">林秀兰</strong></span>
-          <span>课程：<strong>社区合伙人岗前培训</strong></span>
-          <span>总进度：<strong id="detailProgress">100%</strong></span>
-        </div>
-        <table class="ant-table">
-          <colgroup>
-            <col>
-            <col style="width:300px">
-            <col style="width:120px">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>标题</th>
-              <th>进度</th>
-              <th>状态</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>第一讲：云芳邻社区服务平台介绍</td>
-              <td>12:30/12:30</td>
-              <td><span class="c-primary">已学完</span></td>
-            </tr>
-            <tr>
-              <td>第二讲：合伙人准入和服务边界</td>
-              <td>18:12/18:12</td>
-              <td><span class="c-primary">已学完</span></td>
-            </tr>
-            <tr>
-              <td>第三讲：积分任务执行与居民反馈处理</td>
-              <td>09:42/21:05</td>
-              <td>未学完</td>
-            </tr>
-            <tr>
-              <td>第四讲：活动现场安全与异常上报</td>
-              <td>0:00/16:40</td>
-              <td>未学完</td>
-            </tr>
-          </tbody>
-        </table>
+  <div class="modal-mask" id="confirmMask">
+    <div class="confirm-card">
+      <div class="confirm-title"><span class="confirm-icon">!</span><span>操作确认</span></div>
+      <div class="confirm-content">确认重置选中学员在当前课程下的学习记录？</div>
+      <div class="confirm-actions">
+        <button class="ant-btn" onclick="closeConfirm()">取消</button>
+        <button class="ant-btn ant-btn-primary" onclick="confirmReset()">确认</button>
       </div>
     </div>
   </div>
@@ -328,24 +691,55 @@
   <div id="toast" class="toast"></div>
   <script>
     const toastNode = document.getElementById("toast");
-    const detailModal = document.getElementById("detailModal");
-    const detailUser = document.getElementById("detailUser");
-    const detailProgress = document.getElementById("detailProgress");
+    const confirmMask = document.getElementById("confirmMask");
+    const resetBtn = document.getElementById("resetBtn");
+    const checkAll = document.getElementById("checkAll");
+    const rowChecks = Array.from(document.querySelectorAll(".row-check"));
     let toastTimer = null;
+
     function toast(text) {
       toastNode.textContent = text;
       toastNode.classList.add("show");
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toastNode.classList.remove("show"), 1300);
     }
-    function openDetail(name, progress) {
-      detailUser.textContent = name;
-      detailProgress.textContent = progress;
-      detailModal.classList.add("show");
+
+    function syncHeaderCheck() {
+      checkAll.classList.toggle("checked", rowChecks.length > 0 && rowChecks.every(i => i.classList.contains("checked")));
     }
-    function closeDetail() {
-      detailModal.classList.remove("show");
+
+    checkAll.addEventListener("click", function () {
+      const next = !checkAll.classList.contains("checked");
+      checkAll.classList.toggle("checked", next);
+      rowChecks.forEach(item => item.classList.toggle("checked", next));
+    });
+
+    rowChecks.forEach(item => item.addEventListener("click", function () {
+      item.classList.toggle("checked");
+      syncHeaderCheck();
+    }));
+
+    resetBtn.addEventListener("click", function () {
+      const hasChecked = rowChecks.some(item => item.classList.contains("checked"));
+      if (!hasChecked) {
+        toast("请先勾选课程学员");
+        return;
+      }
+      confirmMask.classList.add("show");
+    });
+
+    function closeConfirm() {
+      confirmMask.classList.remove("show");
     }
+
+    function confirmReset() {
+      closeConfirm();
+      toast("学习记录已重置");
+    }
+
+    confirmMask.addEventListener("click", event => {
+      if (event.target === confirmMask) closeConfirm();
+    });
   </script>
 </body>
 </html>

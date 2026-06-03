@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=1920, initial-scale=1" />
-  <title>资源管理-图片库</title>
+  <title>资源管理-图片</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -111,6 +111,13 @@
     .preview-close { font-size: 22px; color: #909399; cursor: pointer; }
     .preview-image { width: 100%; height: 380px; background: #f6f6f6; display: flex; align-items: center; justify-content: center; }
     .preview-image img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .upload-drop {
+      margin: 24px; height: 220px; border: 1px dashed #d9d9d9; border-radius: 6px; background: #fafafa;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; color: rgba(0,0,0,.65);
+    }
+    .upload-icon { font-size: 34px; color: #3ca7fa; line-height: 1; margin-bottom: 14px; }
+    .upload-sub { margin-top: 8px; color: #9aa4b2; font-size: 12px; }
+    .modal-foot { height: 64px; padding: 0 20px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; border-top: 1px solid #f0f0f0; }
     /* yfl-menu-bg-normalize:start */
     .yfl-body { min-height: 1032px; align-items: stretch; }
     .embed-area { min-height: 1032px; }
@@ -154,28 +161,29 @@
         <aside class="meedu-side">
           <div class="meedu-logo"><img src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
           <nav class="meedu-menu">
-  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
-  <div class="meedu-sub-title open"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="arrow">⌄</span></div>
-  <div class="meedu-item child selected">图片库</div>
-  <div class="meedu-item child">视频库</div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="arrow">›</span></div>
+  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>首页</span></span></div>
+  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>分类管理</span></span></div>
+  <div class="meedu-sub-title open"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源管理</span></span><span class="arrow">⌄</span></div>
+  <div class="meedu-item child">视频</div>
+  <div class="meedu-item child selected">图片</div>
+  <div class="meedu-item child">课件</div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程中心</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员管理</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>部门</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统设置</span></span><span class="arrow">›</span></div>
 </nav>
         </aside>
 
         <main class="meedu-main">
           <div class="meedu-head">
-            <div class="meedu-title">图片库</div>
+            <div class="meedu-title">图片</div>
             <div class="meedu-actions"><span>访问学员端</span><span>YUWAY ▾</span></div>
           </div>
           <div class="meedu-content">
             <div class="panel">
               <div class="toolbar">
                 <div>
-                  <button class="btn primary">上传图片</button>
+                  <button class="btn primary" id="uploadImageBtn">上传图片</button>
                   <button class="btn danger disabled" id="deleteBtn">删除</button>
                 </div>
                 <div></div>
@@ -184,8 +192,8 @@
                 <aside class="category-box">
                   <div class="category-item active">全部图片</div>
                   <div class="category-item">课程封面</div>
-                  <div class="category-item">学员头像</div>
-                  <div class="category-item">文本编辑器</div>
+                  <div class="category-item">培训资料</div>
+                  <div class="category-item">活动素材</div>
                   <div class="category-item">其它</div>
                 </aside>
                 <section class="image-area">
@@ -222,13 +230,32 @@
       <div class="preview-image"><img id="previewImg" src="./meedu-admin-assets/course-cover-19.png" alt="图片预览"></div>
     </div>
   </div>
+  <div class="preview-mask" id="uploadMask">
+    <div class="preview-box">
+      <div class="preview-head"><span>上传图片</span><span class="preview-close" id="uploadClose">×</span></div>
+      <div class="upload-drop">
+        <div class="upload-icon">＋</div>
+        <div>选择或拖拽图片到此处上传</div>
+        <div class="upload-sub">上传成功后进入当前资源分类</div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" id="cancelUpload">取消</button>
+        <button class="btn primary" id="saveUpload">确认</button>
+      </div>
+    </div>
+  </div>
   <script>
     const categories = document.querySelectorAll('.category-item');
     const images = document.querySelectorAll('.image-item');
     const deleteBtn = document.getElementById('deleteBtn');
+    const uploadImageBtn = document.getElementById('uploadImageBtn');
     const previewMask = document.getElementById('previewMask');
     const previewImg = document.getElementById('previewImg');
     const previewClose = document.getElementById('previewClose');
+    const uploadMask = document.getElementById('uploadMask');
+    const uploadClose = document.getElementById('uploadClose');
+    const cancelUpload = document.getElementById('cancelUpload');
+    const saveUpload = document.getElementById('saveUpload');
 
     categories.forEach(item => {
       item.addEventListener('click', () => {
@@ -254,6 +281,13 @@
     previewClose.addEventListener('click', () => previewMask.classList.remove('show'));
     previewMask.addEventListener('click', event => {
       if (event.target === previewMask) previewMask.classList.remove('show');
+    });
+    uploadImageBtn.addEventListener('click', () => uploadMask.classList.add('show'));
+    uploadClose.addEventListener('click', () => uploadMask.classList.remove('show'));
+    cancelUpload.addEventListener('click', () => uploadMask.classList.remove('show'));
+    saveUpload.addEventListener('click', () => uploadMask.classList.remove('show'));
+    uploadMask.addEventListener('click', event => {
+      if (event.target === uploadMask) uploadMask.classList.remove('show');
     });
   </script>
 </body>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>资源管理-分类管理</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { width: 1920px; min-height: 1080px; margin: 0; background: #eef2f7; overflow: hidden; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; }
+    .yun-shell { width: 1920px; min-height: 1080px; background: #f7f8fa; }
+    .yun-top { height: 48px; background: #3491fa; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .yun-brand { width: 180px; display: flex; align-items: center; gap: 12px; font-weight: 600; letter-spacing: .5px; }
+    .hamburger { width: 20px; height: 20px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+    .hamburger span { display: block; width: 18px; height: 2px; background: #fff; border-radius: 1px; }
+    .yun-user { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+    .yun-body { display: flex; min-height: 1032px; }
+    .yun-menu { width: 180px; background: #fff; border-right: 1px solid #e5e6eb; color: #4b5563; padding: 10px 0; flex-shrink: 0; }
+    .yun-menu-title { height: 32px; display: flex; align-items: center; padding: 0 16px; color: #a9aeb8; font-size: 12px; }
+    .yun-item { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; color: #4e5969; font-size: 14px; }
+    .yun-item.active { background: #3491fa; color: #fff; }
+    .yun-icon { width: 18px; height: 18px; flex-shrink: 0; }
+    .embed { flex: 1; min-width: 0; display: flex; background: #f1f2f9; height: 1032px; overflow: hidden; }
+    .side { width: 200px; height: 1032px; background: #fff; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #f2f3f5; }
+    .logo { height: 56px; background: #fff; display: flex; align-items: center; }
+    .logo img { width: 128px; max-height: 52px; object-fit: contain; margin-left: 20px; }
+    .menu { height: calc(1032px - 56px); overflow-y: auto; padding-top: 24px; background: #fff; color: rgba(0,0,0,.88); }
+    .menu-item, .sub-title { height: 56px; line-height: 56px; padding: 0 16px 0 24px; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(0,0,0,.88); }
+    .menu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .menu-icon { width: 16px; height: 16px; flex: 0 0 auto; color: #606266; }
+    .menu-item.selected { background: #3ca7fa; color: #fff; font-weight: 500; }
+    .menu-item.child { height: 50px; line-height: 50px; padding-left: 74px; justify-content: flex-start; }
+    .sub-title.open { color: #409eff; }
+    .arrow { color: rgba(0,0,0,.45); font-size: 12px; }
+    .main { width: calc(100% - 200px); display: flex; flex-direction: column; min-width: 0; background: #f1f2f9; }
+    .head { height: 56px; background: #fff; display: flex; align-items: center; justify-content: space-between; }
+    .title { padding-left: 30px; font-size: 20px; font-weight: 600; line-height: 56px; }
+    .actions { display: flex; align-items: center; gap: 18px; padding-right: 30px; color: #606266; }
+    .content { height: calc(1032px - 56px); padding: 20px; overflow: auto; }
+    .panel { width: 100%; min-width: 1180px; min-height: calc(100% - 40px); background: #fff; padding: 30px; border-radius: 15px; margin-bottom: 80px; box-shadow: 0 2px 4px rgba(102,102,102,.05); }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .btn { height: 32px; padding: 4px 15px; border: 1px solid #d9d9d9; background: #fff; border-radius: 3px; color: rgba(0,0,0,.88); cursor: pointer; font-size: 14px; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; }
+    .btn.primary { border: none; background: #3ca7fa; color: #fff; }
+    .btn.link { border: 0; background: transparent; color: #409eff; padding: 0; margin-right: 14px; }
+    .btn.danger { border: 0; background: transparent; color: #ff4d4f; padding: 0; }
+    .table { width: 100%; border-collapse: collapse; table-layout: fixed; color: rgba(0,0,0,.88); }
+    .table th { height: 55px; padding: 16px; background: #fafafa; font-weight: 600; text-align: left; border-bottom: 1px solid #f0f0f0; }
+    .table td { height: 64px; padding: 16px; border-bottom: 1px solid #f0f0f0; background: #fff; }
+    .cat-name { display: flex; align-items: center; gap: 8px; }
+    .indent-1 { padding-left: 36px !important; }
+    .indent-2 { padding-left: 66px !important; }
+    .drag { color: #9aa4b2; font-size: 16px; }
+    .muted { color: #86909c; font-size: 12px; margin-left: 8px; }
+    .modal-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 99; align-items: center; justify-content: center; }
+    .modal-mask.show { display: flex; }
+    .modal { width: 430px; background: #fff; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,.2); overflow: hidden; }
+    .modal-head { height: 52px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
+    .modal-close { font-size: 22px; color: #909399; cursor: pointer; }
+    .modal-body { padding: 28px 32px 8px; }
+    .form-row { display: flex; align-items: center; margin-bottom: 24px; }
+    .form-label { width: 86px; text-align: right; padding-right: 12px; }
+    .form-label::before { content: "*"; color: #ff4d4f; margin-right: 4px; }
+    .select-like, .input { width: 240px; height: 32px; border: 1px solid #d9d9d9; border-radius: 4px; padding: 0 10px; display: flex; align-items: center; justify-content: space-between; background: #fff; outline: none; font-size: 14px; }
+    .modal-foot { height: 64px; padding: 0 20px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; border-top: 1px solid #f0f0f0; }
+    .confirm-text { line-height: 24px; color: rgba(0,0,0,.72); }
+  </style>
+</head>
+<body>
+  <div class="yun-shell">
+    <header class="yun-top">
+      <div class="yun-brand">云芳邻管理后台 <div class="hamburger"><span></span><span></span><span></span></div></div>
+      <div class="yun-user"><span>白云区运营中心</span><span>消息</span><span>平台管理员</span></div>
+    </header>
+    <div class="yun-body">
+      <aside class="yun-menu">
+        <div class="yun-menu-title">云芳邻后台</div>
+        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>工作台</span></div>
+        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-8h6v8"/></svg><span>组织管理</span></div>
+        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>用户管理</span></div>
+        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>内容服务</span></div>
+        <div class="yun-item active"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>教培系统</span></div>
+        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据看板</span></div>
+      </aside>
+      <section class="embed">
+        <aside class="side">
+          <div class="logo"><img src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
+          <nav class="menu">
+            <div class="menu-item"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>首页</span></span></div>
+            <div class="menu-item selected"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>分类管理</span></span></div>
+            <div class="sub-title open"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源管理</span></span><span class="arrow">⌄</span></div>
+            <div class="menu-item child">视频</div>
+            <div class="menu-item child">图片</div>
+            <div class="menu-item child">课件</div>
+            <div class="sub-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程中心</span></span><span class="arrow">›</span></div>
+            <div class="sub-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员管理</span></span><span class="arrow">›</span></div>
+            <div class="sub-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统设置</span></span><span class="arrow">›</span></div>
+          </nav>
+        </aside>
+        <main class="main">
+          <div class="head">
+            <div class="title">分类管理</div>
+            <div class="actions"><span>访问学员端</span><span>YUWAY ▾</span></div>
+          </div>
+          <div class="content">
+            <div class="panel">
+              <div class="toolbar">
+                <button class="btn primary" onclick="openModal('editMask')">新建分类</button>
+                <span class="muted">资源分类用于整理图片、视频、课件，不影响学员端课程分类。</span>
+              </div>
+              <table class="table">
+                <colgroup>
+                  <col>
+                  <col style="width: 160px">
+                  <col style="width: 220px">
+                </colgroup>
+                <thead>
+                  <tr><th>分类名称</th><th>排序</th><th>操作</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><div class="cat-name"><span class="drag">☰</span><span>课程封面</span><span class="muted">图片</span></div></td><td>1</td><td><button class="btn link" onclick="openModal('editMask')">编辑</button><button class="btn danger" onclick="openModal('deleteMask')">删除</button></td></tr>
+                  <tr><td class="indent-1"><div class="cat-name"><span class="drag">☰</span><span>社区培训封面</span></div></td><td>2</td><td><button class="btn link" onclick="openModal('editMask')">编辑</button><button class="btn danger" onclick="openModal('deleteMask')">删除</button></td></tr>
+                  <tr><td><div class="cat-name"><span class="drag">☰</span><span>培训视频</span><span class="muted">视频</span></div></td><td>3</td><td><button class="btn link" onclick="openModal('editMask')">编辑</button><button class="btn danger" onclick="openModal('deleteMask')">删除</button></td></tr>
+                  <tr><td class="indent-1"><div class="cat-name"><span class="drag">☰</span><span>政策与准入</span></div></td><td>4</td><td><button class="btn link" onclick="openModal('editMask')">编辑</button><button class="btn danger" onclick="openModal('deleteMask')">删除</button></td></tr>
+                  <tr><td class="indent-1"><div class="cat-name"><span class="drag">☰</span><span>服务沟通</span></div></td><td>5</td><td><button class="btn link" onclick="openModal('editMask')">编辑</button><button class="btn danger" onclick="openModal('deleteMask')">删除</button></td></tr>
+                  <tr><td><div class="cat-name"><span class="drag">☰</span><span>课程课件</span><span class="muted">课件</span></div></td><td>6</td><td><button class="btn link" onclick="openModal('editMask')">编辑</button><button class="btn danger" onclick="openModal('deleteMask')">删除</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </main>
+      </section>
+    </div>
+  </div>
+  <div class="modal-mask" id="editMask">
+    <div class="modal">
+      <div class="modal-head"><span>分类信息</span><span class="modal-close" onclick="closeModal('editMask')">×</span></div>
+      <div class="modal-body">
+        <div class="form-row"><div class="form-label">所属上级</div><div class="select-like"><span>作为一级分类</span><span>⌄</span></div></div>
+        <div class="form-row"><div class="form-label">分类名称</div><input class="input" value="课程课件"></div>
+      </div>
+      <div class="modal-foot"><button class="btn" onclick="closeModal('editMask')">取消</button><button class="btn primary" onclick="closeModal('editMask')">保存</button></div>
+    </div>
+  </div>
+  <div class="modal-mask" id="deleteMask">
+    <div class="modal">
+      <div class="modal-head"><span>删除分类</span><span class="modal-close" onclick="closeModal('deleteMask')">×</span></div>
+      <div class="modal-body confirm-text">删除前请先检查该分类下是否有关联课程、图片或视频。确认删除后，该分类将不再出现在资源筛选中。</div>
+      <div class="modal-foot"><button class="btn" onclick="closeModal('deleteMask')">取消</button><button class="btn primary" onclick="closeModal('deleteMask')">确定</button></div>
+    </div>
+  </div>
+  <script>
+    function openModal(id) { document.getElementById(id).classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+  </script>
+</body>
+</html>

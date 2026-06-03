@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, initial-scale=1">
+  <title>云芳邻嵌入教培系统 学员课程学习明细</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 1920px; min-height: 1080px; overflow: hidden; background: #eef2f7; color: rgba(0,0,0,.88); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; }
+    .yfl-shell { width: 1920px; min-height: 1080px; background: #f7f8fa; color: #272e3b; }
+    .yfl-top { height: 48px; background: #3491fa; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+    .yfl-brand { width: 180px; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; letter-spacing: .5px; }
+    .yfl-hamburger { width: 20px; height: 20px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
+    .yfl-hamburger span { display: block; width: 18px; height: 2px; background: #fff; border-radius: 1px; }
+    .yfl-user { display: flex; align-items: center; gap: 20px; font-size: 13px; }
+    .yfl-user span { height: 28px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 4px; }
+    .yfl-body { display: flex; min-height: 1032px; }
+    .yfl-sidebar { width: 180px; background: #fff; border-right: 1px solid #e5e6eb; flex-shrink: 0; padding: 10px 0; }
+    .yfl-menu-title { height: 32px; display: flex; align-items: center; padding: 0 16px; color: #a9aeb8; font-size: 12px; }
+    .yfl-menu-item { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; color: #4e5969; font-size: 14px; cursor: default; }
+    .yfl-menu-item.active { background: #3491fa; color: #fff; font-weight: 500; }
+    .yfl-menu-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .embed-area { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .embed-bar { display: none; }
+    .meedu-frame { flex: 1; min-height: 0; overflow: hidden; display: flex; background: #f1f2f9; }
+    .meedu-left { width: 200px; height: 1032px; background: #fff; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #f2f3f5; }
+    .meedu-logo-wrap { height: 56px; background: #fff; display: flex; align-items: center; }
+    .meedu-logo { width: 128px; max-height: 52px; object-fit: contain; margin-left: 20px; }
+    .meedu-menu-box { width: 200px; height: calc(100% - 56px); overflow-y: auto; overflow-x: hidden; padding-top: 22px; }
+    .ant-menu-item, .ant-submenu-title { height: 56px; line-height: 56px; padding-left: 24px; padding-right: 16px; display: flex; align-items: center; gap: 10px; cursor: default; color: rgba(0,0,0,.88); border-radius: 0; }
+    .ant-submenu-title { justify-content: space-between; }
+    .ant-menu-icon-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .menu-icon { width: 16px; height: 16px; color: #555566; flex-shrink: 0; }
+    .ant-menu-item.child { padding-left: 74px; height: 50px; font-size: 14px; }
+    .ant-menu-item.selected { color: #fff; background: #3ca7fa; font-weight: 500; }
+    .ant-submenu-title.open { color: #3ca7fa; }
+    .ant-menu-arrow { font-size: 12px; color: rgba(0,0,0,.45); }
+    .meedu-right { width: calc(100% - 200px); min-width: 0; display: flex; flex-direction: column; background: #f1f2f9; }
+    .meedu-header { width: 100%; height: 56px; background: #fff; z-index: 10; }
+    .meedu-main-header { height: 56px; display: flex; align-items: center; }
+    .meedu-page-name { flex: 1; padding-left: 30px; font-size: 20px; font-weight: 600; color: #333; line-height: 56px; }
+    .meedu-device-bar { display: flex; align-items: center; }
+    .meedu-device-item { width: 95px; height: 20px; display: flex; align-items: center; font-size: 14px; color: #666; line-height: 20px; cursor: default; }
+    .meedu-device-item img { width: 20px; height: 20px; margin-right: 5px; }
+    .meedu-column { width: 1px; height: 20px; background: #d8d8d8; margin: 0 15px; }
+    .meedu-user-info { padding-right: 30px; color: #606266; font-size: 14px; }
+    .meedu-main { height: calc(1032px - 56px); padding: 20px; overflow: auto; flex: 1; }
+    .meedu-main-body { width: 100%; min-width: 1180px; min-height: calc(100% - 40px); background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 2px 4px rgba(102,102,102,.05); text-align: left; }
+    .back-bar-box { width: 100%; display: flex; align-items: center; }
+    .back-link { border: 0; background: transparent; color: #409eff; padding: 0; font-size: 14px; font-family: inherit; cursor: pointer; text-decoration: none; }
+    .line { width: 1px; height: 14px; background: #d8d8d8; margin: 0 15px; }
+    .page-title { font-size: 14px; font-weight: 600; color: #333; }
+    .page-tip { margin-left: 10px; color: #86909c; font-size: 13px; }
+    .summary-row { display: grid; grid-template-columns: 1fr 1.25fr; gap: 20px; margin-top: 30px; }
+    .summary-card { min-height: 116px; border: 1px solid #f0f0f0; border-radius: 8px; background: #fff; padding: 20px; display: flex; align-items: center; }
+    .avatar { width: 64px; height: 64px; border-radius: 50%; background: #dcecff; color: #3ca7fa; display: inline-flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; flex-shrink: 0; margin-right: 16px; }
+    .course-cover { width: 120px; height: 90px; border-radius: 4px; flex-shrink: 0; margin-right: 16px; background: linear-gradient(135deg, #35a8f4 0%, #3fd1b1 100%); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .summary-main { min-width: 0; flex: 1; }
+    .summary-title { font-size: 18px; font-weight: 600; color: #333; line-height: 24px; }
+    .summary-sub { margin-top: 8px; color: #86909c; line-height: 20px; }
+    .meta-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 18px; margin-top: 12px; color: #4e5969; }
+    .meta-grid span { color: #86909c; }
+    .progress-wrap { display: inline-flex; align-items: center; gap: 8px; }
+    .progress-bar { width: 118px; height: 8px; background: #eef2f7; border-radius: 99px; overflow: hidden; }
+    .progress-bar i { display: block; height: 100%; background: #3ca7fa; border-radius: 99px; }
+    .section-head { margin-top: 30px; display: flex; align-items: center; justify-content: space-between; }
+    .section-title { font-size: 16px; font-weight: 600; color: #333; }
+    .section-note { color: #86909c; font-size: 13px; }
+    .ant-table-wrapper { width: 100%; overflow: auto; margin-top: 16px; }
+    .ant-table { width: 100%; border-collapse: collapse; table-layout: fixed; color: rgba(0,0,0,.88); font-size: 14px; }
+    .ant-table th { height: 55px; padding: 16px; background: #fafafa; color: rgba(0,0,0,.88); font-weight: 600; text-align: left; border-bottom: 1px solid #f0f0f0; }
+    .ant-table td { height: 72px; padding: 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; background: #fff; }
+    .ant-table tr:hover td { background: #fafafa; }
+    .lesson-name { color: #333; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .lesson-sub { margin-top: 6px; color: #9aa4b2; font-size: 12px; }
+    .status-done { color: #04c877; }
+    .status-doing { color: #409eff; }
+    .status-none { color: #909399; }
+    .ant-pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 18px; color: rgba(0,0,0,.65); font-size: 14px; }
+    .page-btn { min-width: 32px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; display: inline-flex; align-items: center; justify-content: center; }
+    .page-btn.active { background: #409eff; color: #fff; border-color: #409eff; }
+    .page-size { height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 0 8px; background: #fff; color: rgba(0,0,0,.88); font-family: inherit; }
+    .toast { position: fixed; top: 70px; right: 34px; min-width: 150px; padding: 10px 14px; border-radius: 6px; background: rgba(31,41,55,.92); color: #fff; font-size: 13px; opacity: 0; transform: translateY(-10px); transition: .18s; z-index: 50; text-align: center; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+  <div class="yfl-shell">
+    <header class="yfl-top">
+      <div class="yfl-brand">
+        <span>云芳邻管理后台</span>
+        <div class="yfl-hamburger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="yfl-user"><span>白云区运营中心</span><span>消息</span><span>平台管理员</span></div>
+    </header>
+
+    <div class="yfl-body">
+      <aside class="yfl-sidebar">
+        <div class="yfl-menu-title">云芳邻后台</div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>工作台</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-8h6v8"/></svg><span>组织管理</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>用户管理</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>内容服务</span></div>
+        <div class="yfl-menu-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>教培系统</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据看板</span></div>
+      </aside>
+
+      <section class="embed-area">
+        <div class="embed-bar"></div>
+        <div class="meedu-frame">
+          <aside class="meedu-left">
+            <div class="meedu-logo-wrap"><img class="meedu-logo" src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
+            <div class="meedu-menu-box">
+              <div class="ant-menu-item"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
+              <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="ant-menu-arrow">›</span></div>
+              <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="ant-menu-arrow">›</span></div>
+              <div class="ant-submenu-title open"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="ant-menu-arrow">⌄</span></div>
+              <div class="ant-menu-item child selected">学员列表</div>
+              <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="ant-menu-arrow">›</span></div>
+              <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="ant-menu-arrow">›</span></div>
+              <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="ant-menu-arrow">›</span></div>
+            </div>
+          </aside>
+
+          <section class="meedu-right">
+            <header class="meedu-header">
+              <div class="meedu-main-header">
+                <div class="meedu-page-name">学习进度</div>
+                <div class="meedu-device-bar">
+                  <div class="meedu-device-item"><img src="./meedu-admin-assets/focus-device.png" alt="">访问学员端</div>
+                  <i class="meedu-column"></i>
+                  <div class="meedu-user-info">YUWAY ▾</div>
+                </div>
+              </div>
+            </header>
+
+            <main class="meedu-main">
+              <div class="meedu-main-body">
+                <div class="back-bar-box">
+                  <a class="back-link" href="./pc-member-detail-source.html">‹ 返回学员详情</a>
+                  <span class="line"></span>
+                  <span class="page-title">学习进度明细</span>
+                  <span class="page-tip">从学员详情进入，查看该学员在当前课程下的课时观看情况</span>
+                </div>
+
+                <div class="summary-row">
+                  <div class="summary-card">
+                    <div class="avatar">林</div>
+                    <div class="summary-main">
+                      <div class="summary-title">林秀兰</div>
+                      <div class="summary-sub">云芳邻用户：YFL-10086</div>
+                      <div class="meta-grid">
+                        <div><span>手机号：</span>13800000001</div>
+                        <div><span>账号状态：</span>正常</div>
+                        <div><span>组织：</span>白云区 / 景泰街道</div>
+                        <div><span>岗位：</span>社区合伙人</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="summary-card">
+                    <div class="course-cover">封面</div>
+                    <div class="summary-main">
+                      <div class="summary-title">社区合伙人岗前培训</div>
+                      <div class="summary-sub">课程 ID：18 · 分类：合伙人培训 · 共 4 个课时</div>
+                      <div class="meta-grid">
+                        <div><span>开始学习：</span>2026-05-27 09:18</div>
+                        <div><span>最近学习：</span>2026-05-28 17:36</div>
+                        <div><span>课程进度：</span><span class="progress-wrap"><span class="progress-bar"><i style="width:76%"></i></span>76%</span></div>
+                        <div><span>完成状态：</span><span class="status-doing">学习中</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="section-head">
+                  <div class="section-title">课时学习明细</div>
+                  <div class="section-note">数据按教培系统课时观看记录展示，空记录显示「-」</div>
+                </div>
+
+                <div class="ant-table-wrapper">
+                  <table class="ant-table">
+                    <colgroup>
+                      <col style="width:90px">
+                      <col>
+                      <col style="width:150px">
+                      <col style="width:120px">
+                      <col style="width:120px">
+                      <col style="width:120px">
+                      <col style="width:180px">
+                      <col style="width:180px">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th>课时 ID</th>
+                        <th>课时名称</th>
+                        <th>所属章节</th>
+                        <th>课时时长</th>
+                        <th>已观看</th>
+                        <th>完成状态</th>
+                        <th>开始学习时间</th>
+                        <th>最近观看时间</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>1001</td>
+                        <td><div class="lesson-name">第一讲：云芳邻社区服务平台介绍</div><div class="lesson-sub">对应视频观看记录 watch_record</div></td>
+                        <td>平台认知</td>
+                        <td>00:12:30</td>
+                        <td>00:12:30</td>
+                        <td><span class="status-done">已学完</span></td>
+                        <td>2026-05-27 09:18</td>
+                        <td>2026-05-27 09:34</td>
+                      </tr>
+                      <tr>
+                        <td>1002</td>
+                        <td><div class="lesson-name">第二讲：合伙人准入和服务边界</div><div class="lesson-sub">已产生 watched_at</div></td>
+                        <td>准入规则</td>
+                        <td>00:18:12</td>
+                        <td>00:18:12</td>
+                        <td><span class="status-done">已学完</span></td>
+                        <td>2026-05-27 10:03</td>
+                        <td>2026-05-27 10:28</td>
+                      </tr>
+                      <tr>
+                        <td>1003</td>
+                        <td><div class="lesson-name">第三讲：服务任务执行与居民反馈处理</div><div class="lesson-sub">未产生完成时间</div></td>
+                        <td>服务执行</td>
+                        <td>00:21:05</td>
+                        <td>00:09:42</td>
+                        <td><span class="status-doing">未学完</span></td>
+                        <td>2026-05-28 16:55</td>
+                        <td>2026-05-28 17:36</td>
+                      </tr>
+                      <tr>
+                        <td>1004</td>
+                        <td><div class="lesson-name">第四讲：活动现场安全与异常上报</div><div class="lesson-sub">该课时还未开始观看</div></td>
+                        <td>安全要求</td>
+                        <td>00:16:40</td>
+                        <td>-</td>
+                        <td><span class="status-none">未学完</span></td>
+                        <td>-</td>
+                        <td>-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="ant-pagination">
+                    <span>共 4 条</span>
+                    <span class="page-btn">‹</span>
+                    <span class="page-btn active">1</span>
+                    <span class="page-btn">›</span>
+                    <select class="page-size"><option>10 条/页</option><option>20 条/页</option></select>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </section>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div id="toast" class="toast"></div>
+  <script>
+    const toastNode = document.getElementById("toast");
+    let toastTimer = null;
+    function toast(text) {
+      toastNode.textContent = text;
+      toastNode.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toastNode.classList.remove("show"), 1300);
+    }
+  </script>
+</body>
+</html>

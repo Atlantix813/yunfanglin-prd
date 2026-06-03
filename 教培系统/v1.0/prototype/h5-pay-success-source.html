@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeEdu H5 支付成功</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #fff;
+      color: #1f2937;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .workbench {
+      min-height: 100vh;
+      width: 100%;
+      max-width: 430px;
+      padding: 0;
+    }
+
+    .phone-shell {
+      width: 100%;
+      min-height: 100vh;
+      padding: 0;
+      background: #fff;
+    }
+
+    .phone-screen {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .pay-success-box {
+      width: 100%;
+      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pay-success-box .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+    }
+
+    .pay-success-box .icon img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .pay-success-box .text {
+      height: 18px;
+      margin-top: 30px;
+      margin-bottom: 50px;
+      color: #04c877;
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 18px;
+    }
+
+    .btn-box {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .button {
+      width: 120px;
+      height: 45px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      color: #666;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 400;
+      cursor: pointer;
+    }
+
+    .button.find {
+      margin-left: 35px;
+      border: 1px solid #ff4d4f;
+      color: #ff4d4f;
+    }
+
+    .toast {
+      position: absolute;
+      left: 50%;
+      bottom: 78px;
+      transform: translateX(-50%) translateY(10px);
+      min-width: 150px;
+      max-width: 260px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(31, 41, 55, .92);
+      color: #fff;
+      font-size: 12px;
+      line-height: 18px;
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: .18s;
+      z-index: 120;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (min-width: 431px) { .workbench { margin: 0 auto; } }
+  </style>
+</head>
+<body>
+  <div class="workbench">
+    <div class="phone-shell">
+      <div class="phone-screen">
+        <div class="pay-success-box">
+          <div class="icon">
+            <img src="./meedu-assets/icon-adopt.png" alt="">
+          </div>
+          <div class="text">支付成功</div>
+          <div class="btn-box">
+            <div class="button" data-toast="返回首页：/">
+              返回首页
+            </div>
+            <div class="button find" data-toast="查看订单：/member/order">
+              查看订单
+            </div>
+          </div>
+        </div>
+        <div id="toast" class="toast"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const toast = document.getElementById("toast");
+    let timer = null;
+    document.querySelectorAll("[data-toast]").forEach((node) => {
+      node.addEventListener("click", () => {
+        toast.textContent = node.getAttribute("data-toast");
+        toast.classList.add("show");
+        clearTimeout(timer);
+        timer = setTimeout(() => toast.classList.remove("show"), 1300);
+      });
+    });
+  </script>
+</body>
+</html>

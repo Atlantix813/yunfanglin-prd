@@ -3,91 +3,601 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1920, initial-scale=1">
-  <title>课时管理</title>
+  <title>课程中心-课时管理</title>
   <style>
     * { box-sizing: border-box; }
-    body { width: 1920px; min-height: 1080px; margin: 0; overflow: hidden; background: #eef2f7; color: rgba(0,0,0,.88); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; }
+    body {
+      width: 1920px;
+      min-height: 1080px;
+      margin: 0;
+      overflow: hidden;
+      background: #eef2f7;
+      color: #272e3b;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
     .yfl-shell { width: 1920px; min-height: 1080px; background: #f7f8fa; }
-    .yfl-top { height: 48px; background: #3491fa; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-    .yfl-brand { width: 180px; display: flex; align-items: center; gap: 12px; font-size: 15px; font-weight: 600; letter-spacing: .5px; }
-    .hamburger { width: 20px; height: 20px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
-    .hamburger span { display: block; width: 18px; height: 2px; background: #fff; border-radius: 1px; }
-    .yfl-user { display: flex; align-items: center; gap: 20px; font-size: 13px; }
-    .yfl-user span { display: inline-flex; align-items: center; height: 28px; padding: 0 8px; border-radius: 4px; }
+    .yfl-top {
+      height: 48px;
+      background: #3491fa;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .yfl-brand {
+      width: 180px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+    .hamburger {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+    }
+    .hamburger span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      border-radius: 1px;
+    }
+    .yfl-user {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 13px;
+    }
+    .yfl-user span {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 4px;
+    }
     .yfl-body { display: flex; min-height: 1032px; }
-    .yfl-sidebar { width: 180px; background: #fff; border-right: 1px solid #e5e6eb; padding: 10px 0; flex-shrink: 0; }
-    .yfl-menu-title { height: 32px; display: flex; align-items: center; padding: 0 16px; color: #a9aeb8; font-size: 12px; }
-    .yfl-menu-item { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; color: #4e5969; cursor: pointer; }
-    .yfl-menu-item.active { background: #3491fa; color: #fff; font-weight: 500; }
-    .yfl-menu-item svg { width: 18px; height: 18px; flex: 0 0 auto; }
-    .embed { flex: 1; min-width: 0; display: flex; background: #f1f2f9; }
-    .meedu-side { width: 200px; height: 1032px; background: #fff; border-right: 1px solid #f2f3f5; flex-shrink: 0; }
-    .meedu-logo { height: 56px; display: flex; align-items: center; background: #fff; }
-    .meedu-logo img { width: 128px; max-height: 52px; object-fit: contain; margin-left: 20px; }
-    .meedu-menu { padding-top: 22px; color: rgba(0,0,0,.88); }
-    .meedu-item, .meedu-sub { height: 56px; display: flex; align-items: center; gap: 10px; padding: 0 16px 0 24px; cursor: pointer; }
-    .meedu-sub { justify-content: space-between; }
-    .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .meedu-item.child { height: 50px; padding-left: 74px; }
-    .meedu-item.selected { background: #3ca7fa; color: #fff; font-weight: 500; }
-    .meedu-icon { width: 16px; height: 16px; color: #555566; flex: 0 0 auto; }
-    .arrow { font-size: 12px; color: rgba(0,0,0,.45); }
-    .meedu-main { width: calc(100% - 200px); display: flex; flex-direction: column; min-width: 0; background: #f1f2f9; }
-    .meedu-head { height: 56px; background: #fff; display: flex; align-items: center; justify-content: space-between; }
-    .meedu-title { padding-left: 30px; font-size: 20px; font-weight: 600; color: #333; }
-    .meedu-actions { display: flex; align-items: center; gap: 18px; padding-right: 30px; color: #606266; }
-    .content { height: calc(1032px - 56px); padding: 20px; overflow: auto; }
-    .panel { width: 100%; min-width: 1180px; min-height: calc(100% - 40px); background: #fff; border-radius: 15px; padding: 30px; box-shadow: 0 2px 4px rgba(102,102,102,.05); }
-    .back-bar { display: flex; align-items: center; gap: 15px; height: 32px; }
-    .back-link { border: 0; background: transparent; color: #409eff; padding: 0; font-size: 14px; cursor: pointer; }
-    .divider { width: 1px; height: 14px; background: #d8d8d8; }
-    .back-name { font-weight: 600; color: #333; }
-    .back-sub { color: #86909c; }
-    .toolbar { width: 100%; display: flex; align-items: center; margin-top: 30px; }
-    .btn { height: 32px; padding: 4px 15px; border-radius: 3px; border: 1px solid #d9d9d9; background: #fff; color: rgba(0,0,0,.88); cursor: pointer; font: inherit; display: inline-flex; align-items: center; justify-content: center; }
+    .yfl-sidebar {
+      width: 180px;
+      background: #fff;
+      border-right: 1px solid #e5e6eb;
+      padding: 10px 0;
+      flex-shrink: 0;
+    }
+    .yfl-menu-title {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: #a9aeb8;
+      font-size: 12px;
+    }
+    .yfl-menu-item {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px 0 16px;
+      color: #4e5969;
+      font-size: 14px;
+    }
+    .yfl-menu-item.active {
+      background: #3491fa;
+      color: #fff;
+      font-weight: 500;
+    }
+    .yfl-menu-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .embed {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      background: #f1f2f9;
+    }
+    .playedu-side {
+      width: 200px;
+      height: 1032px;
+      background: #fff;
+      border-right: 1px solid #f2f3f5;
+      flex-shrink: 0;
+    }
+    .playedu-logo {
+      height: 56px;
+      display: flex;
+      align-items: center;
+      background: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .playedu-logo img {
+      width: 128px;
+      max-height: 52px;
+      object-fit: contain;
+      margin-left: 20px;
+    }
+    .playedu-menu {
+      width: 200px;
+      height: calc(1032px - 56px);
+      overflow-y: auto;
+      padding-top: 24px;
+      background: #fff;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+    }
+    .menu-item,
+    .submenu-title {
+      height: 56px;
+      line-height: 56px;
+      padding: 0 16px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(0,0,0,.88);
+    }
+    .menu-item.child {
+      height: 50px;
+      line-height: 50px;
+      padding-left: 74px;
+      justify-content: flex-start;
+    }
+    .menu-item.selected {
+      background: #3ca7fa;
+      color: #fff;
+      font-weight: 500;
+    }
+    .submenu-title.open { color: #409eff; }
+    .menu-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .menu-icon {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+      color: #606266;
+    }
+    .menu-arrow { font-size: 12px; color: rgba(0,0,0,.45); }
+    .playedu-main {
+      width: calc(100% - 200px);
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: #f1f2f9;
+    }
+    .playedu-head {
+      width: 100%;
+      height: 56px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .playedu-title {
+      flex: 1;
+      padding-left: 30px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      line-height: 56px;
+      text-align: left;
+    }
+    .playedu-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-right: 30px;
+      color: #606266;
+      font-size: 14px;
+    }
+    .playedu-content {
+      height: calc(1032px - 56px);
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+    .workspace {
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, #f4f6fb 0%, #eef2f7 100%);
+      box-shadow: inset 0 0 0 1px rgba(229,230,235,.8);
+    }
+    .ghost-board {
+      position: absolute;
+      left: 24px;
+      top: 24px;
+      right: 700px;
+      bottom: 24px;
+      border-radius: 15px;
+      background: #fff;
+      padding: 24px;
+      opacity: .55;
+    }
+    .ghost-board h3 {
+      margin: 0 0 16px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+    }
+    .ghost-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ghost-item {
+      height: 58px;
+      border-radius: 10px;
+      border: 1px solid #edf0f5;
+      background: #fff;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(0,0,0,.75);
+    }
+    .ghost-item span:last-child { color: #9aa4b2; }
+    .drawer-mask {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,23,42,.18);
+    }
+    .hour-drawer {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      bottom: 16px;
+      width: 640px;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: -8px 0 28px rgba(15,23,42,.18);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .drawer-head {
+      height: 56px;
+      padding: 0 24px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .drawer-head h3 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .drawer-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #98a2b3;
+      border: 1px solid #e5e7eb;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .drawer-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px 24px;
+    }
+    .warn-box {
+      width: 502px;
+      background: rgba(255, 77, 79, 0.1);
+      border-radius: 6px;
+      padding: 8px 16px;
+      margin: 0 auto 24px;
+    }
+    .warn-box p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 24px;
+      color: #ff4d4f;
+    }
+    .mode-row {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 16px;
+      padding-left: 42px;
+    }
+    .choice {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(0,0,0,.88);
+      cursor: pointer;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      border: 1px solid #bfc6d1;
+      background: #fff;
+      position: relative;
+    }
+    .choice.active .dot { border-color: #3ca7fa; }
+    .choice.active .dot::after {
+      content: "";
+      position: absolute;
+      inset: 3px;
+      border-radius: 50%;
+      background: #3ca7fa;
+    }
+    .action-row {
+      padding-left: 42px;
+      margin-bottom: 14px;
+    }
+    .btn {
+      height: 32px;
+      border-radius: 6px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      padding: 0 14px;
+      color: rgba(0,0,0,.75);
+      font-size: 14px;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .btn.primary {
+      border: 0;
+      background: #3ca7fa;
+      color: #fff;
+    }
     .btn + .btn { margin-left: 10px; }
-    .btn.primary { border: 0; background: #3ca7fa; color: #fff; }
-    .btn.danger { border: 0; background: #ff4d4f; color: #fff; }
-    .btn.link { border: 0; background: transparent; color: #409eff; padding: 0; height: auto; }
-    .table-wrap { margin-top: 30px; width: 100%; overflow: auto; }
-    table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 14px; }
-    th { height: 55px; padding: 16px; background: #fafafa; border-bottom: 1px solid #f0f0f0; text-align: left; font-weight: 600; }
-    td { height: 72px; padding: 16px; border-bottom: 1px solid #f0f0f0; background: #fff; vertical-align: middle; }
-    tr:hover td { background: #fafafa; }
-    .checkbox { width: 16px; height: 16px; border: 1px solid #d9d9d9; border-radius: 2px; display: inline-flex; align-items: center; justify-content: center; background: #fff; color: #fff; font-size: 12px; cursor: pointer; }
-    .checkbox.checked { background: #3ca7fa; border-color: #3ca7fa; }
-    .checkbox.checked::after { content: "✓"; }
-    .lesson-main { color: #333; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .lesson-sub { margin-top: 6px; color: #9aa4b2; font-size: 12px; }
-    .green { color: #04c877; }
-    .red { color: #ff4d4f; }
-    .ops { display: inline-flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-    .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 18px; color: rgba(0,0,0,.65); }
-    .page { min-width: 32px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; background: #fff; display: inline-flex; align-items: center; justify-content: center; }
-    .page.active { background: #409eff; border-color: #409eff; color: #fff; }
-    .page-size { height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 0 8px; background: #fff; }
-    .toast { position: fixed; top: 70px; right: 34px; min-width: 160px; padding: 10px 14px; border-radius: 6px; background: rgba(31,41,55,.92); color: #fff; opacity: 0; transform: translateY(-10px); transition: .18s; z-index: 50; text-align: center; font-size: 13px; }
+    .tree-box {
+      width: 500px;
+      min-height: 56px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 6px;
+      background: #fff;
+      padding: 8px 8px 0;
+      margin-left: 42px;
+      display: flex;
+      flex-direction: column;
+    }
+    .tree-empty {
+      height: 24px;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.25);
+      line-height: 24px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+    .hour-item {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 8px;
+      padding: 0 6px;
+    }
+    .hour-left {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(0,0,0,.88);
+    }
+    .video-icon {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background: #cfd5de;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      flex-shrink: 0;
+    }
+    .drag-icon {
+      font-size: 20px;
+      color: #9ca3af;
+      cursor: grab;
+      margin-right: 8px;
+    }
+    .delete-icon {
+      font-size: 20px;
+      color: #9ca3af;
+      cursor: pointer;
+    }
+    .chapter-block {
+      width: 502px;
+      margin-left: 42px;
+      margin-bottom: 16px;
+    }
+    .chapter-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .chapter-label {
+      width: 78px;
+      font-size: 14px;
+      line-height: 32px;
+      color: rgba(0,0,0,.85);
+      flex-shrink: 0;
+    }
+    .chapter-input {
+      width: 208px;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 0 11px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+    .chapter-tree {
+      width: 500px;
+      min-height: 56px;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 6px;
+      background: #fff;
+      padding: 8px 8px 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 99;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-mask.show { display: flex; }
+    .select-modal {
+      width: 760px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.2);
+      overflow: hidden;
+    }
+    .modal-head {
+      height: 52px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f0f0f0;
+      font-weight: 600;
+    }
+    .modal-close {
+      font-size: 22px;
+      color: #909399;
+      cursor: pointer;
+    }
+    .modal-body {
+      padding: 24px;
+      max-height: 520px;
+      overflow: auto;
+    }
+    .resource-item {
+      min-height: 52px;
+      border: 1px solid #edf0f5;
+      border-radius: 8px;
+      padding: 0 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .resource-item.active {
+      border-color: #3ca7fa;
+      background: #f7fbff;
+    }
+    .resource-name { color: #1f2937; font-weight: 500; }
+    .resource-meta { color: #9aa4b2; font-size: 12px; margin-top: 4px; }
+    .check {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      border: 1px solid #d9d9d9;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+    }
+    .resource-item.active .check {
+      border-color: #3ca7fa;
+      background: #3ca7fa;
+      color: #fff;
+    }
+    .modal-foot {
+      height: 64px;
+      padding: 0 20px;
+      border-top: 1px solid #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+    .confirm-card {
+      width: 420px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 26px 24px 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    }
+    .confirm-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(0,0,0,.88);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .confirm-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #faad14;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .confirm-content {
+      padding-left: 32px;
+      color: rgba(0,0,0,.65);
+      line-height: 22px;
+    }
+    .confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .toast {
+      position: fixed;
+      top: 70px;
+      right: 34px;
+      min-width: 160px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: rgba(31,41,55,.92);
+      color: #fff;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: .18s;
+      z-index: 120;
+      text-align: center;
+      font-size: 13px;
+    }
     .toast.show { opacity: 1; transform: translateY(0); }
-    /* yfl-menu-bg-normalize:start */
-    .yfl-body { min-height: 1032px; align-items: stretch; }
-    .embed-area { min-height: 1032px; }
-    .embed, .meedu-frame { height: 1032px; min-height: 1032px; align-items: stretch; background: #f1f2f9; overflow: hidden; }
-    .meedu-side, .meedu-left { width: 200px !important; min-width: 200px; height: 1032px !important; min-height: 1032px; background: #fff; flex-shrink: 0; }
-    .meedu-logo, .meedu-logo-wrap { height: 56px !important; min-height: 56px; display: flex; align-items: center; background: #fff; }
-    .meedu-menu, .meedu-menu-box { width: 200px !important; height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); overflow-y: auto; overflow-x: hidden; padding-top: 24px !important; background: #fff; font-size: 14px; }
-    .ant-menu, .meedu-menu { width: 200px !important; background: #fff; }
-    .ant-menu-item, .ant-submenu-title, .meedu-item, .meedu-sub-title, .meedu-sub { height: 56px !important; min-height: 56px; line-height: 56px !important; padding: 0 16px 0 24px !important; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(0,0,0,.88); border-radius: 0; font-size: 14px; }
-    .ant-menu-item.child, .meedu-item.child { height: 50px !important; min-height: 50px; line-height: 50px !important; padding-left: 74px !important; padding-right: 16px !important; justify-content: flex-start; color: rgba(0,0,0,.88); }
-    .ant-menu-item.selected, .meedu-item.selected, .ant-menu-item.child.selected, .meedu-item.child.selected { background: #3ca7fa !important; color: #fff !important; font-weight: 500; }
-    .ant-submenu-title.open, .meedu-sub-title.open, .meedu-sub.open { color: #409eff; }
-    .ant-menu-icon-label, .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .menu-icon, .meedu-icon { width: 16px; height: 16px; flex: 0 0 auto; color: #606266; }
-    .ant-menu-arrow, .arrow { font-size: 12px; color: rgba(0,0,0,.45); }
-    .meedu-frame > .meedu-main, .embed > .meedu-main, .meedu-right { height: 1032px !important; min-height: 1032px; background: #f1f2f9; display: flex; flex-direction: column; min-width: 0; }
-    .meedu-content, .content, .meedu-right > .meedu-main { height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); background: #f1f2f9; overflow: auto; flex: 1 1 auto; }
-    .panel, .meedu-main-body, .work-grid { margin-bottom: 80px; }
-    .panel, .meedu-main-body { display: flow-root; }
-    /* yfl-menu-bg-normalize:end */
   </style>
 </head>
 <body>
@@ -106,123 +616,359 @@
         <div class="yfl-menu-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>教培系统</span></div>
         <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据看板</span></div>
       </aside>
+
       <section class="embed">
-        <aside class="meedu-side">
-          <div class="meedu-logo"><img src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
-          <nav class="meedu-menu">
-  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title open"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="arrow">⌄</span></div>
-  <div class="meedu-item child selected">录播课</div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="arrow">›</span></div>
-</nav>
+        <aside class="playedu-side">
+          <div class="playedu-logo"><img src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
+          <nav class="playedu-menu">
+            <div class="menu-item"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title open"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程中心</span></span><span class="menu-arrow">⌄</span></div>
+            <div class="menu-item child selected">线上课</div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="menu-arrow">›</span></div>
+          </nav>
         </aside>
-        <main class="meedu-main">
-          <header class="meedu-head"><div class="meedu-title">课时管理</div><div class="meedu-actions"><span>访问学员端</span><span>YUWAY ▾</span></div></header>
-          <div class="content">
-            <div class="panel">
-              <div class="back-bar"><button class="back-link" onclick="toast('返回录播课列表')">‹ 返回</button><span class="divider"></span><span class="back-name">社区合伙人成长课</span><span class="back-sub">/ 课时管理</span></div>
-              <div class="toolbar">
-                <button class="btn primary" onclick="toast('跳转：新建课时')">新建课时</button>
-                <button class="btn primary" onclick="toast('跳转：章节管理')">章节管理</button>
-                <button class="btn danger" onclick="toast('确认删除选中的课时')">删除</button>
+
+        <main class="playedu-main">
+          <header class="playedu-head">
+            <div class="playedu-title">线上课</div>
+            <div class="playedu-actions"><span>访问学员端</span><span>YUWAY ▾</span></div>
+          </header>
+          <div class="playedu-content">
+            <div class="workspace">
+              <div class="ghost-board">
+                <h3>线上课</h3>
+                <div class="ghost-list">
+                  <div class="ghost-item"><span>社区合伙人入门培训</span><span>更多 > 课时</span></div>
+                  <div class="ghost-item"><span>居民沟通服务技巧</span><span>更多 > 课时</span></div>
+                  <div class="ghost-item"><span>社区反诈防骗宣传教育</span><span>更多 > 课时</span></div>
+                </div>
               </div>
-              <div class="table-wrap">
-                <table>
-                  <colgroup>
-                    <col style="width:48px"><col style="width:34%"><col style="width:14%"><col style="width:18%"><col style="width:16%"><col style="width:8%"><col style="width:10%">
-                  </colgroup>
-                  <thead>
-                    <tr>
-                      <th><span class="checkbox" id="checkAll"></span></th>
-                      <th>课时</th>
-                      <th>课时时长</th>
-                      <th>所属章节</th>
-                      <th>上架时间</th>
-                      <th>是否显示</th>
-                      <th>操作</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td><span class="checkbox row-check"></span></td>
-                      <td><div class="lesson-main">合伙人准入规则讲解</div><div class="lesson-sub">腾讯云视频 ID：vod-2026052601</div></td>
-                      <td>00:21:35</td>
-                      <td>政策与准入</td>
-                      <td>2026-05-26 09:00</td>
-                      <td><span class="green">· 显示</span></td>
-                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
-                    </tr>
-                    <tr>
-                      <td><span class="checkbox row-check checked"></span></td>
-                      <td><div class="lesson-main">服务工单跟进流程</div><div class="lesson-sub">视频 URL：training/yfl/work-order.mp4</div></td>
-                      <td>00:18:42</td>
-                      <td>运营实务</td>
-                      <td>2026-05-27 10:30</td>
-                      <td><span class="green">· 显示</span></td>
-                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
-                    </tr>
-                    <tr>
-                      <td><span class="checkbox row-check"></span></td>
-                      <td><div class="lesson-main">社区拜访前的信息准备</div><div class="lesson-sub">阿里云视频 ID：ali-lesson-032</div></td>
-                      <td>00:12:18</td>
-                      <td>社区走访</td>
-                      <td>2026-05-27 15:00</td>
-                      <td><span class="green">· 显示</span></td>
-                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
-                    </tr>
-                    <tr>
-                      <td><span class="checkbox row-check"></span></td>
-                      <td><div class="lesson-main">试点小区活动复盘方法</div><div class="lesson-sub">腾讯云视频 ID：vod-2026052804</div></td>
-                      <td>00:25:06</td>
-                      <td>运营实务</td>
-                      <td>2026-05-28 09:40</td>
-                      <td><span class="red">· 隐藏</span></td>
-                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
-                    </tr>
-                    <tr>
-                      <td><span class="checkbox row-check"></span></td>
-                      <td><div class="lesson-main">合伙人常见问题答疑</div><div class="lesson-sub">视频 URL：training/yfl/faq.mp4</div></td>
-                      <td>00:15:27</td>
-                      <td>答疑回看</td>
-                      <td>2026-05-28 16:20</td>
-                      <td><span class="green">· 显示</span></td>
-                      <td><span class="ops"><button class="btn link" onclick="toast('查看学员')">学员</button><button class="btn link" onclick="toast('编辑课时')">编辑</button><button class="btn link" onclick="toast('删除课时')">删除</button></span></td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div class="pagination"><span>共 5 条</span><span class="page">‹</span><span class="page active">1</span><span class="page">›</span><select class="page-size"><option>100 条/页</option><option>50 条/页</option></select></div>
-              </div>
+
+              <div class="drawer-mask"></div>
+
+              <aside class="hour-drawer">
+                <div class="drawer-head">
+                  <h3>课时管理</h3>
+                  <span class="drawer-close" onclick="toast('关闭课时管理')">×</span>
+                </div>
+                <div class="drawer-body">
+                  <div class="warn-box">
+                    <p>1. 保存后，当前课程的课时内容会立即更新，操作请结合当前课程结构确认。</p>
+                    <p>2. 课时调整后，学员学习进度会随课时结构变化重新计算。</p>
+                  </div>
+
+                  <div class="mode-row">
+                    <span class="choice" id="modeFlat"><span class="dot"></span><span>无章节</span></span>
+                    <span class="choice active" id="modeChapter"><span class="dot"></span><span>有章节</span></span>
+                  </div>
+
+                  <div id="flatMode" style="display:none;">
+                    <div class="action-row">
+                      <button class="btn primary" onclick="openVideoPicker('flat')">添加课时</button>
+                    </div>
+                    <div class="tree-box" id="flatHourBox">
+                      <div class="tree-empty">点击上方按钮添加课时</div>
+                    </div>
+                  </div>
+
+                  <div id="chapterMode">
+                    <div class="chapter-block" data-chapter-id="chapter-1">
+                      <div class="chapter-line">
+                        <div class="chapter-label">章节1：</div>
+                        <input class="chapter-input" value="基础认知" />
+                        <button class="btn primary" onclick="openVideoPicker('chapter-1')">添加课时</button>
+                        <button class="btn" onclick="openChapterConfirm('chapter-1')">删除章节</button>
+                      </div>
+                      <div class="chapter-tree" id="chapter-1-box">
+                        <div class="hour-item" data-hour-id="hour-1">
+                          <div class="hour-left">
+                            <span class="video-icon">▶</span>
+                            <span>认识云芳邻服务边界</span>
+                          </div>
+                          <div>
+                            <span class="drag-icon">⋮⋮</span>
+                            <span class="delete-icon" onclick="openHourConfirm('hour-1')">🗑</span>
+                          </div>
+                        </div>
+                        <div class="hour-item" data-hour-id="hour-2">
+                          <div class="hour-left">
+                            <span class="video-icon">▶</span>
+                            <span>居民沟通常见场景</span>
+                          </div>
+                          <div>
+                            <span class="drag-icon">⋮⋮</span>
+                            <span class="delete-icon" onclick="openHourConfirm('hour-2')">🗑</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="chapter-block" data-chapter-id="chapter-2">
+                      <div class="chapter-line">
+                        <div class="chapter-label">章节2：</div>
+                        <input class="chapter-input" value="运营实务" />
+                        <button class="btn primary" onclick="openVideoPicker('chapter-2')">添加课时</button>
+                        <button class="btn" onclick="openChapterConfirm('chapter-2')">删除章节</button>
+                      </div>
+                      <div class="chapter-tree" id="chapter-2-box">
+                        <div class="hour-item" data-hour-id="hour-3">
+                          <div class="hour-left">
+                            <span class="video-icon">▶</span>
+                            <span>工单跟进流程讲解</span>
+                          </div>
+                          <div>
+                            <span class="drag-icon">⋮⋮</span>
+                            <span class="delete-icon" onclick="openHourConfirm('hour-3')">🗑</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="action-row">
+                      <button class="btn" id="addChapterBtn">添加章节</button>
+                    </div>
+                  </div>
+                </div>
+              </aside>
             </div>
           </div>
         </main>
       </section>
     </div>
   </div>
+
+  <div class="modal-mask" id="videoPickerMask">
+    <div class="select-modal">
+      <div class="modal-head">
+        <span>选择视频</span>
+        <span class="modal-close" onclick="closeVideoPicker()">×</span>
+      </div>
+      <div class="modal-body">
+        <div class="resource-item" data-video-id="v1" data-video-name="上门沟通前准备工作">
+          <div>
+            <div class="resource-name">上门沟通前准备工作</div>
+            <div class="resource-meta">12 分 30 秒 · vod-2026060201</div>
+          </div>
+          <span class="check">✓</span>
+        </div>
+        <div class="resource-item" data-video-id="v2" data-video-name="居民诉求记录方法">
+          <div>
+            <div class="resource-name">居民诉求记录方法</div>
+            <div class="resource-meta">09 分 15 秒 · vod-2026060202</div>
+          </div>
+          <span class="check">✓</span>
+        </div>
+        <div class="resource-item" data-video-id="v3" data-video-name="协同工单流转说明">
+          <div>
+            <div class="resource-name">协同工单流转说明</div>
+            <div class="resource-meta">16 分 42 秒 · vod-2026060203</div>
+          </div>
+          <span class="check">✓</span>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeVideoPicker()">取消</button>
+        <button class="btn primary" onclick="confirmVideoPicker()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="hourConfirmMask">
+    <div class="confirm-card">
+      <div class="confirm-title"><span class="confirm-icon">!</span><span>操作确认</span></div>
+      <div class="confirm-content">确认删除此课时？</div>
+      <div class="confirm-actions">
+        <button class="btn" onclick="closeHourConfirm()">取消</button>
+        <button class="btn primary" onclick="confirmDeleteHour()">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="chapterConfirmMask">
+    <div class="confirm-card">
+      <div class="confirm-title"><span class="confirm-icon">!</span><span>操作确认</span></div>
+      <div class="confirm-content">删除章节后，当前章节下的课时会一并删除，确认继续？</div>
+      <div class="confirm-actions">
+        <button class="btn" onclick="closeChapterConfirm()">取消</button>
+        <button class="btn primary" onclick="confirmDeleteChapter()">确认</button>
+      </div>
+    </div>
+  </div>
+
   <div id="toast" class="toast"></div>
+
   <script>
+    const videoPickerMask = document.getElementById("videoPickerMask");
+    const hourConfirmMask = document.getElementById("hourConfirmMask");
+    const chapterConfirmMask = document.getElementById("chapterConfirmMask");
     const toastNode = document.getElementById("toast");
-    const checkAll = document.getElementById("checkAll");
-    const rowChecks = Array.from(document.querySelectorAll(".row-check"));
+    const flatMode = document.getElementById("flatMode");
+    const chapterMode = document.getElementById("chapterMode");
+    const modeFlat = document.getElementById("modeFlat");
+    const modeChapter = document.getElementById("modeChapter");
+    const addChapterBtn = document.getElementById("addChapterBtn");
+    const resourceItems = Array.from(document.querySelectorAll(".resource-item"));
     let toastTimer = null;
+    let pickerTarget = "chapter-1";
+    let deletingHourId = null;
+    let deletingChapterId = null;
+    let chapterIndex = 2;
+    let hourIndex = 3;
+
     function toast(text) {
       toastNode.textContent = text;
       toastNode.classList.add("show");
       clearTimeout(toastTimer);
       toastTimer = setTimeout(() => toastNode.classList.remove("show"), 1300);
     }
-    checkAll.addEventListener("click", function () {
-      const next = !checkAll.classList.contains("checked");
-      checkAll.classList.toggle("checked", next);
-      rowChecks.forEach(item => item.classList.toggle("checked", next));
+
+    function activateMode(type) {
+      const chapterHasContent =
+        document.querySelectorAll(".chapter-block").length > 0 ||
+        document.querySelectorAll("#flatHourBox .hour-item").length > 0;
+      if (chapterHasContent) {
+        toast("课时模式已切换，页面按当前课时结构展示");
+      }
+      if (type === "flat") {
+        modeFlat.classList.add("active");
+        modeChapter.classList.remove("active");
+        flatMode.style.display = "block";
+        chapterMode.style.display = "none";
+      } else {
+        modeChapter.classList.add("active");
+        modeFlat.classList.remove("active");
+        chapterMode.style.display = "block";
+        flatMode.style.display = "block";
+        flatMode.style.display = "none";
+      }
+    }
+
+    modeFlat.addEventListener("click", () => activateMode("flat"));
+    modeChapter.addEventListener("click", () => activateMode("chapter"));
+
+    resourceItems.forEach(item => {
+      item.addEventListener("click", () => {
+        item.classList.toggle("active");
+      });
     });
-    rowChecks.forEach(item => item.addEventListener("click", function () {
-      item.classList.toggle("checked");
-      checkAll.classList.toggle("checked", rowChecks.every(i => i.classList.contains("checked")));
-    }));
+
+    function openVideoPicker(target) {
+      pickerTarget = target;
+      videoPickerMask.classList.add("show");
+    }
+
+    function closeVideoPicker() {
+      videoPickerMask.classList.remove("show");
+    }
+
+    function buildHourItem(id, title) {
+      const row = document.createElement("div");
+      row.className = "hour-item";
+      row.dataset.hourId = id;
+      row.innerHTML = `
+        <div class="hour-left">
+          <span class="video-icon">▶</span>
+          <span>${title}</span>
+        </div>
+        <div>
+          <span class="drag-icon">⋮⋮</span>
+          <span class="delete-icon" onclick="openHourConfirm('${id}')">🗑</span>
+        </div>
+      `;
+      return row;
+    }
+
+    function clearEmpty(box) {
+      const empty = box.querySelector(".tree-empty");
+      if (empty) empty.remove();
+    }
+
+    function confirmVideoPicker() {
+      const selected = resourceItems.filter(item => item.classList.contains("active"));
+      if (selected.length === 0) {
+        toast("请选择视频");
+        return;
+      }
+      const box = pickerTarget === "flat"
+        ? document.getElementById("flatHourBox")
+        : document.getElementById(`${pickerTarget}-box`);
+      clearEmpty(box);
+      selected.forEach(item => {
+        hourIndex += 1;
+        const node = buildHourItem(`hour-${hourIndex}`, item.dataset.videoName);
+        box.appendChild(node);
+      });
+      selected.forEach(item => item.classList.remove("active"));
+      closeVideoPicker();
+      toast("课时已加入当前课程");
+    }
+
+    function openHourConfirm(id) {
+      deletingHourId = id;
+      hourConfirmMask.classList.add("show");
+    }
+
+    function closeHourConfirm() {
+      hourConfirmMask.classList.remove("show");
+    }
+
+    function confirmDeleteHour() {
+      const node = document.querySelector(`[data-hour-id="${deletingHourId}"]`);
+      if (node) node.remove();
+      closeHourConfirm();
+      toast("课时已删除");
+    }
+
+    function openChapterConfirm(id) {
+      deletingChapterId = id;
+      chapterConfirmMask.classList.add("show");
+    }
+
+    function closeChapterConfirm() {
+      chapterConfirmMask.classList.remove("show");
+    }
+
+    function confirmDeleteChapter() {
+      const node = document.querySelector(`[data-chapter-id="${deletingChapterId}"]`);
+      if (node) node.remove();
+      closeChapterConfirm();
+      toast("章节已删除");
+    }
+
+    addChapterBtn.addEventListener("click", () => {
+      chapterIndex += 1;
+      const id = `chapter-${chapterIndex}`;
+      const wrapper = document.createElement("div");
+      wrapper.className = "chapter-block";
+      wrapper.dataset.chapterId = id;
+      wrapper.innerHTML = `
+        <div class="chapter-line">
+          <div class="chapter-label">章节${chapterIndex}：</div>
+          <input class="chapter-input" value="新章节${chapterIndex}" />
+          <button class="btn primary" onclick="openVideoPicker('${id}')">添加课时</button>
+          <button class="btn" onclick="openChapterConfirm('${id}')">删除章节</button>
+        </div>
+        <div class="chapter-tree" id="${id}-box">
+          <div class="tree-empty">点击上方按钮添加课时</div>
+        </div>
+      `;
+      chapterMode.insertBefore(wrapper, document.querySelector(".action-row"));
+      toast("章节已新增");
+    });
+
+    videoPickerMask.addEventListener("click", event => {
+      if (event.target === videoPickerMask) closeVideoPicker();
+    });
+    hourConfirmMask.addEventListener("click", event => {
+      if (event.target === hourConfirmMask) closeHourConfirm();
+    });
+    chapterConfirmMask.addEventListener("click", event => {
+      if (event.target === chapterConfirmMask) closeChapterConfirm();
+    });
   </script>
 </body>
 </html>

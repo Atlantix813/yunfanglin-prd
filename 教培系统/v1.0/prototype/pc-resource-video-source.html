@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=1920, initial-scale=1" />
-  <title>资源管理-视频库</title>
+  <title>资源管理-视频</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -145,6 +145,8 @@
     .row-check.checked::after { content: "✓"; }
     .video-name { color: rgba(0,0,0,.88); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .video-sub { margin-top: 6px; color: #9aa4b2; font-size: 12px; }
+    .op-link { border: 0; background: transparent; padding: 0; margin-right: 14px; color: #409eff; cursor: pointer; font-size: 14px; font-family: inherit; }
+    .op-link.danger { color: #ff4d4f; }
     .modal-mask {
       display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 99; align-items: center; justify-content: center;
     }
@@ -209,21 +211,22 @@
         <aside class="meedu-side">
           <div class="meedu-logo"><img src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
           <nav class="meedu-menu">
-  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
-  <div class="meedu-sub-title open"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="arrow">⌄</span></div>
-  <div class="meedu-item child">图片库</div>
-  <div class="meedu-item child selected">视频库</div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="arrow">›</span></div>
+  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>首页</span></span></div>
+  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h16M4 18h16"/></svg><span>分类管理</span></span></div>
+  <div class="meedu-sub-title open"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源管理</span></span><span class="arrow">⌄</span></div>
+  <div class="meedu-item child selected">视频</div>
+  <div class="meedu-item child">图片</div>
+  <div class="meedu-item child">课件</div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程中心</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员管理</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>部门</span></span><span class="arrow">›</span></div>
+  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统设置</span></span><span class="arrow">›</span></div>
 </nav>
         </aside>
 
         <main class="meedu-main">
           <div class="meedu-head">
-            <div class="meedu-title">视频库</div>
+            <div class="meedu-title">视频</div>
             <div class="meedu-actions"><span>访问学员端</span><span>YUWAY ▾</span></div>
           </div>
           <div class="meedu-content">
@@ -244,11 +247,8 @@
                 <section class="video-area">
                   <div class="video-toolbar">
                     <div class="d-flex">
-                      <button class="btn" id="addCategoryBtn">添加分类</button>
-                      <div class="column-line"></div>
                       <button class="btn primary" id="uploadBtn">上传视频</button>
-                      <button class="btn primary disabled" id="changeBtn">修改视频分类</button>
-                      <button class="btn danger disabled" id="deleteVideoBtn">删除视频</button>
+                      <button class="btn danger disabled" id="deleteVideoBtn">批量删除</button>
                     </div>
                     <div class="search">
                       <input class="input" placeholder="关键字" value="">
@@ -262,9 +262,9 @@
                         <th style="width: 56px;"><span class="row-check" id="checkAll"></span></th>
                         <th>视频名称</th>
                         <th style="width: 150px;">视频时长</th>
-                        <th style="width: 150px;">大小</th>
-                        <th style="width: 120px;">加密</th>
-                        <th style="width: 200px;">上传时间</th>
+                        <th style="width: 150px;">创建人</th>
+                        <th style="width: 200px;">创建时间</th>
+                        <th style="width: 180px;">操作</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -272,41 +272,41 @@
                         <td><span class="row-check"></span></td>
                         <td><div class="video-name">社区合伙人政策与准入规则讲解.mp4</div><div class="video-sub">分类：政策与准入</div></td>
                         <td>00:21:35</td>
-                        <td>128MB</td>
-                        <td>-</td>
+                        <td>周明远</td>
                         <td>2026-05-26 09:20</td>
+                        <td><button class="op-link" onclick="openPreview()">预览</button><button class="op-link" onclick="openEdit()">编辑</button><button class="op-link danger" onclick="openDelete()">删除</button></td>
                       </tr>
                       <tr>
                         <td><span class="row-check"></span></td>
                         <td><div class="video-name">社区服务日常巡查与记录规范.mp4</div><div class="video-sub">分类：日常巡查</div></td>
                         <td>00:18:42</td>
-                        <td>96MB</td>
-                        <td>-</td>
+                        <td>许雅婷</td>
                         <td>2026-05-25 14:10</td>
+                        <td><button class="op-link" onclick="openPreview()">预览</button><button class="op-link" onclick="openEdit()">编辑</button><button class="op-link danger" onclick="openDelete()">删除</button></td>
                       </tr>
                       <tr>
                         <td><span class="row-check"></span></td>
                         <td><div class="video-name">积分任务后台操作培训.mp4</div><div class="video-sub">分类：运营实务</div></td>
                         <td>00:26:08</td>
-                        <td>143MB</td>
-                        <td>-</td>
+                        <td>陈若海</td>
                         <td>2026-05-24 16:42</td>
+                        <td><button class="op-link" onclick="openPreview()">预览</button><button class="op-link" onclick="openEdit()">编辑</button><button class="op-link danger" onclick="openDelete()">删除</button></td>
                       </tr>
                       <tr>
                         <td><span class="row-check"></span></td>
                         <td><div class="video-name">社区突发事件上报流程.mp4</div><div class="video-sub">分类：安全应急</div></td>
                         <td>00:14:56</td>
-                        <td>74MB</td>
-                        <td>-</td>
+                        <td>林佩雯</td>
                         <td>2026-05-23 10:18</td>
+                        <td><button class="op-link" onclick="openPreview()">预览</button><button class="op-link" onclick="openEdit()">编辑</button><button class="op-link danger" onclick="openDelete()">删除</button></td>
                       </tr>
                       <tr>
                         <td><span class="row-check"></span></td>
                         <td><div class="video-name">居民咨询与服务沟通技巧.mp4</div><div class="video-sub">分类：便民服务</div></td>
                         <td>00:19:12</td>
-                        <td>102MB</td>
-                        <td>-</td>
+                        <td>黄俊杰</td>
                         <td>2026-05-22 11:30</td>
+                        <td><button class="op-link" onclick="openPreview()">预览</button><button class="op-link" onclick="openEdit()">编辑</button><button class="op-link danger" onclick="openDelete()">删除</button></td>
                       </tr>
                     </tbody>
                   </table>
@@ -333,39 +333,58 @@
       </div>
     </div>
   </div>
-  <div class="modal-mask" id="categoryMask">
+  <div class="modal-mask" id="previewMask">
+    <div class="upload-modal">
+      <div class="modal-head"><span>视频预览</span><span class="modal-close" onclick="closeModal('previewMask')">×</span></div>
+      <div class="upload-drop">
+        <div class="upload-icon">▶</div>
+        <div>社区合伙人政策与准入规则讲解.mp4</div>
+        <div class="video-sub">这里用于确认视频素材内容</div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeModal('previewMask')">关闭</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-mask" id="editMask">
     <div class="category-modal">
-      <div class="modal-head"><span>添加分类</span><span class="modal-close" id="categoryClose">×</span></div>
+      <div class="modal-head"><span>编辑视频</span><span class="modal-close" onclick="closeModal('editMask')">×</span></div>
       <div class="form-body">
         <div class="form-row">
-          <div class="form-label">所属上级</div>
-          <div class="select-like"><span>作为一级分类</span><span>⌄</span></div>
+          <div class="form-label">分类</div>
+          <div class="select-like"><span>政策与准入</span><span>⌄</span></div>
         </div>
         <div class="form-row">
-          <div class="form-label">分类名称</div>
-          <input class="input-small" value="新视频分类" aria-label="分类名称">
+          <div class="form-label">视频名称</div>
+          <input class="input-small" value="社区合伙人政策与准入规则讲解.mp4" aria-label="视频名称">
         </div>
       </div>
       <div class="modal-foot">
-        <button class="btn" id="cancelCategory">取消</button>
-        <button class="btn primary" id="saveCategory">确定</button>
+        <button class="btn" onclick="closeModal('editMask')">取消</button>
+        <button class="btn primary" onclick="closeModal('editMask')">保存</button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-mask" id="deleteMask">
+    <div class="category-modal">
+      <div class="modal-head"><span>删除视频</span><span class="modal-close" onclick="closeModal('deleteMask')">×</span></div>
+      <div class="form-body" style="line-height: 24px; color: rgba(0,0,0,.72);">
+        删除前请检查选中视频文件无关联课程，确认删除？
+      </div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeModal('deleteMask')">取消</button>
+        <button class="btn primary" onclick="closeModal('deleteMask')">确定</button>
       </div>
     </div>
   </div>
   <script>
     const treeItems = document.querySelectorAll('.tree-item');
     const checks = document.querySelectorAll('.row-check');
-    const changeBtn = document.getElementById('changeBtn');
     const deleteVideoBtn = document.getElementById('deleteVideoBtn');
     const uploadBtn = document.getElementById('uploadBtn');
     const uploadMask = document.getElementById('uploadMask');
     const uploadClose = document.getElementById('uploadClose');
     const cancelUpload = document.getElementById('cancelUpload');
-    const addCategoryBtn = document.getElementById('addCategoryBtn');
-    const categoryMask = document.getElementById('categoryMask');
-    const categoryClose = document.getElementById('categoryClose');
-    const cancelCategory = document.getElementById('cancelCategory');
-    const saveCategory = document.getElementById('saveCategory');
 
     treeItems.forEach(item => {
       item.addEventListener('click', () => {
@@ -379,7 +398,6 @@
         event.stopPropagation();
         item.classList.toggle('checked');
         const hasSelected = document.querySelectorAll('.row-check.checked').length > 0;
-        changeBtn.classList.toggle('disabled', !hasSelected);
         deleteVideoBtn.classList.toggle('disabled', !hasSelected);
       });
     });
@@ -390,13 +408,10 @@
     uploadMask.addEventListener('click', event => {
       if (event.target === uploadMask) uploadMask.classList.remove('show');
     });
-    addCategoryBtn.addEventListener('click', () => categoryMask.classList.add('show'));
-    categoryClose.addEventListener('click', () => categoryMask.classList.remove('show'));
-    cancelCategory.addEventListener('click', () => categoryMask.classList.remove('show'));
-    saveCategory.addEventListener('click', () => categoryMask.classList.remove('show'));
-    categoryMask.addEventListener('click', event => {
-      if (event.target === categoryMask) categoryMask.classList.remove('show');
-    });
+    function openPreview() { document.getElementById('previewMask').classList.add('show'); }
+    function openEdit() { document.getElementById('editMask').classList.add('show'); }
+    function openDelete() { document.getElementById('deleteMask').classList.add('show'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('show'); }
   </script>
 </body>
 </html>

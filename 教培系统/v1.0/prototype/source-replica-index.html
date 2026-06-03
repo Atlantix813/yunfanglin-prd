@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>教培系统源码复刻验收入口</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f6fb;
+      color: #1f2937;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 380px minmax(0, 1fr);
+    }
+
+    .side {
+      background: #fff;
+      border-right: 1px solid #e5e7eb;
+      padding: 24px;
+      overflow-y: auto;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: #2f8df6;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 28px;
+    }
+
+    .desc {
+      margin: 0 0 18px;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 22px;
+    }
+
+    .group {
+      margin-top: 18px;
+    }
+
+    .group-title {
+      margin: 0 0 10px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .count {
+      font-size: 12px;
+      color: #8a94a6;
+      font-weight: 500;
+    }
+
+    .card {
+      width: 100%;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      text-align: left;
+      cursor: pointer;
+      transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .card:hover,
+    .card.active {
+      border-color: #2f8df6;
+      background: #f7fbff;
+      box-shadow: 0 6px 16px rgba(47, 141, 246, .12);
+    }
+
+    .card-name {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #111827;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 22px;
+    }
+
+    .tag {
+      flex: 0 0 auto;
+      border-radius: 4px;
+      padding: 2px 6px;
+      font-size: 12px;
+      color: #2f8df6;
+      background: #eef6ff;
+      font-weight: 600;
+    }
+
+    .card-meta {
+      margin-top: 6px;
+      color: #6b7280;
+      font-size: 12px;
+      line-height: 20px;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 24px;
+    }
+
+    .topbar {
+      min-height: 72px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .preview-title {
+      margin: 0;
+      font-size: 18px;
+      line-height: 26px;
+    }
+
+    .preview-subtitle {
+      margin: 4px 0 0;
+      color: #6b7280;
+      font-size: 13px;
+      line-height: 20px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .btn {
+      height: 34px;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #374151;
+      padding: 0 12px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .btn.primary {
+      background: #2f8df6;
+      color: #fff;
+      border-color: #2f8df6;
+    }
+
+    .frame-wrap {
+      height: calc(100vh - 136px);
+      min-height: 640px;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, .06);
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+    }
+
+    @media (max-width: 1100px) {
+      .page {
+        grid-template-columns: 1fr;
+      }
+
+      .side {
+        position: static;
+        height: auto;
+      }
+
+      .main {
+        padding-top: 0;
+      }
+
+      .frame-wrap {
+        height: 720px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <aside class="side">
+      <div class="brand">
+        <div class="brand-mark">教</div>
+        <div>
+          <h1>教培系统源码复刻</h1>
+          <p class="desc">按 MeEdu 当前源码复刻，外层承载云芳邻后台或手机画布，用于逐页确认付费、会员、订单相关内容的删除范围。</p>
+        </div>
+      </div>
+
+      <section class="group">
+        <h2 class="group-title">H5 个人与交易相关 <span class="count">5 页</span></h2>
+        <button class="card" data-title="H5 个人中心" data-note="个人中心当前仍包含 VIP 入口、订单入口、会员身份文案。" data-url="member-center.html">
+          <div class="card-name">个人中心 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：VIP、订单、会员身份。</div>
+        </button>
+        <button class="card" data-title="H5 VIP 页面" data-note="复刻会员权益页，用于确认会员体系整体下线范围。" data-url="h5-vip-source.html">
+          <div class="card-name">VIP 页面 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：会员套餐、购买按钮、权益文案。</div>
+        </button>
+        <button class="card" data-title="H5 收银台" data-note="复刻下单支付页，用于封存订单和支付入口。" data-url="h5-cashier-source.html">
+          <div class="card-name">收银台 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：支付方式、订单金额、确认支付。</div>
+        </button>
+        <button class="card" data-title="H5 支付成功" data-note="复刻支付完成页，用于确认支付完成后跳转内容。" data-url="h5-pay-success-source.html">
+          <div class="card-name">支付成功 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：支付结果、查看订单。</div>
+        </button>
+        <button class="card" data-title="H5 我的订单" data-note="复刻订单列表页，用于确认订单功能整体隐藏。" data-url="h5-my-orders-source.html">
+          <div class="card-name">我的订单 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：订单状态、订单详情、支付状态。</div>
+        </button>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">H5 课程学习主线 <span class="count">4 页</span></h2>
+        <button class="card" data-title="H5 培训首页" data-note="复刻学习首页，作为居民进入学习中心的主入口。" data-url="training-home.html">
+          <div class="card-name">培训首页 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：免费标签、购买人数、价格痕迹。</div>
+        </button>
+        <button class="card" data-title="H5 课程详情" data-note="复刻课程详情页，用于裁剪购买、试看、会员免费和评论相关内容。" data-url="course-detail.html">
+          <div class="card-name">课程详情 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：购买、试看、VIP 免费、购买人数、评论。</div>
+        </button>
+        <button class="card" data-title="H5 视频学习" data-note="复刻播放页，保留学习进度和课时观看逻辑。" data-url="video-learning.html">
+          <div class="card-name">视频学习 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：付费课时、试看限制、评论。</div>
+        </button>
+        <button class="card" data-title="H5 在学课程" data-note="复刻在学列表，作为学习状态验收页。" data-url="member-learning.html">
+          <div class="card-name">在学课程 <span class="tag">H5</span></div>
+          <div class="card-meta">清理点：购买入口、付费状态。</div>
+        </button>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">PC 资源与录播课搭建相关 <span class="count">8 页</span></h2>
+        <button class="card active" data-title="PC 图片库" data-note="按 MeEdu 图片库源码复刻：左侧图片来源分类，右侧图片网格，顶部保留上传图片和删除。" data-url="pc-resource-images-source.html">
+          <div class="card-name">图片库 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：删除确认、图片使用情况提示。</div>
+        </button>
+        <button class="card" data-title="PC 视频库" data-note="按 MeEdu 视频库源码复刻：左侧视频分类，右侧上传、分类调整、删除和视频列表。" data-url="pc-resource-video-source.html">
+          <div class="card-name">视频库 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：上传配置、删除确认、视频绑定提示。</div>
+        </button>
+        <button class="card" data-title="PC 线上课列表" data-note="云芳邻后台外壳中嵌入 PlayEdu 线上课列表，用于确认双菜单效果和课程管理保留项。" data-url="admin-course-embed-source.html">
+          <div class="card-name">线上课列表 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：价格、销量、课时销售记录入口。</div>
+        </button>
+        <button class="card" data-title="PC 新建课程" data-note="按 PlayEdu 抽屉建课交互复刻：课程分类、课程属性、适用组织、课时列表、课程简介和课件。" data-url="pc-course-create-source.html">
+          <div class="card-name">新建课程 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：价格、VIP 免费、付费试看、允许评论。</div>
+        </button>
+        <button class="card" data-title="PC 分类管理" data-note="按 PlayEdu 独立分类树页面复刻：分类新增、编辑、删除、拖拽排序，并校验课程和资源关联。" data-url="pc-course-category-source.html">
+          <div class="card-name">分类管理 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：课程中心不再单独内嵌分类页，统一走独立分类管理。</div>
+        </button>
+        <button class="card" data-title="PC 课时管理" data-note="按 PlayEdu 课时管理抽屉复刻：课时模式切换、添加课时、章节命名、章节增减、课时拖拽排序与删除确认。" data-url="pc-course-video-list-source.html">
+          <div class="card-name">课时管理 <span class="tag">PC</span></div>
+          <div class="card-meta">保留点：课时与章节在同一张抽屉内维护。</div>
+        </button>
+        <button class="card" data-title="PC 课程学员" data-note="按 PlayEdu 当前课程学员页复刻：重置学习记录、姓名查询、账号查询、课程进度和完成时间。" data-url="pc-course-students-source.html">
+          <div class="card-name">课程学员 <span class="tag">PC</span></div>
+          <div class="card-meta">保留点：围绕当前课程查看学员学习进度。</div>
+        </button>
+        <button class="card" data-title="PC 课件管理" data-note="按 PlayEdu 当前课件管理抽屉复刻：添加课件、拖拽排序、删除课件，课件按课程维度统一挂载。" data-url="pc-course-attach-source.html">
+          <div class="card-name">课件管理 <span class="tag">PC</span></div>
+          <div class="card-meta">保留点：课程资料按课程维度统一维护。</div>
+        </button>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">旧功能排查页（不进本期菜单） <span class="count">4 页</span></h2>
+        <button class="card" data-title="PC 订单列表" data-note="历史排查页：本期从后台菜单移除，不进入教培 MVP。" data-url="pc-order-list-source.html">
+          <div class="card-name">订单列表 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：支付状态、订单金额、取消订单。</div>
+        </button>
+        <button class="card" data-title="PC 退款列表" data-note="历史排查页：本期从后台菜单移除，不进入教培 MVP。" data-url="pc-order-refund-source.html">
+          <div class="card-name">退款列表 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：退款金额、审核退款、退款状态。</div>
+        </button>
+        <button class="card" data-title="PC 订单详情" data-note="历史排查页：用于确认订单详情里哪些字段需要从主线剔除。" data-url="pc-order-detail-source.html">
+          <div class="card-name">订单详情 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：商品金额、支付渠道、优惠抵扣。</div>
+        </button>
+        <button class="card" data-title="PC 交易数据" data-note="历史排查页：本期数据菜单不保留交易数据，只保留学员数据。" data-url="pc-transaction-stats-source.html">
+          <div class="card-name">交易数据 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：今日收入、成交趋势、转化率。</div>
+        </button>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">PC 学员管理 MVP <span class="count">3 页</span></h2>
+        <button class="card" data-title="PC 学员列表" data-note="按最小 MVP 复刻学员学习档案列表：云芳邻用户进入教培后生成映射，只保留搜索、列表和详情入口。" data-url="pc-member-list-source.html">
+          <div class="card-name">学员列表 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：新建、导入、批量设置、VIP、积分、标签、消息。</div>
+        </button>
+        <button class="card" data-title="PC 学员详情" data-note="按最小 MVP 复刻学员详情：基础资料只读，保留学习概览和录播课学习记录。" data-url="pc-member-detail-source.html">
+          <div class="card-name">学员详情 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：订单、积分、实名、修改资料、冻结账号。</div>
+        </button>
+        <button class="card" data-title="PC 课程学习明细" data-note="从学员详情进入，查看某个学员在某门课程下每个课时的观看时长和完成状态。" data-url="pc-member-course-progress-source.html">
+          <div class="card-name">课程学习明细 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：购买、订单、积分、VIP、手动改学员。</div>
+        </button>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">PC 数据菜单 MVP <span class="count">1 页</span></h2>
+        <button class="card" data-title="PC 学员数据" data-note="按 MeEdu 学员数据页复刻：本期只展示今日学习学员、今日新注册学员、总学员数；时间范围作为全局筛选，街道/社区统计放在表格区。" data-url="pc-stats-member-source.html">
+          <div class="card-name">学员数据 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：付费榜、支付统计、成交趋势、学习完成率。</div>
+        </button>
+      </section>
+
+      <section class="group">
+        <h2 class="group-title">PC 系统菜单 MVP <span class="count">1 页</span></h2>
+        <button class="card" data-title="PC 管理人员" data-note="按 MeEdu 管理人员页复刻并改造成云芳邻教培管理员映射列表：只查看授权人员，不在 MeEdu 内新建账号。" data-url="pc-system-admins-source.html">
+          <div class="card-name">管理人员 <span class="tag">PC</span></div>
+          <div class="card-meta">清理点：系统配置、系统日志、功能模块、新建管理员、删除管理员。</div>
+        </button>
+      </section>
+    </aside>
+
+    <main class="main">
+      <div class="topbar">
+        <div>
+          <h2 class="preview-title" id="previewTitle">PC 图片库</h2>
+          <p class="preview-subtitle" id="previewNote">按 MeEdu 图片库源码复刻：左侧图片来源分类，右侧图片网格，顶部保留上传图片和删除。</p>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button" id="reloadBtn">刷新预览</button>
+          <button class="btn primary" type="button" id="openBtn">新窗口打开</button>
+        </div>
+      </div>
+      <div class="frame-wrap">
+        <iframe id="previewFrame" title="源码复刻预览" src="pc-resource-images-source.html"></iframe>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const cards = Array.from(document.querySelectorAll(".card"));
+    const frame = document.getElementById("previewFrame");
+    const title = document.getElementById("previewTitle");
+    const note = document.getElementById("previewNote");
+    const openBtn = document.getElementById("openBtn");
+    const reloadBtn = document.getElementById("reloadBtn");
+    let currentUrl = "pc-resource-images-source.html";
+
+    function setPreview(card) {
+      cards.forEach(item => item.classList.remove("active"));
+      card.classList.add("active");
+      currentUrl = card.dataset.url;
+      title.textContent = card.dataset.title;
+      note.textContent = card.dataset.note;
+      frame.src = currentUrl;
+    }
+
+    cards.forEach(card => {
+      card.addEventListener("click", () => setPreview(card));
+    });
+
+    openBtn.addEventListener("click", () => {
+      window.open(currentUrl, "_blank");
+    });
+
+    reloadBtn.addEventListener("click", () => {
+      frame.src = currentUrl + "?_t=" + Date.now();
+    });
+  </script>
+</body>
+</html>

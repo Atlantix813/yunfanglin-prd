@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1920, initial-scale=1">
-  <title>云芳邻嵌入教培系统 课程管理复刻</title>
+  <title>云芳邻嵌入教培系统 线上课列表复刻</title>
   <link rel="stylesheet" href="组件库样式.css">
   <style>
     * { box-sizing: border-box; }
@@ -321,13 +321,110 @@
     .meedu-main-body {
       width: 100%;
       min-width: 1180px;
-      background-color: #fff;
-      padding: 30px;
-      border-radius: 15px;
       margin-bottom: 24px;
       min-height: calc(100% - 40px);
-      box-shadow: 0 2px 4px rgba(102,102,102,.05);
       text-align: left;
+    }
+
+    .tree-main-body {
+      width: 100%;
+      min-height: 100%;
+      display: flex;
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .tree-left-panel {
+      width: 260px;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 2px 4px rgba(102,102,102,.05);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .tree-right-panel {
+      flex: 1;
+      min-width: 0;
+      background: #fff;
+      border-radius: 15px;
+      box-shadow: 0 2px 4px rgba(102,102,102,.05);
+      padding: 30px;
+    }
+
+    .filter-tabs {
+      display: flex;
+      height: 56px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .filter-tab {
+      flex: 1;
+      border: 0;
+      background: #fff;
+      font-size: 15px;
+      color: rgba(0,0,0,.65);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .filter-tab.active {
+      color: #3ca7fa;
+      font-weight: 600;
+    }
+
+    .filter-tab.active::after {
+      content: "";
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 0;
+      height: 2px;
+      background: #3ca7fa;
+      border-radius: 1px;
+    }
+
+    .filter-tree {
+      padding: 14px 0;
+      max-height: 820px;
+      overflow-y: auto;
+    }
+
+    .tree-group-title {
+      padding: 10px 24px 6px;
+      font-size: 12px;
+      color: #909399;
+    }
+
+    .tree-item {
+      min-height: 42px;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+      color: rgba(0,0,0,.88);
+      cursor: pointer;
+    }
+
+    .tree-item:hover {
+      background: #f6fbff;
+      color: #3ca7fa;
+    }
+
+    .tree-item.active {
+      background: #ecf5ff;
+      color: #3ca7fa;
+      font-weight: 500;
+    }
+
+    .tree-item.child {
+      padding-left: 42px;
+    }
+
+    .tree-item .count {
+      color: #b0b7c3;
+      font-size: 12px;
     }
 
     .float-left { width: 100%; float: left; }
@@ -435,26 +532,6 @@
     .ant-input:focus {
       border-color: #409eff;
       box-shadow: 0 0 0 2px rgba(5,145,255,.1);
-    }
-
-    .drawer-more {
-      height: 14px;
-      font-size: 14px;
-      color: #666;
-      line-height: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-    }
-
-    .drawer-more img {
-      width: 14px;
-      height: 14px;
-      margin-right: 5px;
-    }
-
-    .drawer-more .act {
-      color: #3ca7fa;
     }
 
     .ant-table-wrapper {
@@ -603,75 +680,6 @@
       justify-content: flex-start;
       padding: 0 12px;
       border-radius: 0;
-    }
-
-    .meedu-drawer-mask {
-      display: none;
-      position: fixed;
-      inset: 48px 0 0 180px;
-      background: rgba(0,0,0,.45);
-      z-index: 20;
-    }
-
-    .meedu-drawer-mask.show { display: block; }
-
-    .meedu-drawer {
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 360px;
-      height: 100%;
-      background: #fff;
-      box-shadow: -6px 0 16px rgba(0,0,0,.08);
-      display: flex;
-      flex-direction: column;
-    }
-
-    .drawer-head {
-      height: 55px;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #f0f0f0;
-      font-size: 16px;
-      font-weight: 600;
-    }
-
-    .drawer-close {
-      font-size: 20px;
-      color: #999;
-      cursor: pointer;
-    }
-
-    .drawer-body {
-      padding: 24px;
-      flex: 1;
-    }
-
-    .drawer-body .ant-input,
-    .drawer-body select {
-      width: 100%;
-      margin-bottom: 20px;
-    }
-
-    .drawer-body select {
-      height: 32px;
-      border: 1px solid #d9d9d9;
-      border-radius: 6px;
-      padding: 0 11px;
-      background: #fff;
-      color: rgba(0,0,0,.88);
-      font-size: 14px;
-    }
-
-    .drawer-footer {
-      height: 53px;
-      border-top: 1px solid #f0f0f0;
-      padding: 10px 16px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
     }
 
     .confirm-mask {
@@ -830,8 +838,8 @@
               <div class="ant-menu">
                 <div class="ant-menu-item"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
                 <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="ant-menu-arrow">›</span></div>
-                <div class="ant-submenu-title open"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="ant-menu-arrow">⌄</span></div>
-                <div class="ant-menu-item child selected">录播课</div>
+                <div class="ant-submenu-title open"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程中心</span></span><span class="ant-menu-arrow">⌄</span></div>
+                <div class="ant-menu-item child selected">线上课</div>
                 <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="ant-menu-arrow">›</span></div>
                 <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="ant-menu-arrow">›</span></div>
                 <div class="ant-submenu-title"><span class="ant-menu-icon-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="ant-menu-arrow">›</span></div>
@@ -843,7 +851,7 @@
           <section class="meedu-right">
             <header class="meedu-header">
               <div class="meedu-main-header">
-                <div class="meedu-page-name">录播课</div>
+                <div class="meedu-page-name">线上课</div>
                 <div class="meedu-device-bar">
                   <div class="meedu-device-item" onclick="toast('打开学员端访问二维码')">
                     <img src="./meedu-admin-assets/focus-device.png" alt="">
@@ -857,180 +865,153 @@
 
             <main class="meedu-main">
               <div class="meedu-main-body">
-                <div class="float-left j-b-flex mb-30 meedu-course-actions">
-                  <div class="d-flex">
-                    <button class="ant-btn ant-btn-primary" onclick="toast('跳转：/course/vod/create')">新建录播课</button>
-                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('跳转：/course/vod/category/index')">录播课分类</button>
-                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('跳转：/course/vod/video-import')">课时批量导入</button>
-                    <div class="option-link" onclick="toast('跳转：播放器配置')">
-                      <div class="link">
-                        <img src="./meedu-admin-assets/icon-option.png" alt="">
-                        播放器配置
+                <div class="tree-main-body">
+                  <aside class="tree-left-panel">
+                    <div class="filter-tabs">
+                      <button class="filter-tab active" type="button">分类</button>
+                      <button class="filter-tab" type="button" onclick="toast('切换到组织范围筛选')">组织范围</button>
+                    </div>
+                    <div class="filter-tree">
+                      <div class="tree-group-title">课程分类</div>
+                      <div class="tree-item active"><span>全部分类</span><span class="count">18</span></div>
+                      <div class="tree-item"><span>社区治理</span><span class="count">6</span></div>
+                      <div class="tree-item child"><span>矛盾调解</span><span class="count">3</span></div>
+                      <div class="tree-item child"><span>居民协商</span><span class="count">3</span></div>
+                      <div class="tree-item"><span>安全应急</span><span class="count">5</span></div>
+                      <div class="tree-item child"><span>消防安全</span><span class="count">2</span></div>
+                      <div class="tree-item child"><span>防灾减灾</span><span class="count">3</span></div>
+                      <div class="tree-item"><span>便民服务</span><span class="count">4</span></div>
+                      <div class="tree-item"><span>心理健康</span><span class="count">3</span></div>
+                    </div>
+                  </aside>
+
+                  <section class="tree-right-panel">
+                    <div class="float-left mb-30" style="font-size:20px;font-weight:600;color:#333;">线上课 | 全部分类</div>
+                    <div class="float-left j-b-flex mb-30 meedu-course-actions">
+                      <div class="d-flex">
+                        <button class="ant-btn ant-btn-primary" onclick="toast('跳转：新建课程')">新建课程</button>
+                      </div>
+                      <div class="d-flex">
+                        <div class="d-flex" style="margin-right:24px;">
+                          <span style="margin-right:8px;font-size:14px;color:rgba(0,0,0,.88);">课程名称：</span>
+                          <input class="ant-input" placeholder="请输入名称关键字">
+                        </div>
+                        <button class="ant-btn ml-10" onclick="toast('重置筛选')">重 置</button>
+                        <button class="ant-btn ant-btn-primary ml-10" onclick="toast('执行查询')">查 询</button>
                       </div>
                     </div>
-                  </div>
-                  <div class="d-flex">
-                    <input class="ant-input" placeholder="课程名称关键字">
-                    <button class="ant-btn ml-10" onclick="toast('清空筛选')">清空</button>
-                    <button class="ant-btn ant-btn-primary ml-10" onclick="toast('执行筛选')">筛选</button>
-                    <div class="drawer-more ml-10" onclick="openDrawer()">
-                      <img src="./meedu-admin-assets/icon-filter.png" alt="">
-                      <span>更多</span>
-                    </div>
-                  </div>
-                </div>
 
-                <div class="float-left ant-table-wrapper">
-                  <table class="ant-table">
-                    <colgroup>
-                      <col style="width:6%">
-                      <col style="width:30%">
-                      <col style="width:12%">
-                      <col style="width:14%">
-                      <col style="width:8%">
-                      <col style="width:20%">
-                    </colgroup>
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>课程</th>
-                        <th>分类</th>
-                        <th>上架时间</th>
-                        <th>是否显示</th>
-                        <th>操作</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>19</td>
-                        <td>
-                          <div class="thumb-bar">
-                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-19.png" alt=""></div>
-                            <div><div class="thumb-title">社区矛盾调解沟通技巧</div></div>
-                          </div>
-                        </td>
-                        <td>心理健康</td>
-                        <td>2026-05-06 02:00</td>
-                        <td><span class="c-green">· 显示</span></td>
-                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
-                      </tr>
-                      <tr>
-                        <td>18</td>
-                        <td>
-                          <div class="thumb-bar">
-                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-18.png" alt=""></div>
-                            <div><div class="thumb-title">社区工作者情绪管理与职业倦怠预防</div></div>
-                          </div>
-                        </td>
-                        <td>心理健康</td>
-                        <td>2026-05-06 02:00</td>
-                        <td><span class="c-green">· 显示</span></td>
-                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
-                      </tr>
-                      <tr>
-                        <td>17</td>
-                        <td>
-                          <div class="thumb-bar">
-                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-17.png" alt=""></div>
-                            <div><div class="thumb-title">社区居民心理健康服务</div></div>
-                          </div>
-                        </td>
-                        <td>心理健康</td>
-                        <td>2026-05-06 02:00</td>
-                        <td><span class="c-green">· 显示</span></td>
-                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
-                      </tr>
-                      <tr>
-                        <td>16</td>
-                        <td>
-                          <div class="thumb-bar">
-                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-16.png" alt=""></div>
-                            <div><div class="thumb-title">社区反诈防骗宣传教育</div></div>
-                          </div>
-                        </td>
-                        <td>安全应急</td>
-                        <td>2026-05-06 02:00</td>
-                        <td><span class="c-green">· 显示</span></td>
-                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
-                      </tr>
-                      <tr>
-                        <td>15</td>
-                        <td>
-                          <div class="thumb-bar">
-                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-15.png" alt=""></div>
-                            <div><div class="thumb-title">自然灾害应急预案编制</div></div>
-                          </div>
-                        </td>
-                        <td>安全应急</td>
-                        <td>2026-05-06 02:00</td>
-                        <td><span class="c-green">· 显示</span></td>
-                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
-                      </tr>
-                      <tr>
-                        <td>14</td>
-                        <td>
-                          <div class="thumb-bar">
-                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-14.png" alt=""></div>
-                            <div><div class="thumb-title">社区消防安全管理</div></div>
-                          </div>
-                        </td>
-                        <td>安全应急</td>
-                        <td>2026-05-06 02:00</td>
-                        <td><span class="c-green">· 显示</span></td>
-                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
-                      </tr>
-                      <tr>
-                        <td>13</td>
-                        <td>
-                          <div class="thumb-bar">
-                            <div class="thumb"><img src="./meedu-admin-assets/course-cover-13.png" alt=""></div>
-                            <div><div class="thumb-title">社区活动策划与执行</div></div>
-                          </div>
-                        </td>
-                        <td>便民服务</td>
-                        <td>2026-05-06 02:00</td>
-                        <td><span class="c-green">· 显示</span></td>
-                        <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时管理')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学员')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：附件管理')">附件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="ant-pagination">
-                    <span>共 18 条</span>
-                    <span class="page-btn">‹</span>
-                    <span class="page-btn active">1</span>
-                    <span class="page-btn">2</span>
-                    <span class="page-btn">›</span>
-                    <select class="page-size"><option>10 条/页</option><option>20 条/页</option></select>
-                  </div>
+                    <div class="float-left ant-table-wrapper">
+                      <table class="ant-table">
+                        <colgroup>
+                          <col style="width:30%">
+                          <col style="width:14%">
+                          <col style="width:20%">
+                          <col style="width:10%">
+                          <col style="width:10%">
+                          <col style="width:10%">
+                          <col style="width:16%">
+                        </colgroup>
+                        <thead>
+                          <tr>
+                            <th>课程名称</th>
+                            <th>课程分类</th>
+                            <th>适用组织</th>
+                            <th>必修/选修</th>
+                            <th>创建人</th>
+                            <th>上架时间</th>
+                            <th>操作</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>
+                              <div class="thumb-bar">
+                                <div class="thumb"><img src="./meedu-admin-assets/course-cover-19.png" alt=""></div>
+                                <div><div class="thumb-title">社区矛盾调解沟通技巧</div></div>
+                              </div>
+                            </td>
+                            <td>社区治理</td>
+                            <td>白云区 / 同和街道、京溪街道</td>
+                            <td>必修课</td>
+                            <td>周明远</td>
+                            <td>2026-05-26</td>
+                            <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学习记录')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时列表')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课件管理')">课件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="thumb-bar">
+                                <div class="thumb"><img src="./meedu-admin-assets/course-cover-18.png" alt=""></div>
+                                <div><div class="thumb-title">社区工作者情绪管理与职业倦怠预防</div></div>
+                              </div>
+                            </td>
+                            <td>心理健康</td>
+                            <td>白云区全域</td>
+                            <td>选修课</td>
+                            <td>许雅婷</td>
+                            <td>2026-05-23</td>
+                            <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学习记录')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时列表')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课件管理')">课件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="thumb-bar">
+                                <div class="thumb"><img src="./meedu-admin-assets/course-cover-17.png" alt=""></div>
+                                <div><div class="thumb-title">社区居民心理健康服务</div></div>
+                              </div>
+                            </td>
+                            <td>心理健康</td>
+                            <td>白云区 / 三元里街道</td>
+                            <td>选修课</td>
+                            <td>陈若海</td>
+                            <td>2026-05-20</td>
+                            <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学习记录')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时列表')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课件管理')">课件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="thumb-bar">
+                                <div class="thumb"><img src="./meedu-admin-assets/course-cover-16.png" alt=""></div>
+                                <div><div class="thumb-title">社区反诈防骗宣传教育</div></div>
+                              </div>
+                            </td>
+                            <td>安全应急</td>
+                            <td>白云区 / 同德街道、石井街道</td>
+                            <td>必修课</td>
+                            <td>林佩雯</td>
+                            <td>2026-05-18</td>
+                            <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学习记录')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时列表')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课件管理')">课件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <div class="thumb-bar">
+                                <div class="thumb"><img src="./meedu-admin-assets/course-cover-15.png" alt=""></div>
+                                <div><div class="thumb-title">自然灾害应急预案编制</div></div>
+                              </div>
+                            </td>
+                            <td>安全应急</td>
+                            <td>白云区 / 京溪街道</td>
+                            <td>必修课</td>
+                            <td>黄俊杰</td>
+                            <td>2026-05-16</td>
+                            <td><span class="ant-space"><button class="ant-btn ant-btn-link" onclick="toast('跳转：课程学习记录')">学员</button><span class="dropdown-wrap"><button class="ant-btn ant-btn-link">更多⌄</button><span class="more-menu"><button class="ant-btn ant-btn-link" onclick="toast('跳转：编辑课程')">编辑</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课时列表')">课时</button><button class="ant-btn ant-btn-link" onclick="toast('跳转：课件管理')">课件</button><button class="ant-btn ant-btn-link c-red" onclick="openConfirm()">删除</button></span></span></span></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="ant-pagination">
+                        <span>共 18 条</span>
+                        <span class="page-btn">‹</span>
+                        <span class="page-btn active">1</span>
+                        <span class="page-btn">2</span>
+                        <span class="page-btn">›</span>
+                        <select class="page-size"><option>10 条/页</option><option>20 条/页</option></select>
+                      </div>
+                    </div>
+                  </section>
                 </div>
               </div>
             </main>
           </section>
         </div>
       </section>
-    </div>
-  </div>
-
-  <div id="drawerMask" class="meedu-drawer-mask">
-    <div class="meedu-drawer">
-      <div class="drawer-head">
-        <span>更多筛选</span>
-        <span class="drawer-close" onclick="closeDrawer()">×</span>
-      </div>
-      <div class="drawer-body">
-        <input class="ant-input" placeholder="课程名称关键字">
-        <select>
-          <option value="">分类</option>
-          <option>合伙人培训</option>
-          <option>社区工作人员</option>
-          <option>居民课堂</option>
-        </select>
-        <input class="ant-input" placeholder="课程ID">
-      </div>
-      <div class="drawer-footer">
-        <button class="ant-btn" onclick="toast('清空筛选');closeDrawer()">清空</button>
-        <button class="ant-btn ant-btn-primary" onclick="toast('执行筛选');closeDrawer()">筛选</button>
-      </div>
     </div>
   </div>
 
@@ -1051,18 +1032,9 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    const drawer = document.getElementById("drawerMask");
     const confirmMask = document.getElementById("confirmMask");
     const toastNode = document.getElementById("toast");
     let toastTimer = null;
-
-    function openDrawer() {
-      drawer.classList.add("show");
-    }
-
-    function closeDrawer() {
-      drawer.classList.remove("show");
-    }
 
     function openConfirm() {
       confirmMask.classList.add("show");

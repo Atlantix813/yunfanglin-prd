@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MeEdu H5 个人中心复刻</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #fff;
+      color: #1f2937;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+
+    .workbench {
+      min-height: 100vh;
+      width: 430px;
+      margin: 0;
+      background: #fff;
+    }
+
+    .phone-shell {
+      width: 430px;
+      min-height: 932px;
+      background: #fff;
+    }
+
+    .phone-screen {
+      position: relative;
+      width: 430px;
+      min-height: 932px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .meedu-page {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background: #fff;
+      padding-bottom: 62px;
+    }
+
+    .user-icon {
+      width: 100%;
+      background: #fff;
+      height: 25px;
+      box-sizing: border-box;
+      display: flex;
+    }
+
+    .user-info-box {
+      width: 100%;
+      background: #fff;
+      height: auto;
+      box-sizing: border-box;
+      padding: 25px 15px 30px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .user-avatar-box {
+      width: auto;
+      height: 64px;
+      box-sizing: border-box;
+      padding-right: 15px;
+      flex-shrink: 0;
+    }
+
+    .user-avatar-box img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: block;
+    }
+
+    .user-body {
+      flex: 1;
+      height: 64px;
+      text-align: left;
+      min-width: 0;
+    }
+
+    .user-nickname {
+      width: 100%;
+      padding-top: 10px;
+      padding-bottom: 15px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      line-height: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .role-name {
+      width: 100%;
+      font-size: 13px;
+      font-weight: 400;
+      color: #666;
+      line-height: 13px;
+    }
+
+    .user-back {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    .user-back img {
+      width: 15px;
+      height: 15px;
+      display: block;
+    }
+
+    .user-banner-item {
+      width: 100%;
+      height: auto;
+      background-color: white;
+      box-sizing: border-box;
+      padding: 20px 0;
+    }
+
+    .banner-body {
+      width: 100%;
+      height: auto;
+    }
+
+    .banner-body .item {
+      width: 100%;
+      height: 75px;
+      box-sizing: border-box;
+      padding: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .banner-body .item .icon {
+      width: 100%;
+      height: 35px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      text-align: left;
+      min-width: 0;
+    }
+
+    .banner-body .item .icon-img {
+      display: inline-block;
+      height: 35px;
+      flex-shrink: 0;
+    }
+
+    .banner-body .item .icon-img img {
+      width: 35px;
+      height: 35px;
+      margin-right: 15px;
+      display: block;
+    }
+
+    .banner-body .item .name {
+      width: 100%;
+      height: 15px;
+      font-size: 15px;
+      font-weight: 400;
+      color: #333;
+      line-height: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .banner-body .item .arrow-icon {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+    }
+
+    .banner-body .item .arrow-icon img {
+      width: 15px;
+      height: 15px;
+      display: block;
+    }
+
+    .tech-support {
+      width: 100%;
+      height: auto;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      text-align: center;
+      margin-bottom: 53px;
+    }
+
+    .tech-support .inline-text {
+      display: inline-block;
+      height: 42px;
+      font-size: 18px;
+      font-weight: 600;
+      line-height: 42px;
+      color: #9ca3af;
+      letter-spacing: 2px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 62px;
+      box-shadow: 0 -1px 4px rgba(0, 0, 0, .04);
+      background: #fff;
+      z-index: 100;
+      display: flex;
+      align-items: stretch;
+    }
+
+    .footer-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1px;
+      color: #999;
+      font-size: 10px;
+      line-height: 14px;
+    }
+
+    .footer-item img {
+      width: 28px;
+      height: 28px;
+      display: block;
+    }
+
+    .footer-item.active {
+      color: #333;
+    }
+
+    .toast {
+      position: absolute;
+      left: 50%;
+      bottom: 78px;
+      transform: translateX(-50%) translateY(10px);
+      min-width: 150px;
+      max-width: 260px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(31, 41, 55, .92);
+      color: #fff;
+      font-size: 12px;
+      text-align: center;
+      line-height: 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: .18s;
+      z-index: 120;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 430px) {
+      .workbench,
+      .phone-shell,
+      .phone-screen {
+        width: 100vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="workbench">
+    <div class="phone-shell">
+      <div class="phone-screen">
+        <div class="meedu-page">
+          <div class="user-icon"></div>
+
+          <div class="user-info-box" data-toast="跳转：/member/profile">
+            <div class="user-avatar-box">
+              <img src="./meedu-assets/live-member-avatar.png" alt="头像">
+            </div>
+            <div class="user-body">
+              <div class="user-nickname">体验用户</div>
+              <div class="role-name">普通会员</div>
+            </div>
+            <div class="user-back">
+              <img src="./meedu-assets/back.png" alt="">
+            </div>
+          </div>
+
+          <div class="user-banner-item">
+            <div class="banner-body">
+              <div class="item" data-toast="跳转：/messages">
+                <div class="icon">
+                  <div class="icon-img">
+                    <img src="./meedu-assets/message.png" alt="">
+                  </div>
+                  <div class="name">我的消息</div>
+                </div>
+                <div class="arrow-icon">
+                  <img src="./meedu-assets/back.png" alt="">
+                </div>
+              </div>
+
+              <div class="item" data-toast="跳转：/member/setting">
+                <div class="icon">
+                  <div class="icon-img">
+                    <img src="./meedu-assets/setting.png" alt="">
+                  </div>
+                  <div class="name">关于平台</div>
+                </div>
+                <div class="arrow-icon">
+                  <img src="./meedu-assets/back.png" alt="">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="tech-support">
+            <div class="inline-text">YUWAY</div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <div class="footer-item" data-toast="跳转：首页">
+            <img src="./meedu-assets/icon-home-n@2x.png" alt="">
+            <span>首页</span>
+          </div>
+          <div class="footer-item" data-toast="跳转：在学">
+            <img src="./meedu-assets/icon-study-n@2x.png" alt="">
+            <span>在学</span>
+          </div>
+          <div class="footer-item active" data-toast="当前页：我的">
+            <img src="./meedu-assets/icon-me-h@2x.png" alt="">
+            <span>我的</span>
+          </div>
+        </div>
+        <div id="toast" class="toast"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const toast = document.getElementById("toast");
+    let timer = null;
+    document.querySelectorAll("[data-toast]").forEach((node) => {
+      node.addEventListener("click", () => {
+        toast.textContent = node.getAttribute("data-toast");
+        toast.classList.add("show");
+        clearTimeout(timer);
+        timer = setTimeout(() => toast.classList.remove("show"), 1300);
+      });
+    });
+  </script>
+</body>
+</html>

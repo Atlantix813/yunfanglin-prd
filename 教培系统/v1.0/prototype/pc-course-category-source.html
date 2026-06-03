@@ -3,154 +3,564 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=1920, initial-scale=1" />
-  <title>录播课分类管理</title>
+  <title>分类管理</title>
   <style>
     * { box-sizing: border-box; }
-    body { width: 1920px; min-height: 1080px; margin: 0; background: #eef2f7; overflow: hidden; color: #333; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; }
-    .yun-shell { width: 1920px; min-height: 1080px; background: #f7f8fa; }
-    .yun-top { height: 48px; background: #3491fa; color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-    .yun-brand { width: 180px; display: flex; align-items: center; gap: 12px; font-weight: 600; letter-spacing: .5px; }
-    .hamburger { width: 20px; height: 20px; display: flex; flex-direction: column; justify-content: center; gap: 3px; }
-    .hamburger span { display: block; width: 18px; height: 2px; background: #fff; border-radius: 1px; }
-    .yun-user { display: flex; align-items: center; gap: 20px; font-size: 13px; }
-    .yun-body { display: flex; min-height: 1032px; }
-    .yun-menu { width: 180px; background: #fff; border-right: 1px solid #e5e6eb; padding: 10px 0; flex-shrink: 0; }
-    .yun-menu-title { height: 32px; display: flex; align-items: center; padding: 0 16px; color: #a9aeb8; font-size: 12px; }
-    .yun-item { height: 44px; display: flex; align-items: center; gap: 10px; padding: 0 12px 0 16px; color: #4e5969; font-size: 14px; }
-    .yun-item.active { background: #3491fa; color: #fff; }
-    .yun-icon { width: 18px; height: 18px; flex-shrink: 0; }
-    .embed { flex: 1; min-width: 0; display: flex; background: #f1f2f9; }
-    .meedu-side { width: 200px; height: 1032px; background: #fff; display: flex; flex-direction: column; flex-shrink: 0; border-right: 1px solid #f2f3f5; }
-    .meedu-logo { position: sticky; top: 0; height: 56px; z-index: 10; background: #fff; display: flex; align-items: center; }
-    .meedu-logo img { width: 128px; height: auto; max-height: 52px; object-fit: contain; margin-left: 20px; }
-    .meedu-menu { width: 200px; height: 100%; overflow-y: auto; padding-top: 22px; background: #fff; color: rgba(0,0,0,.88); font-size: 14px; }
-    .meedu-item, .meedu-sub-title { height: 56px; line-height: 56px; padding-left: 24px; padding-right: 16px; display: flex; align-items: center; gap: 10px; cursor: pointer; color: rgba(0,0,0,.88); }
-    .meedu-sub-title { justify-content: space-between; }
-    .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .meedu-item.child { padding-left: 74px; font-size: 14px; }
-    .meedu-item.selected { background: #3b9df6; color: #fff; }
-    .meedu-icon { width: 16px; height: 16px; color: #606266; flex: 0 0 auto; }
-    .arrow { font-size: 10px; color: rgba(0,0,0,.45); }
-    .meedu-main { width: calc(100% - 200px); display: flex; flex-direction: column; background: #f1f2f9; min-width: 0; }
-    .meedu-head { width: 100%; height: 56px; background: #fff; z-index: 10; display: flex; align-items: center; justify-content: space-between; }
-    .meedu-title { flex: 1; padding-left: 30px; font-size: 20px; font-weight: 600; color: #333; line-height: 56px; text-align: left; }
-    .meedu-actions { display: flex; align-items: center; padding-right: 30px; gap: 18px; color: #606266; font-size: 14px; }
-    .meedu-content { height: calc(1032px - 56px); padding: 20px; overflow: auto; flex: 1; }
-    .panel { width: 100%; min-width: 1180px; background-color: #fff; padding: 30px; border-radius: 15px; min-height: calc(100% - 40px); box-shadow: 0 2px 4px rgba(102,102,102,.05); text-align: left; }
-    .back-bar { height: 32px; display: flex; align-items: center; gap: 10px; color: #333; font-size: 18px; font-weight: 600; margin-bottom: 30px; }
-    .back-icon { width: 28px; height: 28px; border: 1px solid #e5e6eb; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #606266; font-size: 18px; cursor: pointer; }
-    .toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 30px; }
-    .btn { height: 32px; padding: 4px 15px; border: 1px solid #d9d9d9; background: #fff; border-radius: 3px; color: rgba(0,0,0,.88); cursor: pointer; font-size: 14px; font-family: inherit; display: inline-flex; align-items: center; justify-content: center; }
-    .btn.primary { border: none; background: #3ca7fa; color: #fff; }
-    .btn.link { border: 0; background: transparent; height: auto; padding: 0; color: #409eff; }
-    .btn.danger { color: #ff4d4f; }
-    .table-wrap { width: 100%; overflow: auto; }
-    .table { width: 100%; border-collapse: collapse; table-layout: fixed; color: rgba(0,0,0,.88); font-size: 14px; }
-    .table th { height: 55px; padding: 16px; background: #fafafa; color: rgba(0,0,0,.88); font-weight: 600; text-align: left; border-bottom: 1px solid #f0f0f0; }
-    .table td { height: 64px; padding: 16px; border-bottom: 1px solid #f0f0f0; vertical-align: middle; background: #fff; }
-    .table tr:hover td { background: #fafafa; }
-    .child-name { padding-left: 24px; color: #4e5969; }
-    .op-space { display: inline-flex; align-items: center; gap: 14px; }
-    .pagination { display: flex; justify-content: flex-end; align-items: center; gap: 8px; padding-top: 20px; color: rgba(0,0,0,.65); font-size: 14px; }
-    .page-btn { min-width: 32px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; background: #fff; }
-    .page-btn.active { background: #409eff; color: #fff; border-color: #409eff; }
-    .modal-mask { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 99; align-items: center; justify-content: center; }
+    body {
+      margin: 0;
+      width: 1920px;
+      min-height: 1080px;
+      overflow: hidden;
+      background: #eef2f7;
+      color: #272e3b;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
+    .yfl-shell { width: 1920px; min-height: 1080px; background: #f7f8fa; }
+    .yfl-top {
+      height: 48px;
+      background: #3491fa;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    }
+    .yfl-brand {
+      width: 180px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+    .hamburger {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+    }
+    .hamburger span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      background: #fff;
+      border-radius: 1px;
+    }
+    .yfl-user {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 13px;
+    }
+    .yfl-user span {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 4px;
+    }
+    .yfl-body { display: flex; min-height: 1032px; }
+    .yfl-sidebar {
+      width: 180px;
+      background: #fff;
+      border-right: 1px solid #e5e6eb;
+      padding: 10px 0;
+      flex-shrink: 0;
+    }
+    .yfl-menu-title {
+      height: 32px;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      color: #a9aeb8;
+      font-size: 12px;
+    }
+    .yfl-menu-item {
+      height: 44px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px 0 16px;
+      color: #4e5969;
+      font-size: 14px;
+    }
+    .yfl-menu-item.active {
+      background: #3491fa;
+      color: #fff;
+      font-weight: 500;
+    }
+    .yfl-menu-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .embed {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      background: #f1f2f9;
+    }
+    .playedu-side {
+      width: 200px;
+      height: 1032px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      border-right: 1px solid #f2f3f5;
+    }
+    .playedu-logo {
+      height: 56px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .playedu-logo img {
+      width: 128px;
+      height: auto;
+      max-height: 52px;
+      object-fit: contain;
+      margin-left: 20px;
+    }
+    .playedu-menu {
+      width: 200px;
+      height: calc(1032px - 56px);
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding-top: 24px;
+      background: #fff;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+    }
+    .menu-item,
+    .submenu-title {
+      height: 56px;
+      line-height: 56px;
+      padding: 0 16px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      color: rgba(0,0,0,.88);
+    }
+    .menu-item.selected {
+      background: #3ca7fa;
+      color: #fff;
+      font-weight: 500;
+    }
+    .menu-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .menu-icon {
+      width: 16px;
+      height: 16px;
+      flex: 0 0 auto;
+      color: #606266;
+    }
+    .menu-arrow { font-size: 12px; color: rgba(0,0,0,.45); }
+    .playedu-main {
+      width: calc(100% - 200px);
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      background: #f1f2f9;
+    }
+    .playedu-head {
+      width: 100%;
+      height: 56px;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .playedu-title {
+      flex: 1;
+      padding-left: 30px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #333;
+      line-height: 56px;
+      text-align: left;
+    }
+    .playedu-actions {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-right: 30px;
+      color: #606266;
+      font-size: 14px;
+    }
+    .playedu-content {
+      height: calc(1032px - 56px);
+      padding: 20px;
+      overflow: auto;
+      flex: 1;
+    }
+    .toolbar {
+      width: 100%;
+      background: #fff;
+      border-radius: 15px;
+      padding: 24px 30px;
+      box-shadow: 0 2px 4px rgba(102,102,102,.05);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .btn {
+      height: 32px;
+      padding: 4px 15px;
+      border: 1px solid #d9d9d9;
+      background: #fff;
+      border-radius: 3px;
+      color: rgba(0,0,0,.88);
+      cursor: pointer;
+      font-size: 14px;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+    .btn.primary {
+      border: 0;
+      background: #3ca7fa;
+      color: #fff;
+    }
+    .helper-text {
+      color: #909399;
+      font-size: 13px;
+    }
+    .tree-panel {
+      width: 100%;
+      min-height: 760px;
+      background: #fff;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 2px 4px rgba(102,102,102,.05);
+    }
+    .category-tree {
+      width: 366px;
+    }
+    .tree-node {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 1px solid #f3f4f6;
+      padding: 0 6px;
+    }
+    .tree-node:last-child { border-bottom: 0; }
+    .tree-left {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #111827;
+    }
+    .tree-name {
+      font-size: 14px;
+      color: rgba(0,0,0,.88);
+    }
+    .tree-name.child { padding-left: 24px; color: #4b5563; }
+    .drag-icon {
+      width: 24px;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 18px;
+      cursor: grab;
+    }
+    .tree-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      color: #9ca3af;
+      font-size: 18px;
+    }
+    .tree-actions span {
+      cursor: pointer;
+    }
+    .tree-actions .danger { color: #ff4d4f; }
+    .modal-mask {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 99;
+      align-items: center;
+      justify-content: center;
+    }
     .modal-mask.show { display: flex; }
-    .modal { width: 800px; background: #fff; border-radius: 8px; box-shadow: 0 8px 30px rgba(0,0,0,.2); overflow: hidden; }
-    .modal-head { height: 52px; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f0f0f0; font-weight: 600; }
-    .modal-close { font-size: 22px; color: #909399; cursor: pointer; }
-    .modal-body { padding: 30px 32px 10px; min-height: 208px; }
-    .modal-foot { height: 64px; padding: 0 20px; display: flex; align-items: center; justify-content: flex-end; gap: 10px; border-top: 1px solid #f0f0f0; }
-    .form-row { display: flex; align-items: flex-start; min-height: 54px; margin-bottom: 18px; }
-    .form-label { width: 120px; padding-right: 16px; line-height: 32px; text-align: right; color: rgba(0,0,0,.88); }
-    .form-label.required::before { content: "*"; color: #ff4d4f; margin-right: 4px; }
-    .form-field { flex: 1; display: flex; align-items: center; gap: 10px; }
-    .input, .select { width: 300px; height: 32px; border: 1px solid #d9d9d9; border-radius: 6px; padding: 4px 11px; font-size: 14px; outline: none; background: #fff; color: rgba(0,0,0,.88); font-family: inherit; }
-    .help { color: #909399; font-size: 13px; line-height: 32px; }
-    .confirm { width: 420px; background: #fff; border-radius: 8px; padding: 26px 24px 20px; box-shadow: 0 6px 16px rgba(0,0,0,.12); }
-    .confirm-title { display: flex; align-items: center; gap: 10px; color: rgba(0,0,0,.88); font-size: 16px; font-weight: 600; margin-bottom: 12px; }
-    .confirm-icon { width: 22px; height: 22px; border-radius: 50%; background: #faad14; color: #fff; display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; }
-    .confirm-content { padding-left: 32px; color: rgba(0,0,0,.65); line-height: 22px; }
-    .confirm-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 24px; }
-    .toast { position: fixed; top: 70px; right: 34px; min-width: 160px; padding: 10px 14px; border-radius: 6px; background: rgba(31,41,55,.92); color: #fff; font-size: 13px; opacity: 0; transform: translateY(-10px); transition: .18s; z-index: 120; text-align: center; }
+    .modal {
+      width: 760px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.2);
+      overflow: hidden;
+    }
+    .modal-head {
+      height: 52px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #f0f0f0;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .modal-close {
+      font-size: 22px;
+      color: #909399;
+      cursor: pointer;
+    }
+    .modal-body {
+      padding: 30px 32px 10px;
+      min-height: 208px;
+    }
+    .modal-foot {
+      height: 64px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      border-top: 1px solid #f0f0f0;
+    }
+    .form-row {
+      display: flex;
+      align-items: flex-start;
+      min-height: 54px;
+      margin-bottom: 18px;
+    }
+    .form-label {
+      width: 120px;
+      padding-right: 16px;
+      line-height: 32px;
+      text-align: right;
+      color: rgba(0,0,0,.88);
+    }
+    .form-label.required::before {
+      content: "*";
+      color: #ff4d4f;
+      margin-right: 4px;
+    }
+    .form-field {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .input,
+    .select {
+      width: 300px;
+      height: 32px;
+      border: 1px solid #d9d9d9;
+      border-radius: 6px;
+      padding: 4px 11px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+      color: rgba(0,0,0,.88);
+      font-family: inherit;
+    }
+    .warning-card {
+      width: 480px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 26px 24px 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    }
+    .warning-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(0,0,0,.88);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .warning-icon {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #faad14;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .warning-content {
+      padding-left: 32px;
+      color: rgba(0,0,0,.65);
+      line-height: 24px;
+    }
+    .warning-content .linklike {
+      color: #ff4d4f;
+    }
+    .warning-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 24px;
+    }
+    .confirm-card {
+      width: 420px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 26px 24px 20px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.12);
+    }
+    .toast {
+      position: fixed;
+      top: 70px;
+      right: 34px;
+      min-width: 160px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      background: rgba(31,41,55,.92);
+      color: #fff;
+      font-size: 13px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: .18s;
+      z-index: 120;
+      text-align: center;
+    }
     .toast.show { opacity: 1; transform: translateY(0); }
-    /* yfl-menu-bg-normalize:start */
-    .yfl-body { min-height: 1032px; align-items: stretch; }
-    .embed-area { min-height: 1032px; }
-    .embed, .meedu-frame { height: 1032px; min-height: 1032px; align-items: stretch; background: #f1f2f9; overflow: hidden; }
-    .meedu-side, .meedu-left { width: 200px !important; min-width: 200px; height: 1032px !important; min-height: 1032px; background: #fff; flex-shrink: 0; }
-    .meedu-logo, .meedu-logo-wrap { height: 56px !important; min-height: 56px; display: flex; align-items: center; background: #fff; }
-    .meedu-menu, .meedu-menu-box { width: 200px !important; height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); overflow-y: auto; overflow-x: hidden; padding-top: 24px !important; background: #fff; font-size: 14px; }
-    .ant-menu, .meedu-menu { width: 200px !important; background: #fff; }
-    .ant-menu-item, .ant-submenu-title, .meedu-item, .meedu-sub-title, .meedu-sub { height: 56px !important; min-height: 56px; line-height: 56px !important; padding: 0 16px 0 24px !important; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: rgba(0,0,0,.88); border-radius: 0; font-size: 14px; }
-    .ant-menu-item.child, .meedu-item.child { height: 50px !important; min-height: 50px; line-height: 50px !important; padding-left: 74px !important; padding-right: 16px !important; justify-content: flex-start; color: rgba(0,0,0,.88); }
-    .ant-menu-item.selected, .meedu-item.selected, .ant-menu-item.child.selected, .meedu-item.child.selected { background: #3ca7fa !important; color: #fff !important; font-weight: 500; }
-    .ant-submenu-title.open, .meedu-sub-title.open, .meedu-sub.open { color: #409eff; }
-    .ant-menu-icon-label, .meedu-label { display: flex; align-items: center; gap: 10px; min-width: 0; }
-    .menu-icon, .meedu-icon { width: 16px; height: 16px; flex: 0 0 auto; color: #606266; }
-    .ant-menu-arrow, .arrow { font-size: 12px; color: rgba(0,0,0,.45); }
-    .meedu-frame > .meedu-main, .embed > .meedu-main, .meedu-right { height: 1032px !important; min-height: 1032px; background: #f1f2f9; display: flex; flex-direction: column; min-width: 0; }
-    .meedu-content, .content, .meedu-right > .meedu-main { height: calc(1032px - 56px) !important; min-height: calc(1032px - 56px); background: #f1f2f9; overflow: auto; flex: 1 1 auto; }
-    .panel, .meedu-main-body, .work-grid { margin-bottom: 80px; }
-    .panel, .meedu-main-body { display: flow-root; }
-    /* yfl-menu-bg-normalize:end */
   </style>
 </head>
 <body>
-  <div class="yun-shell">
-    <header class="yun-top">
-      <div class="yun-brand">云芳邻管理后台 <div class="hamburger"><span></span><span></span><span></span></div></div>
-      <div class="yun-user"><span>白云区运营中心</span><span>消息</span><span>平台管理员</span></div>
+  <div class="yfl-shell">
+    <header class="yfl-top">
+      <div class="yfl-brand">云芳邻管理后台<div class="hamburger"><span></span><span></span><span></span></div></div>
+      <div class="yfl-user"><span>白云区运营中心</span><span>消息</span><span>平台管理员</span></div>
     </header>
-    <div class="yun-body">
-      <aside class="yun-menu">
-        <div class="yun-menu-title">云芳邻后台</div>
-        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>工作台</span></div>
-        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-8h6v8"/></svg><span>组织管理</span></div>
-        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>用户管理</span></div>
-        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>内容服务</span></div>
-        <div class="yun-item active"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>教培系统</span></div>
-        <div class="yun-item"><svg class="yun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据看板</span></div>
+
+    <div class="yfl-body">
+      <aside class="yfl-sidebar">
+        <div class="yfl-menu-title">云芳邻后台</div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>工作台</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V7l8-4 8 4v14"/><path d="M9 21v-8h6v8"/></svg><span>组织管理</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>用户管理</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h8M8 17h5"/></svg><span>内容服务</span></div>
+        <div class="yfl-menu-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>教培系统</span></div>
+        <div class="yfl-menu-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据看板</span></div>
       </aside>
+
       <section class="embed">
-        <aside class="meedu-side">
-          <div class="meedu-logo"><img src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
-          <nav class="meedu-menu">
-  <div class="meedu-item"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title open"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程</span></span><span class="arrow">⌄</span></div>
-  <div class="meedu-item child selected">录播课</div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="arrow">›</span></div>
-  <div class="meedu-sub-title"><span class="meedu-label"><svg class="meedu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="arrow">›</span></div>
-</nav>
+        <aside class="playedu-side">
+          <div class="playedu-logo"><img src="./meedu-admin-assets/logo.png" alt="YUWAY"></div>
+          <nav class="playedu-menu">
+            <div class="menu-item"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg><span>主页</span></span></div>
+            <div class="menu-item selected"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>分类管理</span></span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span>资源</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M4 4.5A2.5 2.5 0 0 1 6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5z"/></svg><span>课程中心</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/></svg><span>学员</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>运营</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-6"/></svg><span>数据</span></span><span class="menu-arrow">›</span></div>
+            <div class="submenu-title"><span class="menu-label"><svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.65 1.65 0 0 0 15 19.4"/></svg><span>系统</span></span><span class="menu-arrow">›</span></div>
+          </nav>
         </aside>
-        <main class="meedu-main">
-          <div class="meedu-head">
-            <div class="meedu-title">录播分类管理</div>
-            <div class="meedu-actions"><span>访问学员端</span><span>YUWAY ▾</span></div>
+
+        <main class="playedu-main">
+          <div class="playedu-head">
+            <div class="playedu-title">分类管理</div>
+            <div class="playedu-actions"><span>访问学员端</span><span>YUWAY ▾</span></div>
           </div>
-          <div class="meedu-content">
-            <div class="panel">
-              <div class="back-bar"><span class="back-icon" onclick="toast('返回录播课列表')">‹</span><span>录播分类管理</span></div>
-              <div class="toolbar"><button class="btn primary" id="addCategoryBtn">添加分类</button></div>
-              <div class="table-wrap">
-                <table class="table">
-                  <colgroup><col style="width:150px"><col><col style="width:180px"></colgroup>
-                  <thead><tr><th>排序</th><th>分类名</th><th>操作</th></tr></thead>
-                  <tbody>
-                    <tr><td>1</td><td>合伙人培训</td><td><span class="op-space"><button class="btn link" onclick="openEdit('合伙人培训','1','无-作为一级分类')">编辑</button><button class="btn link danger" onclick="openConfirm()">删除</button></span></td></tr>
-                    <tr><td>2</td><td><span class="child-name">├ 政策与准入</span></td><td><span class="op-space"><button class="btn link" onclick="openEdit('政策与准入','2','合伙人培训')">编辑</button><button class="btn link danger" onclick="openConfirm()">删除</button></span></td></tr>
-                    <tr><td>3</td><td><span class="child-name">├ 运营实务</span></td><td><span class="op-space"><button class="btn link" onclick="openEdit('运营实务','3','合伙人培训')">编辑</button><button class="btn link danger" onclick="openConfirm()">删除</button></span></td></tr>
-                    <tr><td>4</td><td>社区工作人员</td><td><span class="op-space"><button class="btn link" onclick="openEdit('社区工作人员','4','无-作为一级分类')">编辑</button><button class="btn link danger" onclick="openConfirm()">删除</button></span></td></tr>
-                    <tr><td>5</td><td><span class="child-name">├ 日常巡查</span></td><td><span class="op-space"><button class="btn link" onclick="openEdit('日常巡查','5','社区工作人员')">编辑</button><button class="btn link danger" onclick="openConfirm()">删除</button></span></td></tr>
-                    <tr><td>6</td><td><span class="child-name">├ 服务记录</span></td><td><span class="op-space"><button class="btn link" onclick="openEdit('服务记录','6','社区工作人员')">编辑</button><button class="btn link danger" onclick="openConfirm()">删除</button></span></td></tr>
-                    <tr><td>7</td><td>便民服务</td><td><span class="op-space"><button class="btn link" onclick="openEdit('便民服务','7','无-作为一级分类')">编辑</button><button class="btn link danger" onclick="openConfirm()">删除</button></span></td></tr>
-                  </tbody>
-                </table>
+
+          <div class="playedu-content">
+            <div class="toolbar">
+              <button class="btn primary" id="addCategoryBtn">新建分类</button>
+              <span class="helper-text">课程中心、图片库、视频库、课件库共用同一套分类树</span>
+            </div>
+
+            <div class="tree-panel">
+              <div class="category-tree">
+                <div class="tree-node">
+                  <div class="tree-left">
+                    <span class="drag-icon" title="可拖拽排序">⋮⋮</span>
+                    <span class="tree-name">社区治理</span>
+                  </div>
+                  <div class="tree-actions">
+                    <span title="编辑" onclick="openEdit('社区治理', '无-作为一级分类', '1')">✎</span>
+                    <span class="danger" title="删除" onclick="openWarning()">🗑</span>
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-left">
+                    <span class="drag-icon" title="可拖拽排序">⋮⋮</span>
+                    <span class="tree-name child">矛盾调解</span>
+                  </div>
+                  <div class="tree-actions">
+                    <span title="编辑" onclick="openEdit('矛盾调解', '社区治理', '2')">✎</span>
+                    <span class="danger" title="删除" onclick="openConfirm()">🗑</span>
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-left">
+                    <span class="drag-icon" title="可拖拽排序">⋮⋮</span>
+                    <span class="tree-name child">居民协商</span>
+                  </div>
+                  <div class="tree-actions">
+                    <span title="编辑" onclick="openEdit('居民协商', '社区治理', '3')">✎</span>
+                    <span class="danger" title="删除" onclick="openConfirm()">🗑</span>
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-left">
+                    <span class="drag-icon" title="可拖拽排序">⋮⋮</span>
+                    <span class="tree-name">安全应急</span>
+                  </div>
+                  <div class="tree-actions">
+                    <span title="编辑" onclick="openEdit('安全应急', '无-作为一级分类', '4')">✎</span>
+                    <span class="danger" title="删除" onclick="openWarning()">🗑</span>
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-left">
+                    <span class="drag-icon" title="可拖拽排序">⋮⋮</span>
+                    <span class="tree-name child">消防安全</span>
+                  </div>
+                  <div class="tree-actions">
+                    <span title="编辑" onclick="openEdit('消防安全', '安全应急', '5')">✎</span>
+                    <span class="danger" title="删除" onclick="openConfirm()">🗑</span>
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-left">
+                    <span class="drag-icon" title="可拖拽排序">⋮⋮</span>
+                    <span class="tree-name child">防灾减灾</span>
+                  </div>
+                  <div class="tree-actions">
+                    <span title="编辑" onclick="openEdit('防灾减灾', '安全应急', '6')">✎</span>
+                    <span class="danger" title="删除" onclick="openConfirm()">🗑</span>
+                  </div>
+                </div>
+                <div class="tree-node">
+                  <div class="tree-left">
+                    <span class="drag-icon" title="可拖拽排序">⋮⋮</span>
+                    <span class="tree-name">便民服务</span>
+                  </div>
+                  <div class="tree-actions">
+                    <span title="编辑" onclick="openEdit('便民服务', '无-作为一级分类', '7')">✎</span>
+                    <span class="danger" title="删除" onclick="openWarning()">🗑</span>
+                  </div>
+                </div>
               </div>
-              <div class="pagination"><span>共 7 条</span><span class="page-btn">‹</span><span class="page-btn active">1</span><span class="page-btn">›</span><span class="page-btn" style="width:auto;padding:0 12px;">10 条/页</span></div>
             </div>
           </div>
         </main>
@@ -160,71 +570,113 @@
 
   <div class="modal-mask" id="categoryMask">
     <div class="modal">
-      <div class="modal-head"><span id="modalTitle">添加分类</span><span class="modal-close" onclick="closeCategory()">×</span></div>
+      <div class="modal-head">
+        <span id="modalTitle">新建分类</span>
+        <span class="modal-close" onclick="closeCategory()">×</span>
+      </div>
       <div class="modal-body">
         <div class="form-row">
           <div class="form-label required">所属上级</div>
-          <div class="form-field"><select class="select" id="parentSelect"><option>无-作为一级分类</option><option>合伙人培训</option><option>社区工作人员</option><option>便民服务</option></select></div>
+          <div class="form-field">
+            <select class="select" id="parentSelect">
+              <option>无-作为一级分类</option>
+              <option>社区治理</option>
+              <option>安全应急</option>
+              <option>便民服务</option>
+            </select>
+          </div>
         </div>
         <div class="form-row">
           <div class="form-label required">分类名称</div>
-          <div class="form-field"><input class="input" id="categoryName" value="" placeholder="请输入分类名称"></div>
+          <div class="form-field">
+            <input class="input" id="categoryName" value="" placeholder="请输入分类名称" />
+          </div>
         </div>
         <div class="form-row">
           <div class="form-label required">升序</div>
-          <div class="form-field"><input class="input" id="categorySort" type="number" value="" placeholder="填输入排序"><span class="help">填写整数，数字越小排序越靠前</span></div>
+          <div class="form-field">
+            <input class="input" id="categorySort" type="number" value="" placeholder="请输入排序" />
+            <span class="helper-text">数字越小，排序越靠前</span>
+          </div>
         </div>
       </div>
-      <div class="modal-foot"><button class="btn" onclick="closeCategory()">取消</button><button class="btn primary" onclick="saveCategory()">确定</button></div>
+      <div class="modal-foot">
+        <button class="btn" onclick="closeCategory()">取消</button>
+        <button class="btn primary" onclick="saveCategory()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="warningMask">
+    <div class="warning-card">
+      <div class="warning-title"><span class="warning-icon">!</span><span>操作确认</span></div>
+      <div class="warning-content">
+        此分类已关联
+        <span class="linklike">（3 个线上课程）</span>
+        <span class="linklike">（2 个视频文件）</span>
+        <span class="linklike">（1 个图片文件）</span>
+        ，请先解除关联再删除。
+      </div>
+      <div class="warning-actions">
+        <button class="btn primary" onclick="closeWarning()">好的</button>
+      </div>
     </div>
   </div>
 
   <div class="modal-mask" id="confirmMask">
-    <div class="confirm">
-      <div class="confirm-title"><span class="confirm-icon">!</span><span>操作确认</span></div>
-      <div class="confirm-content">确认删除此分类？</div>
-      <div class="confirm-actions"><button class="btn" onclick="closeConfirm()">取消</button><button class="btn primary" onclick="deleteCategory()">确认</button></div>
+    <div class="confirm-card">
+      <div class="warning-title"><span class="warning-icon">!</span><span>操作确认</span></div>
+      <div class="warning-content">确认删除此分类？</div>
+      <div class="warning-actions">
+        <button class="btn" onclick="closeConfirm()">取消</button>
+        <button class="btn primary" onclick="deleteCategory()">确认</button>
+      </div>
     </div>
   </div>
+
   <div class="toast" id="toast"></div>
   <script>
-    const categoryMask = document.getElementById('categoryMask');
-    const confirmMask = document.getElementById('confirmMask');
-    const addCategoryBtn = document.getElementById('addCategoryBtn');
-    const modalTitle = document.getElementById('modalTitle');
-    const parentSelect = document.getElementById('parentSelect');
-    const categoryName = document.getElementById('categoryName');
-    const categorySort = document.getElementById('categorySort');
+    const categoryMask = document.getElementById("categoryMask");
+    const warningMask = document.getElementById("warningMask");
+    const confirmMask = document.getElementById("confirmMask");
+    const addCategoryBtn = document.getElementById("addCategoryBtn");
+    const modalTitle = document.getElementById("modalTitle");
+    const parentSelect = document.getElementById("parentSelect");
+    const categoryName = document.getElementById("categoryName");
+    const categorySort = document.getElementById("categorySort");
 
-    addCategoryBtn.addEventListener('click', () => {
-      modalTitle.textContent = '添加分类';
-      parentSelect.value = '无-作为一级分类';
-      categoryName.value = '志愿服务培训';
-      categorySort.value = '8';
-      categoryMask.classList.add('show');
+    addCategoryBtn.addEventListener("click", () => {
+      modalTitle.textContent = "新建分类";
+      parentSelect.value = "无-作为一级分类";
+      categoryName.value = "心理健康";
+      categorySort.value = "8";
+      categoryMask.classList.add("show");
     });
 
-    function openEdit(name, sort, parent) {
-      modalTitle.textContent = '编辑分类';
+    function openEdit(name, parent, sort) {
+      modalTitle.textContent = "编辑分类";
       parentSelect.value = parent;
       categoryName.value = name;
       categorySort.value = sort;
-      categoryMask.classList.add('show');
+      categoryMask.classList.add("show");
     }
-    function closeCategory() { categoryMask.classList.remove('show'); }
-    function saveCategory() { closeCategory(); toast('保存成功'); }
-    function openConfirm() { confirmMask.classList.add('show'); }
-    function closeConfirm() { confirmMask.classList.remove('show'); }
-    function deleteCategory() { closeConfirm(); toast('删除成功'); }
+    function closeCategory() { categoryMask.classList.remove("show"); }
+    function saveCategory() { closeCategory(); toast("保存成功"); }
+    function openWarning() { warningMask.classList.add("show"); }
+    function closeWarning() { warningMask.classList.remove("show"); }
+    function openConfirm() { confirmMask.classList.add("show"); }
+    function closeConfirm() { confirmMask.classList.remove("show"); }
+    function deleteCategory() { closeConfirm(); toast("删除成功"); }
     function toast(text) {
-      const node = document.getElementById('toast');
+      const node = document.getElementById("toast");
       node.textContent = text;
-      node.classList.add('show');
+      node.classList.add("show");
       clearTimeout(window.__toastTimer);
-      window.__toastTimer = setTimeout(() => node.classList.remove('show'), 1300);
+      window.__toastTimer = setTimeout(() => node.classList.remove("show"), 1300);
     }
-    categoryMask.addEventListener('click', event => { if (event.target === categoryMask) closeCategory(); });
-    confirmMask.addEventListener('click', event => { if (event.target === confirmMask) closeConfirm(); });
+    categoryMask.addEventListener("click", event => { if (event.target === categoryMask) closeCategory(); });
+    warningMask.addEventListener("click", event => { if (event.target === warningMask) closeWarning(); });
+    confirmMask.addEventListener("click", event => { if (event.target === confirmMask) closeConfirm(); });
   </script>
 </body>
 </html>
