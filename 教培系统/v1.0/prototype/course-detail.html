@@ -1,559 +1,448 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>课程详情</title>
+  <title>教培系统课程详情</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html,
-    body {
-      width: 100%;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
       min-height: 100%;
       background: #fff;
       color: #171923;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
       -webkit-font-smoothing: antialiased;
     }
-
-    body {
-      overflow-x: hidden;
-    }
-
-    .meedu-page {
-      width: min(100vw, 430px);
+    body { overflow-x: hidden; }
+    .page {
+      width: 100%;
+      max-width: 430px;
       min-height: 100vh;
+      margin: 0;
       background: #fff;
-      padding-bottom: calc(53px + env(safe-area-inset-bottom, 0px));
-      overflow-x: hidden;
+      overflow: hidden;
     }
-
-    .navheader {
-      position: sticky;
-      top: 0;
-      z-index: 30;
+    .main-header {
       width: 100%;
       height: 50px;
-      background: #fff;
-      padding: 0 15px;
+      background: #ff4d4f;
+      padding: 0 20px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid #f1f2f6;
     }
-
-    .navheader .back {
-      position: absolute;
-      left: 15px;
+    .back-icon {
       width: 24px;
       height: 24px;
-      object-fit: contain;
-    }
-
-    .navheader .title {
-      width: 72%;
-      color: #171923;
-      font-size: 18px;
-      line-height: 18px;
-      font-weight: 500;
-      text-align: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .course-thumb {
-      position: relative;
-      width: 100%;
-      height: 242px;
-      overflow: hidden;
-      background: linear-gradient(180deg, #2b63ff 0%, #6258f2 48%, #2b2347 100%);
-    }
-
-    .course-thumb::before {
-      content: "";
-      position: absolute;
-      right: -42px;
-      top: -40px;
-      width: 196px;
-      height: 196px;
-      border-radius: 50%;
-      background: rgba(225, 232, 255, .78);
-    }
-
-    .course-thumb::after {
-      content: "";
-      position: absolute;
-      left: -8px;
-      bottom: -1px;
-      width: 150px;
-      height: 118px;
-      border-radius: 86px 86px 0 0;
-      background: rgba(220, 214, 255, .78);
-    }
-
-    .cover-lines {
-      position: absolute;
-      left: 31px;
-      top: 39px;
-      z-index: 2;
-      width: 180px;
-      height: 42px;
-      border-left: 1px solid rgba(255, 255, 255, .78);
-    }
-
-    .cover-lines span {
-      display: block;
-      height: 5px;
-      margin-left: 14px;
-      margin-bottom: 12px;
-      background: rgba(255, 255, 255, .9);
-    }
-
-    .cover-lines span:nth-child(1) {
-      width: 107px;
-    }
-
-    .cover-lines span:nth-child(2) {
-      width: 166px;
-    }
-
-    .cover-lines span:nth-child(3) {
-      width: 166px;
-    }
-
-    .cover-label {
-      position: absolute;
-      left: 31px;
-      bottom: 34px;
-      z-index: 2;
-      color: #fff;
-      font-family: Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size: 7px;
-      line-height: 14px;
-      font-weight: 700;
-      letter-spacing: 0;
-      text-transform: uppercase;
-    }
-
-    .course-title {
-      width: 100%;
-      padding: 15px 15px 0;
-      color: #171923;
-      background: #fff;
-      font-size: 15px;
-      line-height: 20px;
-      font-weight: 600;
-      word-break: break-word;
-      text-align: left;
-    }
-
-    .course-meta {
-      width: 100%;
-      min-height: 65px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 15px 14px;
-      background: #fff;
-    }
-
-    .learn-state {
-      color: #04c877;
-      font-size: 18px;
-      line-height: 30px;
-      font-weight: 600;
-    }
-
-    .course-count {
-      color: #999;
-      font-size: 13px;
-      line-height: 18px;
-    }
-
-    .line {
-      width: 100%;
-      height: 10px;
-      background: #f6f6f6;
-    }
-
-    .tabs {
-      position: sticky;
-      top: 50px;
-      z-index: 20;
-      width: 100%;
-      height: 55px;
-      background: #fff;
-      box-shadow: 0 2px 4px rgba(204, 204, 204, .2);
-      display: flex;
-      justify-content: space-between;
-      padding: 20px 30px;
-    }
-
-    .item-tab {
-      position: relative;
-      width: auto;
-      height: 15px;
       border: 0;
       background: transparent;
-      color: #333;
-      font: inherit;
-      font-size: 15px;
-      line-height: 15px;
-      cursor: pointer;
+      position: relative;
     }
-
-    .item-tab.active {
-      color: #3ca7fa;
-      font-weight: 600;
-    }
-
-    .item-tab.active::after {
+    .back-icon::before {
       content: "";
       position: absolute;
-      left: 5px;
-      top: 25px;
-      width: 20px;
-      height: 3px;
-      border-radius: 3px;
-      background: #3ca7fa;
+      left: 7px;
+      top: 5px;
+      width: 10px;
+      height: 10px;
+      border-left: 2px solid rgba(255,255,255,.95);
+      border-bottom: 2px solid rgba(255,255,255,.95);
+      transform: rotate(45deg);
     }
-
-    .tab-panel {
-      display: none;
+    .top-content {
       width: 100%;
-      padding: 20px 15px 15px;
-      color: #333;
-      background: #fff;
-      font-size: 14px;
-      line-height: 21px;
+      background: #ff4d4f;
+      padding: 8px 20px 20px;
+    }
+    .title {
+      width: 100%;
+      min-height: 48px;
+      font-size: 16px;
+      font-weight: 600;
+      color: rgba(255,255,255,.88);
+      line-height: 24px;
       text-align: left;
-    }
-
-    .tab-panel.active {
-      display: block;
-    }
-
-    .desc p {
-      margin-bottom: 12px;
-    }
-
-    .flow-card {
-      width: 100%;
-      margin-top: 14px;
-      padding: 12px;
-      border-radius: 4px;
-      background: #f6f6f6;
-    }
-
-    .flow-title {
-      margin-bottom: 8px;
-      color: #333;
-      font-size: 15px;
-      line-height: 20px;
-      font-weight: 700;
-    }
-
-    .flow-step {
-      display: flex;
-      align-items: flex-start;
-      margin-top: 8px;
-      color: #666;
-      font-size: 13px;
-      line-height: 19px;
-    }
-
-    .flow-num {
-      flex: 0 0 18px;
-      width: 18px;
-      height: 18px;
-      margin-right: 8px;
-      border-radius: 50%;
-      background: #3ca7fa;
-      color: #fff;
-      text-align: center;
-      font-size: 11px;
-      line-height: 18px;
-      font-weight: 700;
-    }
-
-    .chapter-item {
-      width: 100%;
-      margin-bottom: 10px;
-    }
-
-    .chapter-name {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 10px 0 20px;
-      color: #333;
-      font-size: 15px;
-      line-height: 20px;
-      font-weight: 700;
-    }
-
-    .chapter-name img {
-      width: 15px;
-      height: 15px;
-      transform: rotate(270deg);
-    }
-
-    .video-item {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 10px;
-      padding: 8px 10px;
-      border-radius: 4px;
-      background: #f6f6f6;
-      cursor: pointer;
-    }
-
-    .video-title {
-      width: 100%;
-      margin-bottom: 4px;
-      color: #333;
-      font-size: 14px;
-      line-height: 20px;
-      word-break: break-word;
-    }
-
-    .video-info {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: #999;
-      font-size: 12px;
-      line-height: 20px;
-    }
-
-    .video-progress {
-      color: #3ca7fa;
-    }
-
-    .attach-item {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      min-height: 54px;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 4px;
-      background: #f6f6f6;
-    }
-
-    .attach-item img {
-      width: 28px;
-      height: 28px;
-      margin-right: 10px;
-    }
-
-    .attach-title {
-      flex: 1;
-      min-width: 0;
-      color: #333;
-      font-size: 14px;
-      line-height: 20px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
       overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
     }
-
-    .attach-action {
-      color: #3ca7fa;
-      font-size: 13px;
-      line-height: 18px;
-      white-space: nowrap;
-    }
-
-    .bottom-bar {
-      position: fixed;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 40;
-      width: min(100vw, 430px);
-      height: calc(53px + env(safe-area-inset-bottom, 0px));
-      min-height: 53px;
+    .info-content {
+      width: 100%;
+      height: 80px;
       display: flex;
-      padding: 0 15px env(safe-area-inset-bottom, 0px);
-      border-top: 1px solid rgba(0, 0, 0, .1);
-      background: #fff;
+      align-items: center;
+      margin-bottom: 20px;
     }
-
-    .learn-button {
-      flex: 1;
-      height: 45px;
-      margin: 4px 0;
-      border: 0;
-      border-radius: 3px;
-      background: #3ca7fa;
+    .info { flex: 1; text-align: left; }
+    .record {
+      height: 20px;
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,.88);
+      line-height: 20px;
+      margin-top: 10px;
+    }
+    .record strong { font-size: 20px; }
+    .type {
+      height: 12px;
+      font-size: 12px;
       color: #fff;
+      line-height: 12px;
+      margin-top: 20px;
+    }
+    .progress-box {
+      width: 80px;
+      height: 80px;
+      position: relative;
+      flex: 0 0 80px;
+    }
+    .circle-track,
+    .circle-fill {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+    }
+    .circle-track {
+      border: 7px solid rgba(255,255,255,.3);
+    }
+    .circle-fill {
+      border: 7px solid transparent;
+      border-top-color: #fff;
+      border-right-color: #fff;
+      transform: rotate(45deg);
+    }
+    .circle-num {
+      position: absolute;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: inherit;
-      font-size: 15px;
-      line-height: 40px;
+      color: #fff;
+      font-size: 16px;
       font-weight: 600;
-      cursor: pointer;
     }
-
+    .other-content {
+      width: 100%;
+      border-radius: 16px 16px 0 0;
+      background: #fff;
+      padding: 20px;
+      margin-top: -20px;
+      position: relative;
+      z-index: 10;
+    }
+    .tabs {
+      width: 100%;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      margin-bottom: 20px;
+    }
+    .tab {
+      position: relative;
+      border: 0;
+      background: transparent;
+      color: rgba(0,0,0,.45);
+      font-size: 16px;
+      line-height: 24px;
+      padding: 0;
+    }
+    .tab.active {
+      color: rgba(0,0,0,.88);
+      font-weight: 600;
+    }
+    .tab.active::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -8px;
+      width: 20px;
+      height: 3px;
+      margin-left: -10px;
+      border-radius: 2px;
+      background: #ff4d4f;
+    }
+    .desc {
+      width: 100%;
+      color: rgba(0,0,0,.45);
+      font-size: 12px;
+      line-height: 18px;
+      text-align: left;
+    }
+    .line {
+      width: 100%;
+      height: 1px;
+      background: rgba(0,0,0,.05);
+      margin-top: 20px;
+    }
+    .hours-list-box { width: 100%; display: flex; flex-direction: column; }
+    .chapter-it { width: 100%; margin-top: 20px; }
+    .chapter-name {
+      width: 100%;
+      font-size: 15px;
+      font-weight: 500;
+      color: rgba(0,0,0,.88);
+      line-height: 15px;
+      text-align: left;
+      margin-bottom: 5px;
+    }
+    .hours-it { width: 100%; margin-top: 10px; }
+    .hour-item {
+      width: 100%;
+      background: #fafafa;
+      border-radius: 7px;
+      padding: 10px;
+      text-align: left;
+    }
+    .hour-top {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 16px;
+    }
+    .hour-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: rgba(0,0,0,.45);
+      font-size: 12px;
+      line-height: 16px;
+    }
+    .hour-status { color: #ff4d4f; font-size: 12px; line-height: 16px; }
+    .hour-status.done { color: rgba(0,0,0,.45); }
+    .video-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      background: rgba(0,0,0,.3);
+      position: relative;
+    }
+    .video-dot::after {
+      content: "";
+      position: absolute;
+      left: 4px;
+      top: 3px;
+      width: 0;
+      height: 0;
+      border-top: 3px solid transparent;
+      border-bottom: 3px solid transparent;
+      border-left: 5px solid #fff;
+    }
+    .hour-title {
+      width: 100%;
+      margin-top: 15px;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .panel { display: none; }
+    .panel.show { display: block; }
+    .attachments { display: none; }
+    .attachments.show { display: block; }
+    .attachments-item {
+      width: 100%;
+      height: 69px;
+      background: #fafafa;
+      border-radius: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 15px 10px 10px;
+      margin-bottom: 10px;
+      text-align: left;
+    }
+    .attachments-item:last-child { margin-bottom: 0; }
+    .left-cont { width: calc(100% - 34px); }
+    .label {
+      display: flex;
+      align-items: center;
+      color: rgba(0,0,0,.45);
+      font-size: 12px;
+      line-height: 16px;
+    }
+    .paper-icon {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      background: rgba(0,0,0,.15);
+      margin-right: 5px;
+      position: relative;
+    }
+    .paper-icon::after {
+      content: "";
+      position: absolute;
+      right: 2px;
+      top: 2px;
+      width: 4px;
+      height: 4px;
+      background: rgba(255,255,255,.7);
+      transform: rotate(45deg);
+    }
+    .attach-title {
+      margin-top: 14px;
+      color: rgba(0,0,0,.88);
+      font-size: 14px;
+      line-height: 16px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .download {
+      color: #ff4d4f;
+      font-size: 12px;
+      line-height: 16px;
+    }
     .toast {
       position: fixed;
+      top: 70px;
       left: 50%;
-      bottom: 78px;
-      z-index: 60;
-      max-width: 320px;
-      padding: 9px 14px;
-      border-radius: 18px;
-      background: rgba(0, 0, 0, .72);
+      transform: translateX(-50%) translateY(-10px);
+      min-width: 120px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: rgba(31,41,55,.92);
       color: #fff;
       font-size: 13px;
-      line-height: 18px;
-      transform: translateX(-50%);
       opacity: 0;
-      pointer-events: none;
-      transition: opacity .18s ease;
-      white-space: nowrap;
+      transition: .18s;
+      z-index: 50;
+      text-align: center;
     }
-
-    .toast.show {
-      opacity: 1;
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
-  <main class="meedu-page">
-    <header class="navheader">
-      <img class="back" src="meedu-assets/icon-back.png" alt="">
-      <div class="title">课程详情</div>
-    </header>
+  <main class="page">
+    <div class="main-header">
+      <button class="back-icon" onclick="toast('返回上一页')"></button>
+    </div>
 
-    <section class="course-thumb" aria-label="课程封面">
-      <div class="cover-lines"><span></span><span></span><span></span></div>
-      <div class="cover-label">YUNFY TRAINING<br>COURSE 19</div>
-    </section>
-
-    <h1 class="course-title">社区矛盾调解沟通技巧</h1>
-    <section class="course-meta">
-      <div class="learn-state">可直接学习</div>
-      <div class="course-count">2 章 / 6 课时</div>
-    </section>
-    <div class="line"></div>
-
-    <nav class="tabs" aria-label="课程详情导航">
-      <button class="item-tab active" type="button" data-tab="intro">介绍</button>
-      <button class="item-tab" type="button" data-tab="chapter">目录</button>
-      <button class="item-tab" type="button" data-tab="attach">课件</button>
-    </nav>
-
-    <section class="tab-panel active" data-panel="intro">
-      <div class="desc">
-        <p>面向社区工作人员和志愿者，围绕邻里纠纷、物业沟通、公共空间协商等高频场景，学习共情倾听、事实澄清、分歧拆解和调解记录整理。</p>
-        <p>课程采用短课时组织，适合碎片时间完成。点击「开始学习」后直接进入第一节课，系统同步生成学习记录。</p>
-      </div>
-      <div class="flow-card">
-        <div class="flow-title">学习流程</div>
-        <div class="flow-step"><span class="flow-num">1</span><span>进入课程后从第一课时开始学习。</span></div>
-        <div class="flow-step"><span class="flow-num">2</span><span>完成当前课时后继续下一课时，系统记录进度。</span></div>
-        <div class="flow-step"><span class="flow-num">3</span><span>学完后回到课件页下载调解记录模板和案例清单。</span></div>
-      </div>
-    </section>
-
-    <section class="tab-panel" data-panel="chapter">
-      <div class="chapter-item">
-        <div class="chapter-name">第一章 调解前准备 <img src="meedu-assets/icon-back.png" alt=""></div>
-        <div class="video-item" data-video="1">
-          <div class="video-title">1. 识别矛盾类型与当事人诉求</div>
-          <div class="video-info"><span>12分30秒</span><span class="video-progress">已学 40%</span></div>
+    <section class="top-content">
+      <div class="title">社区矛盾调解沟通技巧</div>
+      <div class="info-content">
+        <div class="info">
+          <div class="record">已学完课时 <strong>2</strong> / 6</div>
+          <div class="type">必修课</div>
         </div>
-        <div class="video-item" data-video="2">
-          <div class="video-title">2. 调解现场的开场话术</div>
-          <div class="video-info"><span>09分45秒</span><span>未开始</span></div>
-        </div>
-        <div class="video-item" data-video="3">
-          <div class="video-title">3. 记录事实与保留证据</div>
-          <div class="video-info"><span>11分20秒</span><span>未开始</span></div>
-        </div>
-      </div>
-      <div class="chapter-item">
-        <div class="chapter-name">第二章 沟通与收尾 <img src="meedu-assets/icon-back.png" alt=""></div>
-        <div class="video-item" data-video="4">
-          <div class="video-title">4. 情绪安抚与共情表达</div>
-          <div class="video-info"><span>13分05秒</span><span>未开始</span></div>
-        </div>
-        <div class="video-item" data-video="5">
-          <div class="video-title">5. 方案协商与责任确认</div>
-          <div class="video-info"><span>15分10秒</span><span>未开始</span></div>
-        </div>
-        <div class="video-item" data-video="6">
-          <div class="video-title">6. 回访安排与结果归档</div>
-          <div class="video-info"><span>08分40秒</span><span>未开始</span></div>
+        <div class="progress-box">
+          <div class="circle-track"></div>
+          <div class="circle-fill"></div>
+          <div class="circle-num">33%</div>
         </div>
       </div>
     </section>
 
-    <section class="tab-panel" data-panel="attach">
-      <div class="attach-item">
-        <img src="meedu-assets/attach-icon.png" alt="">
-        <div class="attach-title">社区矛盾调解记录模板.docx</div>
-        <div class="attach-action">下载</div>
+    <section class="other-content">
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('catalog', this)">课程目录</button>
+        <button class="tab" onclick="showTab('attach', this)">课程附件</button>
       </div>
-      <div class="attach-item">
-        <img src="meedu-assets/attach-icon.png" alt="">
-        <div class="attach-title">邻里纠纷案例清单.pdf</div>
-        <div class="attach-action">下载</div>
+
+      <div id="catalog" class="panel show">
+        <div class="desc">面向社区工作人员和志愿者，学习邻里纠纷沟通、事实记录和调解跟进，适合按章节逐步完成。</div>
+        <div class="line"></div>
+        <div class="hours-list-box">
+          <div class="chapter-it">
+            <div class="chapter-name">第一章 调解前准备</div>
+            <div class="hours-it">
+              <div class="hour-item">
+                <div class="hour-top">
+                  <div class="hour-label"><span class="video-dot"></span><span>视频</span></div>
+                  <div class="hour-status">学习到00:10:18</div>
+                </div>
+                <div class="hour-title">识别矛盾类型与当事人诉求 (00:18)</div>
+              </div>
+            </div>
+            <div class="hours-it">
+              <div class="hour-item">
+                <div class="hour-top">
+                  <div class="hour-label"><span class="video-dot"></span><span>视频</span></div>
+                  <div class="hour-status done">已学完</div>
+                </div>
+                <div class="hour-title">调解现场的开场话术 (00:18)</div>
+              </div>
+            </div>
+            <div class="hours-it">
+              <div class="hour-item">
+                <div class="hour-top">
+                  <div class="hour-label"><span class="video-dot"></span><span>视频</span></div>
+                  <div class="hour-status done">已学完</div>
+                </div>
+                <div class="hour-title">事实记录与证据保留 (00:18)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chapter-it">
+            <div class="chapter-name">第二章 沟通与收尾</div>
+            <div class="hours-it">
+              <div class="hour-item">
+                <div class="hour-top">
+                  <div class="hour-label"><span class="video-dot"></span><span>视频</span></div>
+                  <div class="hour-status">学习到00:03:40</div>
+                </div>
+                <div class="hour-title">情绪安抚与共情表达 (00:20)</div>
+              </div>
+            </div>
+            <div class="hours-it">
+              <div class="hour-item">
+                <div class="hour-top">
+                  <div class="hour-label"><span class="video-dot"></span><span>视频</span></div>
+                  <div class="hour-status done">已学完</div>
+                </div>
+                <div class="hour-title">方案协商与责任确认 (00:20)</div>
+              </div>
+            </div>
+            <div class="hours-it">
+              <div class="hour-item">
+                <div class="hour-top">
+                  <div class="hour-label"><span class="video-dot"></span><span>视频</span></div>
+                  <div class="hour-status done">已学完</div>
+                </div>
+                <div class="hour-title">回访安排与结果归档 (00:20)</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="flow-card">
-        <div class="flow-title">课件使用</div>
-        <div class="flow-step"><span class="flow-num">1</span><span>先完成对应课时，再下载模板跟着练习。</span></div>
-        <div class="flow-step"><span class="flow-num">2</span><span>线下调解时可按模板记录事实、诉求、方案和回访时间。</span></div>
+
+      <div id="attach" class="attachments">
+        <div class="attachments-item">
+          <div class="left-cont">
+            <div class="label"><span class="paper-icon"></span><span>课件</span></div>
+            <div class="attach-title">调解记录模板.docx</div>
+          </div>
+          <div class="download" onclick="toast('下载课件')">下载</div>
+        </div>
+        <div class="attachments-item">
+          <div class="left-cont">
+            <div class="label"><span class="paper-icon"></span><span>课件</span></div>
+            <div class="attach-title">沟通案例清单.pdf</div>
+          </div>
+          <div class="download" onclick="toast('下载课件')">下载</div>
+        </div>
       </div>
     </section>
   </main>
 
-  <div class="bottom-bar">
-    <button class="learn-button" type="button" id="learnBtn">继续学习</button>
-  </div>
-  <div class="toast" id="toast">已创建学习记录，进入第 1 课时</div>
-
+  <div class="toast" id="toast"></div>
   <script>
-    const tabs = document.querySelectorAll(".item-tab");
-    const panels = document.querySelectorAll(".tab-panel");
-    const toast = document.getElementById("toast");
-    let toastTimer = null;
-
-    function showToast(text) {
-      toast.textContent = text;
-      toast.classList.add("show");
-      clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+    function toast(text) {
+      var node = document.getElementById('toast');
+      node.textContent = text;
+      node.classList.add('show');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(function () {
+        node.classList.remove('show');
+      }, 1200);
     }
-
-    tabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
-        const name = tab.dataset.tab;
-        tabs.forEach((item) => item.classList.toggle("active", item === tab));
-        panels.forEach((panel) => panel.classList.toggle("active", panel.dataset.panel === name));
-      });
-    });
-
-    document.querySelectorAll(".video-item").forEach((item) => {
-      item.addEventListener("click", () => showToast("已创建学习记录，进入课时 " + item.dataset.video));
-    });
-
-    document.getElementById("learnBtn").addEventListener("click", () => {
-      showToast("已创建学习记录，进入第 1 课时");
-    });
+    function showTab(id, el) {
+      document.querySelectorAll('.tab').forEach(function (node) { node.classList.remove('active'); });
+      document.querySelectorAll('.panel, .attachments').forEach(function (node) { node.classList.remove('show'); });
+      el.classList.add('active');
+      document.getElementById(id).classList.add('show');
+    }
   </script>
 </body>
 </html>
