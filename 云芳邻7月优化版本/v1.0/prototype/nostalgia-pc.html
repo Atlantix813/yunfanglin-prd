@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!-- prototype-states: list,edit -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>海丝乡愁点位管理</title>
+  <link rel="stylesheet" href="组件库样式.css">
+  <style>
+    html, body { width:1920px; height:1080px; overflow:hidden; }
+    .nostalgia-pc-page { width:1920px; height:1080px; overflow:hidden; }
+    .nostalgia-pc-page .layout { height:1032px; min-height:1032px; }
+    .nostalgia-pc-page .main { min-width:0; height:1032px; }
+    .nostalgia-pc-content { height:992px; overflow:hidden; padding:16px 18px; }
+    .nostalgia-pc-breadcrumb { height:32px; display:flex; align-items:center; gap:8px; color:#86909C; font-size:13px; }
+    .nostalgia-pc-breadcrumb strong { color:#272E3B; font-weight:600; }
+    .nostalgia-pc-table-scroll { width:100%; overflow-x:auto; }
+    .nostalgia-pc-table { min-width:1710px; table-layout:fixed; }
+    .nostalgia-pc-table th,
+    .nostalgia-pc-table td { padding:0 8px; font-size:12px; }
+    .nostalgia-pc-table th:nth-child(1) { width:36px; }
+    .nostalgia-pc-table th:nth-child(2) { width:42px; }
+    .nostalgia-pc-table th:nth-child(3) { width:150px; }
+    .nostalgia-pc-table th:nth-child(4) { width:128px; }
+    .nostalgia-pc-table th:nth-child(5) { width:168px; }
+    .nostalgia-pc-table th:nth-child(6) { width:92px; }
+    .nostalgia-pc-table th:nth-child(7) { width:92px; }
+    .nostalgia-pc-table th:nth-child(8) { width:116px; }
+    .nostalgia-pc-table th:nth-child(9) { width:190px; }
+    .nostalgia-pc-table th:nth-child(10) { width:72px; }
+    .nostalgia-pc-table th:nth-child(11) { width:76px; }
+    .nostalgia-pc-table th:nth-child(12),
+    .nostalgia-pc-table th:nth-child(14) { width:132px; }
+    .nostalgia-pc-table th:nth-child(13) { width:84px; }
+    .nostalgia-pc-table th:nth-child(15) { width:188px; }
+    .nostalgia-pc-name { max-width:140px; overflow:hidden; text-overflow:ellipsis; }
+    .nostalgia-pc-address { max-width:158px; overflow:hidden; text-overflow:ellipsis; }
+    .nostalgia-pc-tags { display:flex; align-items:center; gap:4px; overflow:hidden; }
+    .nostalgia-pc-tags .tag { max-width:78px; overflow:hidden; text-overflow:ellipsis; }
+    .nostalgia-pc-actions { display:flex; align-items:center; white-space:nowrap; }
+    .nostalgia-pc-actions .action-sep { margin:0 5px; }
+    .nostalgia-pc-overlay { position:fixed; inset:0; width:1920px; height:1080px; z-index:1200; }
+    .nostalgia-pc-modal { width:1280px; max-height:940px; }
+    .nostalgia-edit-layout { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(360px,.85fr); gap:24px; }
+    .nostalgia-edit-left { min-width:0; }
+    .nostalgia-edit-right { min-width:0; padding-left:24px; border-left:1px solid #F2F3F5; }
+    .nostalgia-field-wide { grid-column:1 / -1; }
+    .nostalgia-input-group { display:flex; gap:8px; }
+    .nostalgia-input-group .pc-input { flex:1; }
+    .nostalgia-select { appearance:none; padding-right:28px; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23A9AEB8'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 10px center #fff; }
+    .nostalgia-tag-editor { min-height:34px; padding:5px 8px; display:flex; align-items:center; flex-wrap:wrap; gap:6px; border:1px solid #E5E6EB; border-radius:4px; }
+    .nostalgia-tag-editor input { min-width:110px; flex:1; border:0; outline:0; font:inherit; }
+    .nostalgia-editor-toolbar { min-height:78px; padding:10px; display:flex; align-content:flex-start; flex-wrap:wrap; gap:6px 12px; border:1px solid #E5E6EB; border-bottom:0; background:#FAFBFC; color:#4E5969; font-size:13px; }
+    .nostalgia-editor-tool { min-width:28px; height:24px; display:inline-flex; align-items:center; justify-content:center; border-radius:3px; }
+    .nostalgia-editor-tool:hover { background:#EBF5FF; color:#3491FA; }
+    .nostalgia-editor { height:396px; padding:14px; border:1px solid #E5E6EB; border-radius:0 0 4px 4px; color:#4E5969; font-size:13px; line-height:22px; overflow:auto; }
+    .nostalgia-editor-count { margin-top:6px; color:#A9AEB8; font-size:12px; text-align:right; }
+    .nostalgia-upload-caption { margin-top:6px; color:#A9AEB8; font-size:12px; line-height:18px; }
+    .nostalgia-audio-box,
+    .nostalgia-video-box { width:132px; }
+    .nostalgia-cover-label { position:absolute; left:0; bottom:0; width:100%; height:24px; display:flex; align-items:center; justify-content:center; background:rgba(39,46,59,.7); color:#fff; font-size:12px; }
+  </style>
+</head>
+<body class="yfl-pc-root">
+  <div class="page-wrapper nostalgia-pc-page">
+    <header class="header">
+      <div class="header-left">
+        <div class="header-logo">云芳邻管理系统</div>
+        <div class="header-hamburger" aria-label="菜单"><span></span><span></span><span></span></div>
+      </div>
+      <div class="header-right">
+        <div class="header-right-item">使用指南</div>
+        <div class="header-right-item">消息</div>
+        <div class="header-right-item"><span class="avatar">管</span><span>平台管理员</span></div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-item expanded"><span class="label">海丝乡愁</span><span class="arrow">›</span></div>
+        <div class="sidebar-sub">
+          <div class="sidebar-item">内容管理</div>
+          <div class="sidebar-item active">点位管理</div>
+          <div class="sidebar-item">审核管理</div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="tab-bar">
+          <div class="tab-item">工作台</div>
+          <div class="tab-item active">点位管理<span class="tab-close">×</span></div>
+        </div>
+        <div class="nostalgia-pc-content">
+          <div class="nostalgia-pc-breadcrumb"><span>海丝乡愁</span><span>/</span><strong>点位管理</strong></div>
+
+          <div class="filter-card">
+            <div class="filter-row">
+              <div class="filter-field"><label>点位名称</label><input type="text" placeholder="请输入"></div>
+              <div class="filter-field"><label>分类</label><select><option>请选择</option><option>历史文化</option><option>红色文化</option><option>非遗民俗</option></select></div>
+              <div class="filter-field"><label>状态</label><select><option>请选择</option><option>上架</option><option>下架</option></select></div>
+              <div class="filter-field"><label>所属街道</label><select><option>全部街道</option><option>北京街道</option><option>光塔街道</option><option>六榕街道</option><option>人民街道</option></select></div>
+              <button class="btn btn-primary" data-pc-action="query">查询</button>
+              <button class="btn btn-default" data-pc-action="reset">重置</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <div class="op-bar">
+              <button class="btn btn-outline" data-pc-action="toast" data-message="打开创建点位页面">创建</button>
+              <button class="btn btn-outline" data-pc-action="toast" data-message="已导出点位数据">导出</button>
+              <button class="btn btn-outline" data-pc-action="toast" data-message="已导出点位二维码">导出点位二维码</button>
+            </div>
+            <div class="nostalgia-pc-table-scroll">
+              <table class="pc-table nostalgia-pc-table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" aria-label="全选"></th><th>序号</th><th>点位名称</th><th>点位坐标</th><th>点位地址</th><th>分类</th><th>所属街道</th><th>点位标签</th><th>开放时间</th><th>状态</th><th>创建人</th><th>创建时间</th><th>最后修改人</th><th>修改时间</th><th>操作</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择第一行"></td><td>1</td><td class="nostalgia-pc-name">北京路文化旅游区</td><td>113.2705,23.1252</td><td class="nostalgia-pc-address">广州市越秀区北京路步行街</td><td>历史文化</td><td class="street-cell">北京街道</td>
+                    <td class="tag-cell"><div class="nostalgia-pc-tags"><span class="tag tag-blue">4A景区</span><span class="tag tag-orange">千年古道</span></div></td><td>周一至周日 09:00-22:00</td><td><span class="tag tag-green">上架</span></td><td>管理员</td><td>2026-06-20 10:20</td><td>管理员</td><td>2026-07-13 16:20</td>
+                    <td><div class="nostalgia-pc-actions"><a class="action-link">详情</a><span class="action-sep">|</span><a class="action-link nostalgia-edit" data-name="北京路文化旅游区" data-street="北京街道" data-tags="4A景区,千年古道">修改</a><span class="action-sep">|</span><a class="action-link">下架</a><span class="action-sep">|</span><a class="action-link text-danger">删除</a></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择第二行"></td><td>2</td><td class="nostalgia-pc-name">海珠广场</td><td>113.2652,23.1151</td><td class="nostalgia-pc-address">广州市越秀区沿江西路</td><td>红色文化</td><td class="street-cell">人民街道</td>
+                    <td class="tag-cell"><div class="nostalgia-pc-tags"><span class="tag tag-orange">城市地标</span><span class="tag tag-blue">珠江记忆</span></div></td><td>全天开放</td><td><span class="tag tag-green">上架</span></td><td>管理员</td><td>2026-06-18 09:12</td><td>管理员</td><td>2026-07-12 10:38</td>
+                    <td><div class="nostalgia-pc-actions"><a class="action-link">详情</a><span class="action-sep">|</span><a class="action-link nostalgia-edit" data-name="海珠广场" data-street="人民街道" data-tags="城市地标,珠江记忆">修改</a><span class="action-sep">|</span><a class="action-link">下架</a><span class="action-sep">|</span><a class="action-link text-danger">删除</a></div></td>
+                  </tr>
+                  <tr>
+                    <td><input type="checkbox" aria-label="选择第三行"></td><td>3</td><td class="nostalgia-pc-name">将军东电器城旧址</td><td>113.2608,23.1287</td><td class="nostalgia-pc-address">广州市越秀区中山六路</td><td>城市记忆</td><td class="street-cell">六榕街道</td>
+                    <td class="tag-cell"><div class="nostalgia-pc-tags"><span class="tag tag-blue">二手市场记忆</span></div></td><td>周一至周日 10:00-18:00</td><td><span class="tag tag-green">上架</span></td><td>管理员</td><td>2026-06-15 14:05</td><td>管理员</td><td>2026-07-11 14:05</td>
+                    <td><div class="nostalgia-pc-actions"><a class="action-link">详情</a><span class="action-sep">|</span><a class="action-link nostalgia-edit" data-name="将军东电器城旧址" data-street="六榕街道" data-tags="二手市场记忆">修改</a><span class="action-sep">|</span><a class="action-link">下架</a><span class="action-sep">|</span><a class="action-link text-danger">删除</a></div></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="pagination"><span class="total">共 3 条</span><span class="pg active">1</span><select class="pg-select"><option>10条/页</option></select><span>前往</span><span class="pg">1</span><span>页</span></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay nostalgia-pc-overlay" id="pointEditOverlay" hidden>
+    <div class="modal nostalgia-pc-modal">
+      <div class="modal-header"><h3>编辑</h3><div class="modal-close" data-pc-action="close-modal">×</div></div>
+      <div class="modal-body">
+        <div class="nostalgia-edit-layout">
+          <div class="nostalgia-edit-left">
+            <section class="pc-form-section">
+              <div class="pc-form-section-title">基础信息</div>
+              <div class="pc-form-grid">
+                <div class="pc-form-field"><label><span class="required">*</span>点位名称</label><input class="pc-input" id="pointName" value="北京路文化旅游区" maxlength="20"></div>
+                <div class="pc-form-field"><label><span class="required">*</span>点位坐标</label><div class="nostalgia-input-group"><input class="pc-input" value="113.2705,23.1252"><button class="btn btn-outline" type="button">选择位置</button></div></div>
+                <div class="pc-form-field nostalgia-field-wide"><label><span class="required">*</span>点位地址</label><input class="pc-input" value="广州市越秀区北京路步行街" maxlength="50"></div>
+                <div class="pc-form-field"><label><span class="required">*</span>分类</label><select class="pc-input nostalgia-select"><option>历史文化</option><option>红色文化</option><option>非遗民俗</option></select></div>
+                <div class="pc-form-field"><label><span class="required">*</span>所属街道</label><div><select class="pc-input nostalgia-select" id="streetSelect"><option value="">请选择所属街道</option><option>北京街道</option><option>光塔街道</option><option>六榕街道</option><option>人民街道</option></select><div class="form-error" id="streetError" hidden>请选择所属街道</div></div></div>
+                <div class="pc-form-field nostalgia-field-wide"><label>开放时间</label><input class="pc-input" value="周一至周日 09:00-22:00" maxlength="30"></div>
+                <div class="pc-form-field nostalgia-field-wide"><label>点位标签</label><div><div class="nostalgia-tag-editor" id="tagEditor"><input id="customTag" maxlength="15" placeholder="输入标签后按回车，最多 3 个"></div><div class="form-help">标签按配置顺序展示，单个标签最多 15 个字</div></div></div>
+              </div>
+            </section>
+
+            <section class="pc-form-section">
+              <div class="pc-form-section-title">点位素材</div>
+              <div class="pc-form-grid">
+                <div class="pc-form-field nostalgia-field-wide"><label>语音讲解</label><div><div class="pc-upload-grid"><div class="pc-upload-box filled nostalgia-audio-box"><span>语音讲解.mp3</span><span class="pc-upload-remove">×</span></div><div class="pc-upload-box nostalgia-audio-box"><span class="plus">+</span><span>上传音频</span></div></div><div class="nostalgia-upload-caption">支持 MP3、WAV 格式</div></div></div>
+                <div class="pc-form-field nostalgia-field-wide"><label>视频介绍</label><div><div class="pc-upload-grid"><div class="pc-upload-box nostalgia-video-box"><span class="plus">+</span><span>上传视频</span></div></div><div class="nostalgia-upload-caption">上传后用于居民端点位视频介绍</div></div></div>
+                <div class="pc-form-field nostalgia-field-wide"><label><span class="required">*</span>轮播图</label><div><div class="pc-upload-grid"><div class="pc-upload-box filled"><span>点位图 1</span><span class="pc-upload-remove">×</span><span class="nostalgia-cover-label">封面</span></div><div class="pc-upload-box filled"><span>点位图 2</span><span class="pc-upload-remove">×</span></div><div class="pc-upload-box"><span class="plus">+</span><span>上传图片</span></div></div><div class="nostalgia-upload-caption">最多 4 张，可拖动调整顺序，第一张作为封面</div></div></div>
+              </div>
+            </section>
+          </div>
+
+          <div class="nostalgia-edit-right">
+            <div class="pc-form-section-title">点位描述</div>
+            <div class="nostalgia-editor-toolbar"><span class="nostalgia-editor-tool">正文</span><span class="nostalgia-editor-tool"><b>B</b></span><span class="nostalgia-editor-tool"><u>U</u></span><span class="nostalgia-editor-tool">S</span><span class="nostalgia-editor-tool">字号</span><span class="nostalgia-editor-tool">字体</span><span class="nostalgia-editor-tool">左对齐</span><span class="nostalgia-editor-tool">居中</span><span class="nostalgia-editor-tool">链接</span><span class="nostalgia-editor-tool">图片</span><span class="nostalgia-editor-tool">撤销</span><span class="nostalgia-editor-tool">重做</span></div>
+            <div class="nostalgia-editor" contenteditable="true">北京路文化旅游区承载着广州千年商都的城市记忆。居民可在这里查看点位介绍、收听语音讲解，并了解街区相关的历史故事。</div>
+            <div class="nostalgia-editor-count">72 / 2000</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-default" data-pc-action="close-modal">取消</button><button class="btn btn-primary" id="submitPoint">提交</button></div>
+    </div>
+  </div>
+
+  <script src="pc-components.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const state = params.get('state') || 'list';
+    const overlay = document.getElementById('pointEditOverlay');
+    const streetSelect = document.getElementById('streetSelect');
+    const pointName = document.getElementById('pointName');
+    const streetError = document.getElementById('streetError');
+    const tagEditor = document.getElementById('tagEditor');
+    const customTag = document.getElementById('customTag');
+    let currentRow = null;
+
+    function selectedTags() {
+      return [...tagEditor.querySelectorAll('.tag')].map(item => item.dataset.value);
+    }
+
+    function renderTags(tags) {
+      tagEditor.querySelectorAll('.tag').forEach(item => item.remove());
+      tags.slice(0, 3).forEach(tag => {
+        const chip = document.createElement('span');
+        chip.className = 'tag tag-blue';
+        chip.dataset.value = tag;
+        chip.textContent = tag + ' ×';
+        chip.addEventListener('click', () => chip.remove());
+        tagEditor.insertBefore(chip, customTag);
+      });
+    }
+
+    function openEdit(link) {
+      currentRow = link.closest('tr');
+      pointName.value = link.dataset.name;
+      streetSelect.value = link.dataset.street;
+      streetError.hidden = true;
+      renderTags(link.dataset.tags ? link.dataset.tags.split(',') : []);
+      customTag.value = '';
+      overlay.hidden = false;
+    }
+
+    document.querySelectorAll('.nostalgia-edit').forEach(link => link.addEventListener('click', () => openEdit(link)));
+    customTag.addEventListener('keydown', event => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      const value = customTag.value.trim();
+      if (!value) return;
+      const tags = selectedTags();
+      if (tags.length >= 3) {
+        window.YunFangLinPC.showToast(document.body, '单个点位最多配置 3 个标签');
+        return;
+      }
+      if (tags.includes(value)) {
+        window.YunFangLinPC.showToast(document.body, '该标签已添加');
+        return;
+      }
+      renderTags([...tags, value]);
+      customTag.value = '';
+    });
+
+    document.getElementById('submitPoint').addEventListener('click', () => {
+      if (!currentRow) return;
+      if (!streetSelect.value) {
+        streetError.hidden = false;
+        window.YunFangLinPC.showToast(document.body, '请选择所属街道');
+        return;
+      }
+      streetError.hidden = true;
+      const tags = selectedTags();
+      currentRow.querySelector('.street-cell').textContent = streetSelect.value;
+      currentRow.querySelector('.tag-cell').innerHTML = tags.length
+        ? '<div class="nostalgia-pc-tags">' + tags.map((tag, index) => '<span class="tag ' + (index % 2 ? 'tag-orange' : 'tag-blue') + '">' + tag + '</span>').join('') + '</div>'
+        : '-';
+      const link = currentRow.querySelector('.nostalgia-edit');
+      link.dataset.street = streetSelect.value;
+      link.dataset.tags = tags.join(',');
+      overlay.hidden = true;
+      window.YunFangLinPC.showToast(document.body, '点位信息已提交');
+    });
+
+    if (state === 'edit') openEdit(document.querySelector('.nostalgia-edit'));
+  </script>
+</body>
+</html>

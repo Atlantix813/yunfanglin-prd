@@ -1,0 +1,33 @@
+{
+  "endpoint": "c",
+  "generatedAt": "2026-07-16T07:57:07.689Z",
+  "source": {
+    "catalog": "C端小程序/C端组件库.html",
+    "css": "C端小程序/C端组件库样式.css",
+    "js": "C端小程序/C端组件交互.js",
+    "assets": "C端小程序/icons"
+  },
+  "snapshot": {
+    "css": "mobile-components.css",
+    "js": "mobile-components.js",
+    "assets": [
+      "icons/icon_home_selected@2x.png",
+      "icons/icon_service_default@2x.png",
+      "icons/icon_neighbor_default@2x.png",
+      "icons/icon_market_default@2x.png",
+      "icons/icon_my_default@2x.png"
+    ]
+  },
+  "sha256": {
+    "catalog": "65cc9be89c9c20ac7ef3b941d46b395db068eaaab415074230e75e2bdc94d468",
+    "css": "43d6d40f964b6fa806513e7313b8d7db0d4e26e5144b3e41654029405221bf72",
+    "js": "5a00597eb9be172dd94d861abaaa8588086d4d08beaaa44a927b48d69cf1c02a",
+    "assets": {
+      "icons/icon_home_selected@2x.png": "004a1088ee33686c96e4bb3d7205c1fade3671c922bf1d3f5585353190a975d2",
+      "icons/icon_service_default@2x.png": "bdb5cac78d550d779a7ae19e92d7145923b95c3f09a365e649bb89ab4c6032ea",
+      "icons/icon_neighbor_default@2x.png": "497acb2512703de29b53aa2953f77f6ef902fc856b3d2e916bd6b4f5ad61ac9a",
+      "icons/icon_market_default@2x.png": "344a129d4ee44ae192dcb0c51b2dcd1d5bd8bbb19f5e73408ef2bee3e258978b",
+      "icons/icon_my_default@2x.png": "01089e4c057671118ceb29cce2898e6a698242f579c62d91410a99990adbb88c"
+    }
+  }
+}

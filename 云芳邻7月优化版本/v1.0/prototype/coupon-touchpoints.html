@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<!-- prototype-states: unused,recommend,success,mall,profile -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375, initial-scale=1.0">
+  <title>优惠券核销触达</title>
+  <link rel="stylesheet" href="mobile-components.css?v=20260713f">
+  <style>
+    * { box-sizing:border-box; }
+    html, body { width:375px; height:812px; min-height:812px; margin:0; overflow:hidden; background:#F2F5FA; }
+    body { font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif; color:#222835; }
+    button { font:inherit; cursor:pointer; }
+    .m-phone, .m-phone-screen { width:375px; height:812px; overflow:hidden; margin:0 auto; background:#F2F5FA; position:relative; }
+    .page { position:relative; height:724px; overflow:hidden; background:#F2F5FA; }
+    .scroll { height:660px; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; padding-bottom:18px; }
+    .scroll::-webkit-scrollbar { display:none; }
+    .blue-shell { background:#EAF3FF; }
+    .section-card { width:343px; margin:12px 16px 0; background:#fff; border-radius:12px; box-shadow:0 1px 3px rgba(33,71,128,.05); }
+    .bottom-bar { position:absolute; left:0; right:0; bottom:0; z-index:8; }
+
+    .home-bg { background:#EAF3FF; }
+    .home-head { height:158px; padding:16px; background:linear-gradient(180deg,#DDEBFF,#EDF5FF); }
+    .home-community { display:flex; justify-content:space-between; align-items:center; font-size:17px; font-weight:700; }
+    .home-search { height:38px; margin-top:18px; border-radius:20px; background:#fff; display:flex; align-items:center; padding:0 14px; color:#8F99AA; font-size:14px; }
+    .home-announcement { margin-top:14px; height:34px; border-radius:9px; background:#fff7e7; color:#FF8C00; display:flex; align-items:center; padding:0 12px; font-size:13px; font-weight:700; }
+    .home-grid { width:343px; margin:12px 16px 0; padding:14px 12px; border-radius:12px; background:#fff; display:grid; grid-template-columns:repeat(4,1fr); gap:14px 6px; box-shadow:0 1px 3px rgba(33,71,128,.05); }
+    .home-grid-item { display:flex; flex-direction:column; align-items:center; gap:7px; font-size:12px; color:#4E5969; }
+    .home-grid-icon { width:42px; height:42px; border-radius:13px; background:linear-gradient(135deg,#3F86F5,#5B9FFF); position:relative; }
+    .home-grid-icon:before { content:''; position:absolute; left:11px; top:11px; width:20px; height:20px; border:2px solid #fff; border-radius:6px; }
+    .activity-card { padding:14px; }
+    .activity-title { font-size:16px; font-weight:800; margin-bottom:8px; }
+    .activity-cover { height:126px; border-radius:10px; background:linear-gradient(135deg,#89C7FF,#FFE2A6); }
+
+    .modal-mask { position:absolute; left:0; right:0; top:0; bottom:0; z-index:30; background:rgba(20,28,40,.46); display:flex; align-items:center; justify-content:center; padding:12px; }
+    .modal-close { position:absolute; right:17px; top:14px; width:30px; height:30px; border:0; background:transparent; color:#222835; font-size:34px; line-height:30px; font-weight:900; }
+    .unused-modal { width:337px; max-height:704px; border-radius:18px; background:#F7FBFF; padding:18px 14px 16px; position:relative; overflow:hidden; box-shadow:0 14px 42px rgba(24,68,118,.24); }
+    .unused-modal .modal-close,
+    .welfare-modal .modal-close { right:12px; top:12px; color:#7C8798; font-size:30px; z-index:5; }
+    .unused-list { max-height:318px; overflow-y:auto; scrollbar-width:none; margin:12px 0 12px; position:relative; z-index:4; display:flex; flex-direction:column; gap:10px; }
+    .unused-list::-webkit-scrollbar { display:none; }
+    .use-coupon-card { min-height:92px; }
+    .use-coupon-card .recommend-info { padding:13px 12px 11px; }
+    .use-coupon-card .recommend-value strong { font-size:16px; line-height:21px; }
+    .coupon-use-btn { margin-top:7px; min-width:72px; height:28px; border:0; border-radius:6px; background:linear-gradient(135deg,#3F86F5,#5B9FFF); color:#fff; font-size:12px; font-weight:900; box-shadow:0 2px 6px rgba(63,134,245,.20); }
+    .unused-tip { text-align:center; color:#8B95A5; margin:0 0 12px; font-size:13px; font-weight:600; }
+    .modal-actions { display:flex; gap:12px; }
+    .primary-btn, .secondary-btn { flex:1; height:44px; border-radius:8px; font-size:16px; font-weight:800; }
+    .primary-btn { border:0; background:linear-gradient(135deg,#3F86F5,#5B9FFF); color:#fff; box-shadow:0 5px 14px rgba(63,134,245,.24); }
+    .secondary-btn { border:1px solid #D6DDE8; background:#fff; color:#222835; }
+
+    .welfare-modal { width:337px; border-radius:18px; background:#F7FBFF; position:relative; overflow:hidden; box-shadow:0 14px 42px rgba(24,68,118,.24); padding:18px 14px 16px; }
+    .welfare-head { min-height:96px; padding:2px 92px 14px 4px; position:relative; border-bottom:1px solid #EAF0F8; }
+    .welfare-head:before { content:''; position:absolute; right:8px; top:6px; width:62px; height:62px; border-radius:18px; background:linear-gradient(135deg,#EAF4FF,#D6E9FF); border:1px solid #CFE3FF; transform:rotate(6deg); }
+    .welfare-head:after { content:''; position:absolute; right:30px; top:24px; width:18px; height:18px; border-radius:50%; background:#FFB84D; box-shadow:0 0 0 7px rgba(255,184,77,.18); }
+    .welfare-kicker { display:inline-flex; height:22px; align-items:center; padding:0 8px; border-radius:6px; background:#EAF4FF; color:#2F80FF; font-size:11px; font-weight:800; margin-bottom:8px; }
+    .welfare-title { position:relative; z-index:3; color:#222835; font-size:22px; line-height:29px; font-weight:900; letter-spacing:.2px; }
+    .welfare-title em { color:#2F80FF; font-style:normal; }
+    .welfare-sub { margin-top:6px; color:#667085; font-size:13px; line-height:18px; font-weight:600; position:relative; z-index:3; }
+    .recommend-list { margin:12px 0 14px; position:relative; z-index:4; display:flex; flex-direction:column; gap:10px; }
+    .recommend-card { min-height:92px; border-radius:12px; background:#fff; border:1px solid #E6EEF8; display:grid; grid-template-columns:1fr 102px; overflow:hidden; box-shadow:0 2px 8px rgba(33,71,128,.06); }
+    .recommend-info { padding:13px 13px 11px; min-width:0; }
+    .recommend-name { font-size:16px; line-height:21px; font-weight:900; color:#222835; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .recommend-tags { display:flex; gap:6px; margin:7px 0 8px; }
+    .recommend-tag { height:20px; padding:0 7px; border-radius:6px; background:#E9F8F0; color:#20B15A; display:flex; align-items:center; font-size:11px; font-weight:800; }
+    .recommend-tag.orange { background:#FFF0DD; color:#FF8C00; }
+    .recommend-desc { font-size:12px; color:#8B95A5; line-height:17px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .recommend-value { background:#F1F7FF; border-left:1px solid #E6EEF8; color:#2F80FF; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 9px; }
+    .recommend-value strong { font-size:19px; line-height:24px; font-weight:900; }
+    .recommend-value span { margin-top:4px; font-size:12px; color:#7395C6; font-weight:800; }
+    .receive-all { display:block; width:230px; height:44px; margin:2px auto 0; border:0; border-radius:8px; background:linear-gradient(135deg,#3F86F5,#5B9FFF); color:#fff; font-size:16px; font-weight:900; box-shadow:0 6px 14px rgba(63,134,245,.25); }
+    .welfare-close { position:absolute; left:50%; bottom:-53px; transform:translateX(-50%); width:38px; height:38px; border-radius:50%; border:1px solid rgba(255,255,255,.78); background:rgba(255,255,255,.18); color:#fff; font-size:28px; line-height:35px; display:flex; align-items:center; justify-content:center; }
+
+    .success-modal { width:309px; border-radius:18px; background:linear-gradient(180deg,#F2F8FF 0,#fff 42%); padding:26px 22px 22px; position:relative; box-shadow:0 14px 36px rgba(24,68,118,.24); border:1px solid rgba(207,227,255,.9); }
+    .success-modal .modal-close { right:13px; top:10px; color:#7C8798; font-size:30px; }
+    .success-icon { width:58px; height:58px; margin:2px auto 13px; border-radius:50%; background:linear-gradient(135deg,#35C57A,#2F80FF); display:flex; align-items:center; justify-content:center; box-shadow:0 8px 18px rgba(47,128,255,.22); }
+    .success-icon:before { content:''; width:24px; height:13px; border-left:4px solid #fff; border-bottom:4px solid #fff; transform:rotate(-45deg) translate(2px,-2px); border-radius:2px; }
+    .success-title { text-align:center; font-size:21px; line-height:28px; font-weight:900; color:#222835; margin:0; }
+    .success-copy { margin:8px auto 14px; text-align:center; color:#667085; font-size:13px; line-height:19px; font-weight:600; }
+    .success-card { min-height:56px; border-radius:12px; background:#F7FBFF; border:1px solid #E6EEF8; display:flex; align-items:center; justify-content:center; padding:0 14px; margin-bottom:18px; }
+    .success-card strong { font-size:15px; color:#222835; }
+    .success-card span { color:#2F80FF; font-size:13px; font-weight:800; }
+
+    .mall-header { padding:0 16px 14px; background:#DDEBFF; }
+    .mall-location { display:flex; height:48px; align-items:center; justify-content:space-between; color:#222835; }
+    .mall-location-main { min-width:0; height:36px; display:inline-flex; align-items:center; gap:6px; padding-right:12px; }
+    .mall-location-name { max-width:210px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; font-size:17px; font-weight:800; }
+    .mall-location .location-arrow { flex:0 0 auto; font-size:14px; color:#222835; transform:translateY(1px); }
+    .message-line { width:30px; height:30px; border:2px solid #222835; border-radius:50%; position:relative; }
+    .mall-location .message-line { flex:0 0 auto; }
+    .message-line:after { content:'1'; position:absolute; right:-7px; top:-9px; width:19px; height:19px; border-radius:50%; background:#E81D2C; color:#fff; font-size:12px; display:flex; align-items:center; justify-content:center; border:2px solid #DDEBFF; }
+    .coupon-banner { height:87px; border-radius:10px; border:1px dashed rgba(47,128,255,.38); background:rgba(255,255,255,.42); overflow:hidden; display:flex; align-items:center; justify-content:center; color:#2F80FF; box-shadow:0 5px 12px rgba(37,103,245,.08); }
+    .banner-placeholder { display:flex; flex-direction:column; align-items:center; gap:5px; font-size:14px; font-weight:800; }
+    .banner-placeholder span { color:#8B95A5; font-size:12px; font-weight:600; }
+    .mall-filter { display:flex; gap:18px; align-items:center; height:64px; }
+    .filter-text { color:#5F6670; font-size:17px; font-weight:700; }
+    .mall-search { flex:1; height:40px; border-radius:22px; background:#fff; color:#B0B8C8; display:flex; align-items:center; justify-content:space-between; padding:0 14px 0 18px; font-size:16px; }
+    .mall-tabs { display:flex; gap:26px; align-items:center; height:46px; padding:0 18px; background:#EAF3FF; }
+    .mall-tab { font-size:19px; font-weight:900; color:#666F7B; }
+    .mall-tab.active { color:#2F80FF; }
+    .shop-card { width:343px; min-height:116px; margin:12px 16px 0; border-radius:12px; background:#fff; display:grid; grid-template-columns:92px 1fr; gap:12px; padding:12px; box-shadow:0 1px 3px rgba(33,71,128,.05); }
+    .shop-img { width:90px; height:82px; border-radius:9px; background:linear-gradient(135deg,#BFDFFF,#FFE4A8); overflow:hidden; }
+    .shop-img.dark { background:linear-gradient(135deg,#394A61,#E6A36C); }
+    .shop-img.green { background:linear-gradient(135deg,#9FD6B3,#F7D989); }
+    .shop-tag { display:inline-flex; height:18px; padding:0 7px; border-radius:6px; background:#EAF4FF; color:#2F80FF; align-items:center; font-size:10px; font-weight:800; margin-bottom:5px; }
+    .shop-title { font-size:16px; font-weight:900; color:#151B26; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .shop-desc { margin-top:6px; font-size:13px; line-height:18px; color:#9299A6; height:36px; overflow:hidden; }
+    .shop-meta { margin-top:4px; display:flex; align-items:center; justify-content:space-between; color:#9299A6; font-size:12px; font-weight:700; gap:8px; }
+    .shop-action { color:#2F80FF; font-weight:800; white-space:nowrap; }
+
+    .profile-bg { background:var(--m-page-bg); }
+    .profile-bg .scroll { height:664px; padding:0; }
+    .profile-content { padding-top:16px; }
+    .profile-content > .m-profile-points-card { margin-top:12px; }
+    .profile-avatar-image { width:58px; height:58px; border-radius:50%; object-fit:cover; }
+    .profile-tool-icon { width:28px; height:28px; display:block; object-fit:contain; }
+    .profile-coupon-entry { position:relative; }
+    .profile-welfare-badge { position:absolute; right:0; top:-7px; z-index:2; animation:pulse 2.2s ease-in-out infinite; }
+    @keyframes pulse { 0% { transform:scale(1); box-shadow:0 0 0 0 rgba(255,106,61,.35); } 70% { transform:scale(1.06); box-shadow:0 0 0 8px rgba(255,106,61,0); } 100% { transform:scale(1); box-shadow:0 0 0 0 rgba(255,106,61,0); } }
+  </style>
+</head>
+<body>
+  <div class="m-phone">
+    <div class="m-phone-screen" id="screen"></div>
+  </div>
+
+  <script src="mobile-components.js?v=20260713f"></script>
+  <script>
+    const state = new URLSearchParams(location.search).get('state') || 'unused';
+    const screenEl = document.getElementById('screen');
+
+    const coupons = [
+      { name: '平衡车体验课一节', type: '兑换券', tag: '新客专享', date: '2026-05-12 ~ 2026-10-12', value: '价值200元', shop: '晨星体育', distance: '距您 12.0km' },
+      { name: '3-18岁会话/手工单词体验课', type: '兑换券', tag: '暑期体验', date: '2026-06-09 ~ 2026-07-09', value: '价值9.9元', shop: '童画空间', distance: '距您 860m' },
+      { name: '儿童体能体验课', type: '满减券', tag: '周末可用', date: '2026-06-20 ~ 2026-08-20', value: '立减30元', shop: '乐动成长', distance: '距您 1.4km' },
+      { name: '亲子烘焙体验券', type: '兑换券', tag: '家庭专享', date: '2026-07-01 ~ 2026-08-01', value: '价值128元', shop: '甜麦工坊', distance: '距您 2.1km' }
+    ];
+
+    const recommendCoupons = [
+      { name: '平衡车体验课一节', tag: '新客专享', desc: '晨星体育 · 860m · 5月12日前', value: '价值200元' },
+      { name: '儿童体能体验课', tag: '无需积分', desc: '乐动成长 · 1.4km · 7月31日前', value: '立减30元' },
+      { name: '亲子烘焙体验券', tag: '周末可用', desc: '甜麦工坊 · 2.1km · 8月1日前', value: '价值128元' }
+    ];
+
+    function statusBar(options = {}) {
+      return `
+        <div class="m-status-bar ${options.blue ? 'blue' : ''}">
+          <span class="time">6:00 PM</span>
+          <div class="m-status-icons">
+            <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx=".5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx=".5" fill="#222835"/></svg>
+            <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="#222835"/></svg>
+          </div>
+        </div>
+      `;
+    }
+
+    function capsule() {
+      return `
+        <div class="capsule">
+          <div class="capsule-dots"><span></span><span></span><span></span></div>
+          <div class="capsule-divider"></div>
+          <div class="capsule-close"><span class="capsule-target"></span></div>
+        </div>
+      `;
+    }
+
+    function navBar(title, options = {}) {
+      return `
+        <div class="m-nav-bar ${options.blue ? 'blue' : ''}">
+          <span class="back ${options.back ? '' : 'hidden'}">‹</span>
+          <span class="title">${title}</span>
+          ${capsule()}
+        </div>
+      `;
+    }
+
+    function navIcon(key) {
+      const icons = {
+        home: `<img class="m-bottom-tab-icon" src="icons/icon_home_selected@2x.png" alt="">`,
+        service: `<img class="m-bottom-tab-icon" src="icons/icon_service_default@2x.png" alt="">`,
+        neighbor: `<img class="m-bottom-tab-icon" src="icons/icon_neighbor_default@2x.png" alt="">`,
+        market: `<img class="m-bottom-tab-icon" src="icons/icon_market_default@2x.png" alt="">`,
+        mine: `<img class="m-bottom-tab-icon" src="icons/icon_my_default@2x.png" alt="">`
+      };
+      return icons[key];
+    }
+
+    function toolIcon(name) {
+      const icons = {
+        '我的邻里圈': 'icon_huzhu@2x.png',
+        '我的房源': 'icon_fangyuan@2x.png',
+        '我的招聘': 'icon_zhaopin@2x.png',
+        '我的活动': 'icon_date@2x.png',
+        '消息中心': 'icon_message@2x.png',
+        '我的社团': 'icon_shetuan@2x.png',
+        '组织账户': 'icon_zuzhi@2x.png',
+        '使用指南': 'icon_guide@2x.png',
+        '在线客服': 'icon_xiaoxi@2x.png',
+        '消息订阅': 'icon_yaoqing@2x.png',
+        '我的卡包': 'icon_duihuan@2x.png',
+        '我的关注': 'icon_huzhu@2x.png',
+        '任务中心': 'icon_task_group_create@2x.png',
+        '培训管理': 'icon_banshi@2x.png',
+        '领券中心': 'icon_duihuan@2x.png'
+      };
+      return `<img class="profile-tool-icon" src="icons/${icons[name]}" alt="">`;
+    }
+
+    function bottomBar(active) {
+      const items = [
+        ['home', '首页'],
+        ['service', '服务'],
+        ['neighbor', '邻里'],
+        ['market', '市集'],
+        ['mine', '我的']
+      ];
+      return `
+        <nav class="m-bottom-tab-bar bottom-bar" data-m-group>
+          ${items.map(([key, text]) => `
+            <div class="m-bottom-tab-item ${active === key ? 'active' : ''}" data-m-action="tab">
+              ${navIcon(key)}
+              <span>${text}</span>
+            </div>
+          `).join('')}
+        </nav>
+      `;
+    }
+
+    function homeBase(modalHtml) {
+      return `
+        ${statusBar({ blue: true })}
+        ${navBar('首页', { blue: true })}
+        <main class="page home-bg">
+          <div class="scroll">
+            <section class="home-head">
+              <div class="home-community"><span>金沙雅苑社区</span><span>切换</span></div>
+              <div class="home-search">搜索活动、服务、商家</div>
+              <div class="home-announcement">社区公告：本周便民服务时间已更新</div>
+            </section>
+            <section class="home-grid">
+              ${['社区活动','积分兑换','领券中心','便民服务','公告问卷','邻里互助','市集好店','消息中心'].map(name => `<div class="home-grid-item"><span class="home-grid-icon"></span><span>${name}</span></div>`).join('')}
+            </section>
+            <section class="section-card activity-card">
+              <div class="activity-title">周末亲子市集报名中</div>
+              <div class="activity-cover"></div>
+            </section>
+          </div>
+          ${bottomBar('home')}
+          ${modalHtml}
+        </main>
+      `;
+    }
+
+    function unusedModal() {
+      return `
+        <div class="modal-mask">
+          <div class="unused-modal">
+            <button class="modal-close" data-m-action="toast" data-message="关闭弹窗">×</button>
+            <div class="welfare-head">
+              <div class="welfare-kicker">用券提醒</div>
+              <div class="welfare-title">你有<em>优惠券</em>待使用</div>
+              <div class="welfare-sub">已领取的商家好券可到店核销，请在有效期内使用</div>
+            </div>
+            <div class="unused-list">
+              ${coupons.map(item => `
+                <div class="recommend-card use-coupon-card">
+                  <div class="recommend-info">
+                    <div class="recommend-name">${item.name}</div>
+                    <div class="recommend-tags"><span class="recommend-tag">${item.type}</span><span class="recommend-tag orange">${item.tag}</span></div>
+                    <div class="recommend-desc">${item.shop} · ${item.distance}</div>
+                  </div>
+                  <div class="recommend-value">
+                    <strong>${item.value}</strong>
+                    <button class="coupon-use-btn" data-m-action="toast" data-message="进入优惠券核销码页面">立即使用</button>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+            <div class="unused-tip">券列表可上下滑动查看全部未使用优惠券</div>
+            <div class="modal-actions">
+              <button class="primary-btn" data-m-action="toast" data-message="进入领券中心">领新券</button>
+              <button class="secondary-btn" data-m-action="toast" data-message="进入我的卡包">去卡包看看</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function recommendModal() {
+      return `
+        <div class="modal-mask">
+          <div style="position:relative;">
+            <div class="welfare-modal">
+              <button class="modal-close" data-m-action="toast" data-message="关闭弹窗">×</button>
+              <div class="welfare-head">
+                <div class="welfare-kicker">社区福利</div>
+                <div class="welfare-title">附近商家<em>好券</em>可领取</div>
+                <div class="welfare-sub">为你筛选金沙雅苑社区周边可免费领取的优惠券</div>
+              </div>
+              <div class="recommend-list">
+                ${recommendCoupons.map(item => `
+                  <div class="recommend-card">
+                    <div class="recommend-info">
+                      <div class="recommend-name">${item.name}</div>
+                      <div class="recommend-tags"><span class="recommend-tag">${item.tag}</span><span class="recommend-tag orange">免费领取</span></div>
+                      <div class="recommend-desc">${item.desc}</div>
+                    </div>
+                    <div class="recommend-value"><strong>${item.value}</strong><span>到店可用</span></div>
+                  </div>
+                `).join('')}
+              </div>
+              <button class="receive-all" id="receiveAll">立即领取</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function successModal() {
+      return `
+        <div class="modal-mask">
+          <div class="success-modal">
+            <button class="modal-close" data-m-action="toast" data-message="关闭弹窗">×</button>
+            <div class="success-icon"></div>
+            <div class="success-title">优惠券已领取成功</div>
+            <div class="success-copy">已放入「我的卡包」，可在有效期内到店使用。</div>
+            <div class="success-card"><strong>本次领取 3 张优惠券</strong></div>
+            <div class="modal-actions">
+              <button class="primary-btn" data-m-action="toast" data-message="进入领券中心">继续领券</button>
+              <button class="secondary-btn" data-m-action="toast" data-message="进入我的卡包">去卡包用券</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderHomePopup(kind) {
+      const modal = kind === 'recommend' ? recommendModal() : kind === 'success' ? successModal() : unusedModal();
+      screenEl.innerHTML = homeBase(modal);
+    }
+
+    function renderMall() {
+      screenEl.innerHTML = `
+        ${statusBar({ blue: true })}
+        ${navBar('市集', { blue: true })}
+        <main class="page blue-shell">
+          <div class="scroll">
+            <section class="mall-header">
+              <div class="mall-location">
+                <div class="mall-location-main">
+                  <span class="mall-location-name">沙顶社区</span>
+                  <span class="location-arrow">⌄</span>
+                </div>
+                <span class="message-line"></span>
+              </div>
+              <div class="coupon-banner" data-m-action="toast" data-message="进入领券中心">
+                <div class="banner-placeholder">领券中心入口视觉占位<span>UI 设计提供最终横幅</span></div>
+              </div>
+              <div class="mall-filter">
+                <span class="filter-text">种类</span>
+                <span class="filter-text">社区</span>
+                <div class="mall-search">请输入搜索内容 <span style="color:#2F80FF;font-weight:800;">搜索</span></div>
+              </div>
+            </section>
+            <div class="mall-tabs"><span class="mall-tab">活动推广</span><span class="mall-tab active">周边好店</span></div>
+            ${[
+              ['金沙街羊城家政（优居邦）','到家服务','提供专业、健康、安全的星级保姆、育婴师、月嫂、产康、保健、养老护理等综合性到家服务','距您298米','查看',''],
+              ['爱顿健业口腔','医疗服务','爱顿口腔，现已发展为医疗、教学、预防于一体的高端齿科品牌，是中国牙病防治基金会合作单位','距您1.2公里','导航','dark'],
+              ['广州市仟丽职业培训学校','培训课程','学校位于白云区，开设保健按摩、育婴保育、美容美妆、面点、直播等课程','距您1.4公里','查看','green']
+            ].map(item => `
+              <div class="shop-card">
+                <div class="shop-img ${item[5]}"></div>
+                <div>
+                  <div class="shop-tag">${item[1]}</div>
+                  <div class="shop-title">${item[0]}</div>
+                  <div class="shop-desc">${item[2]}</div>
+                  <div class="shop-meta"><span>${item[3]}</span><span class="shop-action">${item[4]}</span></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+          ${bottomBar('market')}
+        </main>
+      `;
+    }
+
+    function renderProfile() {
+      const tools = ['我的邻里圈','我的房源','我的招聘','我的活动','消息中心','我的社团','组织账户','使用指南','在线客服','消息订阅','我的卡包','我的关注','任务中心','培训管理','领券中心'];
+      screenEl.innerHTML = `
+        ${statusBar({ blue: true })}
+        ${navBar('我的', { blue: true })}
+        <main class="page profile-bg">
+          <div class="scroll">
+            <div class="m-page-content profile-content">
+              <section class="m-profile-head">
+                <div class="m-avatar"><img class="profile-avatar-image" src="icons/m3@2x.png" alt="头像"></div>
+                <span class="m-profile-name">梁生</span>
+                <div class="m-user-tag-row1">
+                  <span class="m-user-tag orange">居民</span>
+                  <span class="m-profile-address">金沙雅苑社区</span>
+                </div>
+                <div class="m-user-tag-row2">
+                  <span class="m-user-tag blue">管理员</span>
+                  <span class="m-user-tag partner">合伙人</span>
+                </div>
+                <span class="m-profile-link">个人信息</span>
+              </section>
+              <section class="m-profile-points-card">
+                <div class="m-profile-points-label">我的积分</div>
+                <div class="m-profile-points-value">130</div>
+                <div class="m-profile-points-worth">价值1.30元</div>
+                <div class="m-profile-points-action exchange">
+                  <span class="m-profile-points-icon">兑</span>
+                  <span class="m-profile-points-text">积分兑换</span>
+                </div>
+                <div class="m-profile-points-action earn">
+                  <span class="m-profile-points-icon">赚</span>
+                  <span class="m-profile-points-text">去赚积分</span>
+                </div>
+              </section>
+              <section class="m-func-grid">
+                ${tools.map(name => `
+                  <div class="m-func-item ${name === '领券中心' ? 'profile-coupon-entry' : ''}" data-m-action="toast" data-message="${name === '领券中心' ? '进入领券中心' : name}">
+                    ${name === '领券中心' ? '<span class="m-badge profile-welfare-badge">领福利</span>' : ''}
+                    <span class="m-func-icon">${toolIcon(name)}</span>
+                    <span class="m-func-label">${name}</span>
+                  </div>
+                `).join('')}
+              </section>
+            </div>
+          </div>
+          ${bottomBar('mine')}
+        </main>
+      `;
+    }
+
+    function bindEvents() {
+      const receiveAll = document.getElementById('receiveAll');
+      if (receiveAll) {
+        receiveAll.addEventListener('click', () => {
+          const url = new URL(location.href);
+          url.searchParams.set('state', 'success');
+          history.replaceState(null, '', url);
+          renderHomePopup('success');
+          bindEvents();
+        });
+      }
+    }
+
+    if (state === 'mall') renderMall();
+    else if (state === 'profile') renderProfile();
+    else renderHomePopup(state);
+    bindEvents();
+  </script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<!-- prototype-states: list,edit -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商家入驻情况</title>
+  <link rel="stylesheet" href="组件库样式.css">
+  <style>
+    html, body { width:1920px; height:1080px; overflow:hidden; }
+    .page-wrapper { height:1080px; overflow:hidden; background:#F7F8FA; }
+    .layout { height:1032px; min-height:1032px; }
+    .main { min-width:0; height:1032px; }
+    .content { height:992px; overflow:hidden; padding:20px 24px; }
+    .header-logo { width:150px; }
+    .header-icon { width:16px; height:16px; display:block; stroke:currentColor; }
+    .sidebar-item svg { width:18px; height:18px; }
+    .filter-field input.range-input { width:230px; }
+    .filter-field input.phone-input { width:150px; }
+    .table-wrap { padding:0 16px; }
+    .op-bar { justify-content:flex-start; }
+    .op-left { display:flex; align-items:center; gap:8px; }
+    .table-wrap table th:nth-child(1) { width:5%; }
+    .table-wrap table th:nth-child(2) { width:17%; }
+    .table-wrap table th:nth-child(3) { width:11%; }
+    .table-wrap table th:nth-child(4) { width:10%; }
+    .table-wrap table th:nth-child(5) { width:12%; }
+    .table-wrap table th:nth-child(6) { width:10%; }
+    .table-wrap table th:nth-child(7) { width:11%; }
+    .table-wrap table th:nth-child(8) { width:13%; }
+    .table-wrap table th:nth-child(9) { width:13%; }
+    .table-wrap table th:nth-child(10) { width:7%; text-align:center; }
+    .table-wrap table td:nth-child(10) { text-align:center; }
+    .text-empty { color:#A9AEB8; }
+    .overlay { display:none; position:fixed; inset:0; width:1920px; height:1080px; z-index:1200; }
+    .overlay.show { display:flex; }
+    .form-control input[type="date"] { height:32px; border:1px solid #E5E6EB; border-radius:4px; padding:0 12px; font-size:13px; color:#272E3B; background:#fff; outline:none; width:100%; font-family:inherit; }
+    .form-control input[type="date"]:focus { border-color:#3491FA; }
+    .modal-context { background:#F7F8FA; border-radius:6px; padding:10px 12px; color:#4E5969; font-size:13px; margin-bottom:18px; }
+    .toast-live { position:fixed; left:50%; top:72px; transform:translateX(-50%); background:rgba(39,46,59,0.92); color:#fff; padding:10px 16px; border-radius:4px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:1400; }
+    .toast-live.show { opacity:1; transform:translate(-50%, 6px); }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-left">
+        <div class="header-logo">云芳邻管理系统</div>
+        <div class="header-hamburger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="header-right">
+        <div class="header-right-item">使用指南</div>
+        <div class="header-right-item">
+          <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+            <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9z"></path>
+            <path d="M10 21h4"></path>
+          </svg>
+          <span>消息</span>
+        </div>
+        <div class="header-right-item">
+          <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+            <path d="M8 3H5a2 2 0 00-2 2v3"></path>
+            <path d="M16 3h3a2 2 0 012 2v3"></path>
+            <path d="M21 16v3a2 2 0 01-2 2h-3"></path>
+            <path d="M8 21H5a2 2 0 01-2-2v-3"></path>
+          </svg>
+          <span>全屏</span>
+        </div>
+        <div class="header-right-item"><span class="avatar">管</span><span>平台管理员</span></div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-item expanded">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10h16l-1-5H5l-1 5z"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
+          <span class="label">商家管理</span><span class="arrow">›</span>
+        </div>
+        <div class="sidebar-sub">
+          <div class="sidebar-item">商家列表</div>
+          <div class="sidebar-item active">商家入驻情况</div>
+          <div class="sidebar-item">优惠券管理</div>
+          <div class="sidebar-item">推广管理</div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <div class="tab-bar">
+          <div class="tab-item">首页<span class="tab-close">×</span></div>
+          <div class="tab-item">商家列表<span class="tab-close">×</span></div>
+          <div class="tab-item active">商家入驻情况<span class="tab-close">×</span></div>
+        </div>
+
+        <div class="content">
+          <div class="filter-card">
+            <div class="filter-row">
+              <div class="filter-field">
+                <label>商家名称</label>
+                <input type="text" placeholder="请输入商家名称">
+              </div>
+              <div class="filter-field">
+                <label>所属社区</label>
+                <input type="text" placeholder="请输入所属社区">
+              </div>
+              <div class="filter-field">
+                <label>商家管理员</label>
+                <input type="text" placeholder="请输入姓名">
+              </div>
+              <div class="filter-field">
+                <label>管理员手机号</label>
+                <input class="phone-input" type="text" placeholder="请输入手机号">
+              </div>
+              <div class="filter-field">
+                <label>所属销售</label>
+                <input type="text" placeholder="请输入销售姓名">
+              </div>
+              <div class="filter-field">
+                <label>入驻时间</label>
+                <input class="range-input" type="text" placeholder="开始日期 - 结束日期">
+              </div>
+              <div class="filter-field">
+                <label>创建时间</label>
+                <input class="range-input" type="text" placeholder="开始日期 - 结束日期">
+              </div>
+              <button class="btn btn-primary" data-pc-action="query">查询</button>
+              <button class="btn btn-default" data-pc-action="reset">重置</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <div class="op-bar">
+              <div class="op-left">
+                <button class="btn btn-outline" id="exportBtn">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 3v12"></path>
+                    <path d="M7 10l5 5 5-5"></path>
+                    <path d="M5 21h14"></path>
+                  </svg>
+                  批量导出
+                </button>
+              </div>
+            </div>
+
+            <table class="pc-table">
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>商家名称</th>
+                  <th>所属社区</th>
+                  <th>商家管理员</th>
+                  <th>管理员手机号</th>
+                  <th>所属销售</th>
+                  <th>入驻时间</th>
+                  <th>最后登录时间</th>
+                  <th>创建时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-row="0">
+                  <td>1</td>
+                  <td>归园咖啡社区店</td>
+                  <td>东湖社区</td>
+                  <td>王珊</td>
+                  <td>138****6720</td>
+                  <td class="sales-cell">楚珊</td>
+                  <td class="onboard-cell">2026年07月12日</td>
+                  <td>2026-07-12 09:38</td>
+                  <td>2026-06-28 14:20</td>
+                  <td><a class="action-link edit-link" data-index="0">修改</a></td>
+                </tr>
+                <tr data-row="1">
+                  <td>2</td>
+                  <td>芳邻生鲜驿站</td>
+                  <td>桂花社区</td>
+                  <td>刘敏</td>
+                  <td>159****4381</td>
+                  <td class="sales-cell">林浩</td>
+                  <td class="onboard-cell"><span class="text-empty">-</span></td>
+                  <td><span class="text-empty">-</span></td>
+                  <td>2026-07-03 10:16</td>
+                  <td><a class="action-link edit-link" data-index="1">修改</a></td>
+                </tr>
+                <tr data-row="2">
+                  <td>3</td>
+                  <td>小满家政服务</td>
+                  <td>芳草社区</td>
+                  <td>赵婷婷</td>
+                  <td>186****2039</td>
+                  <td class="sales-cell">何楠</td>
+                  <td class="onboard-cell">2026年07月10日</td>
+                  <td>2026-07-10 16:45</td>
+                  <td>2026-07-01 09:25</td>
+                  <td><a class="action-link edit-link" data-index="2">修改</a></td>
+                </tr>
+                <tr data-row="3">
+                  <td>4</td>
+                  <td>康乐理疗馆</td>
+                  <td>东湖社区</td>
+                  <td>陈可</td>
+                  <td>177****5126</td>
+                  <td class="sales-cell"><span class="text-empty">-</span></td>
+                  <td class="onboard-cell"><span class="text-empty">-</span></td>
+                  <td>2026-06-29 10:10</td>
+                  <td>2026-07-02 11:30</td>
+                  <td><a class="action-link edit-link" data-index="3">修改</a></td>
+                </tr>
+                <tr data-row="4">
+                  <td>5</td>
+                  <td>邻里鲜花坊</td>
+                  <td>桂花社区</td>
+                  <td>周月</td>
+                  <td>136****9088</td>
+                  <td class="sales-cell">唐颖</td>
+                  <td class="onboard-cell">2026年06月18日</td>
+                  <td>2026-07-08 13:22</td>
+                  <td>2026-06-14 15:02</td>
+                  <td><a class="action-link edit-link" data-index="4">修改</a></td>
+                </tr>
+                <tr data-row="5">
+                  <td>6</td>
+                  <td>安心维修服务部</td>
+                  <td>芳草社区</td>
+                  <td>孙明</td>
+                  <td>150****7712</td>
+                  <td class="sales-cell">楚珊</td>
+                  <td class="onboard-cell"><span class="text-empty">-</span></td>
+                  <td><span class="text-empty">-</span></td>
+                  <td>2026-07-05 17:40</td>
+                  <td><a class="action-link edit-link" data-index="5">修改</a></td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div class="pagination">
+              <span class="total">共 126 条</span>
+              <span class="pg active">1</span>
+              <span class="pg">2</span>
+              <span class="pg">3</span>
+              <span class="pg">4</span>
+              <span class="pg">...</span>
+              <span class="pg">13</span>
+              <select class="pg-select"><option>10条/页</option><option>20条/页</option><option>50条/页</option></select>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay" id="editOverlay">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3>修改入驻信息</h3>
+        <div class="modal-close" id="modalClose">×</div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-context" id="modalContext">当前商家：归园咖啡社区店</div>
+        <div class="form-row">
+          <div class="form-label">入驻时间</div>
+          <div class="form-control">
+            <input type="date" id="onboardDate">
+            <div class="form-help">保存后列表按该日期展示入驻时间。</div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">所属销售</div>
+          <div class="form-control">
+            <input type="text" id="salesInput" placeholder="请输入所属销售">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" id="cancelEdit">取消</button>
+        <button class="btn btn-primary" id="saveEdit">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-live" id="toast"></div>
+
+  <script src="pc-components.js?v=20260713b"></script>
+  <script>
+    var currentIndex = 0;
+    var merchants = [
+      { name: '归园咖啡社区店', sales: '楚珊', onboardDate: '2026-07-12' },
+      { name: '芳邻生鲜驿站', sales: '林浩', onboardDate: '' },
+      { name: '小满家政服务', sales: '何楠', onboardDate: '2026-07-10' },
+      { name: '康乐理疗馆', sales: '', onboardDate: '' },
+      { name: '邻里鲜花坊', sales: '唐颖', onboardDate: '2026-06-18' },
+      { name: '安心维修服务部', sales: '楚珊', onboardDate: '' }
+    ];
+
+    function showToast(text) {
+      var toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(function () {
+        toast.classList.remove('show');
+      }, 1600);
+    }
+
+    function formatDateText(dateText) {
+      if (!dateText) return '<span class="text-empty">-</span>';
+      var parts = dateText.split('-');
+      return parts[0] + '年' + parts[1] + '月' + parts[2] + '日';
+    }
+
+    function formatSales(text) {
+      return text ? text : '<span class="text-empty">-</span>';
+    }
+
+    function openEdit(index) {
+      currentIndex = Number(index);
+      var item = merchants[currentIndex];
+      document.getElementById('modalContext').textContent = '当前商家：' + item.name;
+      document.getElementById('onboardDate').value = item.onboardDate;
+      document.getElementById('salesInput').value = item.sales;
+      document.getElementById('editOverlay').classList.add('show');
+    }
+
+    function closeEdit() {
+      document.getElementById('editOverlay').classList.remove('show');
+    }
+
+    document.querySelectorAll('.edit-link').forEach(function (link) {
+      link.addEventListener('click', function () {
+        openEdit(link.dataset.index);
+      });
+    });
+
+    document.getElementById('exportBtn').addEventListener('click', function () {
+      showToast('已生成当前筛选结果导出任务');
+    });
+
+    document.getElementById('modalClose').addEventListener('click', closeEdit);
+    document.getElementById('cancelEdit').addEventListener('click', closeEdit);
+
+    document.getElementById('saveEdit').addEventListener('click', function () {
+      var item = merchants[currentIndex];
+      item.onboardDate = document.getElementById('onboardDate').value;
+      item.sales = document.getElementById('salesInput').value.trim();
+
+      var row = document.querySelector('tr[data-row="' + currentIndex + '"]');
+      row.querySelector('.onboard-cell').innerHTML = formatDateText(item.onboardDate);
+      row.querySelector('.sales-cell').innerHTML = formatSales(item.sales);
+
+      closeEdit();
+      showToast('已保存入驻信息');
+    });
+
+    var initialState = new URLSearchParams(window.location.search).get('state');
+    if (initialState === 'edit') openEdit(0);
+  </script>
+</body>
+</html>

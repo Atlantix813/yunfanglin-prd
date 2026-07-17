@@ -1,0 +1,18 @@
+{
+  "endpoint": "pc",
+  "generatedAt": "2026-07-16T08:07:09.827Z",
+  "source": {
+    "catalog": "PC管理端/PC端组件库.html",
+    "css": "PC管理端/组件库样式.css",
+    "js": "PC管理端/PC端组件交互.js"
+  },
+  "snapshot": {
+    "css": "组件库样式.css",
+    "js": "pc-components.js"
+  },
+  "sha256": {
+    "catalog": "339c823e8d54fd8a0b6c093d814af93ca51a2b0754d23255e5f95f10b44b5dfd",
+    "css": "261193418c465c86ca009d6a2063105b4da7d1f7f20c0cb9591b3b7b594124a8",
+    "js": "967acbdd39d7cedcedb5cbc68600d570a03ac82734f269e825ba3a2169a56278"
+  }
+}

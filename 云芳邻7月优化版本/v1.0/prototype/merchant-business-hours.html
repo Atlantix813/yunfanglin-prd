@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<!-- prototype-states: list,detail,hours -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>商家营业时间配置</title>
+  <link rel="stylesheet" href="组件库样式.css">
+  <style>
+    html, body { width:1920px; height:1080px; overflow:hidden; }
+    .page-wrapper { width:1920px; height:1080px; overflow:hidden; background:#F0F2F5; }
+    .layout { height:1032px; min-height:1032px; display:flex; }
+    .business-sidebar { width:180px; height:1032px; min-height:1032px; overflow:hidden; }
+    .main { width:1740px; height:1032px; min-width:0; }
+    .content { height:992px; overflow:hidden; padding:18px 16px 0; background:#F0F2F5; }
+    .header-logo { width:150px; }
+    .header-icon { width:16px; height:16px; display:block; stroke:currentColor; }
+    .tab-bar { padding-left:20px; background:#fff; }
+    .page-header { display:none; }
+    .business-filter-card { height:186px; padding:18px 16px; border-radius:0; margin:0 0 12px; box-shadow:none; }
+    .filter-grid { display:grid; grid-template-columns: 390px 400px 400px 1fr; row-gap:16px; column-gap:48px; align-items:center; }
+    .filter-field { justify-content:flex-start; }
+    .filter-field label { width:76px; text-align:right; color:#4E5969; }
+    .filter-field input, .filter-field select { width:154px; height:32px; }
+    .filter-field.wide input { width:226px; }
+    .filter-actions { display:flex; gap:8px; margin-top:36px; }
+    .table-wrap { height:568px; padding:0 16px; border-radius:0; box-shadow:none; }
+    .op-bar { height:58px; padding:14px 0 10px; }
+    .op-icon { width:13px; height:13px; display:inline-block; }
+    .table-wrap table th { height:36px; text-align:center; padding:0 10px; }
+    .table-wrap table td { height:42px; text-align:center; color:#86909C; padding:0 10px; }
+    .table-wrap table th:nth-child(1) { width:54px; }
+    .table-wrap table th:nth-child(2) { width:190px; }
+    .table-wrap table th:nth-child(3) { width:118px; }
+    .table-wrap table th:nth-child(4) { width:142px; }
+    .table-wrap table th:nth-child(5) { width:142px; }
+    .table-wrap table th:nth-child(6) { width:166px; }
+    .table-wrap table th:nth-child(7) { width:140px; }
+    .table-wrap table th:nth-child(8) { width:160px; }
+    .table-wrap table th:nth-child(9) { width:154px; }
+    .table-wrap table th:nth-child(10) { width:120px; }
+    .table-wrap table th:nth-child(11) { width:110px; }
+    .table-wrap table th:nth-child(12) { width:150px; }
+    .table-wrap table th:nth-child(13) { width:168px; }
+    .name-ellipsis { display:inline-block; max-width:184px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:middle; }
+    .sidebar-heading { height:32px; padding:0 16px; display:flex; align-items:center; color:#A9AEB8; font-size:12px; }
+    .sidebar-sub .sidebar-item.active { color:#3491FA; background:#E8F3FF; font-weight:500; }
+    .sidebar-item svg { width:16px; height:16px; }
+    .time-cell { color:#4E5969; }
+    .time-empty { color:#A9AEB8; }
+    .overlay { display:none; position:fixed; inset:0; width:1920px; height:1080px; z-index:1200; }
+    .overlay.show { display:flex; }
+    .modal-hours { width:680px; }
+    .merchant-summary { background:#F7F8FA; border-radius:6px; padding:12px 14px; color:#4E5969; font-size:13px; margin-bottom:18px; display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:12px; }
+    .section-block { margin-top:18px; }
+    .section-head { height:36px; background:#F7F8FA; border:1px solid #E5E6EB; display:flex; align-items:center; padding:0 14px; font-size:14px; font-weight:600; color:#272E3B; }
+    .status-row { height:52px; background:#F7F8FA; display:flex; align-items:center; justify-content:space-between; padding:0 18px; border:1px solid #E5E6EB; }
+    .status-row .label { font-size:14px; color:#272E3B; }
+    .status-text { margin-left:auto; margin-right:12px; color:#272E3B; font-size:14px; }
+    .switch-mini { width:46px; height:24px; border-radius:12px; background:#909399; position:relative; cursor:pointer; display:inline-block; vertical-align:middle; }
+    .switch-mini::after { content:''; position:absolute; left:2px; top:2px; width:20px; height:20px; border-radius:50%; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.18); }
+    .switch-mini.on { background:#3491FA; }
+    .switch-mini.on::after { left:24px; }
+    .day-panel { border:1px solid #E5E6EB; border-top:none; background:#F7F8FA; padding:18px 36px; display:flex; flex-wrap:wrap; gap:14px 16px; }
+    .day-chip { min-width:88px; height:36px; border:1px solid #C9CDD4; border-radius:6px; background:#fff; color:#272E3B; font-size:14px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+    .day-chip.active { color:#3491FA; border-color:#3491FA; background:#fff; }
+    .time-panel { border:1px solid #E5E6EB; border-top:none; background:#F7F8FA; padding:18px 28px 20px; }
+    .time-segment { display:grid; grid-template-columns:76px 76px 12px 76px 20px 76px 12px 76px 22px; gap:8px; align-items:center; margin-bottom:12px; }
+    .segment-label { font-size:14px; color:#272E3B; }
+    .segment-label.required::before { content:'*'; color:#F53F3F; margin-right:4px; }
+    .time-input { height:34px; border:1px solid #C9CDD4; background:#fff; border-radius:0; padding:0 8px; font-size:14px; color:#272E3B; font-family:inherit; }
+    .time-sep { text-align:center; color:#272E3B; font-size:18px; }
+    .delete-seg { color:#F53F3F; cursor:pointer; font-size:18px; text-align:center; }
+    .add-time { height:36px; display:flex; align-items:center; justify-content:center; color:#272E3B; font-size:15px; cursor:pointer; margin-top:2px; }
+    .add-time.disabled { display:none; }
+    .rule-tip { margin-top:10px; color:#86909C; font-size:12px; line-height:20px; }
+    .toast-live { position:fixed; left:50%; top:72px; transform:translateX(-50%); background:rgba(39,46,59,0.92); color:#fff; padding:10px 16px; border-radius:4px; font-size:13px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:1400; }
+    .toast-live.show { opacity:1; transform:translate(-50%, 6px); }
+    .modal-merchant { width:1630px; height:980px; border-radius:2px; overflow:hidden; }
+    .modal-merchant .modal-header { height:54px; padding:0 20px; border-bottom:none; }
+    .modal-merchant .modal-header h3 { font-size:16px; color:#272E3B; font-weight:500; }
+    .merchant-close { width:36px; height:36px; font-size:34px; line-height:36px; color:#86909C; }
+    .merchant-detail-body { padding:0 22px; overflow:hidden; }
+    .setup-steps { width:1280px; height:84px; margin:0 auto 8px; position:relative; display:flex; align-items:flex-start; justify-content:space-between; padding-top:28px; }
+    .setup-steps::before { content:''; position:absolute; left:64px; right:64px; top:37px; height:2px; background:#C9CDD4; }
+    .step-node { width:130px; display:flex; flex-direction:column; align-items:center; gap:7px; position:relative; z-index:1; color:#C9CDD4; font-size:13px; font-weight:500; }
+    .step-circle { width:22px; height:22px; border-radius:50%; background:#fff; border:2px solid #C9CDD4; display:flex; align-items:center; justify-content:center; font-size:13px; line-height:1; }
+    .step-node.done { color:#52C41A; }
+    .step-node.done .step-circle { border-color:#52C41A; color:#52C41A; }
+    .step-node.active { color:#3491FA; }
+    .step-node.active .step-circle { border-color:#3491FA; background:#3491FA; color:#fff; }
+    .merchant-section-title { height:38px; display:flex; align-items:center; font-weight:600; color:#272E3B; border-bottom:1px solid #E5E6EB; margin-bottom:26px; }
+    .merchant-form-grid { display:grid; grid-template-columns: 520px 520px 1fr; column-gap:28px; row-gap:24px; }
+    .merchant-field { min-width:0; }
+    .merchant-label { height:22px; margin-bottom:10px; font-size:13px; color:#4E5969; }
+    .merchant-label.required::before { content:'*'; color:#F53F3F; margin-right:2px; }
+    .merchant-input-wrap { position:relative; width:100%; }
+    .merchant-input, .merchant-select, .merchant-textarea { width:100%; border:1px solid #E5E6EB; border-radius:4px; background:#fff; color:#4E5969; font-size:13px; font-family:inherit; outline:none; }
+    .merchant-input, .merchant-select { height:32px; padding:0 14px; }
+    .merchant-select { appearance:none; background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23A9AEB8'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 14px center #fff; padding-right:34px; }
+    .merchant-count { position:absolute; right:10px; top:6px; color:#C9CDD4; font-size:12px; }
+    .merchant-textarea { height:64px; resize:none; padding:10px 12px; line-height:20px; }
+    .merchant-field.intro { grid-column:1 / span 2; }
+    .merchant-field.intro .merchant-count { top:auto; bottom:7px; }
+    .allow-business-row { width:520px; height:52px; margin-top:24px; display:flex; align-items:center; justify-content:space-between; }
+    .allow-business-row .allow-label { font-size:13px; font-weight:600; color:#272E3B; }
+    .decor-section { margin-top:34px; }
+    .upload-row { display:grid; grid-template-columns: 330px 1fr; gap:70px; margin-top:24px; align-items:start; }
+    .upload-title { font-size:13px; color:#4E5969; margin-bottom:10px; }
+    .upload-title.required::before { content:'*'; color:#F53F3F; margin-right:2px; }
+    .upload-list { display:flex; align-items:flex-start; gap:14px; }
+    .upload-thumb, .upload-add { width:132px; height:132px; border:1px dashed #C9CDD4; border-radius:4px; background:#F7F8FA; position:relative; overflow:hidden; }
+    .upload-thumb { border-style:solid; background:linear-gradient(135deg,#E7F3FF 0%,#F7F8FA 45%,#F5D8C8 46%,#D9E7F6 100%); }
+    .upload-thumb::before { content:'门店'; position:absolute; left:12px; top:12px; width:48px; height:20px; border-radius:3px; background:#F53F3F; color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; }
+    .upload-thumb::after { content:'×'; position:absolute; top:6px; right:6px; width:20px; height:20px; border-radius:50%; background:rgba(39,46,59,.6); color:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; }
+    .upload-add { display:flex; align-items:center; justify-content:center; color:#A9AEB8; font-size:34px; }
+    .upload-help { margin-top:6px; color:#C9CDD4; font-size:12px; }
+    .merchant-detail-footer { height:58px; padding:11px 20px; border-top:1px solid #E5E6EB; display:flex; justify-content:flex-end; gap:10px; }
+  </style>
+</head>
+<body>
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-left">
+        <div class="header-logo">云芳邻管理系统</div>
+        <div class="header-hamburger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="header-right">
+        <div class="header-right-item">使用指南</div>
+        <div class="header-right-item">
+          <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9z"></path><path d="M10 21h4"></path></svg>
+          <span>消息</span>
+        </div>
+        <div class="header-right-item"><span class="avatar">管</span><span>平台管理员</span></div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar business-sidebar">
+        <div class="sidebar-heading">菜单</div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11l8-7 8 7"></path><path d="M6 10v10h12V10"></path></svg>
+          <span class="label">工作台</span>
+        </div>
+        <div class="sidebar-item expanded">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10h16l-1 10H5L4 10z"></path><path d="M7 10V7a5 5 0 0110 0v3"></path></svg>
+          <span class="label">商家管理</span><span class="arrow">›</span>
+        </div>
+        <div class="sidebar-sub">
+          <div class="sidebar-item active">商家列表</div>
+          <div class="sidebar-item">商家入驻情况</div>
+          <div class="sidebar-item">优惠券管理</div>
+          <div class="sidebar-item">推广管理</div>
+          <div class="sidebar-item">领取记录</div>
+          <div class="sidebar-item">核销记录</div>
+        </div>
+      </aside>
+      <main class="main">
+        <div class="tab-bar">
+          <div class="tab-item">工作台</div>
+          <div class="tab-item active">商家列表<span class="tab-close">×</span></div>
+          <button class="btn btn-primary" style="margin-left:auto;">更多</button>
+        </div>
+        <div class="content">
+          <div class="page-header">
+            <span class="page-title">商家列表</span>
+            <span class="breadcrumb">商家管理 / 商家列表</span>
+          </div>
+
+          <div class="filter-card business-filter-card">
+            <div class="filter-grid">
+              <div class="filter-field"><label>商家名称</label><input type="text" placeholder="请输入"></div>
+              <div class="filter-field"><label>商家类型</label><select><option>请选择</option><option>服务类</option><option>餐饮类</option><option>零售类</option></select></div>
+              <div class="filter-field"><label>联系人电话</label><input type="text" placeholder="请输入"></div>
+              <div class="filter-field"><label>联系人名称</label><input type="text" placeholder="请输入"></div>
+              <div class="filter-field"><label>关联社区</label><input type="text" placeholder="请输入"></div>
+              <div class="filter-field"><label>商家管理员</label><input type="text" placeholder="请输入"></div>
+              <div class="filter-field"><label>商家管理员手机号</label><input type="text" placeholder="请输入"></div>
+              <div class="filter-field wide"><label>最后登录时间</label><input type="text" placeholder="开始时间    ~    结束时间"></div>
+            </div>
+            <div class="filter-actions">
+              <button class="btn btn-primary" data-pc-action="query">
+                <svg class="op-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="M16.5 16.5L21 21"></path></svg>
+                查询
+              </button>
+              <button class="btn btn-default" data-pc-action="reset">
+                <svg class="op-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 109-9"></path><path d="M3 4v6h6"></path></svg>
+                重置
+              </button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <div class="op-bar">
+              <button class="btn btn-outline">
+                <svg class="op-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg>
+                创建商家
+              </button>
+              <button class="btn btn-outline">
+                <svg class="op-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12"></path><path d="M7 8l5-5 5 5"></path><path d="M5 21h14"></path></svg>
+                批量导入
+              </button>
+            </div>
+            <table class="pc-table">
+              <thead>
+                <tr>
+                  <th>序号</th>
+                  <th>商家名称</th>
+                  <th>商家类型</th>
+                  <th>联系人电话</th>
+                  <th>联系人姓名</th>
+                  <th>关联社区</th>
+                  <th>商家管理员</th>
+                  <th>商家管理员手机号</th>
+                  <th>最后登录时间</th>
+                  <th>营业状态</th>
+                  <th>商家状态</th>
+                  <th>更新时间</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr data-row="0">
+                  <td>1</td>
+                  <td><span class="name-ellipsis">金沙街丰城家政（优居店）</span></td>
+                  <td>服务类</td>
+                  <td>13560032865</td>
+                  <td>王静</td>
+                  <td>沙顶社区</td>
+                  <td>黄佩玲</td>
+                  <td>13318856371</td>
+                  <td>2026-06-26 12:34:51</td>
+                  <td>营业中</td>
+                  <td>正常</td>
+                  <td>2026-06-26 11:08:53</td>
+                  <td><a class="action-link merchant-detail-link" data-index="0">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="0">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="0">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="1">
+                  <td>2</td>
+                  <td><span class="name-ellipsis">云芳邻</span></td>
+                  <td>服务类</td>
+                  <td>13250157082</td>
+                  <td>云芳邻</td>
+                  <td>白云区</td>
+                  <td>王五</td>
+                  <td>13767186759</td>
+                  <td>2026-07-01 10:18:07</td>
+                  <td>已打烊</td>
+                  <td>正常</td>
+                  <td>2026-06-25 09:58:32</td>
+                  <td><a class="action-link merchant-detail-link" data-index="1">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="1">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="1">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="2">
+                  <td>3</td>
+                  <td><span class="name-ellipsis">广州中医药大学第一附属医院服务点</span></td>
+                  <td>服务类</td>
+                  <td>13642737829</td>
+                  <td>王继晨</td>
+                  <td>中医药大学社区</td>
+                  <td>王继晨</td>
+                  <td>13642737829</td>
+                  <td>2026-06-26 11:08:14</td>
+                  <td>营业中</td>
+                  <td>正常</td>
+                  <td>2026-06-24 16:25:18</td>
+                  <td><a class="action-link merchant-detail-link" data-index="2">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="2">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="2">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="3">
+                  <td>4</td>
+                  <td><span class="name-ellipsis">盛之品食品（广州）有限公司</span></td>
+                  <td>零售类</td>
+                  <td>13711195509</td>
+                  <td>何巧霞</td>
+                  <td>南方医科大学社区</td>
+                  <td>何巧霞</td>
+                  <td>13711195509</td>
+                  <td>2026-06-23 15:35:12</td>
+                  <td>已打烊</td>
+                  <td>正常</td>
+                  <td>2026-06-23 15:31:00</td>
+                  <td><a class="action-link merchant-detail-link" data-index="3">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="3">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="3">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="4">
+                  <td>5</td>
+                  <td><span class="name-ellipsis">嘉裕太阳城广场</span></td>
+                  <td>服务类</td>
+                  <td>18102822298</td>
+                  <td>杜主管</td>
+                  <td>南方医科大学社区</td>
+                  <td>嘉裕太阳城广场</td>
+                  <td>18102822298</td>
+                  <td>2026-06-30 19:18:51</td>
+                  <td>营业中</td>
+                  <td>正常</td>
+                  <td>2026-06-18 16:24:45</td>
+                  <td><a class="action-link merchant-detail-link" data-index="4">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="4">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="4">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="5">
+                  <td>6</td>
+                  <td><span class="name-ellipsis">京溪南方医科大社区肉菜店</span></td>
+                  <td>服务类</td>
+                  <td>13602737990</td>
+                  <td>陈冰娜</td>
+                  <td>南方医科大学社区</td>
+                  <td>陈冰娜</td>
+                  <td>13602737990</td>
+                  <td>2026-06-30 14:54:16</td>
+                  <td>营业中</td>
+                  <td>正常</td>
+                  <td>2026-06-18 11:22:40</td>
+                  <td><a class="action-link merchant-detail-link" data-index="5">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="5">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="5">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="6">
+                  <td>7</td>
+                  <td><span class="name-ellipsis">手心咖啡（南医大店）</span></td>
+                  <td>餐饮类</td>
+                  <td>15692417260</td>
+                  <td>陈欣仪</td>
+                  <td>南方医科大学社区</td>
+                  <td>陈欣仪</td>
+                  <td>15692417260</td>
+                  <td>2026-06-19 07:57:24</td>
+                  <td>已打烊</td>
+                  <td>正常</td>
+                  <td>2026-06-17 16:20:51</td>
+                  <td><a class="action-link merchant-detail-link" data-index="6">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="6">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="6">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="7">
+                  <td>8</td>
+                  <td><span class="name-ellipsis">唐伯伯茶室</span></td>
+                  <td>餐饮类</td>
+                  <td>15678907574</td>
+                  <td>唐佳林</td>
+                  <td>南方医科大学社区</td>
+                  <td>唐佳林</td>
+                  <td>15678907574</td>
+                  <td>2026-06-16 23:24:51</td>
+                  <td>营业中</td>
+                  <td>正常</td>
+                  <td>2026-06-17 10:21:27</td>
+                  <td><a class="action-link merchant-detail-link" data-index="7">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="7">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="7">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="8">
+                  <td>9</td>
+                  <td><span class="name-ellipsis">美亚影城</span></td>
+                  <td>服务类</td>
+                  <td>15915826429</td>
+                  <td>梁锦聪</td>
+                  <td>蝶云天社区</td>
+                  <td>美亚影城</td>
+                  <td>19924371522</td>
+                  <td>2026-06-17 17:08:52</td>
+                  <td>营业中</td>
+                  <td>正常</td>
+                  <td>2026-06-16 16:24:25</td>
+                  <td><a class="action-link merchant-detail-link" data-index="8">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="8">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="8">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+                <tr data-row="9">
+                  <td>10</td>
+                  <td><span class="name-ellipsis">立信烟酒行</span></td>
+                  <td>零售类</td>
+                  <td>13570205771</td>
+                  <td>谢金弟</td>
+                  <td>和瑞社区</td>
+                  <td>林翠娇</td>
+                  <td>13570205771</td>
+                  <td>2026-06-12 16:05:00</td>
+                  <td>已打烊</td>
+                  <td>正常</td>
+                  <td>2026-06-12 16:18:22</td>
+                  <td><a class="action-link merchant-detail-link" data-index="9">商家详情</a><span class="action-sep">|</span><a class="action-link merchant-detail-link" data-index="9">修改</a><span class="action-sep">|</span><a class="action-link hours-link" data-index="9">营业时间</a><span class="action-sep">|</span><a class="action-link">更多</a></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="pagination">
+              <span class="total"></span>
+              <span>共 148 条</span>
+              <select class="pg-select"><option>10条/页</option><option>20条/页</option></select>
+              <span class="pg active">1</span><span class="pg">2</span><span class="pg">3</span><span class="pg">4</span><span>···</span><span class="pg">15</span>
+              <span>前往</span><span class="pg">1</span><span>页</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="overlay" id="merchantDetailOverlay">
+    <div class="modal modal-merchant">
+      <div class="modal-header">
+        <h3>修改商家</h3>
+        <div class="modal-close merchant-close" id="merchantDetailClose">×</div>
+      </div>
+      <div class="modal-body merchant-detail-body">
+        <div class="setup-steps">
+          <div class="step-node done">
+            <span class="step-circle">✓</span>
+            <span>资质信息</span>
+          </div>
+          <div class="step-node active">
+            <span class="step-circle">2</span>
+            <span>商家信息</span>
+          </div>
+          <div class="step-node">
+            <span class="step-circle">3</span>
+            <span>人员配置</span>
+          </div>
+        </div>
+
+        <div class="merchant-section-title">商家信息</div>
+        <div class="merchant-form-grid">
+          <div class="merchant-field">
+            <div class="merchant-label required">商家电话(门店)</div>
+            <div class="merchant-input-wrap">
+              <input class="merchant-input" id="detailStorePhone" value="13560032865">
+              <span class="merchant-count">11/20</span>
+            </div>
+          </div>
+          <div class="merchant-field">
+            <div class="merchant-label required">商家电话(老板):</div>
+            <div class="merchant-input-wrap">
+              <input class="merchant-input" id="detailOwnerPhone" value="13560032865">
+              <span class="merchant-count">11/20</span>
+            </div>
+          </div>
+          <div class="merchant-field">
+            <div class="merchant-label required">商家类型</div>
+            <select class="merchant-select" id="detailType">
+              <option>服务类</option>
+              <option>餐饮类</option>
+              <option>零售类</option>
+            </select>
+          </div>
+          <div class="merchant-field intro">
+            <div class="merchant-label required">商家简介</div>
+            <div class="merchant-input-wrap">
+              <textarea class="merchant-textarea" id="detailIntro">提供专业、健康、安全的星级保姆、育婴师、月嫂、产康、保健、养老护理等综合性到家服务</textarea>
+              <span class="merchant-count">41/150</span>
+            </div>
+          </div>
+        </div>
+        <div class="allow-business-row">
+          <span class="allow-label">是否允许营业</span>
+          <i class="switch-mini on"></i>
+        </div>
+
+        <div class="decor-section">
+          <div class="merchant-section-title">店铺装修</div>
+          <div class="upload-row">
+            <div class="upload-group">
+              <div class="upload-title required">商家头像上传</div>
+              <div class="upload-list">
+                <div class="upload-thumb"></div>
+              </div>
+              <div class="upload-help">图片格式为jpg、png，限制图片大小为5M</div>
+            </div>
+            <div class="upload-group">
+              <div class="upload-title required">头部轮播图上传（最多3张）</div>
+              <div class="upload-list">
+                <div class="upload-thumb"></div>
+                <div class="upload-add">＋</div>
+              </div>
+              <div class="upload-help">图片格式为jpg、png，限制图片大小为5M</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="merchant-detail-footer">
+        <button class="btn btn-primary" data-pc-action="toast" data-message="已保存商家信息">保存</button>
+        <button class="btn btn-primary" data-pc-action="toast" data-message="已返回上一步">上一步</button>
+        <button class="btn btn-primary" data-pc-action="toast" data-message="已进入人员配置">下一步</button>
+        <button class="btn btn-default" id="merchantDetailCancel">取消</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay" id="hoursOverlay">
+    <div class="modal modal-hours">
+      <div class="modal-header">
+        <h3>配置营业时间</h3>
+        <div class="modal-close" id="modalClose">×</div>
+      </div>
+      <div class="modal-body">
+        <div class="merchant-summary">
+          <span>商家：<strong id="merchantName">归园咖啡社区店</strong></span>
+          <span>关联社区：<strong id="merchantCommunity">沙顶社区</strong></span>
+          <span>管理员：<strong id="merchantAdmin">黄佩玲</strong></span>
+        </div>
+        <div class="status-row">
+          <span class="label">营业状态</span>
+          <span class="status-text" id="statusText">营业中</span>
+          <i class="switch-mini on" id="statusSwitch"></i>
+        </div>
+        <div class="section-block">
+          <div class="section-head">营业日期</div>
+          <div class="day-panel" id="dayPanel">
+            <button class="day-chip active">周一</button>
+            <button class="day-chip active">周二</button>
+            <button class="day-chip">周三</button>
+            <button class="day-chip active">周四</button>
+            <button class="day-chip">周五</button>
+            <button class="day-chip">周六</button>
+            <button class="day-chip">周日</button>
+          </div>
+        </div>
+        <div class="section-block">
+          <div class="section-head">营业时间</div>
+          <div class="time-panel">
+            <div id="timeSegments">
+              <div class="time-segment">
+                <span class="segment-label required">时段一</span>
+                <input class="time-input" value="09">
+                <span class="time-sep">:</span>
+                <input class="time-input" value="00">
+                <span class="time-sep">—</span>
+                <input class="time-input" value="18">
+                <span class="time-sep">:</span>
+                <input class="time-input" value="00">
+                <span class="delete-seg">×</span>
+              </div>
+            </div>
+            <div class="add-time" id="addTime">+添加时段</div>
+            <div class="rule-tip">营业日期和营业时间互相独立：选中的星期均使用同一组时间段。最多配置 3 个时间段；结束时间小于开始时间时，按跨天营业处理，例如 22:00-02:00。</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-default" id="cancelBtn">取消</button>
+        <button class="btn btn-primary" id="saveBtn">保存</button>
+      </div>
+    </div>
+  </div>
+  <div class="toast-live" id="toast"></div>
+
+  <script src="pc-components.js?v=20260713b"></script>
+  <script>
+    var merchants = [
+      { name:'金沙街丰城家政（优居店）', community:'沙顶社区', admin:'黄佩玲' },
+      { name:'云芳邻', community:'白云区', admin:'王五' },
+      { name:'广州中医药大学第一附属医院服务点', community:'中医药大学社区', admin:'王继晨' },
+      { name:'盛之品食品（广州）有限公司', community:'南方医科大学社区', admin:'何巧霞' },
+      { name:'嘉裕太阳城广场', community:'南方医科大学社区', admin:'嘉裕太阳城广场' },
+      { name:'京溪南方医科大社区肉菜店', community:'南方医科大学社区', admin:'陈冰娜' },
+      { name:'手心咖啡（南医大店）', community:'南方医科大学社区', admin:'陈欣仪' },
+      { name:'唐伯伯茶室', community:'南方医科大学社区', admin:'唐佳林' },
+      { name:'美亚影城', community:'蝶云天社区', admin:'美亚影城' },
+      { name:'立信烟酒行', community:'和瑞社区', admin:'林翠娇' }
+    ];
+    var labels = ['一', '二', '三'];
+
+    function showToast(text) {
+      var toast = document.getElementById('toast');
+      toast.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 1600);
+    }
+    function openModal(index) {
+      var merchant = merchants[index] || merchants[0];
+      document.getElementById('merchantName').textContent = merchant.name;
+      document.getElementById('merchantCommunity').textContent = merchant.community;
+      document.getElementById('merchantAdmin').textContent = merchant.admin;
+      document.getElementById('hoursOverlay').classList.add('show');
+    }
+    function closeModal() { document.getElementById('hoursOverlay').classList.remove('show'); }
+    function openMerchantDetail(index) {
+      var row = document.querySelector('tr[data-row="' + index + '"]');
+      if (row) {
+        var cells = row.querySelectorAll('td');
+        document.getElementById('detailStorePhone').value = cells[3].textContent.trim();
+        document.getElementById('detailOwnerPhone').value = cells[3].textContent.trim();
+        document.getElementById('detailType').value = cells[2].textContent.trim();
+      }
+      document.getElementById('merchantDetailOverlay').classList.add('show');
+    }
+    function closeMerchantDetail() {
+      document.getElementById('merchantDetailOverlay').classList.remove('show');
+    }
+    function segmentTemplate(index) {
+      return '<div class="time-segment">' +
+        '<span class="segment-label ' + (index === 0 ? 'required' : '') + '">时段' + labels[index] + '</span>' +
+        '<input class="time-input" value="' + (index === 0 ? '09' : index === 1 ? '19' : '22') + '">' +
+        '<span class="time-sep">:</span>' +
+        '<input class="time-input" value="00">' +
+        '<span class="time-sep">—</span>' +
+        '<input class="time-input" value="' + (index === 0 ? '18' : index === 1 ? '21' : '02') + '">' +
+        '<span class="time-sep">:</span>' +
+        '<input class="time-input" value="00">' +
+        '<span class="delete-seg">×</span>' +
+      '</div>';
+    }
+    function refreshAddState() {
+      var count = document.querySelectorAll('.time-segment').length;
+      document.getElementById('addTime').classList.toggle('disabled', count >= 3);
+      document.querySelectorAll('.time-segment').forEach(function (seg, index) {
+        seg.querySelector('.segment-label').textContent = '时段' + labels[index];
+        seg.querySelector('.segment-label').classList.toggle('required', index === 0);
+      });
+    }
+    function addSegment() {
+      var wrap = document.getElementById('timeSegments');
+      var count = wrap.querySelectorAll('.time-segment').length;
+      if (count >= 3) { showToast('最多只允许添加3段时间'); return; }
+      wrap.insertAdjacentHTML('beforeend', segmentTemplate(count));
+      refreshAddState();
+    }
+    function deleteSegment(target) {
+      var rows = document.querySelectorAll('.time-segment');
+      if (rows.length <= 1) { showToast('营业时间至少需要保留一个时段'); return; }
+      target.closest('.time-segment').remove();
+      refreshAddState();
+    }
+    function validateBeforeSave() {
+      var selectedDays = document.querySelectorAll('.day-chip.active').length;
+      if (!selectedDays) { showToast('请至少选择一个营业日期'); return false; }
+      if (!document.querySelectorAll('.time-segment').length) { showToast('营业时间至少需要保留一个时段'); return false; }
+      var ranges = [];
+      var invalid = false;
+      document.querySelectorAll('.time-segment').forEach(function (seg) {
+        var inputs = seg.querySelectorAll('.time-input');
+        var sh = Number(inputs[0].value);
+        var sm = Number(inputs[1].value);
+        var eh = Number(inputs[2].value);
+        var em = Number(inputs[3].value);
+        if ([sh, sm, eh, em].some(function (num) { return Number.isNaN(num); }) || sh > 23 || eh > 23 || sm > 59 || em > 59) invalid = true;
+        var start = sh * 60 + sm;
+        var end = eh * 60 + em;
+        if (end <= start) end += 1440;
+        ranges.push([start, end]);
+      });
+      if (invalid) { showToast('请输入正确的营业时间'); return false; }
+      for (var i = 0; i < ranges.length; i++) {
+        for (var j = i + 1; j < ranges.length; j++) {
+          if (ranges[i][0] < ranges[j][1] && ranges[j][0] < ranges[i][1]) {
+            showToast('营业时间段不允许重叠');
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    document.querySelectorAll('.hours-link').forEach(function (link) {
+      link.addEventListener('click', function () { openModal(Number(link.dataset.index)); });
+    });
+    document.querySelectorAll('.merchant-detail-link').forEach(function (link) {
+      link.addEventListener('click', function () { openMerchantDetail(Number(link.dataset.index)); });
+    });
+    document.getElementById('statusSwitch').addEventListener('click', function () {
+      this.classList.toggle('on');
+      document.getElementById('statusText').textContent = this.classList.contains('on') ? '营业中' : '已打烊';
+    });
+    document.querySelectorAll('.day-chip').forEach(function (chip) {
+      chip.addEventListener('click', function () { chip.classList.toggle('active'); });
+    });
+    document.getElementById('addTime').addEventListener('click', addSegment);
+    document.getElementById('timeSegments').addEventListener('click', function (event) {
+      if (event.target.classList.contains('delete-seg')) deleteSegment(event.target);
+    });
+    document.getElementById('modalClose').addEventListener('click', closeModal);
+    document.getElementById('cancelBtn').addEventListener('click', closeModal);
+    document.getElementById('merchantDetailClose').addEventListener('click', closeMerchantDetail);
+    document.getElementById('merchantDetailCancel').addEventListener('click', closeMerchantDetail);
+    document.getElementById('saveBtn').addEventListener('click', function () {
+      if (!validateBeforeSave()) return;
+      closeModal();
+      showToast('已保存营业时间');
+    });
+    refreshAddState();
+
+    var initialState = new URLSearchParams(window.location.search).get('state');
+    if (initialState === 'detail') openMerchantDetail(0);
+    if (initialState === 'hours') openModal(0);
+  </script>
+</body>
+</html>

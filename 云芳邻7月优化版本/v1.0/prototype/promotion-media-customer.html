@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!-- prototype-states: list-video,detail-video,detail-playing -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375, initial-scale=1.0">
+  <title>居民端推广 · 视频态</title>
+  <link rel="stylesheet" href="mobile-components.css?v=20260710b">
+  <style>
+    html, body { width:375px; height:812px; min-height:812px; margin:0; overflow:hidden; background:#F2F5FA; }
+    body { font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif; color:#222835; }
+    .m-phone { width:375px; height:812px; margin:0 auto; background:#F2F5FA; overflow:hidden; }
+    .m-phone-screen { width:375px; height:812px; overflow:hidden; background:#F2F5FA; }
+    .page { display:none; height:724px; overflow:hidden; background:#F2F5FA; position:relative; }
+    .m-phone.is-list .list-page { display:block; }
+    .m-phone.is-detail .detail-page { display:block; }
+    .market-head { background:#fff; border-bottom:1px solid #EEF2F8; }
+    .market-tabs { height:48px; display:flex; align-items:center; padding:0 14px; gap:25px; }
+    .market-tab { font-size:16px; color:#8E96A3; font-weight:700; height:48px; display:flex; align-items:center; position:relative; white-space:nowrap; }
+    .market-tab.active { color:#1296DB; }
+    .market-tab.active:after { content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:#1296DB; }
+    .location { margin-left:auto; color:#222835; font-size:15px; font-weight:700; white-space:nowrap; }
+    .message-btn { width:30px; height:30px; margin-left:8px; position:relative; display:flex; align-items:center; justify-content:center; color:#222835; }
+    .message-btn .badge { position:absolute; right:-5px; top:-4px; width:18px; height:18px; border-radius:50%; background:#E81D2C; color:#fff; font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700; }
+    .search-row { height:48px; display:flex; align-items:center; gap:12px; padding:0 14px; background:#fff; }
+    .community { color:#8E96A3; font-size:15px; width:72px; }
+    .search-box { flex:1; height:36px; border-radius:18px; background:#F2F3F5; display:flex; align-items:center; justify-content:space-between; padding:0 13px 0 20px; color:#939CAB; font-size:16px; min-width:0; }
+    .list-scroll { height:572px; padding:12px 13px 16px; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; }
+    .list-scroll::-webkit-scrollbar { display:none; }
+    .masonry { display:flex; gap:10px; align-items:flex-start; }
+    .masonry-col { flex:1; display:flex; flex-direction:column; gap:10px; min-width:0; }
+    .promo-card { width:100%; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.10); cursor:pointer; }
+    .cover { height:220px; background:#D5D8DE; position:relative; overflow:hidden; }
+    .promo-card.short .cover { height:118px; }
+    .cover.food { background:linear-gradient(135deg,#D7DAE0 0%,#C9CCD3 48%,#F2DEB2 100%); }
+    .cover.clothes { background:linear-gradient(135deg,#D6D9DF 0%,#C7CBD2 58%,#E9F1FC 100%); }
+    .brand { position:absolute; left:8px; top:8px; height:22px; padding:0 8px; border-radius:4px; color:#fff; font-size:11px; font-weight:700; display:flex; align-items:center; }
+    .brand.blue { background:#24A8E8; }
+    .brand.orange { background:#F59A23; }
+    .media-count { position:absolute; right:8px; top:8px; height:24px; padding:0 8px; border-radius:4px; background:rgba(0,0,0,.42); color:#fff; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:700; }
+    .video-play-badge { position:absolute; right:9px; top:9px; width:34px; height:34px; border-radius:50%; background:rgba(0,0,0,.42); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+    .video-play-badge svg { margin-left:2px; }
+    .countdown { position:absolute; right:8px; bottom:10px; height:24px; padding:0 8px; border-radius:5px; background:rgba(0,0,0,.42); color:#fff; display:flex; align-items:center; gap:5px; font-size:12px; font-weight:700; }
+    .dot { width:6px; height:6px; border-radius:50%; background:#9AEB16; }
+    .card-body { padding:12px 9px 10px; }
+    .card-title { color:#222835; font-size:15px; font-weight:700; line-height:22px; }
+    .shop-row { margin-top:9px; padding-top:8px; border-top:1px solid #EEF2F8; display:flex; align-items:center; gap:7px; color:#222835; font-size:12px; }
+    .avatar { width:22px; height:22px; border-radius:50%; background:linear-gradient(135deg,#94D2FF,#FBB03B); position:relative; }
+    .avatar:after { content:''; position:absolute; right:-2px; bottom:-2px; width:9px; height:9px; border-radius:50%; background:#27B9F2; border:1px solid #fff; }
+    .expired .cover, .expired .card-body { opacity:.55; }
+    .expired-tag { position:absolute; right:8px; bottom:10px; height:24px; padding:0 9px; border-radius:5px; background:rgba(0,0,0,.42); color:#fff; font-size:12px; display:flex; align-items:center; }
+    .customer-bottom-bar { position:absolute; left:0; right:0; bottom:0; z-index:5; }
+    .detail-scroll { height:660px; overflow-y:auto; background:#fff; padding-bottom:18px; overscroll-behavior:contain; scrollbar-width:none; }
+    .detail-scroll::-webkit-scrollbar { display:none; }
+    .hero { height:350px; position:relative; background:linear-gradient(135deg,#111827 0%,#1F4F9E 55%,#3F86F5 100%); overflow:hidden; }
+    .video-toggle { position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:58px; height:58px; border-radius:50%; border:0; background:rgba(255,255,255,.92); color:#3F86F5; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(0,0,0,.16); }
+    .video-toggle .pause { display:none; gap:5px; }
+    .hero.playing .play-triangle { display:none; }
+    .hero.playing .pause { display:flex; }
+    .pause i { width:5px; height:20px; border-radius:2px; background:#3F86F5; display:block; }
+    .video-progress { position:absolute; left:18px; right:18px; bottom:18px; height:4px; border-radius:3px; background:rgba(255,255,255,.34); overflow:hidden; }
+    .video-progress span { display:block; width:34%; height:100%; background:#fff; border-radius:3px; }
+    .hero.playing .video-progress span { width:62%; }
+    .shop-info { height:76px; display:flex; align-items:center; padding:10px 16px; border-bottom:1px solid #EEF2F8; background:#fff; }
+    .shop-logo { width:58px; height:58px; border-radius:3px; background:linear-gradient(180deg,#FFE35A,#38A9F2); color:#fff; display:flex; align-items:flex-end; justify-content:center; font-size:11px; font-weight:700; padding-bottom:5px; flex-shrink:0; }
+    .shop-main { flex:1; min-width:0; padding-left:12px; }
+    .shop-name { font-size:16px; font-weight:700; color:#222835; }
+    .publish-time { margin-top:4px; font-size:13px; color:#A6AFBD; }
+    .enter-btn { width:78px; height:34px; border-radius:17px; border:0; background:#43A0FF; color:#fff; font-size:14px; font-weight:700; }
+    .coupon-card { margin:14px 16px 18px; height:112px; border-radius:13px; background:#F4FAFF; box-shadow:0 2px 8px rgba(63,134,245,.08); display:flex; overflow:hidden; border:1px solid #EEF2F8; }
+    .coupon-left { flex:1; padding:16px; }
+    .coupon-title { font-size:15px; color:#222835; font-weight:700; }
+    .coupon-type { margin-top:12px; width:50px; height:24px; border:1px solid #B9D8FF; border-radius:5px; color:#3F86F5; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; }
+    .coupon-date { margin-top:10px; font-size:12px; color:#9BA7B8; }
+    .coupon-right { width:104px; background:#E4F2FF; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#3F86F5; }
+    .coupon-price { font-size:38px; font-weight:500; line-height:38px; }
+    .coupon-price small { font-size:17px; margin-right:3px; }
+    .coupon-get { margin-top:8px; width:72px; height:28px; border-radius:14px; background:#58A8F5; color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+    .content-block { padding:0 20px 16px; }
+    .promo-heading { font-size:17px; font-weight:700; color:#222835; margin-bottom:12px; }
+    .promo-text { font-size:16px; color:#222835; line-height:28px; white-space:pre-line; }
+    .tip { margin:16px 0 0; min-height:32px; border-radius:5px; background:#F5FAFF; color:#B0B8C8; display:flex; align-items:center; padding:8px 12px; font-size:12px; line-height:18px; }
+    .detail-meta { padding:14px 20px 24px; display:flex; justify-content:space-between; color:#A6AFBD; font-size:13px; }
+    .detail-actions { position:absolute; left:0; right:0; bottom:0; height:64px; border-top:1px solid #EEF2F8; background:#fff; display:flex; align-items:center; gap:8px; padding:8px 16px; }
+    .action-mini { width:42px; flex:0 0 42px; color:#4E5969; font-size:12px; line-height:16px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; white-space:nowrap; }
+    .action-mini svg { width:24px; height:24px; flex:0 0 24px; stroke:currentColor; fill:none; stroke-width:2; margin-bottom:1px; }
+    .action-mini span { display:block; white-space:nowrap; }
+    .action-btn { flex:1; height:36px; border:0; border-radius:5px; background:#66BDF2; color:#fff; font-size:15px; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div class="m-phone is-list" id="phone">
+    <div class="m-phone-screen">
+      <div class="m-status-bar">
+        <span class="time">6:00 PM</span>
+        <div class="m-status-icons">
+          <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx=".5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx=".5" fill="#222835"/></svg>
+          <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="#222835"/></svg>
+        </div>
+      </div>
+      <div class="m-nav-bar">
+        <span class="back hidden" id="backBtn">‹</span>
+        <span class="title" id="navTitle">云邻市集</span>
+        <div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+      </div>
+      <main class="page list-page">
+        <section class="market-head">
+          <div class="market-tabs"><div class="market-tab active">活动推广</div><div class="market-tab">好店</div><div class="location">车陂地铁站 ▼</div><div class="message-btn"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4V5z"/></svg><span class="badge">1</span></div></div>
+          <div class="search-row"><div class="community">社区</div><div class="search-box">本地小白菜上市<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5F6670" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></div></div>
+        </section>
+        <div class="list-scroll"><div class="masonry" id="masonry"></div></div>
+        <nav class="m-bottom-tab-bar customer-bottom-bar" data-m-group>
+          <div class="m-bottom-tab-item" data-m-action="tab"><img class="m-bottom-tab-icon" src="icons/icon_home_selected@2x.png" alt=""><span>首页</span></div>
+          <div class="m-bottom-tab-item" data-m-action="tab"><img class="m-bottom-tab-icon" src="icons/icon_service_default@2x.png" alt=""><span>服务</span></div>
+          <div class="m-bottom-tab-item" data-m-action="tab"><img class="m-bottom-tab-icon" src="icons/icon_neighbor_default@2x.png" alt=""><span>邻里</span></div>
+          <div class="m-bottom-tab-item active" data-m-action="tab"><img class="m-bottom-tab-icon" src="icons/icon_market_default@2x.png" alt=""><span>市集</span></div>
+          <div class="m-bottom-tab-item" data-m-action="tab"><img class="m-bottom-tab-icon" src="icons/icon_my_default@2x.png" alt=""><span>我的</span></div>
+        </nav>
+      </main>
+      <main class="page detail-page">
+        <div class="detail-scroll">
+          <section class="hero" id="detailHero"></section>
+          <section class="shop-info"><div class="shop-logo">品牌商户</div><div class="shop-main"><div class="shop-name">振记黄焖鸡米饭</div><div class="publish-time">发布于 2025-12-17 15:12:16</div></div><button class="enter-btn">进店逛逛</button></section>
+          <section class="coupon-card"><div class="coupon-left"><div class="coupon-title">新店开业满减券</div><div class="coupon-type">满减券</div><div class="coupon-date">2026.06.30前可用 · 满¥50可用</div></div><div class="coupon-right"><div class="coupon-price"><small>¥</small>15</div><div>元</div><div class="coupon-get">免费领</div></div></section>
+          <section class="content-block"><div class="promo-heading">老板疯了今天全场3折！</div><div class="promo-text">各位邻居晚上好！
+今天刚从农场拉回来的本地走地鸡，肉质鲜嫩，做黄焖鸡是一流！
+
+因此今天特意搞个销售大促，全场鸡米饭3折起，欢迎街坊过来品尝。</div><div class="tip">温馨提示：信息由商家发布，平台仅提供展示。消费前请注意核验</div></section>
+          <div class="detail-meta"><span>129 人看过</span><span>截止时间12-12 23:59:59</span></div>
+        </div>
+        <div class="detail-actions"><div class="action-mini"><svg viewBox="0 0 24 24"><path d="M4 10h16l-1 10H5L4 10z"/><path d="M7 10V7a5 5 0 0110 0v3"/></svg><span>商家</span></div><div class="action-mini"><svg viewBox="0 0 24 24"><path d="M18 8a3 3 0 10-2.83-4H15a3 3 0 003 4zM6 14a3 3 0 10-2.83-4H3a3 3 0 003 4zM18 20a3 3 0 10-2.83-4H15a3 3 0 003 4z"/><path d="M8.6 11.5l6.8-4M8.6 12.5l6.8 4"/></svg><span>分享</span></div><button class="action-btn">电话咨询</button><button class="action-btn">商家地址</button></div>
+      </main>
+    </div>
+  </div>
+  <script src="mobile-components.js?v=20260713b"></script>
+  <script>
+    var initialState = new URLSearchParams(location.search).get('state');
+    var states = ['list-video', 'detail-video', 'detail-playing'];
+    var state = states.indexOf(initialState) > -1 ? initialState : 'list-video';
+    function playIcon(size) { return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>'; }
+    function card(type, title, shop, short, expired) {
+      var isVideo = type === 'video';
+      var tag = isVideo ? '<div class="brand orange">邻里匠人</div>' : '<div class="brand blue">品牌商户</div>';
+      var media = isVideo ? '<div class="video-play-badge">' + playIcon(15) + '</div>' : '<div class="media-count"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 15l3-3 3 3 2-2 4 4"/></svg>3</div>';
+      var time = expired ? '<div class="expired-tag">已过期</div>' : '<div class="countdown"><span class="dot"></span>还剩 4:38:52</div>';
+      var cls = 'promo-card ' + (short ? 'short ' : '') + (expired ? 'expired' : '');
+      return '<article class="' + cls + '"' + (isVideo ? ' onclick="switchState(\'detail-video\')"' : '') + '><div class="cover ' + (isVideo ? 'clothes' : 'food') + '">' + tag + media + time + '</div><div class="card-body"><div class="card-title">' + title + '</div><div class="shop-row"><div class="avatar"></div><span>' + shop + '</span></div></div></article>';
+    }
+    function renderList() {
+      document.getElementById('masonry').innerHTML = '<div class="masonry-col">' + card('video','门店服务视频介绍，点击了解详情','振记黄焖鸡米饭',false,false) + card('image','新鲜出炉烧腊，今日特价！','张记烧腊',true,false) + card('image','新鲜出炉烧腊，今日特价！','张记烧腊',false,true) + '</div><div class="masonry-col">' + card('image','张阿姨暑假托管开始招人了','张阿姨专业托管',true,false) + card('video','夏季衣服清仓视频展示，欢迎选购！','纯以服装店',false,false) + '</div>';
+    }
+    function renderDetail() {
+      var hero = document.getElementById('detailHero');
+      hero.className = 'hero' + (state === 'detail-playing' ? ' playing' : '');
+      hero.onclick = function() { switchState(state === 'detail-playing' ? 'detail-video' : 'detail-playing'); };
+      hero.innerHTML = '<button class="video-toggle" type="button"><span class="play-triangle"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="pause"><i></i><i></i></span></button><div class="video-progress"><span></span></div>';
+    }
+    function render() {
+      var phone = document.getElementById('phone');
+      var isList = state === 'list-video';
+      phone.classList.toggle('is-list', isList);
+      phone.classList.toggle('is-detail', !isList);
+      document.getElementById('navTitle').textContent = isList ? '云邻市集' : '推广详情';
+      document.getElementById('backBtn').classList.toggle('hidden', isList);
+      if (isList) renderList(); else renderDetail();
+    }
+    window.switchState = function(mode) {
+      if (states.indexOf(mode) === -1) return;
+      state = mode;
+      render();
+    };
+    render();
+  </script>
+</body>
+</html>

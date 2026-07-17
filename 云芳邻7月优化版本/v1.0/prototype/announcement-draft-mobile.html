@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- prototype-states: image-only-error -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375, initial-scale=1.0">
+  <title>编辑公告</title>
+  <link rel="stylesheet" href="mobile-components.css">
+  <style>
+    html, body { width:375px; height:812px; margin:0; overflow:hidden; background:#EEF2F7; }
+    .draft-evidence-page { width:375px; height:724px; padding:12px 20px; display:flex; align-items:flex-start; justify-content:center; background:#EEF2F7; }
+    .draft-evidence-shot { width:335px; height:auto; display:block; border-radius:22px; box-shadow:0 10px 28px rgba(34,40,53,.16); }
+  </style>
+</head>
+<body class="yfl-c-root">
+  <div class="m-phone-screen">
+    <div class="m-status-bar">
+      <span class="time">15:12</span>
+      <div class="m-status-icons" aria-hidden="true">
+        <svg width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
+        <svg width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+    <div class="m-nav-bar">
+      <button class="back" aria-label="返回">‹</button>
+      <span class="title">编辑公告</span>
+      <div class="capsule" aria-label="小程序菜单"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+    </div>
+    <main class="draft-evidence-page">
+      <img class="draft-evidence-shot" src="announcement-draft-image-only-error.png" alt="公告正文仅上传图片时提示暂存失败">
+    </main>
+  </div>
+  <script src="mobile-components.js"></script>
+</body>
+</html>

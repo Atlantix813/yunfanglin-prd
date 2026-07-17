@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!-- prototype-states: empty,image,video,list-video -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=375, initial-scale=1.0">
+  <title>商家端发布推广 · 支持图片/视频</title>
+  <link rel="stylesheet" href="mobile-components.css?v=20260710b">
+  <style>
+    html, body { width:375px; height:812px; min-height:812px; margin:0; overflow:hidden; background:#F2F5FA; }
+    body { font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif; color:#222835; }
+    .m-phone { width:375px; height:812px; margin:0 auto; background:#F2F5FA; overflow:hidden; }
+    .m-phone-screen { width:375px; height:812px; overflow:hidden; background:#F2F5FA; }
+    .page { display:none; height:724px; overflow:hidden; background:#F2F5FA; }
+    .m-phone.mode-publish .publish-page { display:block; }
+    .m-phone.mode-list .manager-page { display:block; }
+    .m-page-content { height:724px; padding:0 16px 24px; overflow-y:auto; overscroll-behavior:contain; scrollbar-width:none; }
+    .m-page-content::-webkit-scrollbar { display:none; }
+    .form-block { margin:0 -16px; background:#fff; border-bottom:1px solid #EEF2F8; }
+    .form-row { min-height:56px; padding:0 16px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #EEF2F8; }
+    .form-row:last-child { border-bottom:0; }
+    .form-row.required:before, .section-head.required:before { content:'*'; color:#F53F3F; font-size:17px; flex-shrink:0; }
+    .placeholder { flex:1; color:#4E5969; font-size:15px; min-width:0; }
+    .count { color:#A6AFBD; font-size:13px; }
+    .textarea-row { height:150px; align-items:flex-start; padding-top:20px; }
+    .textarea-row .count { align-self:flex-end; padding-bottom:18px; }
+    .media-section { padding:18px 0 0; }
+    .section-head { display:grid; grid-template-columns:12px 1fr auto; align-items:start; column-gap:5px; color:#222835; font-size:15px; font-weight:700; }
+    .section-head.required:before { grid-column:1; grid-row:1; display:block; line-height:22px; }
+    .section-title-text { grid-column:2; grid-row:1; line-height:22px; }
+    .section-limit { grid-column:2 / 4; grid-row:2; margin-top:2px; color:#222835; font-size:14px; font-weight:700; line-height:20px; }
+    .ai-link { grid-column:3; grid-row:1; color:#FF9D19; font-size:14px; font-weight:600; white-space:nowrap; line-height:22px; }
+    .media-grid { display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; margin-top:12px; }
+    .media-tile { width:96px; height:96px; border-radius:8px; position:relative; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#A6AFBD; background:#F2F5FA; border:1px solid #E8EEF8; }
+    .media-tile.add { flex-direction:column; gap:7px; border:0; background:#EFF3F8; }
+    .media-tile.add span { font-size:13px; color:#A6AFBD; }
+    .media-tile.photo { background:linear-gradient(135deg,#E8F7F2,#EFF8FF); }
+    .media-tile.photo svg { width:34px; height:34px; color:#3F86F5; }
+    .media-tile.cover:after { content:'封面'; position:absolute; left:0; right:0; bottom:0; height:26px; background:rgba(41,48,61,.64); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; }
+    .media-remove { position:absolute; right:6px; top:6px; width:18px; height:18px; border-radius:50%; background:rgba(34,40,53,.38); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; z-index:2; }
+    .media-tile.video { width:160px; height:96px; background:linear-gradient(135deg,#172033,#3F86F5); border:0; }
+    .media-tile.video:before { content:'视频'; position:absolute; left:8px; top:8px; height:20px; padding:0 8px; border-radius:4px; background:rgba(0,0,0,.36); color:#fff; font-size:11px; display:flex; align-items:center; }
+    .play-circle { width:38px; height:38px; border-radius:50%; background:#fff; color:#3F86F5; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 12px rgba(0,0,0,.16); }
+    .help { margin-top:10px; color:#A6AFBD; font-size:12px; line-height:20px; }
+    .info-card { margin-top:14px; background:#fff; border:1px solid #E8EEF8; border-radius:12px; padding:14px; }
+    .card-head { display:flex; align-items:center; justify-content:space-between; color:#222835; font-size:15px; font-weight:700; }
+    .danger-text { color:#F53F3F; font-weight:500; }
+    .date-box { margin-top:12px; height:38px; border-radius:6px; background:#F2F3F5; display:flex; align-items:center; justify-content:center; color:#697386; font-size:14px; }
+    .coupon-row { margin-top:12px; border:1px solid #EEF2F8; border-radius:8px; padding:12px; display:flex; gap:12px; background:#fff; }
+    .coupon-img { width:58px; height:58px; border-radius:6px; background:#E8EAED; display:flex; align-items:center; justify-content:center; color:#222835; font-size:18px; font-weight:700; }
+    .coupon-title { color:#222835; font-size:14px; font-weight:700; }
+    .coupon-meta { margin-top:6px; color:#A6AFBD; font-size:12px; line-height:18px; }
+    .submit { width:100%; height:44px; border:0; border-radius:6px; margin-top:28px; background:#4C9AF2; color:#fff; font-size:16px; font-weight:700; }
+    .publish-note { text-align:center; color:#A6AFBD; font-size:13px; margin:10px 0 24px; }
+    .manager-page .m-page-content { display:flex; flex-direction:column; min-height:0; }
+    .manager-tabs { flex:0 0 44px; height:44px; margin:0 -16px 12px; background:#fff; border-bottom:1px solid #EEF2F8; display:flex; }
+    .manager-tab { flex:1; display:flex; align-items:center; justify-content:center; color:#939CAB; font-size:15px; font-weight:700; position:relative; }
+    .manager-tab.active { color:#1296DB; }
+    .manager-tab.active:after { content:''; position:absolute; left:0; right:0; bottom:0; height:2px; background:#1296DB; }
+    .manager-scroll { flex:1; min-height:0; overflow-y:auto; padding-bottom:16px; scrollbar-width:none; }
+    .manager-scroll::-webkit-scrollbar { display:none; }
+    .promo-card { background:#fff; border-radius:12px; padding:14px 12px 16px; box-shadow:0 2px 8px rgba(33,71,128,.06); }
+    .promo-top { display:flex; align-items:center; justify-content:space-between; color:#8E96A3; font-size:13px; }
+    .status-green { height:24px; padding:0 9px; border-radius:6px; background:#E8FFF1; color:#14B866; display:flex; align-items:center; gap:5px; font-weight:700; }
+    .promo-title { margin-top:12px; color:#222835; font-size:16px; font-weight:700; line-height:23px; }
+    .promo-copy { margin-top:8px; color:#303847; font-size:15px; line-height:23px; }
+    .view-all { display:flex; justify-content:flex-end; align-items:center; gap:4px; color:#808896; font-size:13px; margin-top:4px; }
+    .manager-video { margin-top:10px; width:180px; height:104px; border-radius:8px; background:linear-gradient(135deg,#172033,#3F86F5); position:relative; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .manager-video:before { content:'视频'; position:absolute; left:8px; top:8px; height:20px; padding:0 8px; border-radius:4px; background:rgba(0,0,0,.42); color:#fff; font-size:11px; display:flex; align-items:center; }
+    .down-time { margin-top:14px; padding-bottom:12px; border-bottom:1px solid #EEF2F8; color:#A6AFBD; font-size:13px; text-align:right; }
+    .card-actions { margin-top:14px; display:flex; align-items:center; justify-content:space-between; color:#FF9D19; font-size:13px; }
+    .offline-btn { width:92px; height:34px; border:1px solid #909399; border-radius:5px; background:#fff; color:#303133; font-size:14px; font-weight:700; }
+    .manager-footer { flex:0 0 74px; height:74px; background:#F2F5FA; display:flex; align-items:center; }
+    .manager-submit { width:100%; height:44px; border:0; border-radius:6px; background:#5BB6EF; color:#fff; font-size:15px; font-weight:700; }
+  </style>
+</head>
+<body>
+  <div class="m-phone mode-publish" id="phone">
+    <div class="m-phone-screen">
+      <div class="m-status-bar">
+        <span class="time">6:00 PM</span>
+        <div class="m-status-icons">
+          <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx=".5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx=".5" fill="#222835"/></svg>
+          <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="#222835"/></svg>
+        </div>
+      </div>
+      <div class="m-nav-bar">
+        <span class="back">‹</span>
+        <span class="title" id="navTitle">发布推广</span>
+        <div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+      </div>
+      <main class="page publish-page">
+        <div class="m-page-content">
+          <section class="form-block">
+            <div class="form-row required"><span class="placeholder">这里填入推广标题</span><span class="count">0/30</span></div>
+            <div class="form-row required textarea-row"><span class="placeholder">请输入推广内容</span><span class="count">0/300</span></div>
+          </section>
+          <section class="media-section">
+            <div class="section-head required">
+              <div class="section-title-text">内容</div>
+              <div class="ai-link">+生成文字图片</div>
+              <div class="section-limit">图片最多5张，视频最多1个</div>
+            </div>
+            <div class="media-grid" id="mediaGrid"></div>
+            <div class="help">1. 拖动图片可调整排序，默认排序第一张图片为封面<br>2. 上传视频后不再支持继续添加图片或视频</div>
+          </section>
+          <section class="info-card">
+            <div class="card-head">结束时间</div>
+            <div class="date-box">2025-12-19 13:45:00</div>
+            <div class="help">若推广进行中途商店打烊，则会影响推广效果</div>
+          </section>
+          <section class="info-card">
+            <div class="card-head"><span>优惠券</span><span class="danger-text">移除优惠券</span></div>
+            <div class="coupon-row">
+              <div class="coupon-img">图</div>
+              <div><div class="coupon-title">全场满200-30优惠券</div><div class="coupon-meta">2026-02-26 10:23 至 2026-02-26 10:23 可领<br>剩余库存：299</div></div>
+            </div>
+          </section>
+          <button class="submit">发布</button>
+          <div class="publish-note">您今天还可发布 1 条推广（每日3条）</div>
+        </div>
+      </main>
+      <main class="page manager-page">
+        <div class="m-page-content">
+          <div class="manager-tabs"><div class="manager-tab active">推广中(2)</div><div class="manager-tab">审核中(1)</div><div class="manager-tab">已下架</div></div>
+          <div class="manager-scroll">
+            <article class="promo-card">
+              <div class="promo-top"><span>2025-12-18 17:11:31</span><span class="status-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg>推广中</span></div>
+              <div class="promo-title">门店新服务视频介绍</div>
+              <div class="promo-copy">点击视频可在居民端查看门店服务介绍，商家端列表仅展示视频封面和播放标识。</div>
+              <div class="view-all">查看全部 <span>⌄</span></div>
+              <div class="manager-video"><div class="play-circle"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+              <div class="down-time">预计下架：2025-12-19 10:30:00</div>
+              <div class="card-actions"><span>● 剩余时长：3天12:34:58</span><button class="offline-btn">提前下架</button></div>
+            </article>
+          </div>
+          <div class="manager-footer"><button class="manager-submit">发布新推广（今日还可发 2 条）</button></div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="mobile-components.js?v=20260713b"></script>
+  <script>
+    var initialState = new URLSearchParams(location.search).get('state');
+    var states = ['empty', 'image', 'video', 'list-video'];
+    var state = states.indexOf(initialState) > -1 ? initialState : 'empty';
+    function addTile(label) {
+      return '<div class="media-tile add"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg><span>' + label + '</span></div>';
+    }
+    function photoTile(cover) {
+      return '<div class="media-tile photo ' + (cover ? 'cover' : '') + '"><span class="media-remove">×</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 13l2.5-2.5L15 15l1.5-1.5L20 17"/><circle cx="8" cy="9" r="1.2"/></svg></div>';
+    }
+    function videoTile() {
+      return '<div class="media-tile video"><span class="media-remove">×</span><div class="play-circle"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>';
+    }
+    function render() {
+      var phone = document.getElementById('phone');
+      var isList = state === 'list-video';
+      phone.classList.toggle('mode-list', isList);
+      phone.classList.toggle('mode-publish', !isList);
+      document.getElementById('navTitle').textContent = isList ? '推广管理' : '发布推广';
+      var grid = document.getElementById('mediaGrid');
+      if (state === 'empty') grid.innerHTML = addTile('添加图片/视频');
+      if (state === 'image') grid.innerHTML = photoTile(true) + photoTile(false) + addTile('添加图片');
+      if (state === 'video') grid.innerHTML = videoTile();
+    }
+    window.switchState = function(mode) {
+      if (states.indexOf(mode) === -1) return;
+      state = mode;
+      render();
+    };
+    render();
+  </script>
+</body>
+</html>

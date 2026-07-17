@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<!-- prototype-states: empty,image,video,detail-image,detail-video,player -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC端发布推广 · 支持图片/视频</title>
+  <link rel="stylesheet" href="组件库样式.css">
+  <style>
+    html, body { width:1920px; height:1080px; overflow:hidden; background:#F0F2F5; color:#606266; }
+    .app { width:1920px; height:1080px; position:relative; background:#F0F2F5; }
+    .header-logo { width:150px; }
+    .header-icon { width:16px; height:16px; display:block; stroke:currentColor; }
+    .layout { display:flex; height:1032px; }
+    .promotion-sidebar { width:180px; height:1032px; min-height:1032px; overflow:hidden; }
+    .sidebar-heading { height:32px; padding:0 16px; display:flex; align-items:center; color:#A9AEB8; font-size:12px; }
+    .sidebar-sub .sidebar-item.active { color:#3491FA; background:#E8F3FF; font-weight:500; }
+    .sidebar-item svg { width:16px; height:16px; }
+    .main { width:1740px; height:1032px; min-width:0; }
+    .tabbar { height:48px; background:#fff; display:flex; align-items:center; padding:0 30px; gap:26px; border-bottom:1px solid #E4E7ED; color:#C0C4CC; }
+    .tabbar .active { color:#2F91F2; border-bottom:2px solid #2F91F2; height:48px; display:flex; align-items:center; }
+    .content { padding:12px 10px 0; height:984px; overflow:hidden; }
+    .filter-panel { height:88px; background:#fff; border-radius:3px; display:flex; align-items:center; padding:0 20px; gap:28px; margin-bottom:16px; }
+    .filter-field { display:flex; align-items:center; gap:12px; font-size:14px; color:#606266; }
+    .filter-field input { width:180px; height:32px; border:1px solid #DCDFE6; border-radius:4px; padding:0 12px; color:#C0C4CC; font-family:inherit; }
+    .table-card { background:#fff; border-radius:3px; padding:20px; height:744px; }
+    .op-line { display:flex; justify-content:space-between; margin-bottom:22px; }
+    .btn-real { height:32px; border:1px solid #409EFF; border-radius:4px; background:#ECF5FF; color:#409EFF; padding:0 16px; font-size:14px; font-family:inherit; }
+    .btn-real.primary { background:#409EFF; color:#fff; }
+    .tabs { display:flex; gap:42px; height:38px; border-bottom:1px solid #DCDFE6; margin-bottom:34px; }
+    .tabs span { color:#303133; font-size:14px; }
+    .tabs .active { color:#409EFF; border-bottom:2px solid #409EFF; padding-bottom:12px; }
+    .real-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:13px; color:#606266; }
+    .real-table th { height:40px; background:#EBEEF5; color:#303133; font-weight:600; text-align:left; padding:0 12px; }
+    .real-table td { height:48px; border-bottom:1px solid #EBEEF5; padding:0 12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .real-table tr:nth-child(even) td { background:#FAFAFA; }
+    .action { color:#409EFF; margin-right:12px; }
+    .pager { height:68px; display:flex; justify-content:flex-end; align-items:center; gap:18px; color:#606266; font-size:13px; }
+    .mask { position:absolute; inset:48px 0 0 0; background:rgba(0,0,0,.48); z-index:10; display:flex; align-items:flex-start; justify-content:center; padding-top:72px; }
+    .dialog { width:calc(100% - 128px); max-width:1840px; height:914px; background:#fff; border-radius:2px; box-shadow:0 2px 12px rgba(0,0,0,.28); display:flex; flex-direction:column; }
+    .dialog, .dialog * { box-sizing:border-box; }
+    .dialog-head { height:64px; display:flex; align-items:center; justify-content:space-between; padding:0 22px; color:#303133; font-size:18px; }
+    .dialog-close { color:#909399; font-size:36px; font-weight:300; line-height:1; }
+    .dialog-body { flex:1; padding:18px 32px 16px; overflow:hidden; }
+    .dialog .form-row { display:block !important; align-items:initial !important; margin:0 0 18px !important; }
+    .dialog .form-row:last-child { margin-bottom:0 !important; }
+    .dialog .form-label { display:block; width:auto !important; text-align:left !important; padding:0 !important; margin:0 0 8px !important; color:#606266; font-size:14px; line-height:22px; }
+    .required { color:#F56C6C; margin-right:4px; }
+    .dialog .input-real { width:100%; height:42px; border:1px solid #DCDFE6; border-radius:4px; display:flex; align-items:center; justify-content:space-between; padding:0 14px; color:#C0C4CC; font-size:14px; background:#fff; }
+    .dialog .input-real span:first-child { color:#C0C4CC; }
+    .dialog .input-real span:last-child { margin-left:auto; color:#C0C4CC; }
+    .dialog .textarea-real { width:100%; height:104px; border:1px solid #DCDFE6; border-radius:4px; padding:12px 14px; color:#C0C4CC; font-size:14px; position:relative; background:#fff; }
+    .dialog .textarea-real span:first-child { display:block; color:#C0C4CC; line-height:22px; }
+    .dialog .textarea-real span:last-child { position:absolute; right:14px; bottom:10px; color:#C0C4CC; }
+    .media-grid { display:flex; gap:14px; align-items:flex-start; }
+    .media-tile { width:104px; height:104px; border:1px solid #DCDFE6; border-radius:4px; background:#fff; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; color:#909399; }
+    .media-tile.add { border-style:dashed; background:#FAFBFD; flex-direction:column; gap:8px; font-size:14px; }
+    .media-tile.image { background:#EEF9F6; }
+    .media-tile.image.first::after { content:'封面'; position:absolute; left:0; right:0; bottom:0; height:32px; background:rgba(39,46,59,.64); color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; }
+    .media-tile.video { width:172px; background:#1F2937; }
+    .remove { position:absolute; right:6px; top:6px; width:22px; height:22px; border-radius:50%; background:rgba(0,0,0,.34); color:#fff; display:flex; align-items:center; justify-content:center; font-size:15px; z-index:2; }
+    .play { width:46px; height:46px; border-radius:50%; background:#fff; color:#409EFF; display:flex; align-items:center; justify-content:center; }
+    .tip { display:block; color:#909399; font-size:13px; line-height:20px; margin-top:6px; }
+    .dialog-foot { height:70px; border-top:1px solid #EBEEF5; display:flex; align-items:center; justify-content:flex-end; padding:0 22px; gap:12px; }
+    .mask { display:none; }
+    .app.mode-publish .publish-mask,
+    .app.mode-detail .detail-mask,
+    .app.mode-player .player-mask { display:flex; }
+    .detail-dialog { height:860px; }
+    .detail-tabs { display:flex; gap:40px; height:46px; border-bottom:1px solid #DCDFE6; margin-bottom:18px; }
+    .detail-tabs span { height:46px; display:flex; align-items:center; color:#303133; font-size:14px; }
+    .detail-tabs .active { color:#409EFF; border-bottom:2px solid #409EFF; }
+    .detail-block { margin-bottom:26px; }
+    .detail-label { color:#909399; font-size:14px; margin-bottom:10px; }
+    .detail-text { color:#303133; font-size:15px; line-height:26px; }
+    .detail-media { display:flex; gap:12px; align-items:flex-start; }
+    .detail-thumb { width:96px; height:96px; border-radius:2px; overflow:hidden; background:#F2F3F5; display:flex; align-items:center; justify-content:center; position:relative; }
+    .detail-thumb.poster-a { background:linear-gradient(135deg,#FFF4D8,#FF5A36); }
+    .detail-thumb.poster-b { background:linear-gradient(135deg,#FFE6E6,#D90429); }
+    .detail-thumb.poster-c { background:linear-gradient(135deg,#FFF8E9,#FF9D19); }
+    .poster-text { color:#fff; font-weight:700; font-size:18px; text-shadow:0 1px 3px rgba(0,0,0,.24); text-align:center; line-height:24px; }
+    .detail-video { width:180px; height:104px; border-radius:4px; background:linear-gradient(135deg,#111827,#2F91F2); cursor:pointer; box-shadow:inset 0 0 0 1px rgba(255,255,255,.12); }
+    .detail-video::after { content:'点击播放'; position:absolute; left:0; right:0; bottom:0; height:30px; background:rgba(0,0,0,.48); color:#fff; display:flex; align-items:center; justify-content:center; font-size:13px; }
+    .video-tag { position:absolute; left:8px; top:8px; height:22px; padding:0 8px; border-radius:3px; background:rgba(0,0,0,.42); color:#fff; display:flex; align-items:center; font-size:12px; z-index:2; }
+    .player-dialog { width:960px; height:620px; background:#fff; border-radius:3px; box-shadow:0 2px 12px rgba(0,0,0,.28); display:flex; flex-direction:column; }
+    .player-body { padding:20px 24px 24px; flex:1; }
+    .video-stage { height:486px; background:#0B1220; border-radius:4px; position:relative; overflow:hidden; display:flex; align-items:center; justify-content:center; color:#fff; }
+    .video-stage .big-play { width:72px; height:72px; border-radius:50%; background:rgba(255,255,255,.92); color:#409EFF; display:flex; align-items:center; justify-content:center; }
+    .video-controls { position:absolute; left:0; right:0; bottom:0; height:58px; background:linear-gradient(180deg,rgba(11,18,32,0),rgba(11,18,32,.88)); display:flex; align-items:flex-end; gap:14px; padding:0 18px 14px; color:#fff; font-size:13px; }
+    .progress { flex:1; height:4px; border-radius:3px; background:rgba(255,255,255,.32); overflow:hidden; margin-bottom:6px; }
+    .progress i { display:block; width:36%; height:100%; background:#409EFF; }
+    .video-name { position:absolute; left:20px; top:18px; color:#fff; font-size:15px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <div class="header-logo">云芳邻管理系统</div>
+        <div class="header-hamburger"><span></span><span></span><span></span></div>
+      </div>
+      <div class="header-right">
+        <div class="header-right-item">使用指南</div>
+        <div class="header-right-item">
+          <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9z"></path><path d="M10 21h4"></path></svg>
+          <span>消息</span>
+        </div>
+        <div class="header-right-item"><span class="avatar">管</span><span>平台管理员</span></div>
+      </div>
+    </header>
+    <div class="layout">
+      <aside class="sidebar promotion-sidebar">
+        <div class="sidebar-heading">菜单</div>
+        <div class="sidebar-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11l8-7 8 7"></path><path d="M6 10v10h12V10"></path></svg>
+          <span class="label">工作台</span>
+        </div>
+        <div class="sidebar-item expanded">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10h16l-1 10H5L4 10z"></path><path d="M7 10V7a5 5 0 0110 0v3"></path></svg>
+          <span class="label">商家管理</span><span class="arrow">›</span>
+        </div>
+        <div class="sidebar-sub">
+          <div class="sidebar-item">商家列表</div>
+          <div class="sidebar-item">商家入驻情况</div>
+          <div class="sidebar-item active">推广管理</div>
+          <div class="sidebar-item">优惠券管理</div>
+          <div class="sidebar-item">领取记录</div>
+          <div class="sidebar-item">核销记录</div>
+        </div>
+      </aside>
+      <main class="main">
+        <div class="tabbar"><span>工作台</span><span class="active">推广管理 ×</span></div>
+        <div class="content">
+          <div class="filter-panel">
+            <div class="filter-field"><span>商家名称</span><input value="请输入商家名称"></div>
+            <div class="filter-field"><span>推广标题</span><input value="请输入推广标题"></div>
+            <div class="filter-field"><span>所属社区</span><input value="请输入所属社区"></div>
+            <button class="btn-real primary">查询</button><button class="btn-real">重置</button>
+          </div>
+          <div class="table-card">
+            <div class="op-line"><button class="btn-real">+ 发布推广</button><button class="btn-real primary">更多⌄</button></div>
+            <div class="tabs"><span class="active">全部(26)</span><span>待审核(1)</span><span>推广中(0)</span><span>审核不通过(0)</span><span>已下架(25)</span></div>
+            <table class="real-table">
+              <thead><tr><th style="width:54px;">序号</th><th>推广标题</th><th>推广文案</th><th>商家名称</th><th>所属社区</th><th>发布时间</th><th>计划下架时间</th><th>下架类型</th><th>推广状态</th><th>操作</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>暑期学车福利来袭</td><td>报名即送防晒大礼包</td><td>安心驾培服务部</td><td>芳草社区</td><td>2026-05-09 16:19:35</td><td>2026-05-15 20:00:00</td><td>自动下架</td><td>推广中</td><td><span class="action" onclick="switchState('detail-video')">推广详情</span><span class="action">强制下架</span></td></tr>
+                <tr><td>2</td><td>店铺A推广</td><td>店铺A推广</td><td>大白·店铺A</td><td>测试社区3（勿删）</td><td>2026-05-07 15:56:40</td><td>2026-05-21 00:00:00</td><td>自动下架</td><td>已下架</td><td><span class="action" onclick="switchState('detail-image')">推广详情</span><span class="action">强制下架</span></td></tr>
+                <tr><td>3</td><td>润福新客礼</td><td>开户享积分</td><td>广东华润银行岭南新世界社区支行</td><td>蝶云天社区</td><td>2026-04-17 11:13:09</td><td>2026-05-17 09:04:00</td><td>自动下架</td><td>已下架</td><td><span class="action" onclick="switchState('detail-image')">推广详情</span></td></tr>
+                <tr><td>4</td><td>推荐有礼</td><td>福分双至</td><td>广东华润银行岭南新世界社区支行</td><td>蝶云天社区</td><td>2026-04-17 11:13:09</td><td>2026-05-17 09:04:00</td><td>自动下架</td><td>已下架</td><td><span class="action" onclick="switchState('detail-image')">推广详情</span></td></tr>
+              </tbody>
+            </table>
+            <div class="pager">共 26 条 <button class="btn-real">10条/页⌄</button> ‹ 1 2 3 › 前往 <button class="btn-real">1</button> 页</div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <div class="mask publish-mask">
+      <div class="dialog">
+        <div class="dialog-head"><span>发布推广</span><span class="dialog-close">×</span></div>
+        <div class="dialog-body">
+          <div class="form-row"><div class="form-label"><span class="required">*</span>选择商家</div><div class="input-real"><span>请选择商家</span><span>⌄</span></div></div>
+          <div class="form-row"><div class="form-label"><span class="required">*</span>推广标题</div><div class="input-real"><span>请输入推广标题</span><span>0/30</span></div></div>
+          <div class="form-row"><div class="form-label"><span class="required">*</span>推广内容</div><div class="textarea-real"><span>请输入推广内容</span><span>0/300</span></div></div>
+          <div class="form-row">
+            <div class="form-label"><span class="required">*</span>内容（图片最多5张，视频最多1个）</div>
+            <div class="media-grid" id="mediaGrid"></div>
+            <div class="tip">1. 拖动图片可调整排序，默认排序第一张图片为封面。<br>2. 图片比例4:3最佳，图片过长可能会影响首页宣传效果。</div>
+          </div>
+          <div class="form-row"><div class="form-label"><span class="required">*</span>结束时间</div><div class="input-real"><span>请选择结束时间</span></div><div class="tip">自定义结束时间最多支持设置30天。若推广进行中途商店打烊，则会影响推广效果。</div></div>
+          <div class="form-row"><div class="form-label">关联优惠券（仅支持关联一张）</div><div class="input-real"><span>请选择关联优惠券</span><span>⌄</span></div></div>
+        </div>
+        <div class="dialog-foot"><button class="btn-real">取消</button><button class="btn-real primary">发布</button></div>
+      </div>
+    </div>
+    <div class="mask detail-mask">
+      <div class="dialog detail-dialog">
+        <div class="dialog-head"><span>详情</span><span class="dialog-close" onclick="switchState('empty')">×</span></div>
+        <div class="dialog-body">
+          <div class="detail-tabs"><span>基础信息</span><span class="active">推广内容</span><span>操作日志</span></div>
+          <div class="detail-block">
+            <div class="detail-label">推广标题：</div>
+            <div class="detail-text" id="detailTitle">暑期学车福利来袭</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">推广内容：</div>
+            <div class="detail-text" id="detailCopy">暑期学车福利来袭，报名即送防晒大礼包，专属极速拿证通道，暑假轻松拿驾照！</div>
+          </div>
+          <div class="detail-block">
+            <div class="detail-label">内容素材：</div>
+            <div class="detail-media" id="detailMedia"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mask player-mask">
+      <div class="player-dialog">
+        <div class="dialog-head"><span>视频播放</span><span class="dialog-close" onclick="switchState('detail-video')">×</span></div>
+        <div class="player-body">
+          <div class="video-stage">
+            <div class="video-name">暑期学车福利来袭.mp4</div>
+            <div class="big-play"><svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+            <div class="video-controls"><span>00:12</span><div class="progress"><i></i></div><span>00:36</span><span>高清</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H3v5"></path><path d="M16 3h5v5"></path><path d="M8 21H3v-5"></path><path d="M16 21h5v-5"></path></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="pc-components.js?v=20260713b"></script>
+  <script>
+    var initialState = new URLSearchParams(location.search).get('state');
+    var states = ['empty', 'image', 'video', 'detail-image', 'detail-video', 'player'];
+    var state = states.indexOf(initialState) > -1 ? initialState : 'empty';
+    function addTile(text) {
+      return '<div class="media-tile add"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg><span>' + text + '</span></div>';
+    }
+    function imageTile(first) {
+      return '<div class="media-tile image ' + (first ? 'first' : '') + '"><span class="remove">×</span><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#409EFF" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 13l2.5-2.5L15 15l1.5-1.5L20 17"/><circle cx="8" cy="9" r="1.2"/></svg></div>';
+    }
+    function videoTile() {
+      return '<div class="media-tile video"><span class="remove">×</span><div class="play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>';
+    }
+    function detailImageTiles() {
+      return '<div class="detail-thumb poster-a"><span class="poster-text">招生<br>福利</span></div><div class="detail-thumb poster-b"><span class="poster-text">新客<br>礼包</span></div><div class="detail-thumb poster-c"><span class="poster-text">轻松<br>拿证</span></div>';
+    }
+    function detailVideoTile() {
+      return "<div class=\"detail-thumb detail-video\" onclick=\"switchState('player')\"><span class=\"video-tag\">视频</span><div class=\"play\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M8 5v14l11-7z\"/></svg></div></div>";
+    }
+    function render() {
+      var app = document.querySelector('.app');
+      app.classList.remove('mode-publish', 'mode-detail', 'mode-player');
+      if (state === 'player') app.classList.add('mode-player');
+      else if (state.indexOf('detail-') === 0) app.classList.add('mode-detail');
+      else app.classList.add('mode-publish');
+
+      var grid = document.getElementById('mediaGrid');
+      if (state === 'empty') grid.innerHTML = addTile('添加图片/视频');
+      if (state === 'image') grid.innerHTML = imageTile(true) + imageTile(false) + addTile('添加图片');
+      if (state === 'video') grid.innerHTML = videoTile();
+      if (state === 'detail-image') document.getElementById('detailMedia').innerHTML = detailImageTiles();
+      if (state === 'detail-video') document.getElementById('detailMedia').innerHTML = detailVideoTile();
+    }
+    window.switchState = function (mode) {
+      if (states.indexOf(mode) === -1) return;
+      state = mode;
+      render();
+    };
+    render();
+  </script>
+</body>
+</html>

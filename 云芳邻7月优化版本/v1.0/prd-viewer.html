@@ -1,0 +1,2857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>云芳邻 7月优化版本 PRD</title>
+  <style>
+    :root {
+      --blue: #2f8cff;
+      --blue-dark: #1d6ee8;
+      --blue-weak: #eaf4ff;
+      --green: #16b36a;
+      --green-bg: #eaf9f1;
+      --orange: #f59e0b;
+      --orange-bg: #fff5df;
+      --red: #ef4444;
+      --red-bg: #fff1f1;
+      --text: #1f2937;
+      --sub: #4b5563;
+      --muted: #8a94a6;
+      --line: #e5e7eb;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --soft: #f8fafc;
+      --shadow: 0 14px 40px rgba(15, 23, 42, .08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 74px 1fr;
+      overflow: hidden;
+    }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      min-width: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2f8cff, #63b3ff);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      flex: none;
+    }
+
+    .title {
+      min-width: 0;
+    }
+
+    .title strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .title span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: #fff;
+      color: var(--sub);
+    }
+
+    .sidebar-toggle {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: #526071;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .sidebar-toggle:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .sidebar-toggle svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 252px 1fr;
+      overflow: hidden;
+    }
+
+    .layout.sidebar-collapsed {
+      grid-template-columns: 64px 1fr;
+    }
+
+    .sidebar {
+      min-height: 0;
+      overflow-y: auto;
+      background: #fff;
+      border-right: 1px solid var(--line);
+      padding: 18px 14px;
+    }
+
+    .layout.sidebar-collapsed .sidebar {
+      padding: 14px 8px;
+      overflow-x: hidden;
+    }
+
+    .sidebar-menu-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 4px 12px 10px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar-menu-title {
+      color: #334155;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .sidebar-menu-head .sidebar-toggle {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      flex: none;
+    }
+
+    .layout.sidebar-collapsed .sidebar-menu-head {
+      justify-content: center;
+      padding: 0 0 10px;
+    }
+
+    .layout.sidebar-collapsed .sidebar-menu-title {
+      display: none;
+    }
+
+    .nav-label {
+      color: #a0a9b7;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 8px 10px;
+    }
+
+    .layout.sidebar-collapsed .nav-label {
+      height: 14px;
+      padding: 7px 0;
+      color: transparent;
+      overflow: hidden;
+    }
+
+    .feature-btn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      color: #425166;
+      border-radius: 10px;
+      padding: 12px 12px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 26px 1fr;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .layout.sidebar-collapsed .feature-btn {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      padding: 12px 0;
+    }
+
+    .feature-btn:hover {
+      background: #f3f7ff;
+      color: var(--blue);
+    }
+
+    .feature-btn.active {
+      background: var(--blue-weak);
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .feature-no {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #eef2f7;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .layout.sidebar-collapsed .feature-no {
+      margin: 0 auto;
+    }
+
+    .feature-btn.active .feature-no {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .feature-name {
+      line-height: 1.45;
+      min-width: 0;
+    }
+
+    .layout.sidebar-collapsed .feature-name {
+      display: none;
+    }
+
+    .content {
+      min-width: 0;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .feature-head {
+      padding: 18px 22px 14px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      min-width: 0;
+    }
+
+    .feature-head h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .feature-head p {
+      margin: 8px 0 0;
+      color: var(--sub);
+      line-height: 1.7;
+      max-width: 1080px;
+    }
+
+    .page-tabs {
+      min-width: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding: 0 22px;
+      position: sticky;
+      top: 0;
+      z-index: 4;
+    }
+
+    .page-tab {
+      border: 0;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      color: #526071;
+      padding: 15px 18px 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 800;
+    }
+
+    .page-tab:hover {
+      color: var(--blue);
+      background: #f7fbff;
+    }
+
+    .page-tab.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+      background: #fff;
+    }
+
+    .workspace {
+      min-height: 0;
+      min-width: 0;
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+      height: calc(100vh - 74px - 54px);
+    }
+
+    .workspace.pc {
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 32%);
+    }
+
+    .workspace.mobile {
+      grid-template-columns: minmax(390px, 430px) minmax(520px, 1fr);
+    }
+
+    .workspace.doc-only {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace.doc-only .proto-panel {
+      display: none;
+    }
+
+    .doc-panel,
+    .proto-panel {
+      min-width: 0;
+      min-height: 0;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .doc-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      order: 2;
+    }
+
+    .doc-head {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #fbfdff);
+    }
+
+    .doc-head .kicker {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .doc-head h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .doc-scroll {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 18px 20px 80px;
+    }
+
+    .block {
+      background: var(--soft);
+      border: 1px solid #eef2f7;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .block h3 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 15px;
+    }
+
+    .block p,
+    .block li {
+      line-height: 1.78;
+      color: #38465a;
+    }
+
+    .block p {
+      margin: 0;
+    }
+
+    .block ul,
+    .block ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .table-scroll table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+      table-layout: auto;
+    }
+
+    .table-scroll th,
+    .table-scroll td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.65;
+      color: #38465a;
+    }
+
+    .table-scroll th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .table-scroll tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .token {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: 5px;
+      background: #edf5ff;
+      color: var(--blue);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .change-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .change-item {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 13px 14px;
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .tag {
+      height: 24px;
+      min-width: 42px;
+      padding: 0 8px;
+      border-radius: 6px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .add {
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .adjust {
+      color: var(--orange);
+      background: var(--orange-bg);
+    }
+
+    .delete {
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .change-body strong {
+      display: block;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .change-body p {
+      margin: 0;
+      color: #465568;
+      line-height: 1.75;
+    }
+
+    .change-body ol {
+      margin: 0;
+      padding-left: 18px;
+      color: #465568;
+      line-height: 1.75;
+    }
+
+    .change-body .rule-groups {
+      padding-left: 20px;
+    }
+
+    .change-body .rule-groups > li {
+      margin-bottom: 8px;
+    }
+
+    .change-body .rule-groups > li:last-child {
+      margin-bottom: 0;
+    }
+
+    .change-body .rule-title {
+      display: inline-block;
+      margin-bottom: 2px;
+      color: #1f2d3d;
+      font-weight: 700;
+    }
+
+    .change-body .rule-groups ol {
+      margin-top: 2px;
+      padding-left: 20px;
+    }
+
+    .proto-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background: #f8fafc;
+      order: 1;
+    }
+
+    .proto-head {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 34px;
+      grid-template-areas:
+        "title open";
+      gap: 10px 12px;
+      align-items: start;
+    }
+
+    .proto-head.has-states {
+      grid-template-areas:
+        "title open"
+        "states open";
+    }
+
+    .proto-title {
+      grid-area: title;
+      min-width: 0;
+    }
+
+    .proto-title span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .proto-title strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
+
+    .open-btn {
+      grid-area: open;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #526071;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .open-btn:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .open-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .state-bar {
+      grid-area: states;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+      align-items: center;
+    }
+
+    .state-bar:empty {
+      display: none;
+    }
+
+    .state-btn {
+      border: 1px solid #dbe2ea;
+      background: #fff;
+      color: #526071;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .state-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .proto-stage {
+      min-height: 0;
+      min-width: 0;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 14px;
+    }
+
+    .workspace.mobile .proto-stage {
+      align-items: start;
+      justify-items: center;
+    }
+
+    .pc-stage {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid #dbe2ea;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .pc-stage iframe {
+      display: block;
+      border: 0;
+      background: #fff;
+      transform-origin: top left;
+      opacity: 0;
+      transition: opacity .16s ease;
+    }
+
+    .phone-shell {
+      width: 375px;
+      height: 812px;
+      border-radius: 30px;
+      border: 1px solid #d6dde8;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, .14);
+      transform-origin: top center;
+    }
+
+    .phone-shell iframe {
+      width: 375px;
+      height: 812px;
+      border: 0;
+      display: block;
+      background: #fff;
+      opacity: 0;
+      transition: opacity .16s ease;
+    }
+
+    .empty {
+      color: var(--muted);
+      line-height: 1.8;
+      padding: 20px;
+    }
+
+    @media (max-width: 1280px) {
+      .layout {
+        grid-template-columns: 220px 1fr;
+      }
+
+      .layout.sidebar-collapsed {
+        grid-template-columns: 64px 1fr;
+      }
+
+      .workspace.pc {
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 34%);
+      }
+
+      .workspace.mobile {
+        grid-template-columns: minmax(360px, 400px) minmax(460px, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">云</div>
+        <div class="title">
+          <strong>云芳邻 7月优化版本 PRD</strong>
+          <span>v1.0 · 小需求聚合版</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-menu-head">
+          <div class="sidebar-menu-title">需求菜单</div>
+          <button class="sidebar-toggle" id="sidebarToggle" type="button" title="收起左侧菜单" aria-label="收起左侧菜单">
+            <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M15 9l-3 3 3 3"></path></svg>
+          </button>
+        </div>
+        <div class="nav-label" id="sectionNavLabel">基础内容</div>
+        <div id="sectionNav"></div>
+        <div class="nav-label" id="featureNavLabel">需求说明</div>
+        <div id="featureNav"></div>
+      </aside>
+
+      <main class="content">
+        <section class="feature-head">
+          <h1 id="featureTitle"></h1>
+          <p id="featureSummary"></p>
+        </section>
+        <nav class="page-tabs" id="pageTabs"></nav>
+        <section class="workspace pc" id="workspace">
+          <article class="doc-panel">
+            <div class="doc-head">
+              <div class="kicker" id="docKicker"></div>
+              <h2 id="pageTitle"></h2>
+            </div>
+            <div class="doc-scroll" id="docScroll"></div>
+          </article>
+
+          <aside class="proto-panel">
+            <div class="proto-head">
+              <div class="proto-title">
+                <span id="protoKicker">原型预览</span>
+                <strong id="protoTitle"></strong>
+              </div>
+              <div class="state-bar" id="stateBar"></div>
+              <a class="open-btn" id="openProto" href="#" target="_blank" title="全屏查看原型" aria-label="全屏查看原型">
+                <svg viewBox="0 0 24 24"><path d="M8 4H4v4"></path><path d="M4 4l6 6"></path><path d="M16 4h4v4"></path><path d="M20 4l-6 6"></path><path d="M8 20H4v-4"></path><path d="M4 20l6-6"></path><path d="M16 20h4v-4"></path><path d="M20 20l-6-6"></path></svg>
+              </a>
+            </div>
+            <div class="proto-stage" id="protoStage">
+              <div class="empty">请选择一个页面。</div>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+/* GENERATED_PRD_DATA_START */
+    // 由 prd-july-optimization.md 自动生成，MD SHA256: eacd5f598f6dd855b1a9940c4dc50948fb379b1248e379a8005c515e9a1db30b
+    const PRD_MODE = "small";
+    const SECTION_DATA = [
+      {
+        "id": "需求背景",
+        "no": "背",
+        "title": "需求背景",
+        "desc": "本期版本性质和组织方式。",
+        "summary": "7 月优化版本属于小需求聚合版。本期不是单一大型业务重做，而是多个独立优化、补齐项和问题修复组成。 每个功能作为一个独立需求进入左侧功能菜单；功能内部再按涉及的页面、弹窗、定时任务、订阅消息或底表拆成横向 tab。当前版本保留 8 个功能。 本期同时涉及两个独立小程序：功能一至功能五、功能八归入「云芳邻」小程序及其配套后台；功能六、功能七归入「海丝乡音」小程序及其配套后台。两个小程序的首页、个人中心和底部导航彼此独立，不共用同一套页面。",
+        "blocks": [
+          {
+            "title": "需求背景",
+            "html": "<p>7 月优化版本属于小需求聚合版。本期不是单一大型业务重做，而是多个独立优化、补齐项和问题修复组成。</p><p>每个功能作为一个独立需求进入左侧功能菜单；功能内部再按涉及的页面、弹窗、定时任务、订阅消息或底表拆成横向 tab。当前版本保留 8 个功能。</p><p>本期同时涉及两个独立小程序：功能一至功能五、功能八归入<span class=\"token\">「云芳邻」</span>小程序及其配套后台；功能六、功能七归入<span class=\"token\">「海丝乡音」</span>小程序及其配套后台。两个小程序的首页、个人中心和底部导航彼此独立，不共用同一套页面。</p>"
+          }
+        ]
+      },
+      {
+        "id": "需求清单",
+        "no": "清",
+        "title": "需求清单",
+        "desc": "本期 8 个独立功能。",
+        "summary": "本期 8 个独立功能。",
+        "blocks": [
+          {
+            "title": "需求清单",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>编号</th><th>需求</th><th>状态</th><th>影响范围</th><th>说明</th></tr></thead><tbody><tr><td>功能一</td><td>优惠券核销触达</td><td>已细化</td><td>居民端首页、商城首页、个人中心</td><td>增强已持券用户的核销提醒，同时补充领券中心入口。</td></tr><tr><td>功能二</td><td>商家营业时间配置</td><td>已细化</td><td>PC后台、C端展示规则</td><td>PC 后台新增<span class=\"token\">「营业时间」</span>配置入口，并把旧商家弹窗里的营业状态、营业时间移到独立弹窗维护。</td></tr><tr><td>功能三</td><td>推广支持视频</td><td>已细化</td><td>PC后台、小程序商家端、居民端</td><td>发布推广支持图片或视频，补齐推广详情、商家端列表、居民端列表和详情的视频展示。</td></tr><tr><td>功能四</td><td>公告暂存与二维码识别</td><td>已细化</td><td>小程序管理后台、居民端</td><td>修复移动端公告仅有正文图片时无法存草稿的问题，公告图片支持长按识别二维码。</td></tr><tr><td>功能五</td><td>商家入驻情况</td><td>已细化</td><td>PC后台、定时任务</td><td>新增商家入驻情况页，用管理员最后登录时间判断商家是否真实入驻。</td></tr><tr><td>功能六</td><td>海丝乡音首页与底部导航改造</td><td>已细化</td><td>居民端首页、底部导航、个人中心</td><td>海丝乡音替代原有首页，底部调整为<span class=\"token\">「海丝乡音 / 市集 / 我的」</span>三项；市集沿用原有页面。</td></tr><tr><td>功能七</td><td>海丝乡愁点位筛选与标签优化</td><td>已细化</td><td>居民端、PC后台</td><td>居民端支持按街道筛选点位并展示运营标签，PC 后台补充街道和标签维护。</td></tr><tr><td>功能八</td><td>待发布问卷预览</td><td>已细化</td><td>PC后台、小程序端</td><td>待发布问卷可生成预览二维码，扫码查看详情和完整题目；预览过程不可提交，不产生答卷数据。</td></tr></tbody></table></div>"
+          }
+        ]
+      }
+    ];
+
+    const DATA = [
+      {
+        "id": "功能一-优惠券核销触达",
+        "no": "一",
+        "title": "功能一 · 优惠券核销触达",
+        "desc": "当前部分居民领取优惠券后未及时核销。本期在首页、商城首页和个人中心增加领券与用券触达，优",
+        "summary": "当前部分居民领取优惠券后未及时核销。本期在首页、商城首页和个人中心增加领券与用券触达，优先提醒已持券用户去使用；无待使用券时引导领取可用福利。",
+        "pages": [
+          {
+            "id": "居民端首页弹窗",
+            "tab": "居民端首页弹窗",
+            "title": "居民端首页弹窗",
+            "type": "mobile",
+            "location": "居民进入小程序首页，现有公告弹窗关闭后展示。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "弹窗 · 「券未使用提醒」",
+                "desc": "增加已持券未使用提醒弹窗，优先引导用户去核销。",
+                "groups": [
+                  {
+                    "title": "弹窗出现逻辑",
+                    "items": [
+                      "每日最多展示一次，在现有公告弹窗关闭后判断。",
+                      "用户存在已领取未使用优惠券时展示。",
+                      "与<span class=\"token\">「领券提示」</span>互斥，优先展示<span class=\"token\">「券未使用提醒」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "券展示规则",
+                    "items": [
+                      "券列表一次最多展示 3 张。",
+                      "弹窗内支持上下滑动查看全部未使用券。"
+                    ]
+                  },
+                  {
+                    "title": "点击交互",
+                    "items": [
+                      "点击券卡<span class=\"token\">「立即使用」</span>进入对应券核销码页面。",
+                      "点击<span class=\"token\">「领新券」</span>进入领券中心。",
+                      "点击<span class=\"token\">「去卡包看看」</span>进入我的卡包。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "弹窗 · 「领券提示」",
+                "desc": "增加推荐领券弹窗，在用户暂无待使用券时引导领取可用福利。",
+                "groups": [
+                  {
+                    "title": "弹窗出现逻辑",
+                    "items": [
+                      "仅在用户没有待使用券时展示。",
+                      "当前至少存在 1 张可免费领取的优惠券时展示。",
+                      "与<span class=\"token\">「券未使用提醒」</span>互斥，已持券场景不展示。"
+                    ]
+                  },
+                  {
+                    "title": "券取值逻辑",
+                    "items": [
+                      "用户已授权地址时，按用户距离取最近的 3 张可领取优惠券。",
+                      "用户未授权地址时，取最新发布的 3 张可领取优惠券。",
+                      "可领取券需同时满足：无需积分、免费领取、库存足够。",
+                      "可领取券少于 3 张时，按实际数量展示。"
+                    ]
+                  },
+                  {
+                    "title": "券展示规则",
+                    "items": [
+                      "券卡展示优惠类型、券名、优惠内容或价值等主要信息。",
+                      "弹窗内券卡不展示单张领取按钮。"
+                    ]
+                  },
+                  {
+                    "title": "点击交互",
+                    "items": [
+                      "点击<span class=\"token\">「立即领取」</span>一次性领取当前展示的全部券。",
+                      "领取成功后展示<span class=\"token\">「领取成功提示」</span>。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "弹窗 · 「领取成功提示」",
+                "desc": "用户一键领取成功后展示结果弹窗，并提供继续领券和去卡包用券入口。",
+                "groups": [
+                  {
+                    "title": "弹窗出现逻辑",
+                    "items": [
+                      "用户点击<span class=\"token\">「立即领取」</span>并领取成功后展示。",
+                      "提示本次领取结果，引导用户继续领券或去卡包用券。"
+                    ]
+                  },
+                  {
+                    "title": "点击交互",
+                    "items": [
+                      "点击<span class=\"token\">「继续领券」</span>进入领券中心。",
+                      "点击<span class=\"token\">「去卡包用券」</span>进入我的卡包。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 首页弹窗",
+              "states": [
+                {
+                  "label": "已持券未使用提醒状态",
+                  "url": "prototype/coupon-touchpoints.html?state=unused"
+                },
+                {
+                  "label": "推荐领券状态",
+                  "url": "prototype/coupon-touchpoints.html?state=recommend"
+                },
+                {
+                  "label": "领券成功状态",
+                  "url": "prototype/coupon-touchpoints.html?state=success"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端商城首页",
+            "tab": "居民端商城首页",
+            "title": "居民端商城首页",
+            "type": "mobile",
+            "location": "居民进入「市集」首页时展示。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "入口横幅 · 「领券中心」",
+                "desc": "调整商城首页领券中心入口位置、占位高度和点击入口。",
+                "groups": [
+                  {
+                    "title": "入口位置",
+                    "items": [
+                      "将<span class=\"token\">「领券中心」</span>入口横幅位置上移，提升首屏可见性。",
+                      "入口占位高度调整为原横幅高度的 1.5 倍。"
+                    ]
+                  },
+                  {
+                    "title": "视觉与交互",
+                    "items": [
+                      "横幅视觉图由 UI 设计提供，原型仅保留占位空间。",
+                      "点击横幅进入领券中心。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 商城首页领券中心入口",
+              "states": [
+                {
+                  "label": "居民端原型 · 商城首页领券中心入口",
+                  "url": "prototype/coupon-touchpoints.html?state=mall"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端个人中心",
+            "tab": "居民端个人中心",
+            "title": "居民端个人中心",
+            "type": "mobile",
+            "location": "居民进入「我的」页面时展示。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "功能入口 · 「领券中心」",
+                "desc": "在个人中心新增领券中心入口、角标和点击跳转。",
+                "groups": [
+                  {
+                    "title": "入口位置",
+                    "items": [
+                      "在个人中心功能宫格新增<span class=\"token\">「领券中心」</span>入口。",
+                      "入口放在功能宫格末位，与现有宫格入口保持同一尺寸和排列规则。"
+                    ]
+                  },
+                  {
+                    "title": "角标规则",
+                    "items": [
+                      "入口右上角显示呼吸感角标<span class=\"token\">「领福利」</span>。",
+                      "角标仅用于提示福利入口，不遮挡入口名称。"
+                    ]
+                  },
+                  {
+                    "title": "点击交互",
+                    "items": [
+                      "点击<span class=\"token\">「领券中心」</span>进入领券中心。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 个人中心领券中心入口",
+              "states": [
+                {
+                  "label": "居民端原型 · 个人中心领券中心入口",
+                  "url": "prototype/coupon-touchpoints.html?state=profile"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能二-商家营业时间配置",
+        "no": "二",
+        "title": "功能二 · 商家营业时间配置",
+        "desc": "当前商家营业时间主要依赖商家自行维护。部分商家未配置营业时间时，居民端营业状态容易不准确",
+        "summary": "当前商家营业时间主要依赖商家自行维护。部分商家未配置营业时间时，居民端营业状态容易不准确。本期在 PC 后台为管理员补充代配置入口，保存后居民端继续沿用现有营业状态展示规则。",
+        "pages": [
+          {
+            "id": "pc端商家列表",
+            "tab": "PC端商家列表",
+            "title": "PC端商家列表",
+            "type": "pc",
+            "location": "PC后台「商家管理」列表页，行内操作区域。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "操作按钮 · 「营业时间」",
+                "desc": "在「商家详情」「修改」「更多」同列增加入口，点击后打开「配置营业时间」弹窗。"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 商家管理列表",
+              "states": [
+                {
+                  "label": "PC端原型 · 商家管理列表",
+                  "url": "prototype/merchant-business-hours.html?state=list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端商家详情-修改商家弹窗",
+            "tab": "PC端商家详情 / 修改商家弹窗",
+            "title": "PC端商家详情 / 修改商家弹窗",
+            "type": "pc",
+            "location": "点击商家列表行内「商家详情」或「修改」后打开「修改商家」弹窗。",
+            "changes": [
+              {
+                "type": "delete",
+                "label": "删除",
+                "title": "配置项 · 营业状态、营业时间",
+                "desc": "从该弹窗移除，统一通过「配置营业时间」弹窗维护；「是否允许营业」保留在原弹窗。"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 修改商家弹窗",
+              "states": [
+                {
+                  "label": "PC端原型 · 修改商家弹窗",
+                  "url": "prototype/merchant-business-hours.html?state=detail"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端配置营业时间弹窗",
+            "tab": "PC端配置营业时间弹窗",
+            "title": "PC端配置营业时间弹窗",
+            "type": "pc",
+            "location": "点击商家列表行内「营业时间」后打开。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "弹窗 · 「配置营业时间」",
+                "desc": "独立承接商家营业状态、营业日期、营业时间段配置。",
+                "groups": [
+                  {
+                    "title": "配置内容",
+                    "items": [
+                      "营业状态：独立承接商家营业状态配置。",
+                      "营业日期：支持勾选周一至周日，选中的星期使用同一组营业时间段。",
+                      "营业时间：支持配置开始时间和结束时间，最多 3 个时间段；不支持按星期分别配置不同时间。"
+                    ]
+                  },
+                  {
+                    "title": "校验提示",
+                    "items": [
+                      "未选择营业日期时，提示<span class=\"token\">「请至少选择一个营业日期」</span>。",
+                      "仅剩 1 个时段时删除，提示<span class=\"token\">「营业时间至少需要保留一个时段」</span>。",
+                      "时间段重叠时，提示<span class=\"token\">「营业时间段不允许重叠」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "跨天与保存",
+                    "items": [
+                      "结束时间小于开始时间时按跨天营业处理，例如 22:00-02:00。",
+                      "保存后刷新商家营业时间配置，C 端继续按现有展示规则判断商家是否营业中。"
+                    ]
+                  },
+                  {
+                    "title": "状态优先级",
+                    "items": [
+                      "<span class=\"token\">「是否允许营业」</span>为最高优先级，继续保留在<span class=\"token\">「修改商家」</span>弹窗中。",
+                      "<span class=\"token\">「是否允许营业」</span>关闭时，<span class=\"token\">「营业状态」</span>不能调整为开启；PC 后台和小程序商家端均沿用该限制。",
+                      "<span class=\"token\">「是否允许营业」</span>开启后，管理员或商家才能将<span class=\"token\">「营业状态」</span>调整为开启。",
+                      "开启<span class=\"token\">「是否允许营业」</span>不会自动开启<span class=\"token\">「营业状态」</span>，仍需由管理员或商家主动调整。"
+                    ]
+                  },
+                  {
+                    "title": "已有能力说明",
+                    "items": [
+                      "上述营业日期、营业时间段和异常提示逻辑已在小程序商家端后台实现，本次补充为兼容 PC 后台配置。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 配置营业时间弹窗",
+              "states": [
+                {
+                  "label": "PC端原型 · 配置营业时间弹窗",
+                  "url": "prototype/merchant-business-hours.html?state=hours"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能三-推广支持视频",
+        "no": "三",
+        "title": "功能三 · 推广支持视频",
+        "desc": "当前推广发布素材只支持图片，商家无法用视频展示门店、服务或商品效果。居民在推广列表和详情",
+        "summary": "当前推广发布素材只支持图片，商家无法用视频展示门店、服务或商品效果。居民在推广列表和详情里也看不到视频内容。本期把「推广素材」从纯图片扩展为图片或视频二选一，并补齐各端视频展示。",
+        "pages": [
+          {
+            "id": "pc端发布推广弹窗",
+            "tab": "PC端发布推广弹窗",
+            "title": "PC端发布推广弹窗",
+            "type": "pc",
+            "location": "PC后台「推广管理」中点击「发布推广」后打开。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "上传区域 · 「内容」",
+                "desc": "支持图片或视频二选一上传，并按素材类型展示对应状态。",
+                "groups": [
+                  {
+                    "title": "字段与空状态",
+                    "items": [
+                      "字段名称由<span class=\"token\">「内容配图」</span>调整为<span class=\"token\">「内容」</span>。",
+                      "未上传素材时，上传占位按钮文案为<span class=\"token\">「添加图片/视频」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "已上传图片状态",
+                    "items": [
+                      "展示图片缩略图，上传按钮继续排在已上传图片后方。",
+                      "追加上传按钮文案调整为<span class=\"token\">「添加图片」</span>，不再出现<span class=\"token\">「视频」</span>字样。",
+                      "默认第一张图片为封面，仅第一张展示<span class=\"token\">「封面」</span>标识。"
+                    ]
+                  },
+                  {
+                    "title": "已上传视频状态",
+                    "items": [
+                      "展示视频卡片和播放标识。",
+                      "上传视频后不再展示上传按钮。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "发布校验 · 素材限制",
+                "desc": "校验素材必填、数量、混传及替换条件。",
+                "groups": [
+                  {
+                    "title": "必填与数量",
+                    "items": [
+                      "内容素材仍为必填。",
+                      "图片最多 5 张，视频最多 1 个。"
+                    ]
+                  },
+                  {
+                    "title": "素材互斥",
+                    "items": [
+                      "图片和视频不支持混传。",
+                      "已上传图片后如选择视频，需先删除图片。"
+                    ]
+                  },
+                  {
+                    "title": "技术评审项",
+                    "items": [
+                      "视频格式、文件大小和时长上限由开发结合现有上传与播放能力确认，产品评审阶段不预先写死 20 秒。",
+                      "最终限制在 PC 后台和小程序商家端保持一致，并在上传前提示、提交时校验。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 发布推广弹窗",
+              "states": [
+                {
+                  "label": "未上传素材状态",
+                  "url": "prototype/promotion-media-pc.html?state=empty"
+                },
+                {
+                  "label": "已上传图片状态",
+                  "url": "prototype/promotion-media-pc.html?state=image"
+                },
+                {
+                  "label": "已上传视频状态",
+                  "url": "prototype/promotion-media-pc.html?state=video"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端推广详情弹窗",
+            "tab": "PC端推广详情弹窗",
+            "title": "PC端推广详情弹窗",
+            "type": "pc",
+            "location": "PC后台「推广管理」列表点击「推广详情」后打开。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "页签内容 · 「推广内容」",
+                "desc": "图片素材沿用现有缩略图展示方式；视频素材展示视频卡片，卡片内显示视频封面和播放标识。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "播放弹窗 · 「视频播放器」",
+                "desc": "点击视频素材后在 PC 页面内打开播放器，不跳转新页面；关闭播放器后返回推广详情弹窗。"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 推广详情弹窗",
+              "states": [
+                {
+                  "label": "视频素材待播放状态",
+                  "url": "prototype/promotion-media-pc.html?state=detail-video"
+                },
+                {
+                  "label": "视频播放器打开状态",
+                  "url": "prototype/promotion-media-pc.html?state=player"
+                }
+              ]
+            }
+          },
+          {
+            "id": "商家端发布推广页",
+            "tab": "商家端发布推广页",
+            "title": "商家端发布推广页",
+            "type": "mobile",
+            "location": "商家在小程序商家端进入「发布推广」页时展示。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "上传区域 · 「内容」",
+                "desc": "支持图片或视频二选一上传，并按素材类型展示对应状态。",
+                "groups": [
+                  {
+                    "title": "字段与空状态",
+                    "items": [
+                      "字段名称由<span class=\"token\">「内容配图」</span>调整为<span class=\"token\">「内容」</span>。",
+                      "数量说明换行展示为<span class=\"token\">「图片最多5张，视频最多1个」</span>。",
+                      "未上传素材时，占位按钮文案为<span class=\"token\">「添加图片/视频」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "已上传图片状态",
+                    "items": [
+                      "继续展示追加图片按钮，按钮文案为<span class=\"token\">「添加图片」</span>。",
+                      "默认第一张图片为封面，仅第一张展示<span class=\"token\">「封面」</span>标识。"
+                    ]
+                  },
+                  {
+                    "title": "已上传视频状态",
+                    "items": [
+                      "展示视频封面和播放标识。",
+                      "上传视频后不再展示上传按钮。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "发布校验 · 素材限制",
+                "desc": "校验素材必填、数量和混传条件。",
+                "groups": [
+                  {
+                    "title": "必填与数量",
+                    "items": [
+                      "内容素材仍为必填。",
+                      "图片最多 5 张，视频最多 1 个。"
+                    ]
+                  },
+                  {
+                    "title": "素材互斥",
+                    "items": [
+                      "图片和视频不支持混传。"
+                    ]
+                  },
+                  {
+                    "title": "技术评审项",
+                    "items": [
+                      "视频格式、文件大小和时长上限沿用技术评审的统一结论，不在小程序商家端单独设置另一套限制。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "商家端原型 · 发布推广页",
+              "states": [
+                {
+                  "label": "未上传素材状态",
+                  "url": "prototype/promotion-media-mobile.html?state=empty"
+                },
+                {
+                  "label": "已上传图片状态",
+                  "url": "prototype/promotion-media-mobile.html?state=image"
+                },
+                {
+                  "label": "已上传视频状态",
+                  "url": "prototype/promotion-media-mobile.html?state=video"
+                }
+              ]
+            }
+          },
+          {
+            "id": "商家端推广管理列表",
+            "tab": "商家端推广管理列表",
+            "title": "商家端推广管理列表",
+            "type": "mobile",
+            "location": "商家在小程序商家端进入「推广管理」列表时展示。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "推广卡片 · 素材展示",
+                "desc": "视频素材使用首帧封面，并展示播放标识。",
+                "groups": [
+                  {
+                    "title": "视频展示",
+                    "items": [
+                      "视频封面取视频首帧。",
+                      "视频推广卡片展示播放标识。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "页面停留在推广管理列表，不新增详情页。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "商家端原型 · 推广管理列表",
+              "states": [
+                {
+                  "label": "商家端原型 · 推广管理列表",
+                  "url": "prototype/promotion-media-mobile.html?state=list-video"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端推广列表",
+            "tab": "居民端推广列表",
+            "title": "居民端推广列表",
+            "type": "mobile",
+            "location": "居民在「云邻市集」活动推广列表查看推广卡片。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "推广卡片 · 视频展示",
+                "desc": "视频推广卡片使用首帧封面，并增加播放入口。",
+                "groups": [
+                  {
+                    "title": "视频展示",
+                    "items": [
+                      "视频封面取视频首帧。",
+                      "视频推广卡片在封面右上角展示半透明圆形播放按钮，按钮内使用三角形播放图形。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击卡片进入推广详情页。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 推广列表",
+              "states": [
+                {
+                  "label": "居民端原型 · 推广列表",
+                  "url": "prototype/promotion-media-customer.html?state=list-video"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端推广详情页",
+            "tab": "居民端推广详情页",
+            "title": "居民端推广详情页",
+            "type": "mobile",
+            "location": "居民点击视频推广卡片后进入推广详情。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "顶部媒体区 · 视频播放器",
+                "desc": "将原图片轮播区域调整为可播放、暂停的视频区域。",
+                "groups": [
+                  {
+                    "title": "媒体区展示",
+                    "items": [
+                      "视频推广详情顶部原图片轮播区域替换为视频内容区域。",
+                      "视频区域下方展示播放进度条。"
+                    ]
+                  },
+                  {
+                    "title": "播放交互",
+                    "items": [
+                      "用户点击视频区域可播放或暂停。",
+                      "播放状态通过播放或暂停图形和进度条变化表达。"
+                    ]
+                  },
+                  {
+                    "title": "页面其余内容",
+                    "items": [
+                      "商家信息、优惠券、推广正文、温馨提示和底部操作沿用现有展示。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 推广详情页",
+              "states": [
+                {
+                  "label": "视频未播放状态",
+                  "url": "prototype/promotion-media-customer.html?state=detail-video"
+                },
+                {
+                  "label": "视频播放中状态",
+                  "url": "prototype/promotion-media-customer.html?state=detail-playing"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能四-公告暂存与二维码识别",
+        "no": "四",
+        "title": "功能四 · 公告暂存与二维码识别",
+        "desc": "小程序管理后台编辑公告时，正文未输入文字、仅上传图片会导致存草稿失败；居民查看公告时，正",
+        "summary": "小程序管理后台编辑公告时，正文未输入文字、仅上传图片会导致存草稿失败；居民查看公告时，正文图片中的二维码无法长按识别。本期修复这两个问题。",
+        "pages": [
+          {
+            "id": "移动端公告暂存",
+            "tab": "移动端公告暂存",
+            "title": "移动端公告暂存",
+            "type": "mobile",
+            "location": "小程序管理后台【公告管理】的「新增公告」「编辑公告」页面。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "暂存校验 · 正文仅有图片",
+                "desc": "公告正文未输入文字、但已上传至少一张图片时，点击「存草稿」允许保存，不再提示「暂存失败」。",
+                "groups": [
+                  {
+                    "title": "当前问题",
+                    "items": [
+                      "公告正文没有文字、仅上传图片时，点击<span class=\"token\">「存草稿」</span>提示<span class=\"token\">「暂存失败」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "正文有效内容判断",
+                    "items": [
+                      "正文包含文字或至少一张图片，均视为已有正文内容。",
+                      "正文同时没有文字和图片时，继续按现有空内容校验处理。",
+                      "标题等其他必填校验保持现有规则。"
+                    ]
+                  },
+                  {
+                    "title": "保存内容",
+                    "items": [
+                      "保存公告标题、正文文字、正文图片和附件等当前已填写内容。",
+                      "草稿保存后保留正文图片的顺序和位置，再次编辑时完整回显。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "结果提示 · 「暂存成功」",
+                "desc": "草稿保存成功后显示「暂存成功」，公告进入草稿状态，可再次进入编辑。",
+                "groups": [
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击<span class=\"token\">「存草稿」</span>并保存成功后，提示<span class=\"token\">「暂存成功」</span>。",
+                      "公告进入草稿状态，管理员可再次进入编辑并继续发布。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "编辑公告",
+              "states": [
+                {
+                  "label": "编辑公告",
+                  "url": "prototype/announcement-draft-mobile.html?state=image-only-error"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端公告二维码识别",
+            "tab": "居民端公告二维码识别",
+            "title": "居民端公告二维码识别",
+            "type": "mobile",
+            "location": "居民端公告详情页或公告内容图片区域。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "图片操作 · 「长按识别二维码」",
+                "desc": "公告正文图片包含二维码时，居民可长按图片调起微信二维码识别。",
+                "groups": [
+                  {
+                    "title": "识别对象",
+                    "items": [
+                      "覆盖公告正文中的全部图片。",
+                      "图片中包含可识别二维码时，长按可调起微信二维码识别入口。"
+                    ]
+                  },
+                  {
+                    "title": "识别体验",
+                    "items": [
+                      "居民长按图片后，按微信现有交互识别二维码。",
+                      "识别成功后按二维码内容打开对应页面。"
+                    ]
+                  },
+                  {
+                    "title": "展示要求",
+                    "items": [
+                      "公告正文图片的原有展示和点击预览保持不变。",
+                      "点击预览和长按识别二维码互不影响。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": null
+          }
+        ]
+      },
+      {
+        "id": "功能五-商家入驻情况",
+        "no": "五",
+        "title": "功能五 · 商家入驻情况",
+        "desc": "商家被录入系统，不等于商家管理员已经实际进入后台。本期需要通过商家管理员最后登录时间判断",
+        "summary": "商家被录入系统，不等于商家管理员已经实际进入后台。本期需要通过商家管理员最后登录时间判断商家是否完成真实入驻，并给运营人员一个可筛选、可导出、可手动修正的监控页。",
+        "pages": [
+          {
+            "id": "pc端商家入驻情况页",
+            "tab": "PC端商家入驻情况页",
+            "title": "PC端商家入驻情况页",
+            "type": "pc",
+            "location": "PC后台「商家管理」主菜单下新增「商家入驻情况」子菜单，进入后展示商家入驻情况列表。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "页面 · 「商家入驻情况」",
+                "desc": "在「商家管理」主菜单下新增监控页，用于查看商家真实入驻情况。",
+                "groups": [
+                  {
+                    "title": "页面目标",
+                    "items": [
+                      "按商家管理员最后登录时间判断商家是否完成真实入驻。",
+                      "帮助运营查看已入驻、未入驻和可补录商家。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "筛选区 · 入驻情况筛选",
+                "desc": "支持按商家、社区、管理员、销售和时间范围组合筛选。",
+                "groups": [
+                  {
+                    "title": "文本筛选",
+                    "items": [
+                      "<span class=\"token\">「商家名称」</span>支持按商家名称模糊搜索。",
+                      "<span class=\"token\">「所属社区」</span>支持按社区名称搜索。",
+                      "<span class=\"token\">「商家管理员」</span>支持按管理员姓名搜索。",
+                      "<span class=\"token\">「管理员手机号」</span>支持按手机号搜索。",
+                      "<span class=\"token\">「所属销售」</span>支持按销售姓名搜索。"
+                    ]
+                  },
+                  {
+                    "title": "时间筛选",
+                    "items": [
+                      "<span class=\"token\">「入驻时间」</span>使用日期范围选择器，按起止日期筛选。",
+                      "<span class=\"token\">「创建时间」</span>使用日期范围选择器，按起止日期筛选。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "列表字段 · 商家入驻信息",
+                "desc": "展示商家归属、管理员、入驻时间、最后登录时间和创建时间。",
+                "groups": [
+                  {
+                    "title": "基础字段",
+                    "items": [
+                      "<span class=\"token\">「序号」</span>按当前列表顺序展示 1、2、3。",
+                      "展示<span class=\"token\">「商家名称」</span><span class=\"token\">「所属社区」</span><span class=\"token\">「商家管理员」</span><span class=\"token\">「管理员手机号」</span>。",
+                      "<span class=\"token\">「所属销售」</span>允许为空。"
+                    ]
+                  },
+                  {
+                    "title": "时间字段",
+                    "items": [
+                      "<span class=\"token\">「入驻时间」</span>展示到年月日，无入驻时间时显示<span class=\"token\">「-」</span>。",
+                      "<span class=\"token\">「最后登录时间」</span>取商家管理员最后登录时间。",
+                      "<span class=\"token\">「创建时间」</span>取商家创建时间。"
+                    ]
+                  },
+                  {
+                    "title": "操作字段",
+                    "items": [
+                      "<span class=\"token\">「操作」</span>列展示行内<span class=\"token\">「修改」</span>。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "操作按钮 · 「批量导出」",
+                "desc": "位于表格左上角，导出当前筛选条件下的商家入驻情况数据。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "行内操作 · 「修改」",
+                "desc": "点击后打开「修改入驻信息」弹窗。"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 商家入驻情况页",
+              "states": [
+                {
+                  "label": "PC端原型 · 商家入驻情况页",
+                  "url": "prototype/merchant-onboarding-status.html?state=list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端修改入驻信息弹窗",
+            "tab": "PC端修改入驻信息弹窗",
+            "title": "PC端修改入驻信息弹窗",
+            "type": "pc",
+            "location": "点击商家入驻情况列表行内「修改」后打开。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "弹窗 · 「修改入驻信息」",
+                "desc": "支持编辑「入驻时间」和「所属销售」；入驻时间使用日期选择器；所属销售使用文本输入框；点击「保存」后更新当前商家信息。"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 修改入驻信息弹窗",
+              "states": [
+                {
+                  "label": "PC端原型 · 修改入驻信息弹窗",
+                  "url": "prototype/merchant-onboarding-status.html?state=edit"
+                }
+              ]
+            }
+          },
+          {
+            "id": "定时任务",
+            "tab": "定时任务",
+            "title": "定时任务",
+            "type": "task",
+            "location": "见当前页面或任务说明。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "定时任务 · 入驻时间写入",
+                "desc": "每日检查尚未写入入驻时间的商家，满足真实登录条件后自动写入。",
+                "groups": [
+                  {
+                    "title": "执行时间",
+                    "items": [
+                      "每日 0 点执行。"
+                    ]
+                  },
+                  {
+                    "title": "处理对象",
+                    "items": [
+                      "仅处理入驻时间为空的商家。",
+                      "已有入驻时间的商家不再纳入本任务监控。"
+                    ]
+                  },
+                  {
+                    "title": "判断条件",
+                    "items": [
+                      "商家管理员从未登录后台时，不写入入驻时间。",
+                      "商家管理员最后登录时间早于或等于商家创建时间时，不写入入驻时间。",
+                      "商家管理员最后登录时间晚于商家创建时间时，视为商家管理员已实际进入后台。"
+                    ]
+                  },
+                  {
+                    "title": "处理结果",
+                    "items": [
+                      "命中写入条件时，取商家管理员最后登录时间对应日期写入入驻时间。",
+                      "入驻时间写入后，后续登录不再自动更新。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": null
+          }
+        ]
+      },
+      {
+        "id": "功能六-海丝乡音首页与底部导航改造",
+        "no": "六",
+        "title": "功能六 · 海丝乡音首页与底部导航改造",
+        "desc": "海丝乡音替代小程序原有首页。底部一级导航调整为「海丝乡音 / 市集 / 我的」三项，市集",
+        "summary": "海丝乡音替代小程序原有首页。底部一级导航调整为「海丝乡音 / 市集 / 我的」三项，市集沿用原有页面；同时保留海丝乡音自身的个人内容入口，并精简云芳邻个人中心。",
+        "pages": [
+          {
+            "id": "居民端海丝乡音首页",
+            "tab": "居民端海丝乡音首页",
+            "title": "居民端海丝乡音首页",
+            "type": "mobile",
+            "location": "居民打开小程序后直接展示，作为新的首页。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "首页 · 「海丝乡音」",
+                "desc": "海丝乡音替代原有首页，居民打开小程序后直接进入；页面标题统一为「海丝乡音」。",
+                "groups": [
+                  {
+                    "title": "首页替换",
+                    "items": [
+                      "小程序启动后默认进入海丝乡音，替代原有首页。",
+                      "页面展示乡音浏览、位置、扫码录音、点位搜索、街道筛选、点位分类、点位标签和点位卡片。"
+                    ]
+                  },
+                  {
+                    "title": "页面标题",
+                    "items": [
+                      "顶部标题统一显示<span class=\"token\">「海丝乡音」</span>。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "底部导航 · 「海丝乡音 / 市集 / 我的」",
+                "desc": "底部一级导航固定为三项，当前页默认选中「海丝乡音」。",
+                "groups": [
+                  {
+                    "title": "导航组成",
+                    "items": [
+                      "第一项为<span class=\"token\">「海丝乡音」</span>，进入海丝乡音首页。",
+                      "第二项为<span class=\"token\">「市集」</span>，沿用原有市集页面和功能；本期不调整市集页内部内容，当前没有店铺数据时不展示店铺内容。",
+                      "第三项为<span class=\"token\">「我的」</span>，进入精简后的云芳邻个人中心。"
+                    ]
+                  },
+                  {
+                    "title": "切换结果",
+                    "items": [
+                      "三个一级入口共用同一组底部导航。",
+                      "点击后切换页面，并高亮当前所在项。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "悬浮入口 · 「我的乡音」",
+                "desc": "在首页右下角、底部导航上方增加悬浮入口，进入海丝乡音原有的个人内容页。",
+                "groups": [
+                  {
+                    "title": "展示位置",
+                    "items": [
+                      "仅在海丝乡音首页展示。",
+                      "固定在页面右下角、底部导航上方，不遮挡点位卡片的主要操作。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击后进入海丝乡音原有的<span class=\"token\">「我的」</span>页面，继续承接消息、我发布的和喜欢等乡音内容。",
+                      "该入口与底部<span class=\"token\">「我的」</span>含义不同：底部<span class=\"token\">「我的」</span>进入云芳邻个人中心。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 海丝乡音首页",
+              "states": [
+                {
+                  "label": "居民端原型 · 海丝乡音首页",
+                  "url": "prototype/nostalgia-mobile.html?state=point-list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端个人中心",
+            "tab": "居民端个人中心",
+            "title": "居民端个人中心",
+            "type": "mobile",
+            "location": "点击底部导航第三项「我的」后展示。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "页面结构 · 个人信息区",
+                "desc": "保留现有个人信息头部，包括头像、姓名、身份、所属社区和「个人信息」入口。"
+              },
+              {
+                "type": "delete",
+                "label": "删除",
+                "title": "页面模块 · 积分卡片",
+                "desc": "移除个人中心积分卡片，不展示积分值、积分兑换和去赚积分。"
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "功能入口 · 保留 5 项",
+                "desc": "功能区仅保留「消息中心」「在线客服」「消息订阅」「我的卡包」「领券中心」。",
+                "groups": [
+                  {
+                    "title": "展示内容",
+                    "items": [
+                      "第一行展示<span class=\"token\">「消息中心」</span><span class=\"token\">「在线客服」</span><span class=\"token\">「消息订阅」</span><span class=\"token\">「我的卡包」</span>。",
+                      "第二行展示<span class=\"token\">「领券中心」</span>，继续保留<span class=\"token\">「领福利」</span>提醒。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "各入口继续进入现有对应页面，本期不调整入口后的业务内容。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "delete",
+                "label": "删除",
+                "title": "功能入口 · 其他入口",
+                "desc": "移除上述 5 项之外的现有个人中心功能入口。"
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "底部导航 · 「海丝乡音 / 市集 / 我的」",
+                "desc": "个人中心共用三项底部导航，当前页高亮「我的」。"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 个人中心",
+              "states": [
+                {
+                  "label": "居民端原型 · 个人中心",
+                  "url": "prototype/nostalgia-mobile.html?state=profile"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能七-海丝乡愁点位筛选与标签优化",
+        "no": "七",
+        "title": "功能七 · 海丝乡愁点位筛选与标签优化",
+        "desc": "当前点位列表缺少区域筛选和重点标签，居民难以快速定位所在街道的特色点位。本期增加街道筛选",
+        "summary": "当前点位列表缺少区域筛选和重点标签，居民难以快速定位所在街道的特色点位。本期增加街道筛选、点位标签展示，并在 PC 后台补充对应维护能力。",
+        "pages": [
+          {
+            "id": "居民端海丝乡音首页",
+            "tab": "居民端海丝乡音首页",
+            "title": "居民端海丝乡音首页",
+            "type": "mobile",
+            "location": "居民打开小程序后进入海丝乡音首页，该页面即小程序首页。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "筛选项 · 「街道」",
+                "desc": "增加街道筛选，方便居民按区域查看点位。",
+                "groups": [
+                  {
+                    "title": "街道筛选",
+                    "items": [
+                      "默认展示<span class=\"token\">「全部街道」</span>。",
+                      "选择街道后，仅展示归属该街道的点位。",
+                      "切换街道后保留当前点位分类筛选条件。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "点位卡片 · 点位标签",
+                "desc": "在点位卡片展示运营标签，突出点位特色。",
+                "groups": [
+                  {
+                    "title": "点位标签",
+                    "items": [
+                      "展示 PC 后台已配置的点位标签。",
+                      "单个点位最多展示 3 个标签。",
+                      "标签示例包括<span class=\"token\">「4A景区」</span><span class=\"token\">「百年老店」</span><span class=\"token\">「最多广州人去的二手市场」</span>。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 海丝乡音首页",
+              "states": [
+                {
+                  "label": "居民端原型 · 海丝乡音首页",
+                  "url": "prototype/nostalgia-mobile.html?state=point-list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端海丝乡愁点位管理",
+            "tab": "PC端海丝乡愁点位管理",
+            "title": "PC端海丝乡愁点位管理",
+            "type": "pc",
+            "location": "PC 后台「海丝乡愁」主菜单下的「点位管理」页面。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "筛选项 · 「所属街道」",
+                "desc": "在现有「点位名称」「分类」「状态」筛选项后增加所属街道筛选。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "列表字段 · 「所属街道」",
+                "desc": "展示点位归属街道。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "列表字段 · 「点位标签」",
+                "desc": "展示当前点位已配置的特色标签。"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 海丝乡愁点位管理",
+              "states": [
+                {
+                  "label": "PC端原型 · 海丝乡愁点位管理",
+                  "url": "prototype/nostalgia-pc.html?state=list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端海丝乡愁点位编辑弹窗",
+            "tab": "PC端海丝乡愁点位编辑弹窗",
+            "title": "PC端海丝乡愁点位编辑弹窗",
+            "type": "pc",
+            "location": "点击点位列表行内「修改」后打开。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "表单字段 · 「所属街道」",
+                "desc": "在点位基础信息中选择点位归属街道，保存后用于后台筛选和居民端点位筛选。",
+                "groups": [
+                  {
+                    "title": "字段与选项",
+                    "items": [
+                      "在<span class=\"token\">「基础信息」</span>区域新增必填字段<span class=\"token\">「所属街道」</span>，使用单选下拉框。",
+                      "下拉选项取当前区已配置且正常使用的街道，沿用街道基础数据的现有排序。",
+                      "新建点位时默认显示<span class=\"token\">「请选择所属街道」</span>；编辑点位时回显已保存的所属街道。"
+                    ]
+                  },
+                  {
+                    "title": "历史数据处理",
+                    "items": [
+                      "历史点位未配置所属街道时，编辑弹窗内显示空值。",
+                      "用户本次修改并提交该点位时，必须补充所属街道。"
+                    ]
+                  },
+                  {
+                    "title": "提交校验",
+                    "items": [
+                      "未选择所属街道时，停止提交并在字段下方提示<span class=\"token\">「请选择所属街道」</span>。",
+                      "选择结果只作用于当前编辑的点位。"
+                    ]
+                  },
+                  {
+                    "title": "保存结果",
+                    "items": [
+                      "保存点位与街道的归属关系，并更新点位列表中的<span class=\"token\">「所属街道」</span>。",
+                      "居民端按街道筛选点位时，该点位归入新选择的街道。",
+                      "修改已有归属街道后，点位从原街道筛选结果中移除，并进入新街道筛选结果。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "表单字段 · 「点位标签」",
+                "desc": "在点位基础信息中录入点位特色标签，保存后用于后台列表和居民端点位卡片展示。",
+                "groups": [
+                  {
+                    "title": "录入与回显",
+                    "items": [
+                      "<span class=\"token\">「点位标签」</span>为选填项，使用标签输入框。",
+                      "输入标签文字后按回车完成添加；已添加标签在输入框内按添加顺序展示。",
+                      "编辑点位时回显已保存的全部标签和原有顺序。",
+                      "点击已添加标签的删除图标后移除该标签。"
+                    ]
+                  },
+                  {
+                    "title": "输入限制",
+                    "items": [
+                      "单个点位最多配置 3 个标签。",
+                      "单个标签最多输入 15 个字符，保存时去除文字首尾空格。",
+                      "空内容不生成标签，相同文字的标签不可重复添加。"
+                    ]
+                  },
+                  {
+                    "title": "异常提示",
+                    "items": [
+                      "已有 3 个标签时继续添加，提示<span class=\"token\">「每个点位最多设置 3 个标签」</span>。",
+                      "标签超过 15 个字符时，提示<span class=\"token\">「单个标签最多 15 个字符」</span>。",
+                      "重复添加相同标签时，提示<span class=\"token\">「该标签已添加」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "保存与展示",
+                    "items": [
+                      "保存标签文字及排序，未配置标签时允许提交。",
+                      "PC 列表与居民端点位卡片按保存顺序展示，最多展示 3 个标签。",
+                      "未配置标签时，PC 列表显示<span class=\"token\">「-」</span>，居民端不展示标签区域。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 海丝乡愁点位编辑弹窗",
+              "states": [
+                {
+                  "label": "PC端原型 · 海丝乡愁点位编辑弹窗",
+                  "url": "prototype/nostalgia-pc.html?state=edit"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能八-待发布问卷预览",
+        "no": "八",
+        "title": "功能八 · 待发布问卷预览",
+        "desc": "社区问卷通常由工作人员创建，再由负责人做发布前检查。当前问卷未发布时负责人无法查看，发布",
+        "summary": "社区问卷通常由工作人员创建，再由负责人做发布前检查。当前问卷未发布时负责人无法查看，发布后发现重要内容有误又难以及时修正。本期在「待发布」阶段增加二维码预览，负责人扫码即可按居民实际作答顺序检查问卷；整个预览过程不产生答卷数据。",
+        "pages": [
+          {
+            "id": "pc端调查问卷列表",
+            "tab": "PC端调查问卷列表",
+            "title": "PC端调查问卷列表",
+            "type": "pc",
+            "location": "PC后台【社区共建】下的【调查问卷】列表。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "行内操作 · 「预览」",
+                "desc": "仅「待发布」问卷显示，点击后打开该问卷的预览二维码弹窗。",
+                "groups": [
+                  {
+                    "title": "展示条件",
+                    "items": [
+                      "问卷保存后处于<span class=\"token\">「待发布」</span>状态时，在操作列显示<span class=\"token\">「预览」</span>。",
+                      "<span class=\"token\">「已发布」</span><span class=\"token\">「已下架」</span>问卷不显示本入口，原有操作保持不变。"
+                    ]
+                  },
+                  {
+                    "title": "操作顺序",
+                    "items": [
+                      "待发布问卷的操作依次为<span class=\"token\">「详情」</span><span class=\"token\">「预览」</span><span class=\"token\">「编辑」</span><span class=\"token\">「删除」</span>。",
+                      "点击<span class=\"token\">「编辑」</span>继续修改问卷；保存后仍处于待发布状态，可再次预览。"
+                    ]
+                  },
+                  {
+                    "title": "预览内容",
+                    "items": [
+                      "预览读取该问卷最近一次成功保存的内容。",
+                      "编辑页中尚未保存的改动不进入预览。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 调查问卷列表",
+              "states": [
+                {
+                  "label": "PC端原型 · 调查问卷列表",
+                  "url": "prototype/questionnaire-preview-pc.html?state=list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端问卷预览二维码弹窗",
+            "tab": "PC端问卷预览二维码弹窗",
+            "title": "PC端问卷预览二维码弹窗",
+            "type": "pc",
+            "location": "点击待发布问卷操作列中的「预览」后，在当前列表页中央打开。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "弹窗 · 「问卷预览」",
+                "desc": "展示问卷标题、待发布状态、预览二维码和扫码说明，供负责人扫码检查。",
+                "groups": [
+                  {
+                    "title": "二维码内容",
+                    "items": [
+                      "每份问卷使用固定的预览二维码，二维码只关联当前问卷。",
+                      "问卷再次编辑并保存后，二维码保持不变，扫码时读取最新保存内容。"
+                    ]
+                  },
+                  {
+                    "title": "扫码结果",
+                    "items": [
+                      "使用微信扫码后直接进入小程序<span class=\"token\">「问卷详情」</span>预览页，不经过调查问卷列表。",
+                      "预览不受问卷计划开放时间限制，待发布期间均可查看。"
+                    ]
+                  },
+                  {
+                    "title": "查看范围",
+                    "items": [
+                      "预览二维码不增加身份、角色或组织范围校验，取得二维码后即可查看预览内容。",
+                      "待发布问卷不提供分享入口，二维码仅由工作人员按需发送给审核人员。"
+                    ]
+                  },
+                  {
+                    "title": "状态限制",
+                    "items": [
+                      "仅待发布问卷可以打开预览内容。",
+                      "问卷发布、下架或删除后，原预览二维码停止进入问卷内容，并提示<span class=\"token\">「该问卷已结束预览」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "数据限制",
+                    "items": [
+                      "扫码、进入详情和填写题目均不增加<span class=\"token\">「已填写」</span>人数。",
+                      "预览期间不生成答卷记录。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 问卷预览二维码弹窗",
+              "states": [
+                {
+                  "label": "PC端原型 · 问卷预览二维码弹窗",
+                  "url": "prototype/questionnaire-preview-pc.html?state=qr"
+                }
+              ]
+            }
+          },
+          {
+            "id": "小程序端问卷预览详情",
+            "tab": "小程序端问卷预览详情",
+            "title": "小程序端问卷预览详情",
+            "type": "mobile",
+            "location": "负责人使用微信扫描待发布问卷的预览二维码后直接进入。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "页面状态 · 「预览模式」",
+                "desc": "沿用现有问卷详情内容，增加预览提示，并将底部操作改为「开始作答」。",
+                "groups": [
+                  {
+                    "title": "进入方式",
+                    "items": [
+                      "扫码直接打开当前问卷详情，不展示调查问卷列表。",
+                      "页面顶部显示<span class=\"token\">「预览模式」</span>提示，说明当前问卷尚未发布、仅供内部检查。"
+                    ]
+                  },
+                  {
+                    "title": "展示内容",
+                    "items": [
+                      "展示问卷标题、所属社区、计划开放时间、问卷说明和问题总览。",
+                      "展示内容与最近一次成功保存的待发布问卷一致。"
+                    ]
+                  },
+                  {
+                    "title": "底部操作",
+                    "items": [
+                      "底部仅显示<span class=\"token\">「开始作答」</span>，点击后进入问卷预览填写页。",
+                      "待发布问卷不提供<span class=\"token\">「分享」</span>入口，避免预览二维码之外的扩散。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "小程序端原型 · 问卷预览详情",
+              "states": [
+                {
+                  "label": "小程序端原型 · 问卷预览详情",
+                  "url": "prototype/questionnaire-preview-mobile.html?state=detail"
+                }
+              ]
+            }
+          },
+          {
+            "id": "小程序端问卷预览填写",
+            "tab": "小程序端问卷预览填写",
+            "title": "小程序端问卷预览填写",
+            "type": "mobile",
+            "location": "在问卷预览详情页点击「开始作答」后进入。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "页面状态 · 预览填写",
+                "desc": "按正式问卷样式展示全部题目和选项，允许检查填写效果；页面不显示「提交问卷」按钮。",
+                "groups": [
+                  {
+                    "title": "题目展示",
+                    "items": [
+                      "题目顺序、题型、必填标记、选项、填空框和说明文字与正式问卷一致。",
+                      "文本输入、单选、多选等控件可操作，用于检查实际填写体验。"
+                    ]
+                  },
+                  {
+                    "title": "提交限制",
+                    "items": [
+                      "页面底部不显示<span class=\"token\">「提交问卷」</span>按钮。",
+                      "底部固定提示<span class=\"token\">「预览模式，填写内容不会保存」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "数据处理",
+                    "items": [
+                      "预览填写内容只保留在当前页面，退出或刷新后清空。",
+                      "不校验居民是否已作答，不占用正式问卷作答次数，不生成答卷数据。"
+                    ]
+                  },
+                  {
+                    "title": "返回结果",
+                    "items": [
+                      "点击左上角返回后回到该问卷的预览详情页。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "小程序端原型 · 问卷预览填写",
+              "states": [
+                {
+                  "label": "小程序端原型 · 问卷预览填写",
+                  "url": "prototype/questionnaire-preview-mobile.html?state=form"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ];
+    /* GENERATED_PRD_DATA_END */
+
+    const sectionNav = document.getElementById("sectionNav");
+    const featureNav = document.getElementById("featureNav");
+    const sectionNavLabel = document.getElementById("sectionNavLabel");
+    const featureNavLabel = document.getElementById("featureNavLabel");
+    const featureTitle = document.getElementById("featureTitle");
+    const featureSummary = document.getElementById("featureSummary");
+    const pageTabs = document.getElementById("pageTabs");
+    const workspace = document.getElementById("workspace");
+    const docKicker = document.getElementById("docKicker");
+    const pageTitle = document.getElementById("pageTitle");
+    const docScroll = document.getElementById("docScroll");
+    const protoKicker = document.getElementById("protoKicker");
+    const protoTitle = document.getElementById("protoTitle");
+    const protoStage = document.getElementById("protoStage");
+    const stateBar = document.getElementById("stateBar");
+    const openProto = document.getElementById("openProto");
+    const protoHead = document.querySelector(".proto-head");
+    const layout = document.querySelector(".layout");
+    const content = document.querySelector(".content");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    let activeSectionId = SECTION_DATA[0]?.id || null;
+    let activeFeatureId = DATA[0].id;
+    let activePageId = DATA[0].pages[0].id;
+    let activeStateIndex = 0;
+    let loadTimer = null;
+
+    const collapseIcon = '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M15 9l-3 3 3 3"></path></svg>';
+    const expandIcon = '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M13 9l3 3-3 3"></path></svg>';
+
+    sectionNavLabel.hidden = SECTION_DATA.length === 0;
+    featureNavLabel.textContent = PRD_MODE === "large" ? "功能板块" : "需求说明";
+
+    function refitPrototype() {
+      const page = currentPage();
+      if (!page || !page.prototype) return;
+      page.prototype.kind === "mobile" ? fitMobileFrame() : fitPcFrame();
+    }
+
+    function syncSidebarToggle() {
+      const collapsed = layout.classList.contains("sidebar-collapsed");
+      sidebarToggle.innerHTML = collapsed ? expandIcon : collapseIcon;
+      sidebarToggle.title = collapsed ? "展开左侧菜单" : "收起左侧菜单";
+      sidebarToggle.setAttribute("aria-label", sidebarToggle.title);
+    }
+
+    sidebarToggle.addEventListener("click", () => {
+      layout.classList.toggle("sidebar-collapsed");
+      syncSidebarToggle();
+      setTimeout(refitPrototype, 180);
+    });
+
+    function currentSection() {
+      return SECTION_DATA.find(item => item.id === activeSectionId);
+    }
+
+    function currentFeature() {
+      return DATA.find(item => item.id === activeFeatureId) || DATA[0];
+    }
+
+    function currentPage() {
+      const feature = currentFeature();
+      return feature.pages.find(item => item.id === activePageId) || feature.pages[0];
+    }
+
+    function abs(url) {
+      return new URL(url, window.location.href).href;
+    }
+
+    function renderSectionNav() {
+      sectionNav.innerHTML = SECTION_DATA.map(section => `
+        <button class="feature-btn ${section.id === activeSectionId ? "active" : ""}" data-section="${section.id}">
+          <span class="feature-no">${section.no}</span>
+          <span class="feature-name">${section.title}</span>
+        </button>
+      `).join("");
+
+      sectionNav.querySelectorAll(".feature-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeSectionId = btn.dataset.section;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderFeatureNav() {
+      featureNav.innerHTML = DATA.map(feature => `
+        <button class="feature-btn ${!activeSectionId && feature.id === activeFeatureId ? "active" : ""}" data-feature="${feature.id}">
+          <span class="feature-no">${feature.no}</span>
+          <span class="feature-name">${feature.title}</span>
+        </button>
+      `).join("");
+
+      featureNav.querySelectorAll(".feature-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const target = DATA.find(item => item.id === btn.dataset.feature);
+          if (!target) return;
+          activeSectionId = null;
+          activeFeatureId = target.id;
+          activePageId = target.pages[0].id;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderTabs() {
+      if (activeSectionId) {
+        pageTabs.innerHTML = "";
+        return;
+      }
+      const feature = currentFeature();
+      pageTabs.innerHTML = feature.pages.map(page => `
+        <button class="page-tab ${page.id === activePageId ? "active" : ""}" data-page="${page.id}">${page.tab}</button>
+      `).join("");
+
+      pageTabs.querySelectorAll(".page-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activePageId = btn.dataset.page;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderChangeBody(change) {
+      if (change.groups) {
+        return `<ol class="rule-groups">${change.groups.map(group => `
+          <li>
+            <span class="rule-title">${group.title}</span>
+            <ol>${group.items.map(item => `<li>${item}</li>`).join("")}</ol>
+          </li>
+        `).join("")}</ol>`;
+      }
+      if (change.list) {
+        return `<ol>${change.list.map(item => `<li>${item}</li>`).join("")}</ol>`;
+      }
+      return `<p>${change.desc}</p>`;
+    }
+
+    function renderDoc() {
+      const section = currentSection();
+      if (section) {
+        featureTitle.textContent = section.title;
+        featureSummary.textContent = section.summary;
+        docKicker.textContent = "基础内容";
+        pageTitle.textContent = section.title;
+        docScroll.innerHTML = section.blocks.map(block => `
+          <div class="block">
+            <h3>${block.title}</h3>
+            ${block.html || `<ul>${(block.list || []).map(item => `<li>${item}</li>`).join("")}</ul>`}
+          </div>
+        `).join("");
+        docScroll.scrollTop = 0;
+        return;
+      }
+
+      const feature = currentFeature();
+      const page = currentPage();
+      featureTitle.textContent = feature.title;
+      featureSummary.textContent = feature.summary;
+      const kickerMap = {
+        pc: "PC端页面需求",
+        mobile: "移动端页面需求",
+        message: "订阅消息需求",
+        task: "定时任务需求",
+        table: "底表设计需求"
+      };
+      docKicker.textContent = kickerMap[page.type] || "需求说明";
+      pageTitle.textContent = page.title;
+
+      const changes = page.changes || [];
+      const changeHtml = changes.length ? changes.map(change => {
+        const body = renderChangeBody(change);
+        return `
+          <div class="change-item">
+            <span class="tag ${change.type}">${change.label}</span>
+            <div class="change-body">
+              <strong>${change.title}</strong>
+              ${body}
+            </div>
+          </div>
+        `;
+      }).join("") : `<p class="empty">待补充。</p>`;
+
+      const notes = page.notes && page.notes.length
+        ? `<div class="block"><h3>补充说明</h3><ul>${page.notes.map(item => `<li>${item}</li>`).join("")}</ul></div>`
+        : "";
+
+      const detailBlocks = (page.blocks || []).map(block => `
+        <div class="block">
+          <h3>${block.title}</h3>
+          ${block.html}
+        </div>
+      `).join("");
+
+      docScroll.innerHTML = `
+        <div class="block">
+          <h3>页面位置</h3>
+          <p>${page.location}</p>
+        </div>
+        <div class="block">
+          <h3>本页改动</h3>
+          <div class="change-list">${changeHtml}</div>
+        </div>
+        ${detailBlocks}
+        ${notes}
+      `;
+      docScroll.scrollTop = 0;
+    }
+
+    function hideIframeScrollbar(iframe) {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const style = doc.createElement("style");
+        style.textContent = "html, body, * { scrollbar-width: none !important; -ms-overflow-style: none !important; } ::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }";
+        doc.head.appendChild(style);
+      } catch (e) {
+        console.warn("skip iframe style", e);
+      }
+    }
+
+    function runAction(iframe, action) {
+      if (!action) return;
+      try {
+        const win = iframe.contentWindow;
+        const fn = win && win[action.fn];
+        if (typeof fn === "function") fn.apply(win, action.args || []);
+      } catch (e) {
+        console.warn("skip iframe action", e);
+      }
+    }
+
+    function fitPcFrame() {
+      const wrap = protoStage.querySelector(".pc-stage");
+      const iframe = protoStage.querySelector("iframe");
+      if (!wrap || !iframe) return;
+      const rect = wrap.getBoundingClientRect();
+      let body = null;
+      let root = null;
+      try {
+        const doc = iframe.contentDocument;
+        body = doc && doc.body;
+        root = doc && doc.documentElement;
+      } catch (e) {
+        console.warn("skip iframe size inspect", e);
+      }
+      const baseW = Math.max(
+        Number(iframe.dataset.baseW) || 1920,
+        body ? body.scrollWidth : 0,
+        body ? body.offsetWidth : 0,
+        root ? root.scrollWidth : 0,
+        root ? root.offsetWidth : 0
+      );
+      const baseH = Math.max(
+        Number(iframe.dataset.baseH) || 1080,
+        body ? body.scrollHeight : 0,
+        body ? body.offsetHeight : 0,
+        root ? root.scrollHeight : 0,
+        root ? root.offsetHeight : 0
+      );
+      const scale = Math.min(rect.width / baseW, rect.height / baseH);
+      iframe.style.width = baseW + "px";
+      iframe.style.height = baseH + "px";
+      iframe.style.transform = `scale(${Math.max(scale, .2).toFixed(4)})`;
+    }
+
+    function fitMobileFrame() {
+      const shell = protoStage.querySelector(".phone-shell");
+      if (!shell) return;
+      const rect = protoStage.getBoundingClientRect();
+      const scale = Math.min((rect.width - 28) / 375, (rect.height - 28) / 812, 1);
+      shell.style.transform = `scale(${Math.max(scale, .52).toFixed(4)})`;
+    }
+
+    function renderStateBar(page) {
+      const states = page.prototype.states;
+      if (!states || states.length <= 1) {
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        return;
+      }
+      protoHead.classList.add("has-states");
+      stateBar.innerHTML = states.map((state, index) => `
+        <button class="state-btn ${index === activeStateIndex ? "active" : ""}" data-index="${index}">${state.label}</button>
+      `).join("");
+
+      stateBar.querySelectorAll(".state-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeStateIndex = Number(btn.dataset.index);
+          renderPrototype();
+        });
+      });
+    }
+
+    function renderPrototype() {
+      if (activeSectionId) {
+        workspace.className = "workspace doc-only";
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        openProto.removeAttribute("href");
+        protoStage.innerHTML = "";
+        return;
+      }
+
+      const page = currentPage();
+      const proto = page.prototype;
+      if (!proto || !proto.states || !proto.states.length) {
+        workspace.className = "workspace doc-only";
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        openProto.removeAttribute("href");
+        protoStage.innerHTML = "";
+        return;
+      }
+      const states = proto.states;
+      const state = states[activeStateIndex] || states[0];
+      const kind = proto.kind;
+
+      workspace.className = `workspace ${kind === "mobile" ? "mobile" : "pc"}`;
+      protoKicker.textContent = kind === "mobile" ? "移动端原型" : "PC端原型";
+      protoTitle.textContent = states.length > 1 ? `${proto.title} · ${state.label}` : proto.title;
+      openProto.href = abs(state.url);
+      renderStateBar(page);
+
+      clearTimeout(loadTimer);
+      loadTimer = setTimeout(() => {
+        protoStage.innerHTML = "";
+        const iframe = document.createElement("iframe");
+          iframe.src = abs(state.url);
+          iframe.dataset.baseW = String(proto.width || 1920);
+          iframe.dataset.baseH = String(proto.height || 1080);
+          iframe.onload = () => {
+            iframe.style.opacity = "1";
+            hideIframeScrollbar(iframe);
+          setTimeout(() => runAction(iframe, state.action), 180);
+          kind === "mobile" ? fitMobileFrame() : fitPcFrame();
+        };
+
+        if (kind === "mobile") {
+          const shell = document.createElement("div");
+          shell.className = "phone-shell";
+          shell.appendChild(iframe);
+          protoStage.appendChild(shell);
+          requestAnimationFrame(fitMobileFrame);
+        } else {
+          const wrap = document.createElement("div");
+          wrap.className = "pc-stage";
+          wrap.appendChild(iframe);
+          protoStage.appendChild(wrap);
+          requestAnimationFrame(fitPcFrame);
+        }
+      }, 80);
+    }
+
+    function renderAll() {
+      renderSectionNav();
+      renderFeatureNav();
+      renderTabs();
+      renderDoc();
+      renderPrototype();
+      content.scrollTop = 0;
+    }
+
+    window.addEventListener("resize", () => {
+      refitPrototype();
+    });
+
+    syncSidebarToggle();
+    renderAll();
+  </script>
+</body>
+</html>
