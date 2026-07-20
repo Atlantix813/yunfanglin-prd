@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- prototype-states: point-list,profile -->
+<!-- prototype-states: point-list,point-list-admin,profile -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
@@ -76,10 +76,15 @@
     .voice-leave-btn { height:32px; padding:0 12px; flex:0 0 auto; border:0; border-radius:7px; background:#3F86F5; color:#fff; font-size:12px; font-weight:700; }
     .voice-empty-audio { color:#7E8999; font-size:12px; }
     .voice-empty { padding:48px 12px; color:#8792A3; text-align:center; font-size:13px; }
-    .voice-my-float { position:absolute; right:16px; bottom:76px; z-index:8; height:42px; padding:0 15px 0 11px; border:0; border-radius:21px; display:flex; align-items:center; gap:7px; background:#287FEF; color:#fff; box-shadow:0 8px 20px rgba(40,127,239,.3); font-size:13px; font-weight:700; }
-    .voice-my-float svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; }
+    .voice-role-actions { position:absolute; right:14px; bottom:76px; z-index:8; width:72px; overflow:hidden; display:flex; flex-direction:column; border-radius:36px; background:linear-gradient(180deg,#5C9BFA 0,#2B7DF0 100%); box-shadow:0 10px 26px rgba(38,115,224,.32); transition:height .2s ease; }
+    .voice-role-actions.resident { height:82px; }
+    .voice-role-actions.admin { height:216px; }
+    .voice-role-action { min-height:72px; padding:9px 4px 8px; position:relative; border:0; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; background:transparent; color:#fff; font-size:11px; font-weight:700; line-height:15px; }
+    .voice-role-action + .voice-role-action::before { content:''; position:absolute; left:13px; right:13px; top:0; height:1px; background:rgba(255,255,255,.32); }
+    .voice-role-action svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+    .voice-role-action span { white-space:nowrap; }
 
-    /* 云芳邻个人中心精简版 */
+    /* 海丝乡音个人中心精简版 */
     .profile-scroll { width:375px; height:664px; overflow-y:auto; padding:16px; background:linear-gradient(180deg,#E4F1FF 0,#F5F7FA 240px); scrollbar-width:none; }
     .profile-head-wrap { padding:16px 0 8px; }
     .profile-avatar-image { width:58px; height:58px; object-fit:cover; border-radius:50%; }
@@ -210,12 +215,17 @@
         <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入消息中心"><span class="m-func-icon"><img src="icons/icon_message@2x.png" alt=""></span><span class="m-func-label">消息中心</span></div>
         <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入在线客服"><span class="m-func-icon"><img src="icons/icon_xiaoxi@2x.png" alt=""></span><span class="m-func-label">在线客服</span></div>
         <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入消息订阅"><span class="m-func-icon"><img src="icons/icon_yaoqing@2x.png" alt=""></span><span class="m-func-label">消息订阅</span></div>
+        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入我的关注"><span class="m-func-icon"><img src="icons/icon_huzhu@2x.png" alt=""></span><span class="m-func-label">我的关注</span></div>
         <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入我的卡包"><span class="m-func-icon"><img src="icons/icon_duihuan@2x.png" alt=""></span><span class="m-func-label">我的卡包</span></div>
         <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入领券中心"><span class="m-badge profile-welfare-badge">领福利</span><span class="m-func-icon"><img src="icons/icon_duihuan@2x.png" alt=""></span><span class="m-func-label">领券中心</span></div>
       </section>
     </main>
 
-    <button class="voice-my-float" id="voiceMyBtn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 13v-2M9 16V8M13 19V5M17 16V8M21 13v-2"/></svg><span>我的乡音</span></button>
+    <nav class="voice-role-actions resident" id="voiceRoleActions" aria-label="海丝乡音快捷入口">
+      <button class="voice-role-action admin-only" data-voice-action="point" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-4.7 6-11a6 6 0 1 0-12 0c0 6.3 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/></svg><span>点位管理</span></button>
+      <button class="voice-role-action admin-only" data-voice-action="review" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8M9 4V2h6v2M7 9h10l1 11H6L7 9Z"/><path d="m9.5 14 1.7 1.8 3.6-3.8"/></svg><span>审核管理</span></button>
+      <button class="voice-role-action" data-voice-action="mine"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-2M8 16V8M12 19V5M16 16V8M20 13v-2"/></svg><span>我的乡音</span></button>
+    </nav>
 
     <nav class="m-bottom-tab-bar sea-bottom-nav" id="bottomNav">
       <button class="sea-bottom-item active" data-state="point-list"><img src="icons/icon_neighbor_default@2x.png" alt=""><span>海丝乡音</span></button>
@@ -227,12 +237,12 @@
   <script src="mobile-components.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
-    const allowedStates = ['point-list', 'profile'];
+    const allowedStates = ['point-list', 'point-list-admin', 'profile'];
     const initialState = allowedStates.includes(params.get('state')) ? params.get('state') : 'point-list';
     const phone = document.getElementById('phone');
     const pointList = document.getElementById('pointList');
     const profilePage = document.getElementById('profilePage');
-    const voiceMyBtn = document.getElementById('voiceMyBtn');
+    const voiceRoleActions = document.getElementById('voiceRoleActions');
     const navTitle = document.getElementById('navTitle');
     const input = document.getElementById('searchInput');
     const cards = [...document.querySelectorAll('.voice-point-card')];
@@ -241,13 +251,18 @@
 
     function renderState(next) {
       const state = allowedStates.includes(next) ? next : 'point-list';
-      pointList.hidden = state !== 'point-list';
+      const isHome = state === 'point-list' || state === 'point-list-admin';
+      const isAdmin = state === 'point-list-admin';
+      pointList.hidden = !isHome;
       profilePage.hidden = state !== 'profile';
-      voiceMyBtn.hidden = state !== 'point-list';
-      phone.classList.toggle('voice-mode', state === 'point-list');
-      navTitle.textContent = state === 'point-list' ? '海丝乡音' : '我的';
+      voiceRoleActions.hidden = !isHome;
+      voiceRoleActions.classList.toggle('admin', isAdmin);
+      voiceRoleActions.classList.toggle('resident', !isAdmin);
+      document.querySelectorAll('.admin-only').forEach(item => { item.hidden = !isAdmin; });
+      phone.classList.toggle('voice-mode', isHome);
+      navTitle.textContent = isHome ? '海丝乡音' : '我的';
       document.querySelectorAll('[data-state]').forEach(item => {
-        const active = item.dataset.state === state;
+        const active = item.dataset.state === state || (item.dataset.state === 'point-list' && isHome);
         item.classList.toggle('active', active);
         item.toggleAttribute('aria-current', active);
       });
@@ -273,7 +288,10 @@
     renderState(initialState);
     document.querySelectorAll('[data-state]').forEach(item => item.addEventListener('click', () => renderState(item.dataset.state)));
     document.getElementById('marketLink').addEventListener('click', () => window.YunFangLinC?.showToast(document.body, '进入原有市集页面'));
-    voiceMyBtn.addEventListener('click', () => window.YunFangLinC?.showToast(document.body, '进入我的乡音'));
+    document.querySelectorAll('[data-voice-action]').forEach(btn => btn.addEventListener('click', () => {
+      const messages = { point: '进入点位管理', review: '进入审核管理', mine: '进入我的乡音' };
+      window.YunFangLinC?.showToast(document.body, messages[btn.dataset.voiceAction]);
+    }));
     document.getElementById('scanBtn').addEventListener('click', () => window.YunFangLinC?.showToast(document.body, '打开扫码录音'));
     document.getElementById('locationBtn').addEventListener('click', () => window.YunFangLinC?.showToast(document.body, '切换当前位置'));
     document.getElementById('searchBtn').addEventListener('click', filterPoints);

@@ -99,8 +99,9 @@
               <div class="filter-field"><label>分类</label><select><option>请选择</option><option>历史文化</option><option>红色文化</option><option>非遗民俗</option></select></div>
               <div class="filter-field"><label>状态</label><select><option>请选择</option><option>上架</option><option>下架</option></select></div>
               <div class="filter-field"><label>所属街道</label><select><option>全部街道</option><option>北京街道</option><option>光塔街道</option><option>六榕街道</option><option>人民街道</option></select></div>
-              <button class="btn btn-primary" data-pc-action="query">查询</button>
-              <button class="btn btn-default" data-pc-action="reset">重置</button>
+              <div class="filter-field"><label>点位标签</label><input id="tagFilter" type="text" placeholder="请输入点位标签"></div>
+              <button class="btn btn-primary" id="pointQuery" data-pc-action="query">查询</button>
+              <button class="btn btn-default" id="pointReset" data-pc-action="reset">重置</button>
             </div>
           </div>
 
@@ -118,25 +119,26 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr data-point-row>
                     <td><input type="checkbox" aria-label="选择第一行"></td><td>1</td><td class="nostalgia-pc-name">北京路文化旅游区</td><td>113.2705,23.1252</td><td class="nostalgia-pc-address">广州市越秀区北京路步行街</td><td>历史文化</td><td class="street-cell">北京街道</td>
                     <td class="tag-cell"><div class="nostalgia-pc-tags"><span class="tag tag-blue">4A景区</span><span class="tag tag-orange">千年古道</span></div></td><td>周一至周日 09:00-22:00</td><td><span class="tag tag-green">上架</span></td><td>管理员</td><td>2026-06-20 10:20</td><td>管理员</td><td>2026-07-13 16:20</td>
                     <td><div class="nostalgia-pc-actions"><a class="action-link">详情</a><span class="action-sep">|</span><a class="action-link nostalgia-edit" data-name="北京路文化旅游区" data-street="北京街道" data-tags="4A景区,千年古道">修改</a><span class="action-sep">|</span><a class="action-link">下架</a><span class="action-sep">|</span><a class="action-link text-danger">删除</a></div></td>
                   </tr>
-                  <tr>
+                  <tr data-point-row>
                     <td><input type="checkbox" aria-label="选择第二行"></td><td>2</td><td class="nostalgia-pc-name">海珠广场</td><td>113.2652,23.1151</td><td class="nostalgia-pc-address">广州市越秀区沿江西路</td><td>红色文化</td><td class="street-cell">人民街道</td>
                     <td class="tag-cell"><div class="nostalgia-pc-tags"><span class="tag tag-orange">城市地标</span><span class="tag tag-blue">珠江记忆</span></div></td><td>全天开放</td><td><span class="tag tag-green">上架</span></td><td>管理员</td><td>2026-06-18 09:12</td><td>管理员</td><td>2026-07-12 10:38</td>
                     <td><div class="nostalgia-pc-actions"><a class="action-link">详情</a><span class="action-sep">|</span><a class="action-link nostalgia-edit" data-name="海珠广场" data-street="人民街道" data-tags="城市地标,珠江记忆">修改</a><span class="action-sep">|</span><a class="action-link">下架</a><span class="action-sep">|</span><a class="action-link text-danger">删除</a></div></td>
                   </tr>
-                  <tr>
+                  <tr data-point-row>
                     <td><input type="checkbox" aria-label="选择第三行"></td><td>3</td><td class="nostalgia-pc-name">将军东电器城旧址</td><td>113.2608,23.1287</td><td class="nostalgia-pc-address">广州市越秀区中山六路</td><td>城市记忆</td><td class="street-cell">六榕街道</td>
                     <td class="tag-cell"><div class="nostalgia-pc-tags"><span class="tag tag-blue">二手市场记忆</span></div></td><td>周一至周日 10:00-18:00</td><td><span class="tag tag-green">上架</span></td><td>管理员</td><td>2026-06-15 14:05</td><td>管理员</td><td>2026-07-11 14:05</td>
                     <td><div class="nostalgia-pc-actions"><a class="action-link">详情</a><span class="action-sep">|</span><a class="action-link nostalgia-edit" data-name="将军东电器城旧址" data-street="六榕街道" data-tags="二手市场记忆">修改</a><span class="action-sep">|</span><a class="action-link">下架</a><span class="action-sep">|</span><a class="action-link text-danger">删除</a></div></td>
                   </tr>
+                  <tr id="pointEmpty" hidden><td colspan="15"><div class="pc-empty"><div class="pc-empty-title">暂无符合条件的点位</div></div></td></tr>
                 </tbody>
               </table>
             </div>
-            <div class="pagination"><span class="total">共 3 条</span><span class="pg active">1</span><select class="pg-select"><option>10条/页</option></select><span>前往</span><span class="pg">1</span><span>页</span></div>
+            <div class="pagination"><span class="total" id="pointTotal">共 3 条</span><span class="pg active">1</span><select class="pg-select"><option>10条/页</option></select><span>前往</span><span class="pg">1</span><span>页</span></div>
           </div>
         </div>
       </main>
@@ -194,7 +196,24 @@
     const streetError = document.getElementById('streetError');
     const tagEditor = document.getElementById('tagEditor');
     const customTag = document.getElementById('customTag');
+    const tagFilter = document.getElementById('tagFilter');
+    const pointRows = [...document.querySelectorAll('[data-point-row]')];
+    const pointEmpty = document.getElementById('pointEmpty');
+    const pointTotal = document.getElementById('pointTotal');
     let currentRow = null;
+
+    function applyTagFilter() {
+      const keyword = tagFilter.value.trim().toLowerCase();
+      let visibleCount = 0;
+      pointRows.forEach(row => {
+        const tags = row.querySelector('.nostalgia-edit').dataset.tags.toLowerCase();
+        const matched = !keyword || tags.includes(keyword);
+        row.hidden = !matched;
+        if (matched) visibleCount += 1;
+      });
+      pointEmpty.hidden = visibleCount !== 0;
+      pointTotal.textContent = '共 ' + visibleCount + ' 条';
+    }
 
     function selectedTags() {
       return [...tagEditor.querySelectorAll('.tag')].map(item => item.dataset.value);
@@ -223,6 +242,14 @@
     }
 
     document.querySelectorAll('.nostalgia-edit').forEach(link => link.addEventListener('click', () => openEdit(link)));
+    document.getElementById('pointQuery').addEventListener('click', applyTagFilter);
+    document.getElementById('pointReset').addEventListener('click', () => {
+      tagFilter.value = '';
+      applyTagFilter();
+    });
+    tagFilter.addEventListener('keydown', event => {
+      if (event.key === 'Enter') applyTagFilter();
+    });
     customTag.addEventListener('keydown', event => {
       if (event.key !== 'Enter') return;
       event.preventDefault();
