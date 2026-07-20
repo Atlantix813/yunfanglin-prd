@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=375, initial-scale=1.0">
   <title>居民端推广 · 视频态</title>
   <link rel="stylesheet" href="mobile-components.css?v=20260710b">
+  <link rel="stylesheet" href="mobile-icons.css">
   <style>
     html, body { width:375px; height:812px; min-height:812px; margin:0; overflow:hidden; background:#F2F5FA; }
     body { font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif; color:#222835; }
@@ -38,10 +39,9 @@
     .brand.blue { background:#24A8E8; }
     .brand.orange { background:#F59A23; }
     .media-count { position:absolute; right:8px; top:8px; height:24px; padding:0 8px; border-radius:4px; background:rgba(0,0,0,.42); color:#fff; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:700; }
-    .video-play-badge { position:absolute; right:9px; top:9px; width:34px; height:34px; border-radius:50%; background:rgba(0,0,0,.42); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.18); }
-    .video-play-badge svg { margin-left:2px; }
+    .video-play-badge { position:absolute; right:9px; top:9px; width:34px; height:34px; border-radius:50%; background:rgba(0,0,0,.42); color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+    .video-play-badge .yfl-icon { margin-left:2px; }
     .countdown { position:absolute; right:8px; bottom:10px; height:24px; padding:0 8px; border-radius:5px; background:rgba(0,0,0,.42); color:#fff; display:flex; align-items:center; gap:5px; font-size:12px; font-weight:700; }
-    .dot { width:6px; height:6px; border-radius:50%; background:#9AEB16; }
     .card-body { padding:12px 9px 10px; }
     .card-title { color:#222835; font-size:15px; font-weight:700; line-height:22px; }
     .shop-row { margin-top:9px; padding-top:8px; border-top:1px solid #EEF2F8; display:flex; align-items:center; gap:7px; color:#222835; font-size:12px; }
@@ -83,7 +83,7 @@
     .detail-meta { padding:14px 20px 24px; display:flex; justify-content:space-between; color:#A6AFBD; font-size:13px; }
     .detail-actions { position:absolute; left:0; right:0; bottom:0; height:64px; border-top:1px solid #EEF2F8; background:#fff; display:flex; align-items:center; gap:8px; padding:8px 16px; }
     .action-mini { width:42px; flex:0 0 42px; color:#4E5969; font-size:12px; line-height:16px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; white-space:nowrap; }
-    .action-mini svg { width:24px; height:24px; flex:0 0 24px; stroke:currentColor; fill:none; stroke-width:2; margin-bottom:1px; }
+    .action-mini .yfl-icon { margin-bottom:1px; }
     .action-mini span { display:block; white-space:nowrap; }
     .action-btn { flex:1; height:36px; border:0; border-radius:5px; background:#66BDF2; color:#fff; font-size:15px; font-weight:700; }
   </style>
@@ -94,8 +94,8 @@
       <div class="m-status-bar">
         <span class="time">6:00 PM</span>
         <div class="m-status-icons">
-          <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx=".5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx=".5" fill="#222835"/></svg>
-          <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="#222835"/></svg>
+          <svg data-inline-svg-ok width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx=".5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx=".5" fill="#222835"/></svg>
+          <svg data-inline-svg-ok width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="#222835"/></svg>
         </div>
       </div>
       <div class="m-nav-bar">
@@ -105,8 +105,8 @@
       </div>
       <main class="page list-page">
         <section class="market-head">
-          <div class="market-tabs"><div class="market-tab active">活动推广</div><div class="market-tab">好店</div><div class="location">车陂地铁站 ▼</div><div class="message-btn"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16v11H8l-4 4V5z"/></svg><span class="badge">1</span></div></div>
-          <div class="search-row"><div class="community">社区</div><div class="search-box">本地小白菜上市<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5F6670" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></div></div>
+          <div class="market-tabs"><div class="market-tab active">活动推广</div><div class="market-tab">好店</div><div class="location">车陂地铁站 ▼</div><div class="message-btn"><span class="yfl-icon yfl-icon--24" data-icon="message" aria-hidden="true"></span><span class="badge">1</span></div></div>
+          <div class="search-row"><div class="community">社区</div><div class="search-box">本地小白菜上市<span class="yfl-icon yfl-icon--20" data-icon="search" aria-hidden="true"></span></div></div>
         </section>
         <div class="list-scroll"><div class="masonry" id="masonry"></div></div>
         <nav class="m-bottom-tab-bar customer-bottom-bar" data-m-group>
@@ -128,7 +128,7 @@
 因此今天特意搞个销售大促，全场鸡米饭3折起，欢迎街坊过来品尝。</div><div class="tip">温馨提示：信息由商家发布，平台仅提供展示。消费前请注意核验</div></section>
           <div class="detail-meta"><span>129 人看过</span><span>截止时间12-12 23:59:59</span></div>
         </div>
-        <div class="detail-actions"><div class="action-mini"><svg viewBox="0 0 24 24"><path d="M4 10h16l-1 10H5L4 10z"/><path d="M7 10V7a5 5 0 0110 0v3"/></svg><span>商家</span></div><div class="action-mini"><svg viewBox="0 0 24 24"><path d="M18 8a3 3 0 10-2.83-4H15a3 3 0 003 4zM6 14a3 3 0 10-2.83-4H3a3 3 0 003 4zM18 20a3 3 0 10-2.83-4H15a3 3 0 003 4z"/><path d="M8.6 11.5l6.8-4M8.6 12.5l6.8 4"/></svg><span>分享</span></div><button class="action-btn">电话咨询</button><button class="action-btn">商家地址</button></div>
+        <div class="detail-actions"><div class="action-mini"><span class="yfl-icon yfl-icon--24" data-icon="store" aria-hidden="true"></span><span>商家</span></div><div class="action-mini"><span class="yfl-icon yfl-icon--24" data-icon="share" aria-hidden="true"></span><span>分享</span></div><button class="action-btn">电话咨询</button><button class="action-btn">商家地址</button></div>
       </main>
     </div>
   </div>
@@ -137,12 +137,12 @@
     var initialState = new URLSearchParams(location.search).get('state');
     var states = ['list-video', 'detail-video', 'detail-playing'];
     var state = states.indexOf(initialState) > -1 ? initialState : 'list-video';
-    function playIcon(size) { return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>'; }
+    function playIcon() { return '<span class="yfl-icon yfl-icon--16" data-icon="play" aria-hidden="true"></span>'; }
     function card(type, title, shop, short, expired) {
       var isVideo = type === 'video';
       var tag = isVideo ? '<div class="brand orange">邻里匠人</div>' : '<div class="brand blue">品牌商户</div>';
-      var media = isVideo ? '<div class="video-play-badge">' + playIcon(15) + '</div>' : '<div class="media-count"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 15l3-3 3 3 2-2 4 4"/></svg>3</div>';
-      var time = expired ? '<div class="expired-tag">已过期</div>' : '<div class="countdown"><span class="dot"></span>还剩 4:38:52</div>';
+      var media = isVideo ? '<div class="video-play-badge">' + playIcon() + '</div>' : '<div class="media-count"><span class="yfl-icon yfl-icon--16" data-icon="image-add" aria-hidden="true"></span>3</div>';
+      var time = expired ? '<div class="expired-tag">已过期</div>' : '<div class="countdown">1:40:00</div>';
       var cls = 'promo-card ' + (short ? 'short ' : '') + (expired ? 'expired' : '');
       return '<article class="' + cls + '"' + (isVideo ? ' onclick="switchState(\'detail-video\')"' : '') + '><div class="cover ' + (isVideo ? 'clothes' : 'food') + '">' + tag + media + time + '</div><div class="card-body"><div class="card-title">' + title + '</div><div class="shop-row"><div class="avatar"></div><span>' + shop + '</span></div></div></article>';
     }
@@ -153,7 +153,7 @@
       var hero = document.getElementById('detailHero');
       hero.className = 'hero' + (state === 'detail-playing' ? ' playing' : '');
       hero.onclick = function() { switchState(state === 'detail-playing' ? 'detail-video' : 'detail-playing'); };
-      hero.innerHTML = '<button class="video-toggle" type="button"><span class="play-triangle"><svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span><span class="pause"><i></i><i></i></span></button><div class="video-progress"><span></span></div>';
+      hero.innerHTML = '<button class="video-toggle" type="button"><span class="play-triangle"><span class="yfl-icon yfl-icon--24" data-icon="play" aria-hidden="true"></span></span><span class="pause"><i></i><i></i></span></button><div class="video-progress"><span></span></div>';
     }
     function render() {
       var phone = document.getElementById('phone');

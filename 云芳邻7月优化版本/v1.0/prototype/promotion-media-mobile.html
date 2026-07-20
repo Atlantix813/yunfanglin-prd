@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=375, initial-scale=1.0">
   <title>商家端发布推广 · 支持图片/视频</title>
   <link rel="stylesheet" href="mobile-components.css?v=20260710b">
+  <link rel="stylesheet" href="mobile-icons.css">
   <style>
     html, body { width:375px; height:812px; min-height:812px; margin:0; overflow:hidden; background:#F2F5FA; }
     body { font-family:'Noto Sans SC',-apple-system,'PingFang SC',sans-serif; color:#222835; }
@@ -30,7 +31,12 @@
     .section-title-text { grid-column:2; grid-row:1; line-height:22px; }
     .section-limit { grid-column:2 / 4; grid-row:2; margin-top:2px; color:#222835; font-size:14px; font-weight:700; line-height:20px; }
     .ai-link { grid-column:3; grid-row:1; color:#FF9D19; font-size:14px; font-weight:600; white-space:nowrap; line-height:22px; }
-    .media-grid { display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; margin-top:12px; }
+    .media-field-group { margin-top:12px; padding:12px; border:1px solid #E8EEF8; border-radius:10px; background:#fff; }
+    .media-field-group.disabled { background:#F7F8FA; }
+    .media-field-head { display:flex; align-items:center; justify-content:space-between; color:#222835; font-size:14px; font-weight:700; }
+    .media-field-limit { color:#A6AFBD; font-size:12px; font-weight:400; }
+    .media-grid { display:flex; flex-wrap:wrap; align-items:flex-start; gap:10px; margin-top:10px; min-height:96px; }
+    .media-disabled-note { width:100%; height:94px; border:1px dashed #D8DEE8; border-radius:8px; background:#F2F3F5; color:#A6AFBD; display:flex; align-items:center; justify-content:center; font-size:12px; }
     .media-tile { width:96px; height:96px; border-radius:8px; position:relative; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; color:#A6AFBD; background:#F2F5FA; border:1px solid #E8EEF8; }
     .media-tile.add { flex-direction:column; gap:7px; border:0; background:#EFF3F8; }
     .media-tile.add span { font-size:13px; color:#A6AFBD; }
@@ -80,8 +86,8 @@
       <div class="m-status-bar">
         <span class="time">6:00 PM</span>
         <div class="m-status-icons">
-          <svg width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx=".5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx=".5" fill="#222835"/></svg>
-          <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="#222835"/></svg>
+          <svg data-inline-svg-ok width="16" height="10" viewBox="0 0 16 10"><rect x="0" y="6" width="3" height="4" rx=".5" fill="#222835"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="#222835"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="#222835"/><rect x="12" y="0" width="3" height="10" rx=".5" fill="#222835"/></svg>
+          <svg data-inline-svg-ok width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="#222835"/><rect x="2" y="2" width="15" height="6" rx="1" fill="#222835"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="#222835"/></svg>
         </div>
       </div>
       <div class="m-nav-bar">
@@ -97,12 +103,19 @@
           </section>
           <section class="media-section">
             <div class="section-head required">
-              <div class="section-title-text">内容</div>
+              <div class="section-title-text">内容素材</div>
               <div class="ai-link">+生成文字图片</div>
-              <div class="section-limit">图片最多5张，视频最多1个</div>
+              <div class="section-limit">图片与视频二选一</div>
             </div>
-            <div class="media-grid" id="mediaGrid"></div>
-            <div class="help">1. 拖动图片可调整排序，默认排序第一张图片为封面<br>2. 上传视频后不再支持继续添加图片或视频</div>
+            <div class="media-field-group" id="imageField">
+              <div class="media-field-head"><span>图片</span><span class="media-field-limit">最多 5 张</span></div>
+              <div class="media-grid" id="imageGrid"></div>
+            </div>
+            <div class="media-field-group" id="videoField">
+              <div class="media-field-head"><span>视频</span><span class="media-field-limit">最多 1 个</span></div>
+              <div class="media-grid" id="videoGrid"></div>
+            </div>
+            <div class="help">切换素材类型前需先删除当前素材；图片默认第一张为封面</div>
           </section>
           <section class="info-card">
             <div class="card-head">结束时间</div>
@@ -125,11 +138,11 @@
           <div class="manager-tabs"><div class="manager-tab active">推广中(2)</div><div class="manager-tab">审核中(1)</div><div class="manager-tab">已下架</div></div>
           <div class="manager-scroll">
             <article class="promo-card">
-              <div class="promo-top"><span>2025-12-18 17:11:31</span><span class="status-green"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></svg>推广中</span></div>
+              <div class="promo-top"><span>2025-12-18 17:11:31</span><span class="status-green"><span class="yfl-icon yfl-icon--16" data-icon="clock" aria-hidden="true"></span>推广中</span></div>
               <div class="promo-title">门店新服务视频介绍</div>
               <div class="promo-copy">点击视频可在居民端查看门店服务介绍，商家端列表仅展示视频封面和播放标识。</div>
               <div class="view-all">查看全部 <span>⌄</span></div>
-              <div class="manager-video"><div class="play-circle"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>
+              <div class="manager-video"><div class="play-circle"><span class="yfl-icon yfl-icon--18" data-icon="play" aria-hidden="true"></span></div></div>
               <div class="down-time">预计下架：2025-12-19 10:30:00</div>
               <div class="card-actions"><span>● 剩余时长：3天12:34:58</span><button class="offline-btn">提前下架</button></div>
             </article>
@@ -145,13 +158,13 @@
     var states = ['empty', 'image', 'video', 'list-video'];
     var state = states.indexOf(initialState) > -1 ? initialState : 'empty';
     function addTile(label) {
-      return '<div class="media-tile add"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg><span>' + label + '</span></div>';
+      return '<div class="media-tile add"><span class="yfl-icon yfl-icon--24" data-icon="upload" aria-hidden="true"></span><span>' + label + '</span></div>';
     }
     function photoTile(cover) {
-      return '<div class="media-tile photo ' + (cover ? 'cover' : '') + '"><span class="media-remove">×</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 13l2.5-2.5L15 15l1.5-1.5L20 17"/><circle cx="8" cy="9" r="1.2"/></svg></div>';
+      return '<div class="media-tile photo ' + (cover ? 'cover' : '') + '"><span class="media-remove">×</span><span class="yfl-icon yfl-icon--24" data-icon="image-add" aria-hidden="true"></span></div>';
     }
     function videoTile() {
-      return '<div class="media-tile video"><span class="media-remove">×</span><div class="play-circle"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>';
+      return '<div class="media-tile video"><span class="media-remove">×</span><div class="play-circle"><span class="yfl-icon yfl-icon--18" data-icon="play" aria-hidden="true"></span></div></div>';
     }
     function render() {
       var phone = document.getElementById('phone');
@@ -159,10 +172,24 @@
       phone.classList.toggle('mode-list', isList);
       phone.classList.toggle('mode-publish', !isList);
       document.getElementById('navTitle').textContent = isList ? '推广管理' : '发布推广';
-      var grid = document.getElementById('mediaGrid');
-      if (state === 'empty') grid.innerHTML = addTile('添加图片/视频');
-      if (state === 'image') grid.innerHTML = photoTile(true) + photoTile(false) + addTile('添加图片');
-      if (state === 'video') grid.innerHTML = videoTile();
+      var imageField = document.getElementById('imageField');
+      var videoField = document.getElementById('videoField');
+      var imageGrid = document.getElementById('imageGrid');
+      var videoGrid = document.getElementById('videoGrid');
+      imageField.classList.toggle('disabled', state === 'video');
+      videoField.classList.toggle('disabled', state === 'image');
+      if (state === 'empty') {
+        imageGrid.innerHTML = addTile('添加图片');
+        videoGrid.innerHTML = addTile('添加视频');
+      }
+      if (state === 'image') {
+        imageGrid.innerHTML = photoTile(true) + photoTile(false) + addTile('添加图片');
+        videoGrid.innerHTML = '<div class="media-disabled-note">已上传图片，请先删除图片</div>';
+      }
+      if (state === 'video') {
+        imageGrid.innerHTML = '<div class="media-disabled-note">已上传视频，请先删除视频</div>';
+        videoGrid.innerHTML = videoTile();
+      }
     }
     window.switchState = function(mode) {
       if (states.indexOf(mode) === -1) return;

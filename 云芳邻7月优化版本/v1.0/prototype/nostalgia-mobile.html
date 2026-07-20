@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<!-- prototype-states: point-list,point-list-admin,profile -->
+<!-- prototype-states: point-list,profile-resident,profile-admin -->
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>海丝乡音居民端</title>
   <link rel="stylesheet" href="mobile-components.css">
+  <link rel="stylesheet" href="mobile-icons.css">
   <style>
     html, body { width:375px; height:812px; margin:0; overflow:hidden; }
     button, input { font:inherit; }
@@ -28,9 +29,9 @@
     .voice-location-arrow { flex:0 0 auto; font-size:13px; }
     .voice-scan { height:38px; padding:0; border:0; display:flex; align-items:center; justify-content:flex-end; gap:7px; background:transparent; color:#1778E9; font-size:14px; font-weight:700; white-space:nowrap; }
     .voice-scan-icon { width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:#2F86F4; color:#fff; box-shadow:0 4px 10px rgba(47,134,244,.22); }
-    .voice-scan-icon svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .voice-scan-icon .yfl-icon { color:currentColor; }
     .voice-search { margin:10px 0 12px; height:46px; border-radius:23px; box-shadow:0 5px 18px rgba(56,95,145,.06); }
-    .voice-search-icon { width:19px; height:19px; flex:0 0 19px; fill:none; stroke:#8A96A8; stroke-width:1.8; stroke-linecap:round; }
+    .voice-search-icon { width:19px; height:19px; flex:0 0 19px; color:#8A96A8; }
     .voice-search input { font-size:14px; }
     .voice-search .m-search-action { font-size:14px; }
     .voice-filter-wrap { margin:0 -16px 12px; padding:0 16px; }
@@ -41,8 +42,7 @@
     .voice-category { min-width:0; height:78px; padding:8px 2px 6px; border:0; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; background:transparent; color:#283142; }
     .voice-category.active { background:#fff; box-shadow:0 6px 18px rgba(45,83,132,.08); }
     .voice-category-icon { width:34px; height:34px; display:grid; place-items:center; color:var(--category-color); }
-    .voice-category-icon svg { width:32px; height:32px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-    .voice-category-icon .fill { fill:currentColor; stroke:none; }
+    .voice-category-icon .yfl-icon { color:currentColor; }
     .voice-category-label { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:100%; font-size:12px; font-weight:700; }
     .voice-result-summary { margin:2px 2px 10px; display:flex; align-items:center; justify-content:space-between; }
     .voice-result-summary strong { font-size:15px; }
@@ -61,7 +61,7 @@
     .voice-pin { width:10px; height:13px; flex:0 0 auto; border-radius:6px 6px 7px 7px; background:#56657A; clip-path:polygon(0 0,100% 0,100% 67%,50% 100%,0 67%); }
     .voice-point-distance { padding-top:3px; color:#8C96A5; font-size:11px; white-space:nowrap; }
     .voice-point-tags { margin-top:9px; display:flex; flex-wrap:wrap; gap:5px; }
-    .voice-point-tag { max-width:100%; padding:3px 7px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; border-radius:8px; background:#EAF4FF; color:#287CE3; font-size:10px; font-weight:700; }
+    .voice-point-tag { max-width:100%; flex:0 0 auto; padding:3px 7px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; border-radius:8px; background:#EAF4FF; color:#287CE3; font-size:10px; font-weight:700; }
     .voice-point-tag.orange { background:#FFF2E5; color:#E78221; }
     .voice-audios { margin-top:11px; display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
     .voice-audio { min-width:0; height:54px; padding:7px; border-radius:10px; display:flex; align-items:center; gap:6px; background:linear-gradient(180deg,#DCEEFF,#EDF5FF); }
@@ -76,23 +76,36 @@
     .voice-leave-btn { height:32px; padding:0 12px; flex:0 0 auto; border:0; border-radius:7px; background:#3F86F5; color:#fff; font-size:12px; font-weight:700; }
     .voice-empty-audio { color:#7E8999; font-size:12px; }
     .voice-empty { padding:48px 12px; color:#8792A3; text-align:center; font-size:13px; }
-    .voice-role-actions { position:absolute; right:14px; bottom:76px; z-index:8; width:72px; overflow:hidden; display:flex; flex-direction:column; border-radius:36px; background:linear-gradient(180deg,#5C9BFA 0,#2B7DF0 100%); box-shadow:0 10px 26px rgba(38,115,224,.32); transition:height .2s ease; }
-    .voice-role-actions.resident { height:82px; }
-    .voice-role-actions.admin { height:216px; }
-    .voice-role-action { min-height:72px; padding:9px 4px 8px; position:relative; border:0; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; background:transparent; color:#fff; font-size:11px; font-weight:700; line-height:15px; }
-    .voice-role-action + .voice-role-action::before { content:''; position:absolute; left:13px; right:13px; top:0; height:1px; background:rgba(255,255,255,.32); }
-    .voice-role-action svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
-    .voice-role-action span { white-space:nowrap; }
-
     /* 海丝乡音个人中心精简版 */
     .profile-scroll { width:375px; height:664px; overflow-y:auto; padding:16px; background:linear-gradient(180deg,#E4F1FF 0,#F5F7FA 240px); scrollbar-width:none; }
     .profile-head-wrap { padding:16px 0 8px; }
     .profile-avatar-image { width:58px; height:58px; object-fit:cover; border-radius:50%; }
+    .profile-role-section { margin-top:14px; }
+    .profile-section-title { margin:0 2px 10px; display:flex; align-items:center; justify-content:space-between; }
+    .profile-section-title strong { font-size:16px; }
+    .profile-section-title span { color:#8792A3; font-size:11px; }
+    .profile-role-card { width:343px; padding:12px; display:grid; gap:8px; border-radius:14px; background:#fff; box-shadow:var(--m-shadow); }
+    .profile-role-card.resident { grid-template-columns:minmax(0,1fr) minmax(0,1fr) 76px; }
+    .profile-stat-button,
+    .profile-detail-button,
+    .profile-admin-action { border:0; cursor:pointer; }
+    .profile-stat-button { min-width:0; height:84px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; background:#F5F8FD; color:#253044; }
+    .profile-stat-label { color:#66748A; font-size:12px; font-weight:600; }
+    .profile-stat-value { font-size:24px; line-height:26px; }
+    .profile-detail-button { height:84px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; background:#EAF4FF; color:#247FF0; font-size:11px; font-weight:700; }
+    .profile-detail-button .yfl-icon { width:22px; height:22px; }
+    .profile-role-card.admin { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .profile-admin-action { min-width:0; height:94px; border-radius:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; background:#F5F8FD; color:#344055; font-size:12px; font-weight:700; }
+    .profile-admin-icon { width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:#EAF4FF; color:#247FF0; }
+    .profile-admin-action:nth-child(2) .profile-admin-icon { background:#EAF9F2; color:#25A56A; }
+    .profile-admin-action:nth-child(3) .profile-admin-icon { background:#FFF4E8; color:#E58A24; }
+    .profile-stat-button:active,
+    .profile-detail-button:active,
+    .profile-admin-action:active { transform:scale(.98); }
     .profile-tools-title { margin:16px 2px 10px; display:flex; align-items:center; justify-content:space-between; }
     .profile-tools-title strong { font-size:16px; }
     .profile-tools-title span { color:#8792A3; font-size:11px; }
     .profile-tool { position:relative; cursor:pointer; }
-    .profile-tool .m-func-icon img { width:34px; height:34px; object-fit:contain; }
     .profile-welfare-badge { position:absolute; top:-8px; right:-2px; }
     .profile-note { margin-top:14px; padding:14px 16px; border-radius:10px; background:#fff; color:#8792A3; font-size:12px; line-height:19px; box-shadow:var(--m-shadow); }
 
@@ -110,8 +123,8 @@
     <div class="m-status-bar">
       <span class="time">15:12</span>
       <div class="m-status-icons" aria-hidden="true">
-        <svg width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
-        <svg width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg data-inline-svg-ok width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
+        <svg data-inline-svg-ok width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
     </div>
     <div class="m-nav-bar">
@@ -128,10 +141,10 @@
         <button class="voice-top-tab active">首页</button>
         <button class="voice-top-tab">关注</button>
         <button class="voice-location" id="locationBtn"><span class="voice-location-mark"></span><span class="voice-location-text">广州奈瑞儿美业</span><span class="voice-location-arrow">⌄</span></button>
-        <button class="voice-scan" id="scanBtn"><span class="voice-scan-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/><path d="M7 12h10"/></svg></span><span>扫码录音</span></button>
+        <button class="voice-scan" id="scanBtn"><span class="voice-scan-icon" aria-hidden="true"><span class="yfl-icon yfl-icon--20" data-icon="scan"></span></span><span>扫码录音</span></button>
       </section>
       <div class="m-search-bar voice-search">
-        <svg class="voice-search-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16.5 16.5 4 4"/></svg>
+        <span class="voice-search-icon yfl-icon" data-icon="search" aria-hidden="true"></span>
         <input type="text" id="searchInput" placeholder="请输入打卡点名称">
         <button class="m-search-action" id="searchBtn">搜索</button>
       </div>
@@ -147,11 +160,11 @@
         </div>
       </section>
       <section class="voice-categories" id="categoryFilters">
-        <button class="voice-category active" data-category-filter="全部"><span class="voice-category-icon" style="--category-color:#2F86F4"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="3" width="11" height="11" rx="2"/><rect x="18" y="3" width="11" height="11" rx="5.5" class="fill"/><rect x="3" y="18" width="11" height="11" rx="2" class="fill"/><rect x="18" y="18" width="11" height="11" rx="2"/></svg></span><span class="voice-category-label">全部</span></button>
-        <button class="voice-category" data-category-filter="热门景点"><span class="voice-category-icon" style="--category-color:#F15B56"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 27h24M7 27V15h18v12M5 15h22L16 6 5 15Z"/><path d="M11 15v12M16 15v12M21 15v12M13 6h6M16 3v3"/></svg></span><span class="voice-category-label">热门景点</span></button>
-        <button class="voice-category" data-category-filter="文物古迹"><span class="voice-category-icon" style="--category-color:#FF9348"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M11 4h10M13 4v5c0 2-4 4-4 9 0 6 3 10 7 10s7-4 7-10c0-5-4-7-4-9V4"/><path d="M10 16c4 2 8 2 12 0M11 22c3-1 7-1 10 0"/></svg></span><span class="voice-category-label">文物古迹</span></button>
-        <button class="voice-category" data-category-filter="公园乐园"><span class="voice-category-icon" style="--category-color:#22C980"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 27h24M16 27V12"/><path d="M16 5c-4 0-7 3-7 7 0 3 2 5 5 6M16 5c4 0 7 3 7 7 0 3-2 5-5 6M8 27v-5M24 27v-5M4 22h8M20 22h8"/></svg></span><span class="voice-category-label">公园乐园</span></button>
-        <button class="voice-category" data-category-filter="故里商店"><span class="voice-category-icon" style="--category-color:#6A5CE7"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 13h22l-2-7H7l-2 7Z"/><path d="M7 13v14h18V13M12 27v-8h8v8"/><path d="M5 13c0 3 4 4 6 1 2 3 8 3 10 0 2 3 6 2 6-1"/></svg></span><span class="voice-category-label">故里商店</span></button>
+        <button class="voice-category active" data-category-filter="全部"><span class="voice-category-icon" style="--category-color:#2F86F4"><span class="yfl-icon yfl-icon--24" data-icon="service" aria-hidden="true"></span></span><span class="voice-category-label">全部</span></button>
+        <button class="voice-category" data-category-filter="热门景点"><span class="voice-category-icon" style="--category-color:#F15B56"><span class="yfl-icon yfl-icon--24" data-icon="location" aria-hidden="true"></span></span><span class="voice-category-label">热门景点</span></button>
+        <button class="voice-category" data-category-filter="文物古迹"><span class="voice-category-icon" style="--category-color:#FF9348"><span class="yfl-icon yfl-icon--24" data-icon="guide" aria-hidden="true"></span></span><span class="voice-category-label">文物古迹</span></button>
+        <button class="voice-category" data-category-filter="公园乐园"><span class="voice-category-icon" style="--category-color:#22C980"><span class="yfl-icon yfl-icon--24" data-icon="activity-list" aria-hidden="true"></span></span><span class="voice-category-label">公园乐园</span></button>
+        <button class="voice-category" data-category-filter="故里商店"><span class="voice-category-icon" style="--category-color:#6A5CE7"><span class="yfl-icon yfl-icon--24" data-icon="store" aria-hidden="true"></span></span><span class="voice-category-label">故里商店</span></button>
       </section>
       <div class="voice-result-summary"><strong>附近打卡点</strong><span id="resultCount">3 个点位</span></div>
       <section class="voice-point-list" id="pointCards">
@@ -161,7 +174,7 @@
             <div class="voice-point-info">
               <div class="voice-point-name">黄埔区广州南洋电缆旧址</div>
               <div class="voice-point-address"><span class="voice-pin"></span><span>广东省广州市黄埔区永丰路</span></div>
-              <div class="voice-point-tags"><span class="voice-point-tag orange">百年老店</span><span class="voice-point-tag">街坊推荐</span></div>
+              <div class="voice-point-tags"><span class="voice-point-tag orange">百年老店</span><span class="voice-point-tag">广州二手市场</span><span class="voice-point-tag">街坊推荐</span></div>
             </div>
             <div class="voice-point-distance">距您 100米</div>
           </div>
@@ -206,63 +219,76 @@
           <div class="m-avatar"><img class="profile-avatar-image" src="icons/m3@2x.png" alt="头像"></div>
           <span class="m-profile-name">梁生</span>
           <div class="m-user-tag-row1"><span class="m-user-tag orange">居民</span><span class="m-profile-address">金沙雅苑社区</span></div>
-          <div class="m-user-tag-row2"><span class="m-user-tag blue">管理员</span><span class="m-user-tag partner">合伙人</span></div>
+          <div class="m-user-tag-row2" id="profileAdminIdentity" hidden><span class="m-user-tag blue">管理员</span></div>
           <span class="m-profile-link" data-m-action="toast" data-message="进入个人信息">个人信息</span>
         </section>
       </section>
+      <section class="profile-role-section" id="profileResidentCard">
+        <div class="profile-section-title"><strong>我的乡音</strong><span>个人内容</span></div>
+        <div class="profile-role-card resident">
+          <button class="profile-stat-button" data-profile-action="published"><span class="profile-stat-label">我发布的</span><strong class="profile-stat-value">12</strong></button>
+          <button class="profile-stat-button" data-profile-action="liked"><span class="profile-stat-label">我喜欢的</span><strong class="profile-stat-value">13</strong></button>
+          <button class="profile-detail-button" data-profile-action="detail"><span class="yfl-icon yfl-icon--22" data-icon="chevron-right" aria-hidden="true"></span><span>进入详情</span></button>
+        </div>
+      </section>
+      <section class="profile-role-section" id="profileAdminCard" hidden>
+        <div class="profile-section-title"><strong>乡音管理</strong><span>管理员功能</span></div>
+        <div class="profile-role-card admin">
+          <button class="profile-admin-action" data-profile-action="mine"><span class="profile-admin-icon"><span class="yfl-icon yfl-icon--24" data-icon="voice" aria-hidden="true"></span></span><span>我的乡音</span></button>
+          <button class="profile-admin-action" data-profile-action="point"><span class="profile-admin-icon"><span class="yfl-icon yfl-icon--24" data-icon="location" aria-hidden="true"></span></span><span>点位管理</span></button>
+          <button class="profile-admin-action" data-profile-action="review"><span class="profile-admin-icon"><span class="yfl-icon yfl-icon--24" data-icon="review" aria-hidden="true"></span></span><span>审核管理</span></button>
+        </div>
+      </section>
       <div class="profile-tools-title"><strong>我的服务</strong><span>常用功能</span></div>
       <section class="m-func-grid">
-        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入消息中心"><span class="m-func-icon"><img src="icons/icon_message@2x.png" alt=""></span><span class="m-func-label">消息中心</span></div>
-        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入在线客服"><span class="m-func-icon"><img src="icons/icon_xiaoxi@2x.png" alt=""></span><span class="m-func-label">在线客服</span></div>
-        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入消息订阅"><span class="m-func-icon"><img src="icons/icon_yaoqing@2x.png" alt=""></span><span class="m-func-label">消息订阅</span></div>
-        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入我的关注"><span class="m-func-icon"><img src="icons/icon_huzhu@2x.png" alt=""></span><span class="m-func-label">我的关注</span></div>
-        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入我的卡包"><span class="m-func-icon"><img src="icons/icon_duihuan@2x.png" alt=""></span><span class="m-func-label">我的卡包</span></div>
-        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入领券中心"><span class="m-badge profile-welfare-badge">领福利</span><span class="m-func-icon"><img src="icons/icon_duihuan@2x.png" alt=""></span><span class="m-func-label">领券中心</span></div>
+        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入消息中心"><span class="m-func-icon"><span class="yfl-icon yfl-icon--24" data-icon="notification" aria-hidden="true"></span></span><span class="m-func-label">消息中心</span></div>
+        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入在线客服"><span class="m-func-icon"><span class="yfl-icon yfl-icon--24" data-icon="service" aria-hidden="true"></span></span><span class="m-func-label">在线客服</span></div>
+        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入消息订阅"><span class="m-func-icon"><span class="yfl-icon yfl-icon--24" data-icon="settings" aria-hidden="true"></span></span><span class="m-func-label">消息订阅</span></div>
+        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入我的关注"><span class="m-func-icon"><span class="yfl-icon yfl-icon--24" data-icon="neighbor" aria-hidden="true"></span></span><span class="m-func-label">我的关注</span></div>
+        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入我的卡包"><span class="m-func-icon"><span class="yfl-icon yfl-icon--24" data-icon="card-wallet" aria-hidden="true"></span></span><span class="m-func-label">我的卡包</span></div>
+        <div class="m-func-item profile-tool" data-m-action="toast" data-message="进入领券中心"><span class="m-badge profile-welfare-badge">领福利</span><span class="m-func-icon"><span class="yfl-icon yfl-icon--24" data-icon="coupon-add" aria-hidden="true"></span></span><span class="m-func-label">领券中心</span></div>
       </section>
     </main>
 
-    <nav class="voice-role-actions resident" id="voiceRoleActions" aria-label="海丝乡音快捷入口">
-      <button class="voice-role-action admin-only" data-voice-action="point" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s6-4.7 6-11a6 6 0 1 0-12 0c0 6.3 6 11 6 11Z"/><circle cx="12" cy="10" r="2.2"/></svg><span>点位管理</span></button>
-      <button class="voice-role-action admin-only" data-voice-action="review" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4h8M9 4V2h6v2M7 9h10l1 11H6L7 9Z"/><path d="m9.5 14 1.7 1.8 3.6-3.8"/></svg><span>审核管理</span></button>
-      <button class="voice-role-action" data-voice-action="mine"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-2M8 16V8M12 19V5M16 16V8M20 13v-2"/></svg><span>我的乡音</span></button>
-    </nav>
-
     <nav class="m-bottom-tab-bar sea-bottom-nav" id="bottomNav">
-      <button class="sea-bottom-item active" data-state="point-list"><img src="icons/icon_neighbor_default@2x.png" alt=""><span>海丝乡音</span></button>
+      <button class="sea-bottom-item active" data-page="home"><img src="icons/icon_neighbor_default@2x.png" alt=""><span>海丝乡音</span></button>
       <button class="sea-bottom-item" id="marketLink"><img src="icons/icon_market_default@2x.png" alt=""><span>市集</span></button>
-      <button class="sea-bottom-item" data-state="profile"><img src="icons/icon_my_default@2x.png" alt=""><span>我的</span></button>
+      <button class="sea-bottom-item" data-page="profile"><img src="icons/icon_my_default@2x.png" alt=""><span>我的</span></button>
     </nav>
     <div class="m-toast"></div>
   </div>
   <script src="mobile-components.js"></script>
   <script>
     const params = new URLSearchParams(location.search);
-    const allowedStates = ['point-list', 'point-list-admin', 'profile'];
+    const allowedStates = ['point-list', 'profile-resident', 'profile-admin'];
     const initialState = allowedStates.includes(params.get('state')) ? params.get('state') : 'point-list';
     const phone = document.getElementById('phone');
     const pointList = document.getElementById('pointList');
     const profilePage = document.getElementById('profilePage');
-    const voiceRoleActions = document.getElementById('voiceRoleActions');
+    const profileResidentCard = document.getElementById('profileResidentCard');
+    const profileAdminCard = document.getElementById('profileAdminCard');
+    const profileAdminIdentity = document.getElementById('profileAdminIdentity');
     const navTitle = document.getElementById('navTitle');
     const input = document.getElementById('searchInput');
     const cards = [...document.querySelectorAll('.voice-point-card')];
+    let currentRole = initialState === 'profile-admin' ? 'admin' : 'resident';
     let street = '全部街道';
     let category = '全部';
 
     function renderState(next) {
       const state = allowedStates.includes(next) ? next : 'point-list';
-      const isHome = state === 'point-list' || state === 'point-list-admin';
-      const isAdmin = state === 'point-list-admin';
+      const isHome = state === 'point-list';
+      if (state === 'profile-admin') currentRole = 'admin';
+      if (state === 'profile-resident') currentRole = 'resident';
       pointList.hidden = !isHome;
-      profilePage.hidden = state !== 'profile';
-      voiceRoleActions.hidden = !isHome;
-      voiceRoleActions.classList.toggle('admin', isAdmin);
-      voiceRoleActions.classList.toggle('resident', !isAdmin);
-      document.querySelectorAll('.admin-only').forEach(item => { item.hidden = !isAdmin; });
+      profilePage.hidden = isHome;
+      profileResidentCard.hidden = isHome || currentRole !== 'resident';
+      profileAdminCard.hidden = isHome || currentRole !== 'admin';
+      profileAdminIdentity.hidden = isHome || currentRole !== 'admin';
       phone.classList.toggle('voice-mode', isHome);
       navTitle.textContent = isHome ? '海丝乡音' : '我的';
-      document.querySelectorAll('[data-state]').forEach(item => {
-        const active = item.dataset.state === state || (item.dataset.state === 'point-list' && isHome);
+      document.querySelectorAll('[data-page]').forEach(item => {
+        const active = item.dataset.page === (isHome ? 'home' : 'profile');
         item.classList.toggle('active', active);
         item.toggleAttribute('aria-current', active);
       });
@@ -286,11 +312,19 @@
     }
 
     renderState(initialState);
-    document.querySelectorAll('[data-state]').forEach(item => item.addEventListener('click', () => renderState(item.dataset.state)));
+    document.querySelector('[data-page="home"]').addEventListener('click', () => renderState('point-list'));
+    document.querySelector('[data-page="profile"]').addEventListener('click', () => renderState(currentRole === 'admin' ? 'profile-admin' : 'profile-resident'));
     document.getElementById('marketLink').addEventListener('click', () => window.YunFangLinC?.showToast(document.body, '进入原有市集页面'));
-    document.querySelectorAll('[data-voice-action]').forEach(btn => btn.addEventListener('click', () => {
-      const messages = { point: '进入点位管理', review: '进入审核管理', mine: '进入我的乡音' };
-      window.YunFangLinC?.showToast(document.body, messages[btn.dataset.voiceAction]);
+    document.querySelectorAll('[data-profile-action]').forEach(btn => btn.addEventListener('click', () => {
+      const messages = {
+        published: '进入「我的乡音」· 我发布的',
+        liked: '进入「我的乡音」· 喜欢',
+        detail: '进入「我的乡音」',
+        mine: '进入「我的乡音」',
+        point: '进入点位管理',
+        review: '进入审核管理'
+      };
+      window.YunFangLinC?.showToast(document.body, messages[btn.dataset.profileAction]);
     }));
     document.getElementById('scanBtn').addEventListener('click', () => window.YunFangLinC?.showToast(document.body, '打开扫码录音'));
     document.getElementById('locationBtn').addEventListener('click', () => window.YunFangLinC?.showToast(document.body, '切换当前位置'));

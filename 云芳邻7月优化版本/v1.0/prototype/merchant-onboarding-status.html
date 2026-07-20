@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>商家入驻情况</title>
   <link rel="stylesheet" href="组件库样式.css">
+  <link rel="stylesheet" href="pc-icons.css">
   <style>
     html, body { width:1920px; height:1080px; overflow:hidden; }
     .page-wrapper { height:1080px; overflow:hidden; background:#F7F8FA; }
@@ -51,19 +52,11 @@
       <div class="header-right">
         <div class="header-right-item">使用指南</div>
         <div class="header-right-item">
-          <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-            <path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9z"></path>
-            <path d="M10 21h4"></path>
-          </svg>
+          <span class="header-icon yfl-icon yfl-icon--16" data-icon="message" aria-hidden="true"></span>
           <span>消息</span>
         </div>
         <div class="header-right-item">
-          <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8">
-            <path d="M8 3H5a2 2 0 00-2 2v3"></path>
-            <path d="M16 3h3a2 2 0 012 2v3"></path>
-            <path d="M21 16v3a2 2 0 01-2 2h-3"></path>
-            <path d="M8 21H5a2 2 0 01-2-2v-3"></path>
-          </svg>
+          <span class="header-icon yfl-icon yfl-icon--16" data-icon="maximize" aria-hidden="true"></span>
           <span>全屏</span>
         </div>
         <div class="header-right-item"><span class="avatar">管</span><span>平台管理员</span></div>
@@ -73,7 +66,7 @@
     <div class="layout">
       <aside class="sidebar">
         <div class="sidebar-item expanded">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10h16l-1-5H5l-1 5z"></path><path d="M5 10v10h14V10"></path><path d="M9 20v-6h6v6"></path></svg>
+          <span class="yfl-icon yfl-icon--18" data-icon="store" aria-hidden="true"></span>
           <span class="label">商家管理</span><span class="arrow">›</span>
         </div>
         <div class="sidebar-sub">
@@ -131,13 +124,10 @@
             <div class="op-bar">
               <div class="op-left">
                 <button class="btn btn-outline" id="exportBtn">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 3v12"></path>
-                    <path d="M7 10l5 5 5-5"></path>
-                    <path d="M5 21h14"></path>
-                  </svg>
+                  <span class="yfl-icon yfl-icon--14" data-icon="export" aria-hidden="true"></span>
                   批量导出
                 </button>
+                <button class="btn btn-primary" id="syncBtn">执行同步任务</button>
               </div>
             </div>
 
@@ -201,7 +191,7 @@
                   <td>177****5126</td>
                   <td class="sales-cell"><span class="text-empty">-</span></td>
                   <td class="onboard-cell"><span class="text-empty">-</span></td>
-                  <td>2026-06-29 10:10</td>
+                  <td>2026-07-06 10:10</td>
                   <td>2026-07-02 11:30</td>
                   <td><a class="action-link edit-link" data-index="3">修改</a></td>
                 </tr>
@@ -283,12 +273,12 @@
   <script>
     var currentIndex = 0;
     var merchants = [
-      { name: '归园咖啡社区店', sales: '楚珊', onboardDate: '2026-07-12' },
-      { name: '芳邻生鲜驿站', sales: '林浩', onboardDate: '' },
-      { name: '小满家政服务', sales: '何楠', onboardDate: '2026-07-10' },
-      { name: '康乐理疗馆', sales: '', onboardDate: '' },
-      { name: '邻里鲜花坊', sales: '唐颖', onboardDate: '2026-06-18' },
-      { name: '安心维修服务部', sales: '楚珊', onboardDate: '' }
+      { name: '归园咖啡社区店', sales: '楚珊', onboardDate: '2026-07-12', syncDate: '' },
+      { name: '芳邻生鲜驿站', sales: '林浩', onboardDate: '', syncDate: '' },
+      { name: '小满家政服务', sales: '何楠', onboardDate: '2026-07-10', syncDate: '' },
+      { name: '康乐理疗馆', sales: '', onboardDate: '', syncDate: '2026-07-06' },
+      { name: '邻里鲜花坊', sales: '唐颖', onboardDate: '2026-06-18', syncDate: '' },
+      { name: '安心维修服务部', sales: '楚珊', onboardDate: '', syncDate: '' }
     ];
 
     function showToast(text) {
@@ -332,6 +322,17 @@
 
     document.getElementById('exportBtn').addEventListener('click', function () {
       showToast('已生成当前筛选结果导出任务');
+    });
+
+    document.getElementById('syncBtn').addEventListener('click', function () {
+      var syncedCount = 0;
+      merchants.forEach(function (item, index) {
+        if (item.onboardDate || !item.syncDate) return;
+        item.onboardDate = item.syncDate;
+        document.querySelector('tr[data-row="' + index + '"] .onboard-cell').innerHTML = formatDateText(item.onboardDate);
+        syncedCount += 1;
+      });
+      showToast(syncedCount ? '同步完成：已写入 ' + syncedCount + ' 家商家的入驻时间' : '同步完成：暂无需要写入的商家');
     });
 
     document.getElementById('modalClose').addEventListener('click', closeEdit);

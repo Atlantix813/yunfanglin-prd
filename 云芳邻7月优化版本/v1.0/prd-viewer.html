@@ -481,12 +481,32 @@
     .token {
       display: inline-flex;
       align-items: center;
-      padding: 2px 8px;
-      border-radius: 5px;
+      padding: 2px 7px;
+      background: #edf5ff;
+      font-weight: 800;
+      line-height: 1.35;
+      white-space: nowrap;
+    }
+
+    .token-action {
+      border: 1px solid #c7e1ff;
+      border-radius: 999px;
       background: #edf5ff;
       color: var(--blue);
-      font-weight: 800;
-      white-space: nowrap;
+    }
+
+    .token-page {
+      border: 1px solid #d8ccff;
+      border-radius: 4px;
+      background: #f4f0ff;
+      color: #6f42c1;
+    }
+
+    .token-field {
+      border: 1px dashed #8fd0b0;
+      border-radius: 3px;
+      background: #edf9f2;
+      color: #16845b;
     }
 
     .change-list {
@@ -650,6 +670,113 @@
       stroke-linejoin: round;
     }
 
+    .open-btn:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
+    .proto-fullscreen-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      background: #f4f7fb;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .18s ease;
+    }
+
+    .proto-fullscreen-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .proto-fullscreen-bar {
+      height: 52px;
+      flex: 0 0 52px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .proto-fullscreen-back {
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: #526071;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .proto-fullscreen-back:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .proto-fullscreen-back svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .proto-fullscreen-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .proto-fullscreen-stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .proto-fullscreen-frame {
+      position: absolute;
+      overflow: hidden;
+      transform-origin: top left;
+      background: #fff;
+      border: 1px solid #d6dde8;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, .16);
+    }
+
+    .proto-fullscreen-frame.mobile {
+      border-radius: 30px;
+    }
+
+    .proto-fullscreen-frame.pc {
+      border-radius: 12px;
+    }
+
+    .proto-fullscreen-frame iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+    }
+
     .state-bar {
       grid-area: states;
       display: flex;
@@ -806,9 +933,9 @@
                 <strong id="protoTitle"></strong>
               </div>
               <div class="state-bar" id="stateBar"></div>
-              <a class="open-btn" id="openProto" href="#" target="_blank" title="全屏查看原型" aria-label="全屏查看原型">
+              <button class="open-btn" id="openProto" type="button" title="全屏查看原型" aria-label="全屏查看原型">
                 <svg viewBox="0 0 24 24"><path d="M8 4H4v4"></path><path d="M4 4l6 6"></path><path d="M16 4h4v4"></path><path d="M20 4l-6 6"></path><path d="M8 20H4v-4"></path><path d="M4 20l6-6"></path><path d="M16 20h4v-4"></path><path d="M20 20l-6-6"></path></svg>
-              </a>
+              </button>
             </div>
             <div class="proto-stage" id="protoStage">
               <div class="empty">请选择一个页面。</div>
@@ -817,11 +944,22 @@
         </section>
       </main>
     </div>
+
+    <div class="proto-fullscreen-overlay" id="protoFullscreen" aria-hidden="true">
+      <div class="proto-fullscreen-bar">
+        <button class="proto-fullscreen-back" id="closeProtoFullscreen" type="button">
+          <svg viewBox="0 0 24 24"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
+          返回文档
+        </button>
+        <strong class="proto-fullscreen-title" id="protoFullscreenTitle"></strong>
+      </div>
+      <div class="proto-fullscreen-stage" id="protoFullscreenStage"></div>
+    </div>
   </div>
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-july-optimization.md 自动生成，MD SHA256: 0320961a65f7e4cc9a76685cc5f0e7a4f1a82fa35cc2a38a6dcf20c8a1d16f05
+    // 由 prd-july-optimization.md 自动生成，MD SHA256: 1b09e702031dbfa794d3403dbbf71d19b3bcf3ab628f5d7f91787c90aa3c9aae
     const PRD_MODE = "small";
     const SECTION_DATA = [
       {
@@ -829,11 +967,11 @@
         "no": "背",
         "title": "需求背景",
         "desc": "本期版本性质和组织方式。",
-        "summary": "7 月优化版本属于小需求聚合版。本期不是单一大型业务重做，而是多个独立优化、补齐项和问题修复组成。 每个功能作为一个独立需求进入左侧功能菜单；功能内部再按涉及的页面、弹窗、定时任务、订阅消息或底表拆成横向 tab。当前版本保留 8 个功能。 本期同时涉及两个独立小程序：功能一至功能五、功能八归入「云芳邻」小程序及其配套后台；功能六、功能七归入「海丝乡音」小程序及其配套后台。两个小程序的首页、个人中心和底部导航彼此独立，不共用同一套页面。",
+        "summary": "7 月优化版本属于小需求聚合版。本期不是单一大型业务重做，而是多个独立优化、补齐项和问题修复组成。 每个功能作为一个独立需求进入左侧功能菜单；功能内部再按涉及的页面、弹窗、定时任务、手动任务、订阅消息或底表拆成横向 tab。当前版本保留 8 个功能。 本期同时涉及两个独立小程序：功能一至功能五、功能八归入云芳邻小程序及其配套后台；功能六、功能七归入海丝乡音小程序及其配套后台。两个小程序的首页、个人中心和底部导航彼此独立，不共用同一套页面。",
         "blocks": [
           {
             "title": "需求背景",
-            "html": "<p>7 月优化版本属于小需求聚合版。本期不是单一大型业务重做，而是多个独立优化、补齐项和问题修复组成。</p><p>每个功能作为一个独立需求进入左侧功能菜单；功能内部再按涉及的页面、弹窗、定时任务、订阅消息或底表拆成横向 tab。当前版本保留 8 个功能。</p><p>本期同时涉及两个独立小程序：功能一至功能五、功能八归入<span class=\"token\">「云芳邻」</span>小程序及其配套后台；功能六、功能七归入<span class=\"token\">「海丝乡音」</span>小程序及其配套后台。两个小程序的首页、个人中心和底部导航彼此独立，不共用同一套页面。</p>"
+            "html": "<p>7 月优化版本属于小需求聚合版。本期不是单一大型业务重做，而是多个独立优化、补齐项和问题修复组成。</p><p>每个功能作为一个独立需求进入左侧功能菜单；功能内部再按涉及的页面、弹窗、定时任务、手动任务、订阅消息或底表拆成横向 tab。当前版本保留 8 个功能。</p><p>本期同时涉及两个独立小程序：功能一至功能五、功能八归入云芳邻小程序及其配套后台；功能六、功能七归入海丝乡音小程序及其配套后台。两个小程序的首页、个人中心和底部导航彼此独立，不共用同一套页面。</p>"
           }
         ]
       },
@@ -846,7 +984,7 @@
         "blocks": [
           {
             "title": "需求清单",
-            "html": "<div class=\"table-scroll\"><table><thead><tr><th>编号</th><th>需求</th><th>状态</th><th>影响范围</th><th>说明</th></tr></thead><tbody><tr><td>功能一</td><td>优惠券核销触达</td><td>已细化</td><td>居民端首页、商城首页、个人中心</td><td>增强已持券用户的核销提醒，同时补充领券中心入口。</td></tr><tr><td>功能二</td><td>商家营业时间配置</td><td>已细化</td><td>PC后台、C端展示规则</td><td>PC 后台新增<span class=\"token\">「营业时间」</span>配置入口，并把旧商家弹窗里的营业状态、营业时间移到独立弹窗维护。</td></tr><tr><td>功能三</td><td>推广支持视频</td><td>已细化</td><td>PC后台、小程序商家端、居民端</td><td>发布推广支持图片或视频，补齐推广详情、商家端列表、居民端列表和详情的视频展示。</td></tr><tr><td>功能四</td><td>公告暂存与二维码识别</td><td>已细化</td><td>小程序管理后台、居民端</td><td>修复移动端公告仅有正文图片时无法存草稿的问题，公告图片支持长按识别二维码。</td></tr><tr><td>功能五</td><td>商家入驻情况</td><td>已细化</td><td>PC后台、定时任务</td><td>新增商家入驻情况页，用管理员最后登录时间判断商家是否真实入驻。</td></tr><tr><td>功能六</td><td>海丝乡音首页与底部导航改造</td><td>已细化</td><td>居民端首页、底部导航、个人中心</td><td>海丝乡音替代原有首页，底部调整为<span class=\"token\">「海丝乡音 / 市集 / 我的」</span>三项；市集沿用原有页面。</td></tr><tr><td>功能七</td><td>海丝乡愁点位筛选与标签优化</td><td>已细化</td><td>居民端、PC后台</td><td>居民端支持按街道筛选点位并展示运营标签，PC 后台补充街道和标签维护。</td></tr><tr><td>功能八</td><td>待发布问卷预览</td><td>已细化</td><td>PC后台、小程序端</td><td>待发布问卷可生成预览二维码，扫码查看详情和完整题目；预览过程不可提交，不产生答卷数据。</td></tr></tbody></table></div>"
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>编号</th><th>需求</th><th>状态</th><th>影响范围</th><th>说明</th></tr></thead><tbody><tr><td>功能一</td><td>优惠券核销触达</td><td>已细化</td><td>居民端首页、商城首页、个人中心</td><td>增强已持券用户的核销提醒，同时补充领券中心入口。</td></tr><tr><td>功能二</td><td>商家营业时间配置</td><td>已细化</td><td>PC后台、C端展示规则</td><td>PC 后台新增<span class=\"token token-action\">「营业时间」</span>配置入口，并把旧商家弹窗里的<span class=\"token token-field\">[营业状态]</span>、<span class=\"token token-field\">[营业时间]</span>移到独立弹窗维护。</td></tr><tr><td>功能三</td><td>推广支持视频</td><td>已细化</td><td>PC后台、小程序商家端、居民端</td><td>发布推广支持图片或视频，补齐推广详情、商家端列表、居民端列表和详情的视频展示。</td></tr><tr><td>功能四</td><td>公告暂存与二维码识别</td><td>已细化</td><td>小程序管理后台、居民端</td><td>修复移动端公告仅有正文图片时无法存草稿的问题，公告图片支持长按识别二维码。</td></tr><tr><td>功能五</td><td>商家入驻情况</td><td>已细化</td><td>PC后台、手动任务</td><td>新增商家入驻情况页，用管理员最后登录时间判断商家是否真实入驻。</td></tr><tr><td>功能六</td><td>海丝乡音首页与底部导航改造</td><td>已细化</td><td>居民端首页、底部导航、个人中心</td><td>海丝乡音替代原有首页，底部调整为<span class=\"token token-action\">「海丝乡音 / 市集 / 我的」</span>三项；市集沿用原有页面。</td></tr><tr><td>功能七</td><td>海丝乡愁点位筛选与标签优化</td><td>已细化</td><td>居民端、PC后台</td><td>居民端支持按街道筛选点位并展示运营标签，PC 后台补充街道和标签维护。</td></tr><tr><td>功能八</td><td>待发布问卷预览</td><td>已细化</td><td>PC后台、小程序端</td><td>待发布问卷可生成预览二维码，扫码查看详情和完整题目；预览过程不可提交，不产生答卷数据。</td></tr></tbody></table></div>"
           }
         ]
       }
@@ -870,7 +1008,7 @@
               {
                 "type": "add",
                 "label": "新增",
-                "title": "弹窗 · 「券未使用提醒」",
+                "title": "弹窗 · <span class=\"token token-page\">【券未使用提醒】</span>",
                 "desc": "增加已持券未使用提醒弹窗，优先引导用户去核销。",
                 "groups": [
                   {
@@ -878,7 +1016,7 @@
                     "items": [
                       "每日最多展示一次，在现有公告弹窗关闭后判断。",
                       "用户存在已领取未使用优惠券时展示。",
-                      "与<span class=\"token\">「领券提示」</span>互斥，优先展示<span class=\"token\">「券未使用提醒」</span>。"
+                      "与<span class=\"token token-page\">【领券提示】</span>互斥，优先展示<span class=\"token token-page\">【券未使用提醒】</span>。"
                     ]
                   },
                   {
@@ -891,9 +1029,9 @@
                   {
                     "title": "点击交互",
                     "items": [
-                      "点击券卡<span class=\"token\">「立即使用」</span>进入对应券核销码页面。",
-                      "点击<span class=\"token\">「领新券」</span>进入领券中心。",
-                      "点击<span class=\"token\">「去卡包看看」</span>进入我的卡包。"
+                      "点击券卡<span class=\"token token-action\">「立即使用」</span>进入对应券核销码页面。",
+                      "点击<span class=\"token token-action\">「领新券」</span>进入<span class=\"token token-page\">【领券中心】</span>。",
+                      "点击<span class=\"token token-action\">「去卡包看看」</span>进入<span class=\"token token-page\">【我的卡包】</span>。"
                     ]
                   }
                 ]
@@ -901,7 +1039,7 @@
               {
                 "type": "add",
                 "label": "新增",
-                "title": "弹窗 · 「领券提示」",
+                "title": "弹窗 · <span class=\"token token-page\">【领券提示】</span>",
                 "desc": "增加推荐领券弹窗，在用户暂无待使用券时引导领取可用福利。",
                 "groups": [
                   {
@@ -909,7 +1047,7 @@
                     "items": [
                       "仅在用户没有待使用券时展示。",
                       "当前至少存在 1 张可免费领取的优惠券时展示。",
-                      "与<span class=\"token\">「券未使用提醒」</span>互斥，已持券场景不展示。"
+                      "与<span class=\"token token-page\">【券未使用提醒】</span>互斥，已持券场景不展示。"
                     ]
                   },
                   {
@@ -931,8 +1069,8 @@
                   {
                     "title": "点击交互",
                     "items": [
-                      "点击<span class=\"token\">「立即领取」</span>一次性领取当前展示的全部券。",
-                      "领取成功后展示<span class=\"token\">「领取成功提示」</span>。"
+                      "点击<span class=\"token token-action\">「立即领取」</span>一次性领取当前展示的全部券。",
+                      "领取成功后展示<span class=\"token token-page\">【领取成功提示】</span>。"
                     ]
                   }
                 ]
@@ -940,21 +1078,21 @@
               {
                 "type": "add",
                 "label": "新增",
-                "title": "弹窗 · 「领取成功提示」",
+                "title": "弹窗 · <span class=\"token token-page\">【领取成功提示】</span>",
                 "desc": "用户一键领取成功后展示结果弹窗，并提供继续领券和去卡包用券入口。",
                 "groups": [
                   {
                     "title": "弹窗出现逻辑",
                     "items": [
-                      "用户点击<span class=\"token\">「立即领取」</span>并领取成功后展示。",
+                      "用户点击<span class=\"token token-action\">「立即领取」</span>并领取成功后展示。",
                       "提示本次领取结果，引导用户继续领券或去卡包用券。"
                     ]
                   },
                   {
                     "title": "点击交互",
                     "items": [
-                      "点击<span class=\"token\">「继续领券」</span>进入领券中心。",
-                      "点击<span class=\"token\">「去卡包用券」</span>进入我的卡包。"
+                      "点击<span class=\"token token-action\">「继续领券」</span>进入<span class=\"token token-page\">【领券中心】</span>。",
+                      "点击<span class=\"token token-action\">「去卡包用券」</span>进入<span class=\"token token-page\">【我的卡包】</span>。"
                     ]
                   }
                 ]
@@ -987,18 +1125,18 @@
             "tab": "居民端商城首页",
             "title": "居民端商城首页",
             "type": "mobile",
-            "location": "居民进入「市集」首页时展示。",
+            "location": "居民进入<span class=\"token token-action\">「市集」</span>首页时展示。",
             "changes": [
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "入口横幅 · 「领券中心」",
+                "title": "入口横幅 · <span class=\"token token-action\">「领券中心」</span>",
                 "desc": "调整商城首页领券中心入口位置、占位高度和点击入口。",
                 "groups": [
                   {
                     "title": "入口位置",
                     "items": [
-                      "将<span class=\"token\">「领券中心」</span>入口横幅位置上移，提升首屏可见性。",
+                      "将<span class=\"token token-action\">「领券中心」</span>入口横幅位置上移，提升首屏可见性。",
                       "入口占位高度调整为原横幅高度的 1.5 倍。"
                     ]
                   },
@@ -1006,7 +1144,7 @@
                     "title": "视觉与交互",
                     "items": [
                       "横幅视觉图由 UI 设计提供，原型仅保留占位空间。",
-                      "点击横幅进入领券中心。"
+                      "点击横幅进入<span class=\"token token-page\">【领券中心】</span>。"
                     ]
                   }
                 ]
@@ -1031,32 +1169,32 @@
             "tab": "居民端个人中心",
             "title": "居民端个人中心",
             "type": "mobile",
-            "location": "居民进入「我的」页面时展示。",
+            "location": "居民进入<span class=\"token token-action\">「我的」</span>页面时展示。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "功能入口 · 「领券中心」",
+                "title": "功能入口 · <span class=\"token token-action\">「领券中心」</span>",
                 "desc": "在个人中心新增领券中心入口、角标和点击跳转。",
                 "groups": [
                   {
                     "title": "入口位置",
                     "items": [
-                      "在个人中心功能宫格新增<span class=\"token\">「领券中心」</span>入口。",
+                      "在个人中心功能宫格新增<span class=\"token token-action\">「领券中心」</span>入口。",
                       "入口放在功能宫格末位，与现有宫格入口保持同一尺寸和排列规则。"
                     ]
                   },
                   {
                     "title": "角标规则",
                     "items": [
-                      "入口右上角显示呼吸感角标<span class=\"token\">「领福利」</span>。",
+                      "入口右上角显示呼吸感角标<span class=\"token token-field\">[领福利]</span>。",
                       "角标仅用于提示福利入口，不遮挡入口名称。"
                     ]
                   },
                   {
                     "title": "点击交互",
                     "items": [
-                      "点击<span class=\"token\">「领券中心」</span>进入领券中心。"
+                      "点击<span class=\"token token-action\">「领券中心」</span>进入<span class=\"token token-page\">【领券中心】</span>。"
                     ]
                   }
                 ]
@@ -1090,13 +1228,13 @@
             "tab": "PC端商家列表",
             "title": "PC端商家列表",
             "type": "pc",
-            "location": "PC后台「商家管理」列表页，行内操作区域。",
+            "location": "PC后台<span class=\"token token-page\">【商家管理】</span>列表页，行内操作区域。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "操作按钮 · 「营业时间」",
-                "desc": "在「商家详情」「修改」「更多」同列增加入口，点击后打开「配置营业时间」弹窗。"
+                "title": "操作按钮 · <span class=\"token token-action\">「营业时间」</span>",
+                "desc": "在<span class=\"token token-action\">「商家详情」</span><span class=\"token token-action\">「修改」</span><span class=\"token token-action\">「更多」</span>同列增加入口，点击后打开<span class=\"token token-page\">【配置营业时间】</span>弹窗。"
               }
             ],
             "blocks": [],
@@ -1118,13 +1256,13 @@
             "tab": "PC端商家详情 / 修改商家弹窗",
             "title": "PC端商家详情 / 修改商家弹窗",
             "type": "pc",
-            "location": "点击商家列表行内「商家详情」或「修改」后打开「修改商家」弹窗。",
+            "location": "点击商家列表行内<span class=\"token token-action\">「商家详情」</span>或<span class=\"token token-action\">「修改」</span>后打开<span class=\"token token-page\">【修改商家】</span>弹窗。",
             "changes": [
               {
                 "type": "delete",
                 "label": "删除",
-                "title": "配置项 · 营业状态、营业时间",
-                "desc": "从该弹窗移除，统一通过「配置营业时间」弹窗维护；「是否允许营业」保留在原弹窗。"
+                "title": "配置项 · <span class=\"token token-field\">[营业状态]</span>、<span class=\"token token-field\">[营业时间]</span>",
+                "desc": "从该弹窗移除，统一通过<span class=\"token token-page\">【配置营业时间】</span>弹窗维护；<span class=\"token token-field\">[是否允许营业]</span>保留在原弹窗。"
               }
             ],
             "blocks": [],
@@ -1146,28 +1284,28 @@
             "tab": "PC端配置营业时间弹窗",
             "title": "PC端配置营业时间弹窗",
             "type": "pc",
-            "location": "点击商家列表行内「营业时间」后打开。",
+            "location": "点击商家列表行内<span class=\"token token-action\">「营业时间」</span>后打开。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "弹窗 · 「配置营业时间」",
-                "desc": "独立承接商家营业状态、营业日期、营业时间段配置。",
+                "title": "弹窗 · <span class=\"token token-page\">【配置营业时间】</span>",
+                "desc": "独立承接商家<span class=\"token token-field\">[营业状态]</span>、<span class=\"token token-field\">[营业日期]</span>、<span class=\"token token-field\">[营业时间]</span>配置。",
                 "groups": [
                   {
                     "title": "配置内容",
                     "items": [
-                      "营业状态：独立承接商家营业状态配置。",
-                      "营业日期：支持勾选周一至周日，选中的星期使用同一组营业时间段。",
-                      "营业时间：支持配置开始时间和结束时间，最多 3 个时间段；不支持按星期分别配置不同时间。"
+                      "<span class=\"token token-field\">[营业状态]</span>：独立承接商家营业状态配置。",
+                      "<span class=\"token token-field\">[营业日期]</span>：支持勾选周一至周日，选中的星期使用同一组营业时间段。",
+                      "<span class=\"token token-field\">[营业时间]</span>：支持配置开始时间和结束时间，最多 3 个时间段；不支持按星期分别配置不同时间。"
                     ]
                   },
                   {
                     "title": "校验提示",
                     "items": [
-                      "未选择营业日期时，提示<span class=\"token\">「请至少选择一个营业日期」</span>。",
-                      "仅剩 1 个时段时删除，提示<span class=\"token\">「营业时间至少需要保留一个时段」</span>。",
-                      "时间段重叠时，提示<span class=\"token\">「营业时间段不允许重叠」</span>。"
+                      "未选择营业日期时，提示“请至少选择一个营业日期”。",
+                      "仅剩 1 个时段时删除，提示“营业时间至少需要保留一个时段”。",
+                      "时间段重叠时，提示“营业时间段不允许重叠”。"
                     ]
                   },
                   {
@@ -1180,10 +1318,10 @@
                   {
                     "title": "状态优先级",
                     "items": [
-                      "<span class=\"token\">「是否允许营业」</span>为最高优先级，继续保留在<span class=\"token\">「修改商家」</span>弹窗中。",
-                      "<span class=\"token\">「是否允许营业」</span>关闭时，<span class=\"token\">「营业状态」</span>不能调整为开启；PC 后台和小程序商家端均沿用该限制。",
-                      "<span class=\"token\">「是否允许营业」</span>开启后，管理员或商家才能将<span class=\"token\">「营业状态」</span>调整为开启。",
-                      "开启<span class=\"token\">「是否允许营业」</span>不会自动开启<span class=\"token\">「营业状态」</span>，仍需由管理员或商家主动调整。"
+                      "<span class=\"token token-field\">[是否允许营业]</span>为最高优先级，继续保留在<span class=\"token token-page\">【修改商家】</span>弹窗中。",
+                      "<span class=\"token token-field\">[是否允许营业]</span>关闭时，<span class=\"token token-field\">[营业状态]</span>不能调整为开启；PC 后台和小程序商家端均沿用该限制。",
+                      "<span class=\"token token-field\">[是否允许营业]</span>开启后，管理员或商家才能将<span class=\"token token-field\">[营业状态]</span>调整为开启。",
+                      "开启<span class=\"token token-field\">[是否允许营业]</span>不会自动开启<span class=\"token token-field\">[营业状态]</span>，仍需由管理员或商家主动调整。"
                     ]
                   },
                   {
@@ -1216,41 +1354,42 @@
         "no": "三",
         "title": "功能三 · 推广支持视频",
         "desc": "当前推广发布素材只支持图片，商家无法用视频展示门店、服务或商品效果。居民在推广列表和详情",
-        "summary": "当前推广发布素材只支持图片，商家无法用视频展示门店、服务或商品效果。居民在推广列表和详情里也看不到视频内容。本期把「推广素材」从纯图片扩展为图片或视频二选一，并补齐各端视频展示。",
+        "summary": "当前推广发布素材只支持图片，商家无法用视频展示门店、服务或商品效果。居民在推广列表和详情里也看不到视频内容。本期把<span class=\"token token-field\">[推广素材]</span>从纯图片扩展为图片或视频二选一，并补齐各端视频展示。",
         "pages": [
           {
             "id": "pc端发布推广弹窗",
             "tab": "PC端发布推广弹窗",
             "title": "PC端发布推广弹窗",
             "type": "pc",
-            "location": "PC后台「推广管理」中点击「发布推广」后打开。",
+            "location": "PC后台<span class=\"token token-page\">【推广管理】</span>中点击<span class=\"token token-action\">「发布推广」</span>后打开。",
             "changes": [
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "上传区域 · 「内容」",
-                "desc": "支持图片或视频二选一上传，并按素材类型展示对应状态。",
+                "title": "上传区域 · <span class=\"token token-field\">[图片]</span>、<span class=\"token token-field\">[视频]</span>",
+                "desc": "将图片和视频拆为两个独立上传区域，素材仍为二选一。",
                 "groups": [
                   {
                     "title": "字段与空状态",
                     "items": [
-                      "字段名称由<span class=\"token\">「内容配图」</span>调整为<span class=\"token\">「内容」</span>。",
-                      "未上传素材时，上传占位按钮文案为<span class=\"token\">「添加图片/视频」</span>。"
+                      "原<span class=\"token token-field\">[内容配图]</span>拆分为<span class=\"token token-field\">[图片]</span>和<span class=\"token token-field\">[视频]</span>两个独立上传区域。",
+                      "未上传素材时，两个区域同时可用，占位按钮分别显示<span class=\"token token-action\">「添加图片」</span>和<span class=\"token token-action\">「添加视频」</span>。"
                     ]
                   },
                   {
                     "title": "已上传图片状态",
                     "items": [
                       "展示图片缩略图，上传按钮继续排在已上传图片后方。",
-                      "追加上传按钮文案调整为<span class=\"token\">「添加图片」</span>，不再出现<span class=\"token\">「视频」</span>字样。",
-                      "默认第一张图片为封面，仅第一张展示<span class=\"token\">「封面」</span>标识。"
+                      "追加上传按钮文案为<span class=\"token token-action\">「添加图片」</span>。",
+                      "默认第一张图片为封面，仅第一张展示<span class=\"token token-field\">[封面]</span>标识。",
+                      "视频上传区域保留展示并进入禁用状态，提示需先删除已上传图片。"
                     ]
                   },
                   {
                     "title": "已上传视频状态",
                     "items": [
                       "展示视频卡片和播放标识。",
-                      "上传视频后不再展示上传按钮。"
+                      "图片上传区域保留展示并进入禁用状态，提示需先删除已上传视频。"
                     ]
                   }
                 ]
@@ -1272,13 +1411,14 @@
                     "title": "素材互斥",
                     "items": [
                       "图片和视频不支持混传。",
-                      "已上传图片后如选择视频，需先删除图片。"
+                      "已上传图片后如选择视频，需先删除图片。",
+                      "已上传视频后如选择图片，需先删除视频。"
                     ]
                   },
                   {
                     "title": "技术评审项",
                     "items": [
-                      "视频格式、文件大小和时长上限由开发结合现有上传与播放能力确认，产品评审阶段不预先写死 20 秒。",
+                      "视频格式、文件大小和时长上限由开发结合现有上传与播放能力确认。",
                       "最终限制在 PC 后台和小程序商家端保持一致，并在上传前提示、提交时校验。"
                     ]
                   }
@@ -1312,18 +1452,18 @@
             "tab": "PC端推广详情弹窗",
             "title": "PC端推广详情弹窗",
             "type": "pc",
-            "location": "PC后台「推广管理」列表点击「推广详情」后打开。",
+            "location": "PC后台<span class=\"token token-page\">【推广管理】</span>列表点击<span class=\"token token-action\">「推广详情」</span>后打开。",
             "changes": [
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "页签内容 · 「推广内容」",
+                "title": "页签内容 · <span class=\"token token-action\">「推广内容」</span>",
                 "desc": "图片素材沿用现有缩略图展示方式；视频素材展示视频卡片，卡片内显示视频封面和播放标识。"
               },
               {
                 "type": "add",
                 "label": "新增",
-                "title": "播放弹窗 · 「视频播放器」",
+                "title": "播放弹窗 · <span class=\"token token-page\">【视频播放器】</span>",
                 "desc": "点击视频素材后在 PC 页面内打开播放器，不跳转新页面；关闭播放器后返回推广详情弹窗。"
               }
             ],
@@ -1350,34 +1490,35 @@
             "tab": "商家端发布推广页",
             "title": "商家端发布推广页",
             "type": "mobile",
-            "location": "商家在小程序商家端进入「发布推广」页时展示。",
+            "location": "商家在小程序商家端进入<span class=\"token token-page\">【发布推广】</span>页时展示。",
             "changes": [
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "上传区域 · 「内容」",
-                "desc": "支持图片或视频二选一上传，并按素材类型展示对应状态。",
+                "title": "上传区域 · <span class=\"token token-field\">[图片]</span>、<span class=\"token token-field\">[视频]</span>",
+                "desc": "将图片和视频拆为两个独立上传区域，素材仍为二选一。",
                 "groups": [
                   {
                     "title": "字段与空状态",
                     "items": [
-                      "字段名称由<span class=\"token\">「内容配图」</span>调整为<span class=\"token\">「内容」</span>。",
-                      "数量说明换行展示为<span class=\"token\">「图片最多5张，视频最多1个」</span>。",
-                      "未上传素材时，占位按钮文案为<span class=\"token\">「添加图片/视频」</span>。"
+                      "原<span class=\"token token-field\">[内容配图]</span>拆分为<span class=\"token token-field\">[图片]</span>和<span class=\"token token-field\">[视频]</span>两个独立上传区域。",
+                      "两个区域分别展示<span class=\"token token-field\">[最多 5 张]</span>和<span class=\"token token-field\">[最多 1 个]</span>的数量说明。",
+                      "未上传素材时，两个区域同时可用，占位按钮分别显示<span class=\"token token-action\">「添加图片」</span>和<span class=\"token token-action\">「添加视频」</span>。"
                     ]
                   },
                   {
                     "title": "已上传图片状态",
                     "items": [
-                      "继续展示追加图片按钮，按钮文案为<span class=\"token\">「添加图片」</span>。",
-                      "默认第一张图片为封面，仅第一张展示<span class=\"token\">「封面」</span>标识。"
+                      "继续展示追加图片按钮，按钮文案为<span class=\"token token-action\">「添加图片」</span>。",
+                      "默认第一张图片为封面，仅第一张展示<span class=\"token token-field\">[封面]</span>标识。",
+                      "视频上传区域进入禁用状态，提示需先删除已上传图片。"
                     ]
                   },
                   {
                     "title": "已上传视频状态",
                     "items": [
                       "展示视频封面和播放标识。",
-                      "上传视频后不再展示上传按钮。"
+                      "图片上传区域进入禁用状态，提示需先删除已上传视频。"
                     ]
                   }
                 ]
@@ -1398,7 +1539,8 @@
                   {
                     "title": "素材互斥",
                     "items": [
-                      "图片和视频不支持混传。"
+                      "图片和视频不支持混传。",
+                      "已上传一种素材后，需先删除当前素材才能改为另一种。"
                     ]
                   },
                   {
@@ -1437,7 +1579,7 @@
             "tab": "商家端推广管理列表",
             "title": "商家端推广管理列表",
             "type": "mobile",
-            "location": "商家在小程序商家端进入「推广管理」列表时展示。",
+            "location": "商家在小程序商家端进入<span class=\"token token-page\">【推广管理】</span>列表时展示。",
             "changes": [
               {
                 "type": "adjust",
@@ -1480,7 +1622,7 @@
             "tab": "居民端推广列表",
             "title": "居民端推广列表",
             "type": "mobile",
-            "location": "居民在「云邻市集」活动推广列表查看推广卡片。",
+            "location": "居民在<span class=\"token token-page\">【云邻市集】</span>活动推广列表查看推广卡片。",
             "changes": [
               {
                 "type": "adjust",
@@ -1499,6 +1641,21 @@
                     "title": "点击结果",
                     "items": [
                       "点击卡片进入推广详情页。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "推广卡片 · <span class=\"token token-field\">[剩余时间]</span>",
+                "desc": "居民端推广卡片仅展示<span class=\"token token-field\">[时:分:秒]</span>格式的剩余时长。",
+                "groups": [
+                  {
+                    "title": "展示格式",
+                    "items": [
+                      "按<span class=\"token token-field\">[时:分:秒]</span>展示剩余时长，示例为 1:40:00。",
+                      "去掉原绿色圆点和“还剩”前缀，不再组合“天”的文字描述。"
                     ]
                   }
                 ]
@@ -1586,18 +1743,18 @@
             "tab": "移动端公告暂存",
             "title": "移动端公告暂存",
             "type": "mobile",
-            "location": "小程序管理后台【公告管理】的「新增公告」「编辑公告」页面。",
+            "location": "小程序管理后台<span class=\"token token-page\">【公告管理】</span>的<span class=\"token token-page\">【新增公告】</span><span class=\"token token-page\">【编辑公告】</span>页面。",
             "changes": [
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "暂存校验 · 正文仅有图片",
-                "desc": "公告正文未输入文字、但已上传至少一张图片时，点击「存草稿」允许保存，不再提示「暂存失败」。",
+                "title": "暂存校验 · <span class=\"token token-field\">[正文仅有图片]</span>",
+                "desc": "公告正文未输入文字、但已上传至少一张图片时，点击<span class=\"token token-action\">「存草稿」</span>允许保存，不再提示“暂存失败”。",
                 "groups": [
                   {
                     "title": "当前问题",
                     "items": [
-                      "公告正文没有文字、仅上传图片时，点击<span class=\"token\">「存草稿」</span>提示<span class=\"token\">「暂存失败」</span>。"
+                      "公告正文没有文字、仅上传图片时，点击<span class=\"token token-action\">「存草稿」</span>提示“暂存失败”。"
                     ]
                   },
                   {
@@ -1620,13 +1777,13 @@
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "结果提示 · 「暂存成功」",
-                "desc": "草稿保存成功后显示「暂存成功」，公告进入草稿状态，可再次进入编辑。",
+                "title": "结果提示 · “暂存成功”",
+                "desc": "草稿保存成功后显示“暂存成功”，公告进入草稿状态，可再次进入编辑。",
                 "groups": [
                   {
                     "title": "点击结果",
                     "items": [
-                      "点击<span class=\"token\">「存草稿」</span>并保存成功后，提示<span class=\"token\">「暂存成功」</span>。",
+                      "点击<span class=\"token token-action\">「存草稿」</span>并保存成功后，提示“暂存成功”。",
                       "公告进入草稿状态，管理员可再次进入编辑并继续发布。"
                     ]
                   }
@@ -1657,7 +1814,7 @@
               {
                 "type": "add",
                 "label": "新增",
-                "title": "图片操作 · 「长按识别二维码」",
+                "title": "图片操作 · <span class=\"token token-action\">「长按识别二维码」</span>",
                 "desc": "公告正文图片包含二维码时，居民可长按图片调起微信二维码识别。",
                 "groups": [
                   {
@@ -1701,13 +1858,13 @@
             "tab": "PC端商家入驻情况页",
             "title": "PC端商家入驻情况页",
             "type": "pc",
-            "location": "PC后台「商家管理」主菜单下新增「商家入驻情况」子菜单，进入后展示商家入驻情况列表。",
+            "location": "PC后台<span class=\"token token-page\">【商家管理】</span>主菜单下新增<span class=\"token token-page\">【商家入驻情况】</span>子菜单，进入后展示商家入驻情况列表。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "页面 · 「商家入驻情况」",
-                "desc": "在「商家管理」主菜单下新增监控页，用于查看商家真实入驻情况。",
+                "title": "页面 · <span class=\"token token-page\">【商家入驻情况】</span>",
+                "desc": "在<span class=\"token token-page\">【商家管理】</span>主菜单下新增监控页，用于查看商家真实入驻情况。",
                 "groups": [
                   {
                     "title": "页面目标",
@@ -1727,18 +1884,18 @@
                   {
                     "title": "文本筛选",
                     "items": [
-                      "<span class=\"token\">「商家名称」</span>支持按商家名称模糊搜索。",
-                      "<span class=\"token\">「所属社区」</span>支持按社区名称搜索。",
-                      "<span class=\"token\">「商家管理员」</span>支持按管理员姓名搜索。",
-                      "<span class=\"token\">「管理员手机号」</span>支持按手机号搜索。",
-                      "<span class=\"token\">「所属销售」</span>支持按销售姓名搜索。"
+                      "<span class=\"token token-field\">[商家名称]</span>支持按商家名称模糊搜索。",
+                      "<span class=\"token token-field\">[所属社区]</span>支持按社区名称搜索。",
+                      "<span class=\"token token-field\">[商家管理员]</span>支持按管理员姓名搜索。",
+                      "<span class=\"token token-field\">[管理员手机号]</span>支持按手机号搜索。",
+                      "<span class=\"token token-field\">[所属销售]</span>支持按销售姓名搜索。"
                     ]
                   },
                   {
                     "title": "时间筛选",
                     "items": [
-                      "<span class=\"token\">「入驻时间」</span>使用日期范围选择器，按起止日期筛选。",
-                      "<span class=\"token\">「创建时间」</span>使用日期范围选择器，按起止日期筛选。"
+                      "<span class=\"token token-field\">[入驻时间]</span>使用日期范围选择器，按起止日期筛选。",
+                      "<span class=\"token token-field\">[创建时间]</span>使用日期范围选择器，按起止日期筛选。"
                     ]
                   }
                 ]
@@ -1752,23 +1909,23 @@
                   {
                     "title": "基础字段",
                     "items": [
-                      "<span class=\"token\">「序号」</span>按当前列表顺序展示 1、2、3。",
-                      "展示<span class=\"token\">「商家名称」</span><span class=\"token\">「所属社区」</span><span class=\"token\">「商家管理员」</span><span class=\"token\">「管理员手机号」</span>。",
-                      "<span class=\"token\">「所属销售」</span>允许为空。"
+                      "<span class=\"token token-field\">[序号]</span>按当前列表顺序展示 1、2、3。",
+                      "展示<span class=\"token token-field\">[商家名称]</span>、<span class=\"token token-field\">[所属社区]</span>、<span class=\"token token-field\">[商家管理员]</span>、<span class=\"token token-field\">[管理员手机号]</span>。",
+                      "<span class=\"token token-field\">[所属销售]</span>允许为空。"
                     ]
                   },
                   {
                     "title": "时间字段",
                     "items": [
-                      "<span class=\"token\">「入驻时间」</span>展示到年月日，无入驻时间时显示<span class=\"token\">「-」</span>。",
-                      "<span class=\"token\">「最后登录时间」</span>取商家管理员最后登录时间。",
-                      "<span class=\"token\">「创建时间」</span>取商家创建时间。"
+                      "<span class=\"token token-field\">[入驻时间]</span>展示到年月日，无入驻时间时显示<span class=\"token token-field\">[-]</span>。",
+                      "<span class=\"token token-field\">[最后登录时间]</span>取商家管理员最后登录时间。",
+                      "<span class=\"token token-field\">[创建时间]</span>取商家创建时间。"
                     ]
                   },
                   {
                     "title": "操作字段",
                     "items": [
-                      "<span class=\"token\">「操作」</span>列展示行内<span class=\"token\">「修改」</span>。"
+                      "<span class=\"token token-field\">[操作]</span>列展示行内<span class=\"token token-action\">「修改」</span>。"
                     ]
                   }
                 ]
@@ -1776,14 +1933,35 @@
               {
                 "type": "add",
                 "label": "新增",
-                "title": "操作按钮 · 「批量导出」",
+                "title": "操作按钮 · <span class=\"token token-action\">「批量导出」</span>",
                 "desc": "位于表格左上角，导出当前筛选条件下的商家入驻情况数据。"
               },
               {
                 "type": "add",
                 "label": "新增",
-                "title": "行内操作 · 「修改」",
-                "desc": "点击后打开「修改入驻信息」弹窗。"
+                "title": "操作按钮 · <span class=\"token token-action\">「执行同步任务」</span>",
+                "desc": "位于<span class=\"token token-action\">「批量导出」</span>旁边，由运营人员手动触发入驻时间同步。",
+                "groups": [
+                  {
+                    "title": "按钮位置",
+                    "items": [
+                      "位于列表左上角<span class=\"token token-action\">「批量导出」</span>按钮旁边。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击后立即执行一次入驻时间同步任务。",
+                      "执行完成后提示本次写入入驻时间的商家数量，并刷新当前列表。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "行内操作 · <span class=\"token token-action\">「修改」</span>",
+                "desc": "点击后打开<span class=\"token token-page\">【修改入驻信息】</span>弹窗。"
               }
             ],
             "blocks": [],
@@ -1805,13 +1983,13 @@
             "tab": "PC端修改入驻信息弹窗",
             "title": "PC端修改入驻信息弹窗",
             "type": "pc",
-            "location": "点击商家入驻情况列表行内「修改」后打开。",
+            "location": "点击<span class=\"token token-page\">【商家入驻情况】</span>列表行内<span class=\"token token-action\">「修改」</span>后打开。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "弹窗 · 「修改入驻信息」",
-                "desc": "支持编辑「入驻时间」和「所属销售」；入驻时间使用日期选择器；所属销售使用文本输入框；点击「保存」后更新当前商家信息。"
+                "title": "弹窗 · <span class=\"token token-page\">【修改入驻信息】</span>",
+                "desc": "支持编辑<span class=\"token token-field\">[入驻时间]</span>和<span class=\"token token-field\">[所属销售]</span>；入驻时间使用日期选择器；所属销售使用文本输入框；点击<span class=\"token token-action\">「保存」</span>后更新当前商家信息。"
               }
             ],
             "blocks": [],
@@ -1829,29 +2007,29 @@
             }
           },
           {
-            "id": "定时任务",
-            "tab": "定时任务",
-            "title": "定时任务",
+            "id": "手动任务",
+            "tab": "手动任务",
+            "title": "手动任务",
             "type": "task",
-            "location": "见当前页面或任务说明。",
+            "location": "在<span class=\"token token-page\">【商家入驻情况】</span>页点击<span class=\"token token-action\">「执行同步任务」</span>后触发。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "定时任务 · 入驻时间写入",
-                "desc": "每日检查尚未写入入驻时间的商家，满足真实登录条件后自动写入。",
+                "title": "手动任务 · 入驻时间写入",
+                "desc": "运营人员点击<span class=\"token token-action\">「执行同步任务」</span>后，检查尚未写入入驻时间的商家，满足真实登录条件后写入。",
                 "groups": [
                   {
-                    "title": "执行时间",
+                    "title": "触发方式",
                     "items": [
-                      "每日 0 点执行。"
+                      "运营人员在<span class=\"token token-page\">【商家入驻情况】</span>页点击<span class=\"token token-action\">「执行同步任务」</span>后执行。"
                     ]
                   },
                   {
                     "title": "处理对象",
                     "items": [
                       "仅处理入驻时间为空的商家。",
-                      "已有入驻时间的商家不再纳入本任务监控。"
+                      "已有入驻时间的商家不再纳入本次任务处理。"
                     ]
                   },
                   {
@@ -1882,7 +2060,7 @@
         "no": "六",
         "title": "功能六 · 海丝乡音首页与底部导航改造",
         "desc": "海丝乡音替代小程序原有首页。底部一级导航调整为「海丝乡音 / 市集 / 我的」三项，市集",
-        "summary": "海丝乡音替代小程序原有首页。底部一级导航调整为「海丝乡音 / 市集 / 我的」三项，市集沿用原有页面；同时保留海丝乡音自身的个人内容入口和管理员入口，并精简海丝乡音个人中心。",
+        "summary": "海丝乡音替代小程序原有首页。底部一级导航调整为<span class=\"token token-action\">「海丝乡音 / 市集 / 我的」</span>三项，市集沿用原有页面；海丝乡音的个人内容入口和管理员入口统一放到个人中心，并按普通用户、管理员展示对应卡片。",
         "pages": [
           {
             "id": "居民端海丝乡音首页",
@@ -1894,8 +2072,8 @@
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "首页 · 「海丝乡音」",
-                "desc": "海丝乡音替代原有首页，居民打开小程序后直接进入；页面标题统一为「海丝乡音」。",
+                "title": "首页 · <span class=\"token token-page\">【海丝乡音】</span>",
+                "desc": "海丝乡音替代原有首页，居民打开小程序后直接进入；页面标题统一为“海丝乡音”。",
                 "groups": [
                   {
                     "title": "首页替换",
@@ -1907,7 +2085,7 @@
                   {
                     "title": "页面标题",
                     "items": [
-                      "顶部标题统一显示<span class=\"token\">「海丝乡音」</span>。"
+                      "顶部标题统一显示“海丝乡音”。"
                     ]
                   }
                 ]
@@ -1915,15 +2093,15 @@
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "底部导航 · 「海丝乡音 / 市集 / 我的」",
-                "desc": "底部一级导航固定为三项，当前页默认选中「海丝乡音」。",
+                "title": "底部导航 · <span class=\"token token-action\">「海丝乡音 / 市集 / 我的」</span>",
+                "desc": "底部一级导航固定为三项，当前页默认选中<span class=\"token token-action\">「海丝乡音」</span>。",
                 "groups": [
                   {
                     "title": "导航组成",
                     "items": [
-                      "第一项为<span class=\"token\">「海丝乡音」</span>，进入海丝乡音首页。",
-                      "第二项为<span class=\"token\">「市集」</span>，沿用原有市集页面和功能；本期不调整市集页内部内容，当前没有店铺数据时不展示店铺内容。",
-                      "第三项为<span class=\"token\">「我的」</span>，进入精简后的海丝乡音个人中心。"
+                      "第一项为<span class=\"token token-action\">「海丝乡音」</span>，进入海丝乡音首页。",
+                      "第二项为<span class=\"token token-action\">「市集」</span>，沿用原有市集页面和功能；本期不调整市集页内部内容，当前没有店铺数据时不展示店铺内容。",
+                      "第三项为<span class=\"token token-action\">「我的」</span>，进入精简后的海丝乡音个人中心。"
                     ]
                   },
                   {
@@ -1931,45 +2109,6 @@
                     "items": [
                       "三个一级入口共用同一组底部导航。",
                       "点击后切换页面，并高亮当前所在项。"
-                    ]
-                  }
-                ]
-              },
-              {
-                "type": "adjust",
-                "label": "调整",
-                "title": "悬浮操作区 · 「点位管理 / 审核管理 / 我的乡音」",
-                "desc": "按用户身份展示竖向胶囊入口：普通用户仅显示「我的乡音」；管理员显示「点位管理」「审核管理」「我的乡音」三个入口。",
-                "groups": [
-                  {
-                    "title": "展示位置与样式",
-                    "items": [
-                      "仅在海丝乡音首页展示。",
-                      "固定在页面右下角、底部导航上方，使用蓝色竖向胶囊样式，不遮挡点位卡片的主要操作。",
-                      "管理员状态下三个入口在同一个竖向胶囊内从上到下排列，入口之间使用分隔线区分。"
-                    ]
-                  },
-                  {
-                    "title": "普通用户",
-                    "items": [
-                      "仅显示<span class=\"token\">「我的乡音」</span>。",
-                      "点击后进入海丝乡音原有的个人内容页，继续承接消息、我发布的和喜欢等乡音内容。"
-                    ]
-                  },
-                  {
-                    "title": "管理员",
-                    "items": [
-                      "显示<span class=\"token\">「点位管理」</span><span class=\"token\">「审核管理」</span><span class=\"token\">「我的乡音」</span>三个入口。",
-                      "点击<span class=\"token\">「点位管理」</span>进入原有移动端点位管理页。",
-                      "点击<span class=\"token\">「审核管理」</span>进入原有移动端审核管理页。",
-                      "点击<span class=\"token\">「我的乡音」</span>进入海丝乡音原有的个人内容页。"
-                    ]
-                  },
-                  {
-                    "title": "入口区分",
-                    "items": [
-                      "悬浮操作区承接海丝乡音业务内的个人内容和管理功能。",
-                      "底部<span class=\"token\">「我的」</span>进入海丝乡音小程序的个人中心。"
                     ]
                   }
                 ]
@@ -1983,12 +2122,8 @@
               "title": "居民端原型 · 海丝乡音首页",
               "states": [
                 {
-                  "label": "普通用户",
+                  "label": "居民端原型 · 海丝乡音首页",
                   "url": "prototype/nostalgia-mobile.html?state=point-list"
-                },
-                {
-                  "label": "管理员",
-                  "url": "prototype/nostalgia-mobile.html?state=point-list-admin"
                 }
               ]
             }
@@ -1998,13 +2133,13 @@
             "tab": "居民端个人中心",
             "title": "居民端个人中心",
             "type": "mobile",
-            "location": "点击底部导航第三项「我的」后展示。",
+            "location": "点击底部导航第三项<span class=\"token token-action\">「我的」</span>后展示。",
             "changes": [
               {
                 "type": "adjust",
                 "label": "调整",
                 "title": "页面结构 · 个人信息区",
-                "desc": "保留现有个人信息头部，包括头像、姓名、身份、所属社区和「个人信息」入口。"
+                "desc": "保留现有个人信息头部，包括头像、姓名、身份、所属社区和<span class=\"token token-action\">「个人信息」</span>入口。"
               },
               {
                 "type": "delete",
@@ -2013,24 +2148,85 @@
                 "desc": "移除个人中心积分卡片，不展示积分值、积分兑换和去赚积分。"
               },
               {
-                "type": "adjust",
-                "label": "调整",
-                "title": "功能入口 · 保留 6 项",
-                "desc": "功能区保留「消息中心」「在线客服」「消息订阅」「我的关注」「我的卡包」「领券中心」。",
+                "type": "add",
+                "label": "新增",
+                "title": "数据卡片 · 普通用户<span class=\"token token-page\">【我的乡音】</span>",
+                "desc": "在<span class=\"token token-page\">【我的服务】</span>上方展示<span class=\"token token-action\">「我发布的」</span><span class=\"token token-action\">「我喜欢的」</span>数量和<span class=\"token token-action\">「进入详情」</span>按钮。",
                 "groups": [
                   {
-                    "title": "展示内容",
+                    "title": "展示条件",
                     "items": [
-                      "第一行展示<span class=\"token\">「消息中心」</span><span class=\"token\">「在线客服」</span><span class=\"token\">「消息订阅」</span><span class=\"token\">「我的关注」</span>。",
-                      "第二行展示<span class=\"token\">「我的卡包」</span><span class=\"token\">「领券中心」</span>，<span class=\"token\">「领券中心」</span>继续保留<span class=\"token\">「领福利」</span>提醒。"
+                      "普通用户进入个人中心时，在<span class=\"token token-page\">【我的服务】</span>上方展示，卡片标题为<span class=\"token token-page\">【我的乡音】</span>。",
+                      "普通用户不展示<span class=\"token token-page\">【乡音管理】</span>卡片。"
+                    ]
+                  },
+                  {
+                    "title": "卡片内容",
+                    "items": [
+                      "展示<span class=\"token token-action\">「我发布的」</span>及对应数量，数量与<span class=\"token token-page\">【我的乡音】</span>页面中<span class=\"token token-action\">「我发布的」</span>Tab 的内容总数一致。",
+                      "展示<span class=\"token token-action\">「我喜欢的」</span>及对应数量，数量与<span class=\"token token-page\">【我的乡音】</span>页面中<span class=\"token token-action\">「喜欢」</span>Tab 的内容总数一致。",
+                      "展示<span class=\"token token-action\">「进入详情」</span>按钮。"
                     ]
                   },
                   {
                     "title": "点击结果",
                     "items": [
-                      "<span class=\"token\">「我的关注」</span>进入现有关注内容页。",
-                      "<span class=\"token\">「在线客服」</span>接通客服小工具后，点击直接打开在线客服。",
-                      "<span class=\"token\">「消息订阅」</span>进入订阅设置页，页面仅展示海丝乡音相关订阅项。",
+                      "点击<span class=\"token token-action\">「我发布的」</span>进入原有<span class=\"token token-page\">【我的乡音】</span>页面，并默认选中<span class=\"token token-action\">「我发布的」</span>Tab。",
+                      "点击<span class=\"token token-action\">「我喜欢的」</span>进入原有<span class=\"token token-page\">【我的乡音】</span>页面，并默认选中<span class=\"token token-action\">「喜欢」</span>Tab。",
+                      "点击<span class=\"token token-action\">「进入详情」</span>进入原有<span class=\"token token-page\">【我的乡音】</span>页面，默认选中<span class=\"token token-action\">「我发布的」</span>Tab。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "数据卡片 · 管理员<span class=\"token token-page\">【乡音管理】</span>",
+                "desc": "在<span class=\"token token-page\">【我的服务】</span>上方展示<span class=\"token token-action\">「我的乡音」</span><span class=\"token token-action\">「点位管理」</span><span class=\"token token-action\">「审核管理」</span>三个入口，不展示数量。",
+                "groups": [
+                  {
+                    "title": "展示条件",
+                    "items": [
+                      "管理员进入个人中心时，在<span class=\"token token-page\">【我的服务】</span>上方展示，卡片标题为<span class=\"token token-page\">【乡音管理】</span>。",
+                      "管理员不展示普通用户的<span class=\"token token-page\">【我的乡音】</span>数据卡片。"
+                    ]
+                  },
+                  {
+                    "title": "卡片内容",
+                    "items": [
+                      "展示<span class=\"token token-action\">「我的乡音」</span><span class=\"token token-action\">「点位管理」</span><span class=\"token token-action\">「审核管理」</span>三个等宽入口。",
+                      "三个入口只展示图标和名称，不展示内容数量或待办数量。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击<span class=\"token token-action\">「我的乡音」</span>进入原有<span class=\"token token-page\">【我的乡音】</span>页面，默认选中<span class=\"token token-action\">「我发布的」</span>Tab。",
+                      "点击<span class=\"token token-action\">「点位管理」</span>进入原有移动端点位管理页。",
+                      "点击<span class=\"token token-action\">「审核管理」</span>进入原有移动端审核管理页。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "功能入口 · 保留 6 项",
+                "desc": "功能区保留<span class=\"token token-action\">「消息中心」</span><span class=\"token token-action\">「在线客服」</span><span class=\"token token-action\">「消息订阅」</span><span class=\"token token-action\">「我的关注」</span><span class=\"token token-action\">「我的卡包」</span><span class=\"token token-action\">「领券中心」</span>。",
+                "groups": [
+                  {
+                    "title": "展示内容",
+                    "items": [
+                      "第一行展示<span class=\"token token-action\">「消息中心」</span><span class=\"token token-action\">「在线客服」</span><span class=\"token token-action\">「消息订阅」</span><span class=\"token token-action\">「我的关注」</span>。",
+                      "第二行展示<span class=\"token token-action\">「我的卡包」</span><span class=\"token token-action\">「领券中心」</span>，<span class=\"token token-action\">「领券中心」</span>继续保留<span class=\"token token-field\">[领福利]</span>提醒。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "<span class=\"token token-action\">「我的关注」</span>进入现有关注内容页。",
+                      "<span class=\"token token-action\">「在线客服」</span>接通客服小工具后，点击直接打开在线客服。",
+                      "<span class=\"token token-action\">「消息订阅」</span>进入订阅设置页，页面仅展示海丝乡音相关订阅项。",
                       "其余入口继续进入现有对应页面。"
                     ]
                   }
@@ -2039,20 +2235,20 @@
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "功能入口 · 「我的关注」",
-                "desc": "恢复保留原有「我的关注」入口，点击后进入现有关注内容页。"
+                "title": "功能入口 · <span class=\"token token-action\">「我的关注」</span>",
+                "desc": "恢复保留原有<span class=\"token token-action\">「我的关注」</span>入口，点击后进入现有关注内容页。"
               },
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "功能入口 · 「在线客服」",
+                "title": "功能入口 · <span class=\"token token-action\">「在线客服」</span>",
                 "desc": "入口需接通客服小工具；当前尚未接通，本期需完成接入后再向居民提供在线咨询。"
               },
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "功能入口 · 「消息订阅」",
-                "desc": "移除原「云芳邻」小程序使用的订阅项，仅保留海丝乡音相关订阅项。"
+                "title": "功能入口 · <span class=\"token token-action\">「消息订阅」</span>",
+                "desc": "移除原云芳邻小程序使用的订阅项，仅保留海丝乡音相关订阅项。"
               },
               {
                 "type": "delete",
@@ -2063,8 +2259,8 @@
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "底部导航 · 「海丝乡音 / 市集 / 我的」",
-                "desc": "个人中心共用三项底部导航，当前页高亮「我的」。"
+                "title": "底部导航 · <span class=\"token token-action\">「海丝乡音 / 市集 / 我的」</span>",
+                "desc": "个人中心共用三项底部导航，当前页高亮<span class=\"token token-action\">「我的」</span>。"
               }
             ],
             "blocks": [],
@@ -2075,8 +2271,12 @@
               "title": "居民端原型 · 个人中心",
               "states": [
                 {
-                  "label": "居民端原型 · 个人中心",
-                  "url": "prototype/nostalgia-mobile.html?state=profile"
+                  "label": "普通用户",
+                  "url": "prototype/nostalgia-mobile.html?state=profile-resident"
+                },
+                {
+                  "label": "管理员",
+                  "url": "prototype/nostalgia-mobile.html?state=profile-admin"
                 }
               ]
             }
@@ -2100,13 +2300,14 @@
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "筛选项 · 「街道」",
+                "title": "筛选项 · <span class=\"token token-field\">[街道]</span>",
                 "desc": "增加街道筛选，方便居民按区域查看点位。",
                 "groups": [
                   {
                     "title": "街道筛选",
                     "items": [
-                      "默认展示<span class=\"token\">「全部街道」</span>。",
+                      "默认展示<span class=\"token token-field\">[全部街道]</span>。",
+                      "街道选项取越秀区租户<span class=\"token token-page\">【层级管理】</span>中的街道数据。",
                       "选择街道后，仅展示归属该街道的点位。",
                       "切换街道后保留当前点位分类筛选条件。"
                     ]
@@ -2116,7 +2317,7 @@
               {
                 "type": "adjust",
                 "label": "调整",
-                "title": "点位卡片 · 点位标签",
+                "title": "点位卡片 · <span class=\"token token-field\">[点位标签]</span>",
                 "desc": "在点位卡片展示运营标签，突出点位特色。",
                 "groups": [
                   {
@@ -2124,7 +2325,8 @@
                     "items": [
                       "展示 PC 后台已配置的点位标签。",
                       "单个点位最多展示 3 个标签。",
-                      "标签示例包括<span class=\"token\">「4A景区」</span><span class=\"token\">「百年老店」</span><span class=\"token\">「最多广州人去的二手市场」</span>。"
+                      "单个标签不拆分显示；当前行剩余空间不足时，整枚标签换到下一行。",
+                      "标签示例包括<span class=\"token token-field\">[4A景区]</span>、<span class=\"token token-field\">[百年老店]</span>、<span class=\"token token-field\">[广州二手市场]</span>。"
                     ]
                   }
                 ]
@@ -2149,30 +2351,30 @@
             "tab": "PC端海丝乡愁点位管理",
             "title": "PC端海丝乡愁点位管理",
             "type": "pc",
-            "location": "PC 后台「海丝乡愁」主菜单下的「点位管理」页面。",
+            "location": "PC 后台<span class=\"token token-page\">【海丝乡愁】</span>主菜单下的<span class=\"token token-page\">【点位管理】</span>页面。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "筛选项 · 「所属街道」",
-                "desc": "在现有「点位名称」「分类」「状态」筛选项后增加所属街道筛选。"
+                "title": "筛选项 · <span class=\"token token-field\">[所属街道]</span>",
+                "desc": "在现有<span class=\"token token-field\">[点位名称]</span>、<span class=\"token token-field\">[分类]</span>、<span class=\"token token-field\">[状态]</span>筛选项后增加所属街道筛选。"
               },
               {
                 "type": "add",
                 "label": "新增",
-                "title": "筛选项 · 「点位标签」",
+                "title": "筛选项 · <span class=\"token token-field\">[点位标签]</span>",
                 "desc": "增加纯文本输入框，支持按点位标签文字模糊查询。"
               },
               {
                 "type": "add",
                 "label": "新增",
-                "title": "列表字段 · 「所属街道」",
+                "title": "列表字段 · <span class=\"token token-field\">[所属街道]</span>",
                 "desc": "展示点位归属街道。"
               },
               {
                 "type": "add",
                 "label": "新增",
-                "title": "列表字段 · 「点位标签」",
+                "title": "列表字段 · <span class=\"token token-field\">[点位标签]</span>",
                 "desc": "展示当前点位已配置的特色标签。"
               }
             ],
@@ -2195,20 +2397,20 @@
             "tab": "PC端海丝乡愁点位编辑弹窗",
             "title": "PC端海丝乡愁点位编辑弹窗",
             "type": "pc",
-            "location": "点击点位列表行内「修改」后打开。",
+            "location": "点击点位列表行内<span class=\"token token-action\">「修改」</span>后打开。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "表单字段 · 「所属街道」",
+                "title": "表单字段 · <span class=\"token token-field\">[所属街道]</span>",
                 "desc": "在点位基础信息中选择点位归属街道，保存后用于后台筛选和居民端点位筛选。",
                 "groups": [
                   {
                     "title": "字段与选项",
                     "items": [
-                      "在<span class=\"token\">「基础信息」</span>区域新增必填字段<span class=\"token\">「所属街道」</span>，使用单选下拉框。",
-                      "下拉选项取当前区已配置且正常使用的街道，沿用街道基础数据的现有排序。",
-                      "新建点位时默认显示<span class=\"token\">「请选择所属街道」</span>；编辑点位时回显已保存的所属街道。"
+                      "在<span class=\"token token-page\">【基础信息】</span>区域新增必填字段<span class=\"token token-field\">[所属街道]</span>，使用单选下拉框。",
+                      "下拉选项取越秀区租户<span class=\"token token-page\">【层级管理】</span>中正常使用的街道数据，并按层级管理中的现有顺序展示。",
+                      "新建点位时默认显示“请选择所属街道”；编辑点位时回显已保存的所属街道。"
                     ]
                   },
                   {
@@ -2221,14 +2423,14 @@
                   {
                     "title": "提交校验",
                     "items": [
-                      "未选择所属街道时，停止提交并在字段下方提示<span class=\"token\">「请选择所属街道」</span>。",
+                      "未选择所属街道时，停止提交并在字段下方提示“请选择所属街道”。",
                       "选择结果只作用于当前编辑的点位。"
                     ]
                   },
                   {
                     "title": "保存结果",
                     "items": [
-                      "保存点位与街道的归属关系，并更新点位列表中的<span class=\"token\">「所属街道」</span>。",
+                      "保存点位与街道的归属关系，并更新点位列表中的<span class=\"token token-field\">[所属街道]</span>。",
                       "居民端按街道筛选点位时，该点位归入新选择的街道。",
                       "修改已有归属街道后，点位从原街道筛选结果中移除，并进入新街道筛选结果。"
                     ]
@@ -2238,13 +2440,13 @@
               {
                 "type": "add",
                 "label": "新增",
-                "title": "表单字段 · 「点位标签」",
+                "title": "表单字段 · <span class=\"token token-field\">[点位标签]</span>",
                 "desc": "在点位基础信息中录入点位特色标签，保存后用于后台列表和居民端点位卡片展示。",
                 "groups": [
                   {
                     "title": "录入与回显",
                     "items": [
-                      "<span class=\"token\">「点位标签」</span>为选填项，使用标签输入框。",
+                      "<span class=\"token token-field\">[点位标签]</span>为选填项，使用标签输入框。",
                       "输入标签文字后按回车完成添加；已添加标签在输入框内按添加顺序展示。",
                       "编辑点位时回显已保存的全部标签和原有顺序。",
                       "点击已添加标签的删除图标后移除该标签。"
@@ -2254,16 +2456,16 @@
                     "title": "输入限制",
                     "items": [
                       "单个点位最多配置 3 个标签。",
-                      "单个标签最多输入 15 个字符，保存时去除文字首尾空格。",
+                      "单个标签最多输入 8 个字，保存时去除文字首尾空格。",
                       "空内容不生成标签，相同文字的标签不可重复添加。"
                     ]
                   },
                   {
                     "title": "异常提示",
                     "items": [
-                      "已有 3 个标签时继续添加，提示<span class=\"token\">「每个点位最多设置 3 个标签」</span>。",
-                      "标签超过 15 个字符时，提示<span class=\"token\">「单个标签最多 15 个字符」</span>。",
-                      "重复添加相同标签时，提示<span class=\"token\">「该标签已添加」</span>。"
+                      "已有 3 个标签时继续添加，提示“每个点位最多设置 3 个标签”。",
+                      "标签超过 8 个字时，提示“单个标签最多 8 个字”。",
+                      "重复添加相同标签时，提示“该标签已添加”。"
                     ]
                   },
                   {
@@ -2271,7 +2473,7 @@
                     "items": [
                       "保存标签文字及排序，未配置标签时允许提交。",
                       "PC 列表与居民端点位卡片按保存顺序展示，最多展示 3 个标签。",
-                      "未配置标签时，PC 列表显示<span class=\"token\">「-」</span>，居民端不展示标签区域。"
+                      "未配置标签时，PC 列表显示<span class=\"token token-field\">[-]</span>，居民端不展示标签区域。"
                     ]
                   }
                 ]
@@ -2298,33 +2500,33 @@
         "no": "八",
         "title": "功能八 · 待发布问卷预览",
         "desc": "社区问卷通常由工作人员创建，再由负责人做发布前检查。当前问卷未发布时负责人无法查看，发布",
-        "summary": "社区问卷通常由工作人员创建，再由负责人做发布前检查。当前问卷未发布时负责人无法查看，发布后发现重要内容有误又难以及时修正。本期在「待发布」阶段增加二维码预览，负责人扫码即可按居民实际作答顺序检查问卷；整个预览过程不产生答卷数据。",
+        "summary": "社区问卷通常由工作人员创建，再由负责人做发布前检查。当前问卷未发布时负责人无法查看，发布后发现重要内容有误又难以及时修正。本期在<span class=\"token token-field\">[待发布]</span>阶段增加二维码预览，负责人扫码即可按居民实际作答顺序检查问卷；整个预览过程不产生答卷数据。",
         "pages": [
           {
             "id": "pc端调查问卷列表",
             "tab": "PC端调查问卷列表",
             "title": "PC端调查问卷列表",
             "type": "pc",
-            "location": "PC后台【社区共建】下的【调查问卷】列表。",
+            "location": "PC后台<span class=\"token token-page\">【社区共建】</span>下的<span class=\"token token-page\">【调查问卷】</span>列表。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "行内操作 · 「预览」",
-                "desc": "仅「待发布」问卷显示，点击后打开该问卷的预览二维码弹窗。",
+                "title": "行内操作 · <span class=\"token token-action\">「预览」</span>",
+                "desc": "仅<span class=\"token token-field\">[待发布]</span>问卷显示，点击后打开该问卷的预览二维码弹窗。",
                 "groups": [
                   {
                     "title": "展示条件",
                     "items": [
-                      "问卷保存后处于<span class=\"token\">「待发布」</span>状态时，在操作列显示<span class=\"token\">「预览」</span>。",
-                      "<span class=\"token\">「已发布」</span><span class=\"token\">「已下架」</span>问卷不显示本入口，原有操作保持不变。"
+                      "问卷保存后处于<span class=\"token token-field\">[待发布]</span>状态时，在操作列显示<span class=\"token token-action\">「预览」</span>。",
+                      "<span class=\"token token-field\">[已发布]</span>、<span class=\"token token-field\">[已下架]</span>问卷不显示本入口，原有操作保持不变。"
                     ]
                   },
                   {
                     "title": "操作顺序",
                     "items": [
-                      "待发布问卷的操作依次为<span class=\"token\">「详情」</span><span class=\"token\">「预览」</span><span class=\"token\">「编辑」</span><span class=\"token\">「删除」</span>。",
-                      "点击<span class=\"token\">「编辑」</span>继续修改问卷；保存后仍处于待发布状态，可再次预览。"
+                      "待发布问卷的操作依次为<span class=\"token token-action\">「详情」</span><span class=\"token token-action\">「预览」</span><span class=\"token token-action\">「编辑」</span><span class=\"token token-action\">「删除」</span>。",
+                      "点击<span class=\"token token-action\">「编辑」</span>继续修改问卷；保存后仍处于待发布状态，可再次预览。"
                     ]
                   },
                   {
@@ -2356,12 +2558,12 @@
             "tab": "PC端问卷预览二维码弹窗",
             "title": "PC端问卷预览二维码弹窗",
             "type": "pc",
-            "location": "点击待发布问卷操作列中的「预览」后，在当前列表页中央打开。",
+            "location": "点击待发布问卷操作列中的<span class=\"token token-action\">「预览」</span>后，在当前列表页中央打开。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "弹窗 · 「问卷预览」",
+                "title": "弹窗 · <span class=\"token token-page\">【问卷预览】</span>",
                 "desc": "展示问卷标题、待发布状态、预览二维码和扫码说明，供负责人扫码检查。",
                 "groups": [
                   {
@@ -2374,7 +2576,7 @@
                   {
                     "title": "扫码结果",
                     "items": [
-                      "使用微信扫码后直接进入小程序<span class=\"token\">「问卷详情」</span>预览页，不经过调查问卷列表。",
+                      "使用微信扫码后直接进入小程序<span class=\"token token-page\">【问卷详情】</span>预览页，不经过调查问卷列表。",
                       "预览不受问卷计划开放时间限制，待发布期间均可查看。"
                     ]
                   },
@@ -2389,13 +2591,13 @@
                     "title": "状态限制",
                     "items": [
                       "仅待发布问卷可以打开预览内容。",
-                      "问卷发布、下架或删除后，原预览二维码停止进入问卷内容，并提示<span class=\"token\">「该问卷已结束预览」</span>。"
+                      "问卷发布、下架或删除后，原预览二维码停止进入问卷内容，并提示“该问卷已结束预览”。"
                     ]
                   },
                   {
                     "title": "数据限制",
                     "items": [
-                      "扫码、进入详情和填写题目均不增加<span class=\"token\">「已填写」</span>人数。",
+                      "扫码、进入详情和填写题目均不增加<span class=\"token token-field\">[已填写]</span>人数。",
                       "预览期间不生成答卷记录。"
                     ]
                   }
@@ -2426,14 +2628,14 @@
               {
                 "type": "add",
                 "label": "新增",
-                "title": "页面状态 · 「预览模式」",
-                "desc": "沿用现有问卷详情内容，增加预览提示，并将底部操作改为「开始作答」。",
+                "title": "页面状态 · <span class=\"token token-field\">[预览模式]</span>",
+                "desc": "沿用现有问卷详情内容，增加预览提示，并将底部操作改为<span class=\"token token-action\">「开始作答」</span>。",
                 "groups": [
                   {
                     "title": "进入方式",
                     "items": [
                       "扫码直接打开当前问卷详情，不展示调查问卷列表。",
-                      "页面顶部显示<span class=\"token\">「预览模式」</span>提示，说明当前问卷尚未发布、仅供内部检查。"
+                      "页面顶部显示<span class=\"token token-field\">[预览模式]</span>提示，说明当前问卷尚未发布、仅供内部检查。"
                     ]
                   },
                   {
@@ -2446,8 +2648,8 @@
                   {
                     "title": "底部操作",
                     "items": [
-                      "底部仅显示<span class=\"token\">「开始作答」</span>，点击后进入问卷预览填写页。",
-                      "待发布问卷不提供<span class=\"token\">「分享」</span>入口，避免预览二维码之外的扩散。"
+                      "底部仅显示<span class=\"token token-action\">「开始作答」</span>，点击后进入问卷预览填写页。",
+                      "待发布问卷不提供<span class=\"token token-action\">「分享」</span>入口，避免预览二维码之外的扩散。"
                     ]
                   }
                 ]
@@ -2472,13 +2674,13 @@
             "tab": "小程序端问卷预览填写",
             "title": "小程序端问卷预览填写",
             "type": "mobile",
-            "location": "在问卷预览详情页点击「开始作答」后进入。",
+            "location": "在问卷预览详情页点击<span class=\"token token-action\">「开始作答」</span>后进入。",
             "changes": [
               {
                 "type": "add",
                 "label": "新增",
-                "title": "页面状态 · 预览填写",
-                "desc": "按正式问卷样式展示全部题目和选项，允许检查填写效果；页面不显示「提交问卷」按钮。",
+                "title": "页面状态 · <span class=\"token token-field\">[预览填写]</span>",
+                "desc": "按正式问卷样式展示全部题目和选项，允许检查填写效果；页面不显示<span class=\"token token-action\">「提交问卷」</span>按钮。",
                 "groups": [
                   {
                     "title": "题目展示",
@@ -2490,8 +2692,8 @@
                   {
                     "title": "提交限制",
                     "items": [
-                      "页面底部不显示<span class=\"token\">「提交问卷」</span>按钮。",
-                      "底部固定提示<span class=\"token\">「预览模式，填写内容不会保存」</span>。"
+                      "页面底部不显示<span class=\"token token-action\">「提交问卷」</span>按钮。",
+                      "底部固定提示“预览模式，填写内容不会保存”。"
                     ]
                   },
                   {
@@ -2545,6 +2747,10 @@
     const protoStage = document.getElementById("protoStage");
     const stateBar = document.getElementById("stateBar");
     const openProto = document.getElementById("openProto");
+    const protoFullscreen = document.getElementById("protoFullscreen");
+    const protoFullscreenTitle = document.getElementById("protoFullscreenTitle");
+    const protoFullscreenStage = document.getElementById("protoFullscreenStage");
+    const closeProtoFullscreen = document.getElementById("closeProtoFullscreen");
     const protoHead = document.querySelector(".proto-head");
     const layout = document.querySelector(".layout");
     const content = document.querySelector(".content");
@@ -2597,6 +2803,71 @@
     function abs(url) {
       return new URL(url, window.location.href).href;
     }
+
+    function fitFullscreenFrame() {
+      const frame = protoFullscreenStage.querySelector(".proto-fullscreen-frame");
+      if (!frame) return;
+      const baseW = Number(frame.dataset.baseW) || 375;
+      const baseH = Number(frame.dataset.baseH) || 812;
+      const rect = protoFullscreenStage.getBoundingClientRect();
+      const padding = 28;
+      const scale = Math.min((rect.width - padding * 2) / baseW, (rect.height - padding * 2) / baseH);
+      const safeScale = Math.max(scale, .2);
+      const displayW = baseW * safeScale;
+      const displayH = baseH * safeScale;
+      frame.style.left = Math.max((rect.width - displayW) / 2, 0) + "px";
+      frame.style.top = Math.max((rect.height - displayH) / 2, 0) + "px";
+      frame.style.transform = `scale(${safeScale.toFixed(4)})`;
+    }
+
+    function openPrototypeFullscreen() {
+      const page = currentPage();
+      const proto = page && page.prototype;
+      if (!proto || !proto.states || !proto.states.length) return;
+      const state = proto.states[activeStateIndex] || proto.states[0];
+      const kind = proto.kind === "mobile" ? "mobile" : "pc";
+      const baseW = Number(proto.width) || (kind === "mobile" ? 375 : 1920);
+      const baseH = Number(proto.height) || (kind === "mobile" ? 812 : 1080);
+
+      protoFullscreenTitle.textContent = proto.states.length > 1 ? `${proto.title} · ${state.label}` : proto.title;
+      protoFullscreenStage.innerHTML = "";
+
+      const frame = document.createElement("div");
+      frame.className = `proto-fullscreen-frame ${kind}`;
+      frame.dataset.baseW = String(baseW);
+      frame.dataset.baseH = String(baseH);
+      frame.style.width = baseW + "px";
+      frame.style.height = baseH + "px";
+
+      const iframe = document.createElement("iframe");
+      iframe.src = abs(state.url);
+      iframe.title = protoFullscreenTitle.textContent;
+      iframe.onload = () => {
+        hideIframeScrollbar(iframe);
+        setTimeout(() => runAction(iframe, state.action), 180);
+      };
+      frame.appendChild(iframe);
+      protoFullscreenStage.appendChild(frame);
+
+      protoFullscreen.classList.add("show");
+      protoFullscreen.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(fitFullscreenFrame);
+    }
+
+    function closePrototypeFullscreen() {
+      protoFullscreen.classList.remove("show");
+      protoFullscreen.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      protoFullscreenStage.innerHTML = "";
+      openProto.focus();
+    }
+
+    openProto.addEventListener("click", openPrototypeFullscreen);
+    closeProtoFullscreen.addEventListener("click", closePrototypeFullscreen);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && protoFullscreen.classList.contains("show")) closePrototypeFullscreen();
+    });
 
     function renderSectionNav() {
       sectionNav.innerHTML = SECTION_DATA.map(section => `
@@ -2674,7 +2945,7 @@
       const section = currentSection();
       if (section) {
         featureTitle.textContent = section.title;
-        featureSummary.textContent = section.summary;
+        featureSummary.innerHTML = section.summary;
         docKicker.textContent = "基础内容";
         pageTitle.textContent = section.title;
         docScroll.innerHTML = section.blocks.map(block => `
@@ -2690,12 +2961,12 @@
       const feature = currentFeature();
       const page = currentPage();
       featureTitle.textContent = feature.title;
-      featureSummary.textContent = feature.summary;
+      featureSummary.innerHTML = feature.summary;
       const kickerMap = {
         pc: "PC端页面需求",
         mobile: "移动端页面需求",
         message: "订阅消息需求",
-        task: "定时任务需求",
+        task: "任务需求",
         table: "底表设计需求"
       };
       docKicker.textContent = kickerMap[page.type] || "需求说明";
@@ -2830,7 +3101,7 @@
         workspace.className = "workspace doc-only";
         stateBar.innerHTML = "";
         protoHead.classList.remove("has-states");
-        openProto.removeAttribute("href");
+        openProto.disabled = true;
         protoStage.innerHTML = "";
         return;
       }
@@ -2841,7 +3112,7 @@
         workspace.className = "workspace doc-only";
         stateBar.innerHTML = "";
         protoHead.classList.remove("has-states");
-        openProto.removeAttribute("href");
+        openProto.disabled = true;
         protoStage.innerHTML = "";
         return;
       }
@@ -2852,7 +3123,7 @@
       workspace.className = `workspace ${kind === "mobile" ? "mobile" : "pc"}`;
       protoKicker.textContent = kind === "mobile" ? "移动端原型" : "PC端原型";
       protoTitle.textContent = states.length > 1 ? `${proto.title} · ${state.label}` : proto.title;
-      openProto.href = abs(state.url);
+      openProto.disabled = false;
       renderStateBar(page);
 
       clearTimeout(loadTimer);
@@ -2896,6 +3167,7 @@
 
     window.addEventListener("resize", () => {
       refitPrototype();
+      fitFullscreenFrame();
     });
 
     syncSidebarToggle();

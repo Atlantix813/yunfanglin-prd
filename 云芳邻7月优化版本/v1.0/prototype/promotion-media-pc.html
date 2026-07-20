@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PC端发布推广 · 支持图片/视频</title>
   <link rel="stylesheet" href="组件库样式.css">
+  <link rel="stylesheet" href="pc-icons.css">
   <style>
     html, body { width:1920px; height:1080px; overflow:hidden; background:#F0F2F5; color:#606266; }
     .app { width:1920px; height:1080px; position:relative; background:#F0F2F5; }
@@ -52,7 +53,13 @@
     .dialog .textarea-real { width:100%; height:104px; border:1px solid #DCDFE6; border-radius:4px; padding:12px 14px; color:#C0C4CC; font-size:14px; position:relative; background:#fff; }
     .dialog .textarea-real span:first-child { display:block; color:#C0C4CC; line-height:22px; }
     .dialog .textarea-real span:last-child { position:absolute; right:14px; bottom:10px; color:#C0C4CC; }
-    .media-grid { display:flex; gap:14px; align-items:flex-start; }
+    .media-fields { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    .media-field { min-height:146px; padding:12px; border:1px solid #E4E7ED; border-radius:4px; background:#fff; }
+    .media-field.disabled { background:#F7F8FA; }
+    .media-field-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; color:#303133; font-size:14px; font-weight:600; }
+    .media-field-limit { color:#909399; font-size:12px; font-weight:400; }
+    .media-grid { display:flex; gap:14px; align-items:flex-start; min-height:104px; }
+    .media-disabled-note { width:100%; height:104px; border:1px dashed #D8DDE6; border-radius:4px; background:#F2F3F5; color:#A8ABB2; display:flex; align-items:center; justify-content:center; font-size:13px; }
     .media-tile { width:104px; height:104px; border:1px solid #DCDFE6; border-radius:4px; background:#fff; display:flex; align-items:center; justify-content:center; position:relative; overflow:hidden; color:#909399; }
     .media-tile.add { border-style:dashed; background:#FAFBFD; flex-direction:column; gap:8px; font-size:14px; }
     .media-tile.image { background:#EEF9F6; }
@@ -102,7 +109,7 @@
       <div class="header-right">
         <div class="header-right-item">使用指南</div>
         <div class="header-right-item">
-          <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9z"></path><path d="M10 21h4"></path></svg>
+          <span class="header-icon yfl-icon yfl-icon--16" data-icon="message" aria-hidden="true"></span>
           <span>消息</span>
         </div>
         <div class="header-right-item"><span class="avatar">管</span><span>平台管理员</span></div>
@@ -112,11 +119,11 @@
       <aside class="sidebar promotion-sidebar">
         <div class="sidebar-heading">菜单</div>
         <div class="sidebar-item">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11l8-7 8 7"></path><path d="M6 10v10h12V10"></path></svg>
+          <span class="yfl-icon yfl-icon--18" data-icon="home" aria-hidden="true"></span>
           <span class="label">工作台</span>
         </div>
         <div class="sidebar-item expanded">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 10h16l-1 10H5L4 10z"></path><path d="M7 10V7a5 5 0 0110 0v3"></path></svg>
+          <span class="yfl-icon yfl-icon--18" data-icon="store" aria-hidden="true"></span>
           <span class="label">商家管理</span><span class="arrow">›</span>
         </div>
         <div class="sidebar-sub">
@@ -163,9 +170,18 @@
           <div class="form-row"><div class="form-label"><span class="required">*</span>推广标题</div><div class="input-real"><span>请输入推广标题</span><span>0/30</span></div></div>
           <div class="form-row"><div class="form-label"><span class="required">*</span>推广内容</div><div class="textarea-real"><span>请输入推广内容</span><span>0/300</span></div></div>
           <div class="form-row">
-            <div class="form-label"><span class="required">*</span>内容（图片最多5张，视频最多1个）</div>
-            <div class="media-grid" id="mediaGrid"></div>
-            <div class="tip">1. 拖动图片可调整排序，默认排序第一张图片为封面。<br>2. 图片比例4:3最佳，图片过长可能会影响首页宣传效果。</div>
+            <div class="form-label"><span class="required">*</span>内容素材（图片与视频二选一）</div>
+            <div class="media-fields">
+              <section class="media-field" id="imageField">
+                <div class="media-field-head"><span>图片</span><span class="media-field-limit">最多 5 张</span></div>
+                <div class="media-grid" id="imageGrid"></div>
+              </section>
+              <section class="media-field" id="videoField">
+                <div class="media-field-head"><span>视频</span><span class="media-field-limit">最多 1 个</span></div>
+                <div class="media-grid" id="videoGrid"></div>
+              </section>
+            </div>
+            <div class="tip">1. 图片与视频不可同时上传，切换类型前需先删除当前素材。<br>2. 拖动图片可调整排序，默认排序第一张图片为封面；图片比例 4:3 最佳。</div>
           </div>
           <div class="form-row"><div class="form-label"><span class="required">*</span>结束时间</div><div class="input-real"><span>请选择结束时间</span></div><div class="tip">自定义结束时间最多支持设置30天。若推广进行中途商店打烊，则会影响推广效果。</div></div>
           <div class="form-row"><div class="form-label">关联优惠券（仅支持关联一张）</div><div class="input-real"><span>请选择关联优惠券</span><span>⌄</span></div></div>
@@ -199,8 +215,8 @@
         <div class="player-body">
           <div class="video-stage">
             <div class="video-name">暑期学车福利来袭.mp4</div>
-            <div class="big-play"><svg width="34" height="34" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
-            <div class="video-controls"><span>00:12</span><div class="progress"><i></i></div><span>00:36</span><span>高清</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H3v5"></path><path d="M16 3h5v5"></path><path d="M8 21H3v-5"></path><path d="M16 21h5v-5"></path></svg></div>
+            <div class="big-play"><span class="yfl-icon yfl-icon--24" data-icon="play" aria-hidden="true"></span></div>
+            <div class="video-controls"><span>00:12</span><div class="progress"><i></i></div><span>00:36</span><span>高清</span><span class="yfl-icon yfl-icon--16" data-icon="maximize" aria-hidden="true"></span></div>
           </div>
         </div>
       </div>
@@ -212,19 +228,19 @@
     var states = ['empty', 'image', 'video', 'detail-image', 'detail-video', 'player'];
     var state = states.indexOf(initialState) > -1 ? initialState : 'empty';
     function addTile(text) {
-      return '<div class="media-tile add"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg><span>' + text + '</span></div>';
+      return '<div class="media-tile add"><span class="yfl-icon yfl-icon--24" data-icon="add" aria-hidden="true"></span><span>' + text + '</span></div>';
     }
     function imageTile(first) {
-      return '<div class="media-tile image ' + (first ? 'first' : '') + '"><span class="remove">×</span><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#409EFF" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M8 13l2.5-2.5L15 15l1.5-1.5L20 17"/><circle cx="8" cy="9" r="1.2"/></svg></div>';
+      return '<div class="media-tile image ' + (first ? 'first' : '') + '"><span class="remove">×</span><span class="yfl-icon yfl-icon--24" data-icon="image" aria-hidden="true"></span></div>';
     }
     function videoTile() {
-      return '<div class="media-tile video"><span class="remove">×</span><div class="play"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div></div>';
+      return '<div class="media-tile video"><span class="remove">×</span><div class="play"><span class="yfl-icon yfl-icon--20" data-icon="play" aria-hidden="true"></span></div></div>';
     }
     function detailImageTiles() {
       return '<div class="detail-thumb poster-a"><span class="poster-text">招生<br>福利</span></div><div class="detail-thumb poster-b"><span class="poster-text">新客<br>礼包</span></div><div class="detail-thumb poster-c"><span class="poster-text">轻松<br>拿证</span></div>';
     }
     function detailVideoTile() {
-      return "<div class=\"detail-thumb detail-video\" onclick=\"switchState('player')\"><span class=\"video-tag\">视频</span><div class=\"play\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><path d=\"M8 5v14l11-7z\"/></svg></div></div>";
+      return "<div class=\"detail-thumb detail-video\" onclick=\"switchState('player')\"><span class=\"video-tag\">视频</span><div class=\"play\"><span class=\"yfl-icon yfl-icon--20\" data-icon=\"play\" aria-hidden=\"true\"></span></div></div>";
     }
     function render() {
       var app = document.querySelector('.app');
@@ -233,10 +249,24 @@
       else if (state.indexOf('detail-') === 0) app.classList.add('mode-detail');
       else app.classList.add('mode-publish');
 
-      var grid = document.getElementById('mediaGrid');
-      if (state === 'empty') grid.innerHTML = addTile('添加图片/视频');
-      if (state === 'image') grid.innerHTML = imageTile(true) + imageTile(false) + addTile('添加图片');
-      if (state === 'video') grid.innerHTML = videoTile();
+      var imageField = document.getElementById('imageField');
+      var videoField = document.getElementById('videoField');
+      var imageGrid = document.getElementById('imageGrid');
+      var videoGrid = document.getElementById('videoGrid');
+      imageField.classList.toggle('disabled', state === 'video');
+      videoField.classList.toggle('disabled', state === 'image');
+      if (state === 'empty') {
+        imageGrid.innerHTML = addTile('添加图片');
+        videoGrid.innerHTML = addTile('添加视频');
+      }
+      if (state === 'image') {
+        imageGrid.innerHTML = imageTile(true) + imageTile(false) + addTile('添加图片');
+        videoGrid.innerHTML = '<div class="media-disabled-note">已上传图片，请先删除图片</div>';
+      }
+      if (state === 'video') {
+        imageGrid.innerHTML = '<div class="media-disabled-note">已上传视频，请先删除视频</div>';
+        videoGrid.innerHTML = videoTile();
+      }
       if (state === 'detail-image') document.getElementById('detailMedia').innerHTML = detailImageTiles();
       if (state === 'detail-video') document.getElementById('detailMedia').innerHTML = detailVideoTile();
     }

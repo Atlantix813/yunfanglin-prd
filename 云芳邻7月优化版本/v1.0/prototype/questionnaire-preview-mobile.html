@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=375, initial-scale=1.0">
   <title>问卷预览</title>
   <link rel="stylesheet" href="mobile-components.css">
+  <link rel="stylesheet" href="mobile-icons.css">
   <style>
     html, body { width:375px; height:812px; margin:0; overflow:hidden; }
     button, input, textarea { font:inherit; }
@@ -14,13 +15,13 @@
     .questionnaire-scroll { width:375px; height:668px; padding:12px 12px 24px; overflow-y:auto; background:linear-gradient(180deg,#DDEBFF 0,#EDF5FF 270px,#F5F7FB 100%); scrollbar-width:none; }
     .questionnaire-scroll::-webkit-scrollbar { display:none; }
     .questionnaire-preview-tip { min-height:54px; padding:10px 12px; display:flex; align-items:flex-start; gap:10px; border:1px solid #B8D4FA; border-radius:10px; background:#F3F8FF; color:#3C5575; }
-    .questionnaire-preview-tip svg { width:20px; height:20px; margin-top:1px; flex:0 0 20px; fill:none; stroke:#2F80ED; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .questionnaire-preview-tip > .yfl-icon { margin-top:1px; flex:0 0 20px; color:#2F80ED; }
     .questionnaire-preview-tip strong { display:block; color:#2479E8; font-size:13px; }
-    .questionnaire-preview-tip span { display:block; margin-top:3px; font-size:11px; line-height:16px; }
+    .questionnaire-preview-tip div span { display:block; margin-top:3px; font-size:11px; line-height:16px; }
     .questionnaire-detail-card { margin-top:12px; padding:18px 16px; border-radius:12px; background:#fff; box-shadow:0 4px 14px rgba(50,86,132,.06); }
     .questionnaire-title-row { display:grid; grid-template-columns:36px minmax(0,1fr); gap:10px; align-items:start; }
     .questionnaire-title-icon { width:32px; height:32px; border-radius:50%; display:grid; place-items:center; background:#46D8A5; color:#fff; }
-    .questionnaire-title-icon svg { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+    .questionnaire-title-icon .yfl-icon { color:currentColor; }
     .questionnaire-title { padding-top:2px; color:#171A20; font-size:18px; line-height:26px; font-weight:700; }
     .questionnaire-community { margin-top:16px; color:#9097A2; font-size:14px; }
     .questionnaire-divider { height:1px; margin:12px 0 16px; background:#EDF0F4; }
@@ -51,7 +52,7 @@
     .questionnaire-option input:checked + .questionnaire-radio { border-color:#2F80ED; }
     .questionnaire-option input:checked + .questionnaire-radio::after { content:''; position:absolute; inset:5px; border-radius:50%; background:#2F80ED; }
     .questionnaire-preview-footer { width:375px; height:64px; padding:10px 16px; border-top:1px solid #E5EAF2; display:flex; align-items:center; justify-content:center; gap:8px; background:#fff; color:#64748A; font-size:13px; }
-    .questionnaire-preview-footer svg { width:20px; height:20px; fill:none; stroke:#2F80ED; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+    .questionnaire-preview-footer .yfl-icon { color:#2F80ED; }
     .questionnaire-phone [hidden] { display:none; }
   </style>
 </head>
@@ -60,8 +61,8 @@
     <div class="m-status-bar">
       <span class="time">15:12</span>
       <div class="m-status-icons" aria-hidden="true">
-        <svg width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
-        <svg width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <svg data-inline-svg-ok width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
+        <svg data-inline-svg-ok width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </div>
     </div>
     <div class="m-nav-bar questionnaire-nav">
@@ -72,13 +73,13 @@
 
     <main class="questionnaire-scroll" id="detailPage">
       <section class="questionnaire-preview-tip">
-        <svg viewBox="0 0 24 24"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+        <span class="yfl-icon yfl-icon--20" data-icon="view" aria-hidden="true"></span>
         <div><strong>预览模式</strong><span>当前问卷处于待发布状态，仅供内部检查。</span></div>
       </section>
 
       <section class="questionnaire-detail-card">
         <div class="questionnaire-title-row">
-          <span class="questionnaire-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h12a4 4 0 0 1 4 4v3a4 4 0 0 1-4 4H9l-5 4v-4a4 4 0 0 1-2-3.5V9a4 4 0 0 1 2-4Z"></path><path d="M8 9h7M8 12h4"></path></svg></span>
+          <span class="questionnaire-title-icon" aria-hidden="true"><span class="yfl-icon yfl-icon--20" data-icon="message"></span></span>
           <div class="questionnaire-title">测试一下想要预览有什么效果</div>
         </div>
         <div class="questionnaire-community">白云区</div>
@@ -97,7 +98,7 @@
 
     <main class="questionnaire-scroll questionnaire-form-scroll" id="formPage" hidden>
       <section class="questionnaire-preview-tip">
-        <svg viewBox="0 0 24 24"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+        <span class="yfl-icon yfl-icon--20" data-icon="view" aria-hidden="true"></span>
         <div><strong>预览填写</strong><span>可检查题目和选项，当前内容不会形成答卷。</span></div>
       </section>
 
@@ -117,7 +118,7 @@
     </main>
 
     <footer class="questionnaire-preview-footer" id="formFooter" hidden>
-      <svg viewBox="0 0 24 24"><path d="M3 12s3.5-6 9-6 9 6 9 6-3.5 6-9 6-9-6-9-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+      <span class="yfl-icon yfl-icon--20" data-icon="view" aria-hidden="true"></span>
       <span>预览模式，填写内容不会保存</span>
     </footer>
   </div>

@@ -160,7 +160,7 @@
                 <div class="pc-form-field"><label><span class="required">*</span>分类</label><select class="pc-input nostalgia-select"><option>历史文化</option><option>红色文化</option><option>非遗民俗</option></select></div>
                 <div class="pc-form-field"><label><span class="required">*</span>所属街道</label><div><select class="pc-input nostalgia-select" id="streetSelect"><option value="">请选择所属街道</option><option>北京街道</option><option>光塔街道</option><option>六榕街道</option><option>人民街道</option></select><div class="form-error" id="streetError" hidden>请选择所属街道</div></div></div>
                 <div class="pc-form-field nostalgia-field-wide"><label>开放时间</label><input class="pc-input" value="周一至周日 09:00-22:00" maxlength="30"></div>
-                <div class="pc-form-field nostalgia-field-wide"><label>点位标签</label><div><div class="nostalgia-tag-editor" id="tagEditor"><input id="customTag" maxlength="15" placeholder="输入标签后按回车，最多 3 个"></div><div class="form-help">标签按配置顺序展示，单个标签最多 15 个字</div></div></div>
+                <div class="pc-form-field nostalgia-field-wide"><label>点位标签</label><div><div class="nostalgia-tag-editor" id="tagEditor"><input id="customTag" maxlength="8" placeholder="输入标签后按回车，最多 3 个"></div><div class="form-help">标签按配置顺序展示，单个标签最多 8 个字</div></div></div>
               </div>
             </section>
 
@@ -258,6 +258,10 @@
       const tags = selectedTags();
       if (tags.length >= 3) {
         window.YunFangLinPC.showToast(document.body, '单个点位最多配置 3 个标签');
+        return;
+      }
+      if ([...value].length > 8) {
+        window.YunFangLinPC.showToast(document.body, '单个标签最多 8 个字');
         return;
       }
       if (tags.includes(value)) {
