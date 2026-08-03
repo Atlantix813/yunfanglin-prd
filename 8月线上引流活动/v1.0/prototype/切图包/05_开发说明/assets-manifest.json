@@ -1,0 +1,125 @@
+{
+  "package": "社区清凉福利节_透明PNG组件包_V2",
+  "version": "2.0.0",
+  "canvasReferenceWidth": 390,
+  "layerOrder": [
+    "dynamic-media",
+    "png-shell",
+    "dynamic-copy-and-controls"
+  ],
+  "assets": [
+    {
+      "file": "../01_主题装饰/hero_夏日版头透明框.png",
+      "role": "activity-hero-frame",
+      "dynamicFields": [
+        "activityTitle",
+        "activitySubtitle",
+        "startAt",
+        "endAt"
+      ],
+      "render": {
+        "width": "100%",
+        "aspectRatio": "3 / 2",
+        "objectFit": "contain"
+      }
+    },
+    {
+      "file": "../01_主题装饰/title_优惠券栏目空白飘带.png",
+      "role": "coupon-section-title",
+      "dynamicFields": [
+        "sectionTitle"
+      ]
+    },
+    {
+      "file": "../01_主题装饰/title_社区商家栏目空白飘带.png",
+      "role": "merchant-section-title",
+      "dynamicFields": [
+        "sectionTitle"
+      ]
+    },
+    {
+      "file": "../02_优惠券组件/coupon_粉色空壳.png",
+      "role": "coupon-shell-primary",
+      "dynamicFields": [
+        "amount",
+        "thresholdText",
+        "couponName",
+        "validityText",
+        "claimState"
+      ]
+    },
+    {
+      "file": "../02_优惠券组件/coupon_橙色空壳.png",
+      "role": "coupon-shell-secondary",
+      "dynamicFields": [
+        "amount",
+        "thresholdText",
+        "couponName",
+        "validityText",
+        "claimState"
+      ]
+    },
+    {
+      "file": "../02_优惠券组件/coupon_蓝色空壳.png",
+      "role": "coupon-shell-tertiary",
+      "dynamicFields": [
+        "amount",
+        "thresholdText",
+        "couponName",
+        "validityText",
+        "claimState"
+      ]
+    },
+    {
+      "file": "../03_商家组件/merchant_card_透明图片孔位空壳.png",
+      "role": "merchant-card-shell",
+      "dynamicFields": [
+        "merchantImageUrl",
+        "merchantName",
+        "categoryName",
+        "distanceText",
+        "rating",
+        "salesText"
+      ],
+      "layering": {
+        "merchantImageUrl": "place below the PNG shell in the transparent upper aperture",
+        "merchantCopy": "place above the PNG shell in the lower information area"
+      }
+    },
+    {
+      "file": "../03_商家组件/merchant_coupon_badge_空壳.png",
+      "role": "merchant-coupon-badge",
+      "dynamicFields": [
+        "amount",
+        "thresholdText"
+      ]
+    },
+    {
+      "file": "../04_交互组件/community_selector_社区选择空壳.png",
+      "role": "community-selector-shell",
+      "dynamicFields": [
+        "communityName"
+      ]
+    },
+    {
+      "file": "../04_交互组件/button_一键领取空壳.png",
+      "role": "claim-all-button-shell",
+      "dynamicFields": [
+        "buttonText",
+        "buttonState"
+      ]
+    },
+    {
+      "file": "../04_交互组件/button_我的券悬浮图标.png",
+      "role": "coupon-wallet-floating-shell",
+      "dynamicFields": [
+        "unreadCount"
+      ]
+    },
+    {
+      "file": "../01_主题装饰/bottom_海浪冰块装饰.png",
+      "role": "bottom-decoration",
+      "dynamicFields": []
+    }
+  ]
+}

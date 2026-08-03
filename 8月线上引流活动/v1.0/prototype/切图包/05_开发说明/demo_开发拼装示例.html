@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>社区清凉福利节 - 透明 PNG 拼装示例</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      color: #143764;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #26c8ef;
+    }
+    button { color: inherit; font: inherit; }
+    .page {
+      position: relative;
+      width: min(100%, 390px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 14px 14px 110px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255,255,255,.22), transparent 25%),
+        linear-gradient(180deg, #17c8f3 0%, #8feafd 42%, #ebfbff 100%);
+    }
+    .community {
+      position: relative;
+      z-index: 5;
+      height: 56px;
+      cursor: pointer;
+    }
+    .community img,
+    .hero-frame,
+    .section-title img,
+    .coupon-shell,
+    .claim-shell,
+    .merchant-shell,
+    .badge-shell,
+    .wallet-shell {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+    }
+    .community-name {
+      position: absolute;
+      z-index: 2;
+      left: 64px;
+      right: 46px;
+      top: 50%;
+      overflow: hidden;
+      font-size: 15px;
+      font-weight: 700;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      transform: translateY(-50%);
+    }
+    .hero {
+      position: relative;
+      height: 242px;
+      margin: -2px -14px 0;
+      overflow: hidden;
+    }
+    .hero-copy {
+      position: absolute;
+      z-index: 2;
+      top: 66px;
+      left: 72px;
+      right: 72px;
+      color: #fff;
+      text-align: center;
+      text-shadow: 0 2px 5px rgba(0, 82, 142, .22);
+    }
+    .hero-copy h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+    .hero-copy p {
+      margin: 8px 0 0;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .section-title {
+      position: relative;
+      width: 260px;
+      height: 78px;
+      margin: -10px auto -14px;
+    }
+    .section-title span {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding-bottom: 7px;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 800;
+      text-shadow: 0 2px 3px rgba(11, 112, 165, .24);
+    }
+    .coupon-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 7px;
+    }
+    .coupon {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      min-width: 0;
+    }
+    .coupon-copy {
+      position: absolute;
+      z-index: 2;
+      inset: 16% 10% 20%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .coupon-amount {
+      color: #ff397d;
+      font-size: 25px;
+      font-weight: 900;
+      line-height: 1;
+    }
+    .coupon-amount small { font-size: 12px; }
+    .coupon-threshold {
+      margin-top: 5px;
+      color: #e95479;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .coupon-name {
+      margin-top: auto;
+      color: #76486e;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .coupon-state {
+      position: absolute;
+      z-index: 2;
+      left: 18%;
+      right: 18%;
+      bottom: 8%;
+      color: #8a5200;
+      font-size: 12px;
+      font-weight: 800;
+      text-align: center;
+    }
+    .claim {
+      position: relative;
+      width: 342px;
+      max-width: 100%;
+      aspect-ratio: 2.1 / 1;
+      margin: -38px auto -32px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+    .claim span {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 900;
+      text-shadow: 0 2px 3px rgba(126, 68, 0, .3);
+    }
+    .merchant-section { position: relative; }
+    .merchant-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .merchant {
+      position: relative;
+      aspect-ratio: 2 / 3;
+      min-width: 0;
+    }
+    .merchant-photo {
+      position: absolute;
+      z-index: 0;
+      top: 3.8%;
+      left: 5%;
+      width: 90%;
+      height: 54%;
+      border-radius: 16px 16px 4px 4px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.46)),
+        linear-gradient(145deg, #54dbf4, #ffdb75 54%, #ff80b2);
+    }
+    .merchant-copy {
+      position: absolute;
+      z-index: 2;
+      left: 10%;
+      right: 10%;
+      top: 62%;
+      color: #20476c;
+    }
+    .merchant-copy h3 {
+      display: -webkit-box;
+      overflow: hidden;
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.35;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    .merchant-meta {
+      margin-top: 7px;
+      color: #71879e;
+      font-size: 11px;
+    }
+    .merchant-rating {
+      margin-top: 6px;
+      color: #f29a24;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .merchant-badge {
+      position: absolute;
+      z-index: 3;
+      top: 50%;
+      right: 4%;
+      width: 52px;
+      height: 52px;
+    }
+    .merchant-badge span {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding-bottom: 2px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 900;
+      text-align: center;
+    }
+    .wallet {
+      position: fixed;
+      z-index: 9;
+      right: max(18px, calc((100vw - 390px) / 2 + 18px));
+      bottom: 24px;
+      width: 62px;
+      height: 62px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+    .wallet-count {
+      position: absolute;
+      z-index: 2;
+      top: 2px;
+      right: 2px;
+      min-width: 18px;
+      height: 18px;
+      padding: 0 5px;
+      border: 2px solid #fff;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      line-height: 14px;
+      background: #ff3c77;
+    }
+    .bottom-wave {
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <button class="community" type="button" aria-label="选择社区">
+      <img src="../04_交互组件/community_selector_社区选择空壳.png" alt="">
+      <span class="community-name">云芳邻 · 兰蔻社区</span>
+    </button>
+
+    <section class="hero">
+      <img class="hero-frame" src="../01_主题装饰/hero_夏日版头透明框.png" alt="">
+      <div class="hero-copy">
+        <h1>社区清凉福利节</h1>
+        <p>7月25日 - 8月10日 · 好券一次领</p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <img src="../01_主题装饰/title_优惠券栏目空白飘带.png" alt="">
+        <span>社区福利券</span>
+      </div>
+      <div class="coupon-list" id="couponList"></div>
+      <button class="claim" type="button">
+        <img class="claim-shell" src="../04_交互组件/button_一键领取空壳.png" alt="">
+        <span>一键领取全部</span>
+      </button>
+    </section>
+
+    <section class="merchant-section">
+      <div class="section-title">
+        <img src="../01_主题装饰/title_社区商家栏目空白飘带.png" alt="">
+        <span>社区商家</span>
+      </div>
+      <div class="merchant-grid" id="merchantGrid"></div>
+    </section>
+
+    <img class="bottom-wave" src="../01_主题装饰/bottom_海浪冰块装饰.png" alt="">
+  </main>
+
+  <button class="wallet" type="button" aria-label="我的券">
+    <img class="wallet-shell" src="../04_交互组件/button_我的券悬浮图标.png" alt="">
+    <span class="wallet-count">3</span>
+  </button>
+
+  <script>
+    const coupons = [
+      { theme: "粉色", amount: "20", threshold: "满60元可用", name: "社区餐饮券" },
+      { theme: "橙色", amount: "10", threshold: "满30元可用", name: "社区生活券" },
+      { theme: "蓝色", amount: "5", threshold: "无门槛", name: "新客专享券" }
+    ];
+    const merchants = [
+      { name: "邻里鲜食铺", category: "餐饮美食", distance: "120m", rating: "4.9", amount: "20" },
+      { name: "云芳邻家居馆", category: "生活服务", distance: "260m", rating: "4.8", amount: "10" },
+      { name: "社区洗护中心", category: "便民服务", distance: "380m", rating: "4.9", amount: "15" },
+      { name: "悦己美学馆", category: "丽人美业", distance: "520m", rating: "4.7", amount: "8" }
+    ];
+
+    document.querySelector("#couponList").innerHTML = coupons.map((coupon) => `
+      <article class="coupon">
+        <img class="coupon-shell" src="../02_优惠券组件/coupon_${coupon.theme}空壳.png" alt="">
+        <div class="coupon-copy">
+          <div class="coupon-amount"><small>¥</small>${coupon.amount}</div>
+          <div class="coupon-threshold">${coupon.threshold}</div>
+          <div class="coupon-name">${coupon.name}</div>
+        </div>
+        <div class="coupon-state">立即领取</div>
+      </article>
+    `).join("");
+
+    document.querySelector("#merchantGrid").innerHTML = merchants.map((merchant) => `
+      <article class="merchant">
+        <div class="merchant-photo"></div>
+        <img class="merchant-shell" src="../03_商家组件/merchant_card_透明图片孔位空壳.png" alt="">
+        <div class="merchant-copy">
+          <h3>${merchant.name}</h3>
+          <div class="merchant-meta">${merchant.category} · ${merchant.distance}</div>
+          <div class="merchant-rating">★ ${merchant.rating}</div>
+        </div>
+        <div class="merchant-badge">
+          <img class="badge-shell" src="../03_商家组件/merchant_coupon_badge_空壳.png" alt="">
+          <span>¥${merchant.amount}<br>券</span>
+        </div>
+      </article>
+    `).join("");
+  </script>
+</body>
+</html>

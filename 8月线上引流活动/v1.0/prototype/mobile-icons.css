@@ -1,0 +1,39 @@
+/* 由图标工具.mjs根据图标清单生成，请勿手工修改。 */
+.yfl-icon{display:inline-block;width:1em;height:1em;flex:0 0 auto;background-color:currentColor;-webkit-mask-image:var(--yfl-icon);mask-image:var(--yfl-icon);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;vertical-align:-.125em}
+.yfl-icon--16{width:16px;height:16px}
+.yfl-icon--18{width:18px;height:18px}
+.yfl-icon--20{width:20px;height:20px}
+.yfl-icon--22{width:22px;height:22px}
+.yfl-icon--24{width:24px;height:24px}
+.yfl-c-root .yfl-icon[data-icon="activity-list"]{--yfl-icon:url("./icons/c/activity-list.svg")}
+.yfl-c-root .yfl-icon[data-icon="alert"]{--yfl-icon:url("./icons/c/alert.svg")}
+.yfl-c-root .yfl-icon[data-icon="calendar"]{--yfl-icon:url("./icons/c/calendar.svg")}
+.yfl-c-root .yfl-icon[data-icon="card-wallet"]{--yfl-icon:url("./icons/c/card-wallet.svg")}
+.yfl-c-root .yfl-icon[data-icon="check"]{--yfl-icon:url("./icons/c/check.svg")}
+.yfl-c-root .yfl-icon[data-icon="chevron-left"]{--yfl-icon:url("./icons/c/chevron-left.svg")}
+.yfl-c-root .yfl-icon[data-icon="chevron-right"]{--yfl-icon:url("./icons/c/chevron-right.svg")}
+.yfl-c-root .yfl-icon[data-icon="clock"]{--yfl-icon:url("./icons/c/clock.svg")}
+.yfl-c-root .yfl-icon[data-icon="coupon"]{--yfl-icon:url("./icons/c/coupon.svg")}
+.yfl-c-root .yfl-icon[data-icon="coupon-add"]{--yfl-icon:url("./icons/c/coupon-add.svg")}
+.yfl-c-root .yfl-icon[data-icon="guide"]{--yfl-icon:url("./icons/c/guide.svg")}
+.yfl-c-root .yfl-icon[data-icon="help"]{--yfl-icon:url("./icons/c/help.svg")}
+.yfl-c-root .yfl-icon[data-icon="home"]{--yfl-icon:url("./icons/c/home.svg")}
+.yfl-c-root .yfl-icon[data-icon="image-add"]{--yfl-icon:url("./icons/c/image-add.svg")}
+.yfl-c-root .yfl-icon[data-icon="location"]{--yfl-icon:url("./icons/c/location.svg")}
+.yfl-c-root .yfl-icon[data-icon="market"]{--yfl-icon:url("./icons/c/market.svg")}
+.yfl-c-root .yfl-icon[data-icon="message"]{--yfl-icon:url("./icons/c/message.svg")}
+.yfl-c-root .yfl-icon[data-icon="my"]{--yfl-icon:url("./icons/c/my.svg")}
+.yfl-c-root .yfl-icon[data-icon="neighbor"]{--yfl-icon:url("./icons/c/neighbor.svg")}
+.yfl-c-root .yfl-icon[data-icon="notification"]{--yfl-icon:url("./icons/c/notification.svg")}
+.yfl-c-root .yfl-icon[data-icon="play"]{--yfl-icon:url("./icons/c/play.svg")}
+.yfl-c-root .yfl-icon[data-icon="review"]{--yfl-icon:url("./icons/c/review.svg")}
+.yfl-c-root .yfl-icon[data-icon="scan"]{--yfl-icon:url("./icons/c/scan.svg")}
+.yfl-c-root .yfl-icon[data-icon="search"]{--yfl-icon:url("./icons/c/search.svg")}
+.yfl-c-root .yfl-icon[data-icon="service"]{--yfl-icon:url("./icons/c/service.svg")}
+.yfl-c-root .yfl-icon[data-icon="settings"]{--yfl-icon:url("./icons/c/settings.svg")}
+.yfl-c-root .yfl-icon[data-icon="share"]{--yfl-icon:url("./icons/c/share.svg")}
+.yfl-c-root .yfl-icon[data-icon="store"]{--yfl-icon:url("./icons/c/store.svg")}
+.yfl-c-root .yfl-icon[data-icon="upload"]{--yfl-icon:url("./icons/c/upload.svg")}
+.yfl-c-root .yfl-icon[data-icon="user"]{--yfl-icon:url("./icons/c/user.svg")}
+.yfl-c-root .yfl-icon[data-icon="view"]{--yfl-icon:url("./icons/c/view.svg")}
+.yfl-c-root .yfl-icon[data-icon="voice"]{--yfl-icon:url("./icons/c/voice.svg")}

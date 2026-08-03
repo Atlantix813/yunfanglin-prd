@@ -1,0 +1,594 @@
+<!-- prototype-states: default, collected, unregistered, ended, empty -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>居民端 · 活动落地页</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+.shop-img{height:90px;display:flex;align-items:center;justify-content:center;font-size:32px}
+.shop-info{padding:10px 12px}
+</style>
+</head>
+<body>
+
+<div class="yfl-c-root is-blue-nav m-phone">
+<div class="m-phone-screen">
+
+  <div class="m-status-bar">
+    <span class="time">9:41</span>
+    <div class="m-status-icons">
+      <svg width="16" height="10" viewBox="0 0 16 10"><rect y="6" width="3" height="4" rx=".5" fill="currentColor"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="currentColor"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="currentColor"/><rect x="12" width="3" height="10" rx=".5" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="currentColor"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <div class="m-nav-bar">
+    <button class="back" aria-label="返回">‹</button>
+    <span class="title">社区清凉福利节</span>
+    <div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+  </div>
+
+  <div class="m-page-scroll">
+  <main class="m-page-content" id="mainPage">
+
+    <!-- 社区选择器 -->
+    <div id="communityBar" style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;font-size:13px;color:#666">
+      <div style="display:flex;align-items:center;gap:4px;cursor:pointer" onclick="showSheet()"><span class="yfl-icon yfl-icon--16" data-icon="location" aria-hidden="true"></span><span>当前社区：</span><strong id="communityName" style="color:#1890FF">南医大社区</strong><span style="font-size:10px;color:#999;margin-left:2px">切换 ›</span></div>
+      <button id="shareBtn" style="background:none;border:none;cursor:pointer;color:#666;display:flex;align-items:center;gap:4px;font-size:12px;padding:2px 0" title="分享"><span class="yfl-icon yfl-icon--18" data-icon="share" aria-hidden="true"></span><span>分享活动</span></button>
+    </div>
+
+    <!-- Hero -->
+    <section class="m-card" id="heroCard" style="margin-bottom:12px;padding:32px 8px;text-align:center;background:linear-gradient(135deg,#e8f4ff,#b8dfff);border-radius:6px;position:relative" data-style-ok>
+      <div style="font-size:24px;font-weight:900;color:#1890FF">社区清凉福利节</div>
+      <div style="font-size:13px;color:#666;margin-top:6px">好券在手 家门口就能用</div>
+      <div style="background:#1890FF;color:#fff;display:inline-block;padding:4px 14px;border-radius:12px;font-size:12px;font-weight:700;margin-top:10px">8.15 — 8.31</div>
+    </section>
+
+    <!-- 限时活动券 标题 -->
+    <div class="m-list-header" id="couponHeader" style="display:flex;justify-content:space-between;align-items:center">
+      <strong>限时活动券</strong>
+      <span style="font-size:12px;color:#1890FF;cursor:pointer">查看全部 ›</span>
+    </div>
+
+    <!-- 券列表 -->
+    <div id="couponSection">
+      <div style="display:flex;gap:8px;margin-bottom:12px" data-style-ok>
+        <div class="m-card" style="flex:1;min-width:0;text-align:center;padding:16px 8px;border-radius:6px">
+          <div style="font-size:28px;font-weight:900;color:#E91E63">¥15</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">满50可用</div>
+          <div style="font-size:11px;margin-top:2px" class="coupon-tag" id="couponTag1"></div>
+        </div>
+        <div class="m-card" style="flex:1;min-width:0;text-align:center;padding:16px 8px;border-radius:6px">
+          <div style="font-size:28px;font-weight:900;color:#E65100">¥20</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">家政立减</div>
+          <div style="font-size:11px;margin-top:2px" class="coupon-tag" id="couponTag2"></div>
+        </div>
+        <div class="m-card" style="flex:1;min-width:0;text-align:center;padding:16px 8px;border-radius:6px">
+          <div style="font-size:28px;font-weight:900;color:#1565C0">¥8</div>
+          <div style="font-size:11px;color:#999;margin-top:2px">满30可用</div>
+          <div style="font-size:11px;margin-top:2px" class="coupon-tag" id="couponTag3"></div>
+        </div>
+      </div>
+
+      <!-- 一键领取 -->
+      <div style="text-align:center;margin-bottom:12px" data-style-ok>
+        <button class="m-btn m-btn-primary" id="claimBtn" style="width:260px;padding:12px;font-size:16px">一键领取</button>
+        <div style="font-size:11px;color:#999;margin-top:4px">领取后自动放入卡包</div>
+      </div>
+
+      <!-- 加入社区福利群 -->
+      <div id="wecomBanner" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-radius:12px;background:linear-gradient(135deg,#7EC8E3,#5B9BD5);margin-bottom:16px;cursor:pointer;position:relative;overflow:hidden" data-style-ok>
+        <div style="position:absolute;bottom:-8px;right:-10px;width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.08)" data-style-ok></div>
+        <div style="position:relative;z-index:1" data-style-ok>
+          <div style="font-size:16px;font-weight:500;color:#fff;margin-bottom:4px" id="wecomTitle">加入南医大社区福利群</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.8)" id="wecomSub">获取南医大社区最新活动与优惠</div>
+        </div>
+        <div style="position:relative;z-index:1;display:flex;align-items:center" data-style-ok>
+          <div style="width:48px;height:48px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;position:relative" data-style-ok>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5B9BD5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><circle cx="8" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><path d="M5.5 13.5A4 4 0 0 0 4 16.5V19h4"/><path d="M18.5 13.5A4 4 0 0 1 20 16.5V19h-4"/></svg>
+          </div>
+          <span style="color:#fff;font-size:13px;margin-left:6px">加入群聊 ›</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 逛逛社区好店 标题 -->
+    <div class="m-list-header" id="merchantHeader" style="display:flex;justify-content:space-between;align-items:center">
+      <strong>逛逛社区好店</strong>
+      <span style="font-size:12px;color:#1890FF;cursor:pointer">查看全部 ›</span>
+    </div>
+
+    <!-- 商家列表 -->
+    <div id="merchantSection" style="padding-bottom:20px">
+      <div id="shopGrid" data-style-ok style="display:flex;flex-wrap:wrap;gap:10px;width:100%"></div>
+      <div id="shopLoading" style="display:none;text-align:center;padding:12px 0;font-size:12px;color:#999">加载中…</div>
+      <div id="shopEnd" style="display:none;text-align:center;padding:12px 0;font-size:12px;color:#bbb">已全部加载</div>
+    </div>
+
+    <!-- 空状态 -->
+    <div id="emptyState" style="display:none;text-align:center;padding:60px 16px">
+      <div style="font-size:14px;color:#999;margin-bottom:20px">当前社区暂无活动信息</div>
+      <button class="m-btn m-btn-primary" style="padding:10px 32px;font-size:14px">逛逛社区</button>
+    </div>
+
+  </main>
+  </div>
+
+<!-- 我的券浮标 -->
+<div id="myCouponFab" class="fab-trigger" style="position:fixed;bottom:30px;right:16px;z-index:20;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FF6B9D,#E91E63);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(233,30,99,.35)" data-style-ok><span style="font-size:16px">券</span><span>我的</span></div>
+
+<!-- 领取加载遮罩 -->
+<div id="collectOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center" data-style-ok>
+  <div style="background:#fff;border-radius:10px;padding:28px 36px;text-align:center;min-width:220px" data-style-ok>
+    <div style="font-size:15px;font-weight:600;color:#333;margin-bottom:12px">当前正领取优惠券，请稍等</div>
+    <div style="font-size:28px;font-weight:900;color:#1890FF" id="collectProgress">0/20</div>
+  </div>
+</div>
+
+<!-- 领取结果弹窗 -->
+<div class="m-dialog-overlay" id="resultDialog" data-style-ok>
+  <div class="m-dialog-box" style="width:300px" data-style-ok>
+    <div class="m-dialog-body" style="text-align:center" data-style-ok>
+      <p style="font-size:15px;font-weight:600;margin:0" id="resultMsg">您已成功领取全部优惠券<span style="display:block;font-size:12px;color:#999;margin-top:4px" id="resultSub"></span></p>
+    </div>
+    <div class="m-dialog-actions">
+      <button id="resultOkBtn">好的</button>
+    </div>
+  </div>
+</div>
+
+<!-- 注册弹窗 -->
+<div class="m-dialog-overlay" id="registerDialog" data-style-ok>
+  <div class="m-dialog-box" style="width:320px" data-style-ok>
+    <div class="m-dialog-body" style="text-align:left" data-style-ok>
+      <strong style="font-size:16px;display:block;text-align:center;margin-bottom:8px" data-style-ok>领取优惠券</strong>
+      <p style="font-size:13px;color:#666;text-align:center;margin:0 0 14px" data-style-ok>授权注册即可一键领取 <span style="color:#1890FF;font-weight:700" id="regClaimCommunity">南医大社区</span> 活动优惠！</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;background:#F5F7FA;border-radius:8px;padding:12px 14px" data-style-ok>
+        <span style="font-size:13px;color:#333">绑定社区：<span style="color:#1890FF;font-weight:700" id="regBrowseCommunity">南医大社区</span></span>
+        <button id="switchCommunityBtn" style="border:0;background:none;color:#1890FF;font-size:12px;cursor:pointer;white-space:nowrap;padding:0" data-style-ok>更换绑定社区</button>
+      </div>
+      <p style="font-size:11px;color:#999;margin:8px 0 0;display:none" id="regBindTip">注册后将归属 <span style="color:#1890FF;font-weight:700" id="regBindCommunity">沙顶社区</span>，该社区活动与通知将推送给您</p>
+    </div>
+    <div class="m-dialog-actions">
+      <button id="skipRegisterBtn">暂不领取</button>
+      <button id="confirmRegisterBtn">注册并领取</button>
+    </div>
+  </div>
+</div>
+
+<!-- 订阅消息弹窗 -->
+<div class="m-dialog-overlay" id="subscribeDialog" data-style-ok>
+  <div class="m-dialog-box" style="width:300px" data-style-ok>
+    <div class="m-dialog-body" style="text-align:center" data-style-ok>
+      <strong style="font-size:15px" data-style-ok>开启活动通知</strong>
+      <p class="m-list-desc" style="margin-top:8px" data-style-ok>开启后，您将收到优惠券到期提醒、社区活动通知等消息</p>
+    </div>
+    <div class="m-dialog-actions">
+      <button id="subscribeDenyBtn">暂不开启</button>
+      <button id="subscribeAllowBtn">允许</button>
+    </div>
+  </div>
+</div>
+
+<!-- 社区选择面板 -->
+<div class="m-sheet-overlay" id="communitySheet" data-style-ok>
+  <div class="m-sheet" style="padding:0;display:flex;flex-direction:column;max-height:65vh" data-style-ok>
+    <div class="m-sheet-handle" style="margin:12px auto 8px"></div>
+
+    <!-- 搜索栏 -->
+    <div style="display:flex;align-items:center;gap:10px;padding:0 16px 12px" data-style-ok>
+      <div style="flex:1;display:flex;align-items:center;background:#F5F5F5;border-radius:8px;padding:8px 12px;gap:6px" data-style-ok>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="communitySearch" placeholder="请输入关键字搜索" style="border:0;outline:0;background:transparent;flex:1;font-size:14px;color:#333;min-width:0">
+      </div>
+      <button id="communitySearchBtn" style="border:0;background:none;color:#1890FF;font-size:14px;font-weight:600;white-space:nowrap;padding:0">搜索</button>
+    </div>
+
+    <!-- 细分隔线 -->
+    <div style="height:1px;background:#F0F0F0;margin:0 16px" data-style-ok></div>
+
+    <!-- 最近使用 -->
+    <div style="padding:12px 16px" data-style-ok>
+      <div style="font-size:14px;font-weight:700;color:#333;margin-bottom:8px">最近使用</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div class="community-recent-tag" data-community="南医大社区" style="background:#F0F0F0;border-radius:16px;padding:6px 14px;font-size:13px;color:#333;cursor:pointer">南医大社区</div>
+        <div class="community-recent-tag" data-community="沙顶社区" style="background:#F0F0F0;border-radius:16px;padding:6px 14px;font-size:13px;color:#333;cursor:pointer">沙顶社区</div>
+      </div>
+    </div>
+
+    <!-- 细分隔线 -->
+    <div style="height:1px;background:#F0F0F0;margin:0 16px" data-style-ok></div>
+
+    <!-- 树形列表（全区所有社区） -->
+    <div style="flex:1;overflow-y:auto;padding:8px 0;min-height:0" data-style-ok>
+      <div class="community-tree-parent" data-community="白云区" style="display:flex;align-items:center;padding:14px 16px;cursor:pointer" data-style-ok>
+        <span class="community-arrow" style="font-size:12px;color:#999;transition:transform .2s;display:inline-block;width:18px;text-align:center">›</span>
+        <span style="font-size:15px;color:#333;flex:1;margin-left:4px">白云区</span>
+      </div>
+      <div class="community-children" style="display:none">
+        <div class="community-tree-child" data-community="南医大社区" style="display:flex;align-items:center;padding:14px 16px 14px 42px;cursor:pointer;color:#333" data-style-ok>
+          <span class="community-child-label" style="font-size:15px">南医大社区</span>
+        </div>
+        <div class="community-tree-child" data-community="沙顶社区" style="display:flex;align-items:center;padding:14px 16px 14px 42px;cursor:pointer;color:#333" data-style-ok>
+          <span class="community-child-label" style="font-size:15px">沙顶社区</span>
+        </div>
+        <div class="community-tree-child" data-community="金沙社区" style="display:flex;align-items:center;padding:14px 16px 14px 42px;cursor:pointer;color:#333" data-style-ok>
+          <span class="community-child-label" style="font-size:15px">金沙社区</span>
+        </div>
+        <div class="community-tree-child" data-community="嘉禾社区" style="display:flex;align-items:center;padding:14px 16px 14px 42px;cursor:pointer;color:#333" data-style-ok>
+          <span class="community-child-label" style="font-size:15px">嘉禾社区</span>
+        </div>
+      </div>
+      <div class="community-tree-parent" data-community="越秀区" style="display:flex;align-items:center;padding:14px 16px;cursor:pointer" data-style-ok>
+        <span class="community-arrow" style="font-size:12px;color:#999;transition:transform .2s;display:inline-block;width:18px;text-align:center">›</span>
+        <span style="font-size:15px;color:#333;flex:1;margin-left:4px">越秀区</span>
+      </div>
+      <div class="community-children" style="display:none">
+        <div class="community-tree-child" data-community="北京路社区" style="display:flex;align-items:center;padding:14px 16px 14px 42px;cursor:pointer;color:#333" data-style-ok>
+          <span class="community-child-label" style="font-size:15px">北京路社区</span>
+        </div>
+        <div class="community-tree-child" data-community="东山口社区" style="display:flex;align-items:center;padding:14px 16px 14px 42px;cursor:pointer;color:#333" data-style-ok>
+          <span class="community-child-label" style="font-size:15px">东山口社区</span>
+        </div>
+      </div>
+      <div class="community-tree-parent" data-community="天河区" style="display:flex;align-items:center;padding:14px 16px;cursor:pointer" data-style-ok>
+        <span class="community-arrow" style="font-size:12px;color:#999;transition:transform .2s;display:inline-block;width:18px;text-align:center">›</span>
+        <span style="font-size:15px;color:#333;flex:1;margin-left:4px">天河区</span>
+      </div>
+      <div class="community-children" style="display:none">
+        <div class="community-tree-child" data-community="体育西社区" style="display:flex;align-items:center;padding:14px 16px 14px 42px;cursor:pointer;color:#333" data-style-ok>
+          <span class="community-child-label" style="font-size:15px">体育西社区</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部按钮 -->
+    <div style="padding:16px 20px 24px;display:flex;gap:12px;border-top:1px solid #F0F0F0;flex-shrink:0" data-style-ok>
+      <button id="communityCancelBtn" style="flex:1;height:44px;border:1.5px solid #1890FF;border-radius:8px;background:#fff;color:#1890FF;font-size:16px;font-weight:500;cursor:pointer">取消</button>
+      <button id="communityConfirmBtn" style="flex:1;height:44px;border:none;border-radius:8px;background:#1890FF;color:#fff;font-size:16px;font-weight:500;cursor:pointer">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 分享面板 -->
+<div class="m-sheet-overlay" id="shareSheet" data-style-ok>
+  <div class="m-sheet" style="padding:0;display:flex;flex-direction:column" data-style-ok>
+    <div class="m-sheet-handle" style="margin:12px auto 8px"></div>
+    <div style="text-align:center;font-size:16px;font-weight:700;color:#333;padding:0 0 16px">分享活动</div>
+    <div style="display:flex;gap:12px;padding:0 20px" data-style-ok>
+      <div id="shareMiniAppBtn" style="flex:1;background:#F5F7FA;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer" data-style-ok>
+        <div style="font-size:22px;margin-bottom:6px">📤</div>
+        <div style="font-size:14px;font-weight:600;color:#333">小程序转发</div>
+        <div style="font-size:11px;color:#999;margin-top:4px">发给微信好友或群聊</div>
+      </div>
+      <div id="sharePosterBtn" style="flex:1;background:#F5F7FA;border-radius:10px;padding:16px 8px;text-align:center;cursor:pointer" data-style-ok>
+        <div style="font-size:22px;margin-bottom:6px">🖼️</div>
+        <div style="font-size:14px;font-weight:600;color:#333">海报转发</div>
+        <div style="font-size:11px;color:#999;margin-top:4px">转发当前社区活动海报</div>
+      </div>
+    </div>
+    <div style="padding:16px 20px 24px;border-top:1px solid #F0F0F0;margin-top:16px;flex-shrink:0" data-style-ok>
+      <button id="shareCancelBtn" style="width:100%;height:44px;border:none;border-radius:8px;background:#fff;color:#666;font-size:15px;cursor:pointer">取消</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+  var p = new URLSearchParams(location.search);
+  var s = p.get('state') || 'default';
+  var isUnregistered = false;
+  var isRegisterSheet = false;
+  var currentCommunity = '南医大社区';
+
+  function el(id){ return document.getElementById(id); }
+
+  function updateCommunity(name) {
+    currentCommunity = name;
+    el('communityName').textContent = name;
+    el('regClaimCommunity').textContent = name;
+    el('wecomTitle').textContent = '加入' + name + '福利群';
+    el('wecomSub').textContent = '获取' + name + '最新活动与优惠';
+    if(shopPool[name] && shopPool[name].length){
+      // 有活动内容：恢复完整页面
+      el('heroCard').style.display = '';
+      el('couponHeader').style.display = ''; el('couponSection').style.display = '';
+      el('merchantHeader').style.display = ''; el('merchantSection').style.display = '';
+      el('claimBtn').style.display = '';
+      el('myCouponFab').style.display = '';
+      el('wecomBanner').style.display = '';
+      el('shareBtn').style.display = '';
+      el('emptyState').style.display = 'none';
+      resetShopList();
+    } else {
+      // 无活动内容：整页空状态
+      el('heroCard').style.display = 'none'; el('couponHeader').style.display = 'none'; el('couponSection').style.display = 'none';
+      el('merchantHeader').style.display = 'none'; el('merchantSection').style.display = 'none';
+      el('claimBtn').style.display = 'none';
+      el('myCouponFab').style.display = 'none';
+      el('wecomBanner').style.display = 'none';
+      el('shareBtn').style.display = 'none';
+      el('emptyState').style.display = 'block';
+    }
+  }
+
+  function updateRegHint(community) {
+    el('regBrowseCommunity').textContent = community;
+    el('regBindCommunity').textContent = community;
+    el('regBindTip').style.display = 'block';
+  }
+
+  function resetRegHint() {
+    el('regBrowseCommunity').textContent = currentCommunity;
+    el('regBindTip').style.display = 'none';
+  }
+
+  function showDialog(id){ el(id).classList.add('show'); }
+  function hideDialog(id){ el(id).classList.remove('show'); }
+  window.showSheet = function(){ isRegisterSheet = false; showDialog('communitySheet'); };
+  function hideSheet(){ hideDialog('communitySheet'); }
+
+  function showRegisterDialog(){
+    resetRegHint();
+    showDialog('registerDialog');
+  }
+
+  el('skipRegisterBtn').addEventListener('click', function(){ hideDialog('registerDialog'); });
+  el('switchCommunityBtn').addEventListener('click', function(e){
+    e.stopPropagation();
+    isRegisterSheet = true;
+    showDialog('communitySheet');
+  });
+  el('confirmRegisterBtn').addEventListener('click', function(){
+    hideDialog('registerDialog');
+    isUnregistered = false;
+    startCollect();
+  });
+  el('resultOkBtn').addEventListener('click', function(){
+    hideDialog('resultDialog');
+    showDialog('subscribeDialog');
+  });
+
+  el('subscribeAllowBtn').addEventListener('click', function(){ hideDialog('subscribeDialog'); });
+  el('subscribeDenyBtn').addEventListener('click', function(){ hideDialog('subscribeDialog'); });
+
+  // 社区树交互
+  var selectedCommunity = currentCommunity;
+  function highlightSelected(community){
+    document.querySelectorAll('.community-tree-child').forEach(function(node){
+      var label = node.querySelector('.community-child-label');
+      node.style.color = '#333';
+      if(label) label.style.fontWeight = '400';
+    });
+    document.querySelectorAll('.community-recent-tag').forEach(function(tag){
+      tag.style.background = '#F0F0F0';
+    });
+    var target = document.querySelector('.community-tree-child[data-community="'+community+'"]');
+    if(target){
+      target.style.color = '#1890FF';
+      var label = target.querySelector('.community-child-label');
+      if(label) label.style.fontWeight = '700';
+    }
+    var tag = document.querySelector('.community-recent-tag[data-community="'+community+'"]');
+    if(tag){ tag.style.background = '#E6F0FF'; }
+  }
+  document.querySelectorAll('.community-tree-parent').forEach(function(node){
+    node.addEventListener('click', function(){
+      var children = this.nextElementSibling;
+      var arrow = this.querySelector('.community-arrow');
+      if(children && children.classList.contains('community-children')){
+        var isOpen = children.style.display === 'block';
+        children.style.display = isOpen ? 'none' : 'block';
+        if(arrow){ arrow.textContent = isOpen ? '›' : '⌄'; arrow.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(0deg)'; }
+      }
+    });
+  });
+  document.querySelectorAll('.community-tree-child').forEach(function(node){
+    node.addEventListener('click', function(e){
+      e.stopPropagation();
+      var community = node.getAttribute('data-community');
+      if(!community) return;
+      selectedCommunity = community;
+      highlightSelected(community);
+    });
+  });
+  document.querySelectorAll('.community-recent-tag').forEach(function(tag){
+    tag.addEventListener('click', function(){
+      var community = tag.getAttribute('data-community');
+      selectedCommunity = community;
+      highlightSelected(community);
+    });
+  });
+  el('communityConfirmBtn').addEventListener('click', function(){
+    if(isRegisterSheet){
+      updateRegHint(selectedCommunity);
+      isRegisterSheet = false;
+    } else {
+      updateCommunity(selectedCommunity);
+    }
+    hideSheet();
+  });
+  el('communityCancelBtn').addEventListener('click', function(){ isRegisterSheet = false; hideSheet(); });
+  highlightSelected(selectedCommunity);
+  el('myCouponFab').addEventListener('click', function(){
+    if(isUnregistered) showRegisterDialog();
+  });
+
+  el('wecomBanner').addEventListener('click', function(){
+    // 跳转企微官方群引导页
+  });
+
+  el('shareBtn').addEventListener('click', function(){
+    showDialog('shareSheet');
+  });
+  el('shareCancelBtn').addEventListener('click', function(){ hideDialog('shareSheet'); });
+  el('shareMiniAppBtn').addEventListener('click', function(){
+    hideDialog('shareSheet');
+    // 调起微信转发弹窗
+  });
+  el('sharePosterBtn').addEventListener('click', function(){
+    hideDialog('shareSheet');
+    // 调起微信图片转发（当前社区海报）
+  });
+
+  el('couponHeader').querySelector('span').addEventListener('click', function(){
+    // 跳转领券中心·8月福利节 Tab
+  });
+
+  el('merchantHeader').querySelector('span').addEventListener('click', function(){
+    // 跳转商家列表页
+  });
+
+  el('claimBtn').addEventListener('click', function(){
+    if(isUnregistered){ showRegisterDialog(); return; }
+    startCollect();
+  });
+
+  function startCollect(){
+    el('collectOverlay').style.display = 'flex';
+    var progress = el('collectProgress'), total = 20, current = 0;
+    var timer = setInterval(function(){
+      current++;
+      progress.textContent = current + '/' + total;
+      if(current >= total){
+        clearInterval(timer);
+        setTimeout(function(){
+          el('collectOverlay').style.display = 'none';
+          el('claimBtn').disabled = true;
+          el('claimBtn').className = 'm-btn m-btn-disabled';
+          el('claimBtn').textContent = '已领取';
+          document.querySelectorAll('.coupon-tag').forEach(function(t){ t.textContent = '已领取'; t.style.color = '#16b36a'; });
+          el('resultMsg').textContent = '您已成功领取全部优惠券';
+          el('resultSub').textContent = '';
+          showDialog('resultDialog');
+        }, 500);
+      }
+    }, 60);
+  }
+
+  // 商家数据源（参与活动商家清单：按社区关联，商家自带社区字段）
+  var shopPool = {
+    '南医大社区': [
+      {name:'邻里小厨', emoji:'🍳', grad:'linear-gradient(135deg,#B3E5FC,#4FC3F7)', dist:'120m'},
+      {name:'洁家家政', emoji:'🏠', grad:'linear-gradient(135deg,#FFE0B2,#FFB74D)', dist:'280m'},
+      {name:'好邻居便利店', emoji:'🏪', grad:'linear-gradient(135deg,#C8E6C9,#81C784)', dist:'150m'},
+      {name:'阳光亲子馆', emoji:'👶', grad:'linear-gradient(135deg,#F8BBD0,#F48FB1)', dist:'320m'},
+      {name:'邻里药房', emoji:'💊', grad:'linear-gradient(135deg,#D1C4E9,#9575CD)', dist:'410m'},
+      {name:'阿婆糖水铺', emoji:'🍧', grad:'linear-gradient(135deg,#FFF9C4,#FFD54F)', dist:'560m'},
+      {name:'城南理发店', emoji:'💈', grad:'linear-gradient(135deg,#B2EBF2,#4DD0E1)', dist:'680m'},
+      {name:'鲜果时光', emoji:'🍉', grad:'linear-gradient(135deg,#FCE4EC,#F48FB1)', dist:'720m'}
+    ],
+    '沙顶社区': [
+      {name:'沙顶茶餐厅', emoji:'🍜', grad:'linear-gradient(135deg,#FFE0B2,#FF8A65)', dist:'90m'},
+      {name:'老张烧腊', emoji:'🍗', grad:'linear-gradient(135deg,#FFCDD2,#E57373)', dist:'210m'},
+      {name:'沙顶粮油店', emoji:'🌾', grad:'linear-gradient(135deg,#D7CCC8,#A1887F)', dist:'340m'},
+      {name:'康乐诊所', emoji:'🏥', grad:'linear-gradient(135deg,#B3E5FC,#4FC3F7)', dist:'450m'},
+      {name:'沙顶花店', emoji:'💐', grad:'linear-gradient(135deg,#E1BEE7,#BA68C8)', dist:'590m'}
+    ],
+    '金沙社区': [
+      {name:'金沙生鲜超市', emoji:'🥬', grad:'linear-gradient(135deg,#C8E6C9,#66BB6A)', dist:'100m'},
+      {name:'金沙早餐店', emoji:'🥟', grad:'linear-gradient(135deg,#FFF9C4,#FFCA28)', dist:'230m'},
+      {name:'金沙药房', emoji:'💊', grad:'linear-gradient(135deg,#D1C4E9,#9575CD)', dist:'360m'}
+    ]
+  };
+  var pageSize = 4;
+  var currentPage = 0;
+  var loading = false;
+
+  function shopCardHtml(shop){
+    return '<div style="width:calc(50% - 5px);background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div class="shop-img" style="background:'+shop.grad+'">'+shop.emoji+'</div><div class="shop-info"><div style="font-weight:600;font-size:13px">'+shop.name+'</div><div style="font-size:11px;color:#999;margin-top:2px">距您 '+shop.dist+'</div></div></div>';
+  }
+
+  function renderShops(){
+    var pool = shopPool[currentCommunity] || [];
+    var grid = el('shopGrid');
+    grid.innerHTML = pool.slice(0, (currentPage + 1) * pageSize).map(shopCardHtml).join('');
+    var hasMore = pool.length > (currentPage + 1) * pageSize;
+    el('shopLoading').style.display = 'none';
+    el('shopEnd').style.display = hasMore ? 'none' : 'block';
+  }
+
+  function resetShopList(){
+    currentPage = 0;
+    loading = false;
+    renderShops();
+  }
+
+  function loadMoreShops(){
+    if(loading) return;
+    var pool = shopPool[currentCommunity] || [];
+    if(pool.length <= (currentPage + 1) * pageSize) return;
+    loading = true;
+    el('shopLoading').style.display = 'block';
+    setTimeout(function(){
+      currentPage++;
+      loading = false;
+      renderShops();
+      if(scrollEl && scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 40){
+        setTimeout(checkScrollLoad, 100);
+      }
+    }, 600);
+  }
+
+  // 商家区滚动触底加载（页面主体滚动）
+  var scrollEl = document.querySelector('.m-page-scroll');
+  function checkScrollLoad(){
+    if(scrollEl && scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 40){
+      loadMoreShops();
+    }
+  }
+  if(scrollEl){
+    scrollEl.addEventListener('scroll', checkScrollLoad);
+  }
+
+  function applyState(st){
+    isUnregistered = false;
+    el('claimBtn').textContent = '一键领取'; el('claimBtn').disabled = false; el('claimBtn').className = 'm-btn m-btn-primary';
+    el('collectOverlay').style.display = 'none';
+    document.querySelectorAll('.coupon-tag').forEach(function(t){ t.textContent = ''; });
+    hideDialog('registerDialog'); hideDialog('resultDialog'); hideSheet(); hideDialog('subscribeDialog');
+    el('heroCard').style.display = '';
+    el('couponHeader').style.display = ''; el('couponSection').style.display = '';
+    el('merchantHeader').style.display = ''; el('merchantSection').style.display = '';
+    el('emptyState').style.display = 'none';
+    el('communityBar').style.display = 'flex';
+    el('claimBtn').style.display = '';
+    el('shareBtn').style.display = '';
+
+    switch(st){
+      case 'collected':
+        el('claimBtn').disabled = true; el('claimBtn').className = 'm-btn m-btn-disabled'; el('claimBtn').textContent = '已领取';
+        document.querySelectorAll('.coupon-tag').forEach(function(t){ t.textContent = '已领取'; t.style.color = '#16b36a'; });
+        break;
+      case 'unregistered':
+        isUnregistered = true; showRegisterDialog();
+        break;
+      case 'ended':
+        el('claimBtn').textContent = '活动已结束'; el('claimBtn').disabled = true; el('claimBtn').className = 'm-btn m-btn-disabled';
+        el('wecomBanner').style.display = 'none';
+        break;
+      case 'empty':
+        el('heroCard').style.display = 'none'; el('couponHeader').style.display = 'none'; el('couponSection').style.display = 'none';
+        el('merchantHeader').style.display = 'none'; el('merchantSection').style.display = 'none';
+        el('claimBtn').style.display = 'none';
+        el('myCouponFab').style.display = 'none';
+        el('wecomBanner').style.display = 'none';
+        el('shareBtn').style.display = 'none';
+        el('emptyState').style.display = 'block';
+        break;
+    }
+  }
+
+  applyState(s);
+  renderShops();
+})();
+</script>
+</body>
+</html>

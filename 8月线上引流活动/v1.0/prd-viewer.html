@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>项目名称 · 切页式 PRD Viewer 模板</title>
+  <style>
+    :root {
+      --blue: #2f8cff;
+      --blue-dark: #1d6ee8;
+      --blue-weak: #eaf4ff;
+      --green: #16b36a;
+      --green-bg: #eaf9f1;
+      --orange: #f59e0b;
+      --orange-bg: #fff5df;
+      --red: #ef4444;
+      --red-bg: #fff1f1;
+      --text: #1f2937;
+      --sub: #4b5563;
+      --muted: #8a94a6;
+      --line: #e5e7eb;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --soft: #f8fafc;
+      --shadow: 0 14px 40px rgba(15, 23, 42, .08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 74px 1fr;
+      overflow: hidden;
+    }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      min-width: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2f8cff, #63b3ff);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      flex: none;
+    }
+
+    .title {
+      min-width: 0;
+    }
+
+    .title strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .title span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: #fff;
+      color: var(--sub);
+    }
+
+    .sidebar-toggle {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: #526071;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .sidebar-toggle:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .sidebar-toggle svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 252px 1fr;
+      overflow: hidden;
+    }
+
+    .layout.sidebar-collapsed {
+      grid-template-columns: 64px 1fr;
+    }
+
+    .sidebar {
+      min-height: 0;
+      overflow-y: auto;
+      background: #fff;
+      border-right: 1px solid var(--line);
+      padding: 18px 14px;
+    }
+
+    .layout.sidebar-collapsed .sidebar {
+      padding: 14px 8px;
+      overflow-x: hidden;
+    }
+
+    .sidebar-menu-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 4px 12px 10px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar-menu-title {
+      color: #334155;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .sidebar-menu-head .sidebar-toggle {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      flex: none;
+    }
+
+    .layout.sidebar-collapsed .sidebar-menu-head {
+      justify-content: center;
+      padding: 0 0 10px;
+    }
+
+    .layout.sidebar-collapsed .sidebar-menu-title {
+      display: none;
+    }
+
+    .nav-label {
+      color: #a0a9b7;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 8px 10px;
+    }
+
+    .layout.sidebar-collapsed .nav-label {
+      height: 14px;
+      padding: 7px 0;
+      color: transparent;
+      overflow: hidden;
+    }
+
+    .feature-btn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      color: #425166;
+      border-radius: 10px;
+      padding: 12px 12px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .layout.sidebar-collapsed .feature-btn {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      padding: 12px 0;
+    }
+
+    .feature-btn:hover {
+      background: #f3f7ff;
+      color: var(--blue);
+    }
+
+    .feature-btn.active {
+      background: var(--blue-weak);
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .feature-name {
+      line-height: 1.45;
+      min-width: 0;
+    }
+
+    body.large-mode:not(.sidebar-collapsed) .feature-btn {
+      grid-template-columns: 1fr;
+      padding-left: 16px;
+    }
+
+    .layout.sidebar-collapsed .feature-name {
+      display: none;
+    }
+
+    .content {
+      min-width: 0;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .feature-head {
+      padding: 18px 22px 14px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      min-width: 0;
+    }
+
+    .feature-head h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .feature-head p {
+      margin: 8px 0 0;
+      color: var(--sub);
+      line-height: 1.7;
+      max-width: 1080px;
+    }
+
+    .page-tabs {
+      min-width: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding: 0 22px;
+      position: sticky;
+      top: 0;
+      z-index: 4;
+    }
+
+    .page-tab {
+      border: 0;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      color: #526071;
+      padding: 15px 18px 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 800;
+    }
+
+    .page-tab:hover {
+      color: var(--blue);
+      background: #f7fbff;
+    }
+
+    .page-tab.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+      background: #fff;
+    }
+
+    .workspace {
+      min-height: 0;
+      min-width: 0;
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+      height: calc(100vh - 74px - 54px);
+    }
+
+    .workspace.pc {
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 32%);
+    }
+
+    .workspace.mobile {
+      grid-template-columns: minmax(390px, 430px) minmax(520px, 1fr);
+    }
+
+    .workspace.doc-only {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace.doc-only .proto-panel {
+      display: none;
+    }
+
+    .doc-panel,
+    .proto-panel {
+      min-width: 0;
+      min-height: 0;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .doc-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      order: 2;
+    }
+
+    .doc-head {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #fbfdff);
+    }
+
+    .doc-head .kicker {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .doc-head h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .doc-scroll {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 18px 20px 80px;
+    }
+
+    .block {
+      background: var(--soft);
+      border: 1px solid #eef2f7;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .block h3 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 15px;
+    }
+
+    .block p,
+    .block li {
+      line-height: 1.78;
+      color: #38465a;
+    }
+
+    .block p {
+      margin: 0;
+    }
+
+    .block ul,
+    .block ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .table-scroll table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+
+    .table-scroll th,
+    .table-scroll td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.65;
+      color: #38465a;
+    }
+
+    .table-scroll th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .table-scroll tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .token {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      background: #edf5ff;
+      font-weight: 800;
+      line-height: 1.35;
+      white-space: nowrap;
+    }
+
+    .token-action {
+      border: 1px solid #c7e1ff;
+      border-radius: 999px;
+      background: #edf5ff;
+      color: var(--blue);
+    }
+
+    .token-page {
+      border: 1px solid #d8ccff;
+      border-radius: 4px;
+      background: #f4f0ff;
+      color: #6f42c1;
+    }
+
+    .token-field {
+      border: 1px dashed #8fd0b0;
+      border-radius: 3px;
+      background: #edf9f2;
+      color: #16845b;
+    }
+
+    .md-code {
+      background: #f6f8fa;
+      border: 1px solid #e8ecf1;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: #333;
+      font-family: "SF Mono", Consolas, Menlo, monospace;
+    }
+
+    .change-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .change-item {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 13px 14px;
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .tag {
+      height: 24px;
+      min-width: 42px;
+      padding: 0 8px;
+      border-radius: 6px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .add {
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .adjust {
+      color: var(--orange);
+      background: var(--orange-bg);
+    }
+
+    .delete {
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .change-body strong {
+      display: block;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .change-body p {
+      margin: 0;
+      color: #465568;
+      line-height: 1.75;
+    }
+
+    .change-body ol {
+      margin: 0;
+      padding-left: 18px;
+      color: #465568;
+      line-height: 1.75;
+    }
+
+    .change-body .rule-groups {
+      padding-left: 20px;
+    }
+
+    .change-body .rule-groups > li {
+      margin-bottom: 8px;
+    }
+
+    .change-body .rule-groups > li:last-child {
+      margin-bottom: 0;
+    }
+
+    .change-body .rule-title {
+      display: inline-block;
+      margin-bottom: 2px;
+      color: #1f2d3d;
+      font-weight: 700;
+    }
+
+    .change-body .rule-groups ol {
+      margin-top: 2px;
+      padding-left: 20px;
+    }
+
+    .proto-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background: #f8fafc;
+      order: 1;
+    }
+
+    .proto-head {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 34px;
+      grid-template-areas:
+        "title open";
+      gap: 10px 12px;
+      align-items: start;
+    }
+
+    .proto-head.has-states {
+      grid-template-areas:
+        "title open"
+        "states open";
+    }
+
+    .proto-title {
+      grid-area: title;
+      min-width: 0;
+    }
+
+    .proto-title span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .proto-title strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
+
+    .open-btn {
+      grid-area: open;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #526071;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .open-btn:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .open-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .open-btn:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
+    .proto-fullscreen-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      background: #f4f7fb;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .18s ease;
+    }
+
+    .proto-fullscreen-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .proto-fullscreen-bar {
+      height: 52px;
+      flex: 0 0 52px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .proto-fullscreen-back {
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: #526071;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .proto-fullscreen-back:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .proto-fullscreen-back svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .proto-fullscreen-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .proto-fullscreen-stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .proto-fullscreen-frame {
+      position: absolute;
+      overflow: hidden;
+      transform-origin: top left;
+      background: #fff;
+      border: 1px solid #d6dde8;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, .16);
+    }
+
+    .proto-fullscreen-frame.mobile {
+      border-radius: 30px;
+    }
+
+    .proto-fullscreen-frame.pc {
+      border-radius: 12px;
+    }
+
+    .proto-fullscreen-frame iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+    }
+
+    .state-bar {
+      grid-area: states;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+      align-items: center;
+    }
+
+    .state-bar:empty {
+      display: none;
+    }
+
+    .state-btn {
+      border: 1px solid #dbe2ea;
+      background: #fff;
+      color: #526071;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .state-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .proto-stage {
+      min-height: 0;
+      min-width: 0;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 14px;
+    }
+
+    .pc-stage {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid #dbe2ea;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .pc-stage iframe {
+      display: block;
+      border: 0;
+      background: #fff;
+      transform-origin: top left;
+      opacity: 0;
+      transition: opacity .16s ease;
+    }
+
+    .phone-shell {
+      width: 375px;
+      height: 812px;
+      border-radius: 30px;
+      border: 1px solid #d6dde8;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, .14);
+      transform-origin: center center;
+    }
+
+    .phone-shell iframe {
+      width: 375px;
+      height: 812px;
+      border: 0;
+      display: block;
+      background: #fff;
+      opacity: 0;
+      transition: opacity .16s ease;
+    }
+
+    .empty {
+      color: var(--muted);
+      line-height: 1.8;
+      padding: 20px;
+    }
+
+    @media (max-width: 1280px) {
+      .layout {
+        grid-template-columns: 220px 1fr;
+      }
+
+      .layout.sidebar-collapsed {
+        grid-template-columns: 64px 1fr;
+      }
+
+      .workspace.pc {
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 34%);
+      }
+
+      .workspace.mobile {
+        grid-template-columns: minmax(360px, 400px) minmax(460px, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">云</div>
+        <div class="title">
+          <strong>项目名称 · 切页式 PRD Viewer 模板</strong>
+          <span>左侧切功能，横向切页面，原型按当前内容展示。</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-menu-head">
+          <div class="sidebar-menu-title">需求菜单</div>
+          <button class="sidebar-toggle" id="sidebarToggle" type="button" title="收起左侧菜单" aria-label="收起左侧菜单">
+            <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M15 9l-3 3 3 3"></path></svg>
+          </button>
+        </div>
+        <div class="nav-label" id="sectionNavLabel">基础内容</div>
+        <div id="sectionNav"></div>
+        <div class="nav-label" id="featureNavLabel">需求说明</div>
+        <div id="featureNav"></div>
+      </aside>
+
+      <main class="content">
+        <section class="feature-head">
+          <h1 id="featureTitle"></h1>
+          <p id="featureSummary"></p>
+        </section>
+        <nav class="page-tabs" id="pageTabs"></nav>
+        <section class="workspace pc" id="workspace">
+          <article class="doc-panel">
+            <div class="doc-head">
+              <div class="kicker" id="docKicker"></div>
+              <h2 id="pageTitle"></h2>
+            </div>
+            <div class="doc-scroll" id="docScroll"></div>
+          </article>
+
+          <aside class="proto-panel">
+            <div class="proto-head">
+              <div class="proto-title">
+                <span id="protoKicker">原型预览</span>
+                <strong id="protoTitle"></strong>
+              </div>
+              <div class="state-bar" id="stateBar"></div>
+              <button class="open-btn" id="openProto" type="button" title="全屏查看原型" aria-label="全屏查看原型">
+                <svg viewBox="0 0 24 24"><path d="M8 4H4v4"></path><path d="M4 4l6 6"></path><path d="M16 4h4v4"></path><path d="M20 4l-6 6"></path><path d="M8 20H4v-4"></path><path d="M4 20l6-6"></path><path d="M16 20h4v-4"></path><path d="M20 20l-6-6"></path></svg>
+              </button>
+            </div>
+            <div class="proto-stage" id="protoStage">
+              <div class="empty">请选择一个页面。</div>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <div class="proto-fullscreen-overlay" id="protoFullscreen" aria-hidden="true">
+      <div class="proto-fullscreen-bar">
+        <button class="proto-fullscreen-back" id="closeProtoFullscreen" type="button">
+          <svg viewBox="0 0 24 24"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
+          返回文档
+        </button>
+        <strong class="proto-fullscreen-title" id="protoFullscreenTitle"></strong>
+      </div>
+      <div class="proto-fullscreen-stage" id="protoFullscreenStage"></div>
+    </div>
+  </div>
+
+  <script>
+/* GENERATED_PRD_DATA_START */
+    // 由 prd-august-activity.md 自动生成，MD SHA256: fff907d0eb1227eb748f60f7e71ffd3b8daee4836c468ed6295d93bb3a0bdcd6
+    const PRD_MODE = "small";
+    const SECTION_DATA = [
+      {
+        "id": "需求背景",
+        "no": "背",
+        "title": "需求背景",
+        "desc": "本期版本性质和组织方式。",
+        "summary": "2026 年 7 月 22 日会议决定 8 月 15 日起开展纯线上社区引流活动，试点南医大、沙顶及金沙街相关社区，覆盖约 58 家商家。活动页是社区公告的单一承接入口，首期轻量，以统一页面承载不同社区内容。",
+        "blocks": [
+          {
+            "title": "需求背景",
+            "html": "<p>2026 年 7 月 22 日会议决定 8 月 15 日起开展纯线上社区引流活动，试点南医大、沙顶及金沙街相关社区，覆盖约 58 家商家。活动页是社区公告的单一承接入口，首期轻量，以统一页面承载不同社区内容。</p>"
+          }
+        ]
+      },
+      {
+        "id": "需求清单",
+        "no": "清",
+        "title": "需求清单",
+        "desc": "本期 3 个独立功能。",
+        "summary": "本期 3 个独立功能。",
+        "blocks": [
+          {
+            "title": "需求清单",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>类型</th><th>项目</th><th>内容</th><th>说明</th></tr></thead><tbody><tr><td>新增</td><td>页面</td><td><span class=\"token token-action\">「8月活动落地页」</span></td><td>承接公告流量，展示社区商家和优惠券，支持一键领取</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「一键领取」</span></td><td>全屏遮罩展示进度，逐张领取，完成后弹窗展示结果</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「社区切换」</span></td><td>底部滑出面板切换活动社区，页面内容跟随刷新</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「领券中心 Tab」</span></td><td>领券中心新增<span class=\"token token-action\">「8月福利节」</span>Tab，按券名称关键词筛选</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「加入社区福利群」</span></td><td>一键领取下方展示群聊入口，不同社区对应不同企微群</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「分享」</span></td><td>活动页分享按钮，触发微信分享能力</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「订阅消息」</span></td><td>一键领取完成后弹窗引导用户授权订阅，授权后开启所有订阅子项</td></tr><tr><td>新增</td><td>埋点</td><td><span class=\"token token-action\">「We 分析事件上报」</span></td><td>活动页关键交互节点上报，支撑指标与漏斗分析</td></tr><tr><td>新增</td><td>配置</td><td><span class=\"token token-action\">「消息订阅面板」</span></td><td>市集模块新增<span class=\"token token-action\">「社区活动通知」</span>子项，支持手动群发推送</td></tr></tbody></table></div>"
+          }
+        ]
+      },
+      {
+        "id": "技术实现要点",
+        "no": "技",
+        "title": "技术实现要点",
+        "desc": "基础需求内容。",
+        "summary": "本页面主体为纯前端新页面，活动、券、商家数据复用现有接口。企微群入口需配置社区→企微<span class=\"token token-action\">「加入群聊」</span>参数的映射，由运营在企微管理后台创建后维护到服务端。",
+        "blocks": [
+          {
+            "title": "技术实现要点",
+            "html": "<p>本页面主体为纯前端新页面，活动、券、商家数据复用现有接口。企微群入口需配置社区→企微<span class=\"token token-action\">「加入群聊」</span>参数的映射，由运营在企微管理后台创建后维护到服务端。</p>"
+          },
+          {
+            "title": "页面参数",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>说明</th></tr></thead><tbody><tr><td>communityId</td><td>入口携带的社区ID，用于初始化当前社区</td></tr></tbody></table></div>"
+          },
+          {
+            "title": "数据获取",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>数据</th><th>来源</th><th>过滤逻辑</th></tr></thead><tbody><tr><td>社区列表</td><td>全区组织树接口</td><td>—</td></tr><tr><td>商家列表</td><td>现有商家列表接口</td><td>取活动配置<span class=\"token token-action\">「参与活动商家清单」</span>，按当前社区筛选，支持分页加载</td></tr><tr><td>活动券列表</td><td>现有领券中心券列表接口</td><td>前端按所选社区 + 券名称关键词双重过滤</td></tr><tr><td>用户已领券状态</td><td>现有用户已领券查询</td><td>用于判断每张券是否已领取</td></tr></tbody></table></div>"
+          },
+          {
+            "title": "一键领取",
+            "html": "<ul><li>串行逐张调用现有单张领券接口</li><li>成功/失败分别计数，完成后统一弹窗（只区分&quot;全部成功&quot;和&quot;部分失败&quot;，不逐条报错）</li><li>领取期间按钮禁用防重复点击</li></ul>"
+          },
+          {
+            "title": "活动时间",
+            "html": "<ul><li>前端硬编码活动起止时间，非活动期内按钮置灰<span class=\"token token-action\">「活动已结束」</span></li><li>活动卡片和各区域保持正常展示，不叠加遮罩</li><li>券本身不受影响，用户仍可从领券中心正常领取</li></ul>"
+          },
+          {
+            "title": "活动配置",
+            "html": "<p>活动页所有需前端协助维护的配置项见 `功能一 · 活动配置`，当前前端硬编码，不排除评审后改为后端下发。</p>"
+          },
+          {
+            "title": "现有接口依赖",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>接口</th><th>用途</th></tr></thead><tbody><tr><td>组织树/社区列表</td><td>社区切换面板</td></tr><tr><td>商家列表（含商家ID、名称、头图、社区字段）</td><td>商家卡片区</td></tr><tr><td>领券中心券列表（含券名称、面额、门槛、库存、所属商家ID、有效期）</td><td>活动券区</td></tr><tr><td>单张领券</td><td>一键领取逐张调用</td></tr><tr><td>用户已领券查询</td><td>判断已领取状态</td></tr><tr><td>用户注册/授权</td><td>注册弹窗流程</td></tr></tbody></table></div>"
+          }
+        ]
+      }
+    ];
+
+    const DATA = [
+      {
+        "id": "功能一-商家活动落地页",
+        "no": "一",
+        "title": "功能一 · 商家活动落地页",
+        "desc": "为社区公告创建轻量级落地页。不同社区扫码进入后自动展示对应商家和券。支持一键领取全部活动",
+        "summary": "为社区公告创建轻量级落地页。不同社区扫码进入后自动展示对应商家和券。支持一键领取全部活动券，新用户在页内完成注册。",
+        "pages": [
+          {
+            "id": "居民端活动页",
+            "tab": "居民端活动页",
+            "title": "居民端活动页",
+            "type": "mobile",
+            "location": "小程序内独立页面，通过社区公告链接或二维码进入，入口携带社区信息。不替代现有首页，不改变领券中心和卡包逻辑。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "社区选择器 · 社区切换",
+                "desc": "位于主视觉卡片上方，展示当前社区。点击后底部滑出社区面板切换，页面内容跟随刷新。",
+                "groups": [
+                  {
+                    "title": "结构",
+                    "items": [
+                      "左侧<span class=\"token token-action\">「当前社区：XX」</span>，右侧<span class=\"token token-action\">「切换」</span>入口和分享按钮。",
+                      "位于主视觉卡片上方。",
+                      "点击后底部滑出社区选择面板，包含搜索栏、最近使用标签、树形列表、确定/取消按钮。"
+                    ]
+                  },
+                  {
+                    "title": "面板交互",
+                    "items": [
+                      "搜索栏：输入关键字过滤社区列表。",
+                      "最近使用：胶囊标签展示最近选择的社区，点击直接选中。",
+                      "树形列表：父级节点带展开/收起箭头（›/⌄），子级节点点击选中，选中态蓝色高亮。",
+                      "点击<span class=\"token token-action\">「确定」</span>才生效切换，<span class=\"token token-action\">「取消」</span>关闭面板不切换。"
+                    ]
+                  },
+                  {
+                    "title": "联动",
+                    "items": [
+                      "社区选择面板展示全区所有社区（来自组织树），不限制试点范围。",
+                      "选择新社区后，页面券列表和商家列表按新社区展示。",
+                      "选中没有参与活动的社区时，页面展示空状态。",
+                      "注册弹窗中绑定社区名称同步更新。",
+                      "企微群入口文案同步更新。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "主视觉区 · 活动卡片",
+                "desc": "展示活动名称、副标题、时间范围。活动结束后按钮置灰，卡片正常展示。",
+                "groups": [
+                  {
+                    "title": "结构",
+                    "items": [
+                      "活动名称、副标题。",
+                      "活动时间范围胶囊标签。"
+                    ]
+                  },
+                  {
+                    "title": "活动结束状态",
+                    "items": [
+                      "活动时间外进入，按钮变灰显示<span class=\"token token-action\">「活动已结束」</span>并不可点击。",
+                      "Hero 卡片和页面布局保持正常展示，不叠加半透明遮罩。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "活动券区 · 券列表 + 一键领取",
+                "desc": "3 张券横向排列，券面只展示金额和门槛，底部设<span class=\"token token-action\">「一键领取」</span>按钮。不设单张领取按钮。",
+                "groups": [
+                  {
+                    "title": "券卡片结构",
+                    "items": [
+                      "多张券横向滚动排列（首屏露出 3 张）。",
+                      "每张券仅展示面额和门槛描述，不设领取按钮。",
+                      "已领取的券底部显示<span class=\"token token-action\">「已领取」</span>标记。"
+                    ]
+                  },
+                  {
+                    "title": "券取值规则",
+                    "items": [
+                      "调两组接口：用户所选社区的券列表（按名称关键词如<span class=\"token token-page\">【福利节】</span>过滤）、用户已领券列表。",
+                      "券列表按所选社区筛选，切换社区后重新拉取。",
+                      "从活动券列表中剔除已下架的券和库存为 0 的券，得到有效活动券。",
+                      "已领券：有效活动券中，用户已经领取过的那些（含已使用、未使用状态）。",
+                      "可领券：有效活动券中，用户还没领过的那些。"
+                    ]
+                  },
+                  {
+                    "title": "按钮判定规则",
+                    "items": [
+                      "可领券一张都没有（活动券全被领完了）→ 按钮置灰，文案<span class=\"token token-action\">「已领取」</span>。",
+                      "可领券哪怕只剩 1 张没领 → 按钮亮起，文案<span class=\"token token-action\">「一键领取」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "券排序规则",
+                    "items": [
+                      "可领券在前，已领券在后。",
+                      "可领券按面额从高到低。",
+                      "相同面额按到期时间从近到远。"
+                    ]
+                  },
+                  {
+                    "title": "券区标题",
+                    "items": [
+                      "左侧<span class=\"token token-action\">「限时活动券」</span>。",
+                      "右侧<span class=\"token token-action\">「查看全部」</span>入口。"
+                    ]
+                  },
+                  {
+                    "title": "一键领取交互",
+                    "items": [
+                      "点击后仅领取可领券列表中的券，已领或不可领的自动跳过。",
+                      "全屏遮罩，中央显示<span class=\"token token-action\">「当前正领取优惠券，请稍等」</span>和实时进度。",
+                      "串行逐张调用单张领券接口，失败成功分别统计。",
+                      "全部领取完成后遮罩消失。",
+                      "弹出结果弹窗：",
+                      "全部成功：<span class=\"token token-action\">「您已成功领取全部优惠券」</span>。",
+                      "部分失败：<span class=\"token token-action\">「部分优惠券领取失败」</span>，不逐条列出失败原因。",
+                      "弹窗点击<span class=\"token token-action\">「好的」</span>关闭。",
+                      "领取完成后刷新可领券列表，如无可领券则按钮变为置灰<span class=\"token token-action\">「已领取」</span>。",
+                      "执行期间按钮不可重复点击。"
+                    ]
+                  },
+                  {
+                    "title": "空状态",
+                    "items": [
+                      "无券时展示<span class=\"token token-action\">「当前社区暂无活动优惠券」</span>。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "商家列表区 · 商家列表",
+                "desc": "两列卡片，上部为门店头图，下部为商家名称和距离。",
+                "groups": [
+                  {
+                    "title": "结构",
+                    "items": [
+                      "两列卡片网格。",
+                      "每卡上部为门店头图（彩色背景占位），下部为信息区。"
+                    ]
+                  },
+                  {
+                    "title": "卡片内容",
+                    "items": [
+                      "商家名称。",
+                      "距您 xxm（仅已注册且已授权定位的用户显示，新用户或不授权定位则不展示此字段）。",
+                      "点击进入商家详情页。"
+                    ]
+                  },
+                  {
+                    "title": "商家取值规则",
+                    "items": [
+                      "取活动配置<span class=\"token token-action\">「参与活动商家清单」</span>中、所属社区为当前社区的商家。",
+                      "切换社区后按新社区重新展示对应商家。"
+                    ]
+                  },
+                  {
+                    "title": "加载方式",
+                    "items": [
+                      "商家列表支持向下滑动无限加载（分页加载），不限于固定数量。",
+                      "首次进入加载首屏商家，滚动触底时自动加载下一页，加载中展示加载提示。"
+                    ]
+                  },
+                  {
+                    "title": "排序规则",
+                    "items": [
+                      "从当前社区的参与商家中随机乱序排列。",
+                      "每次进入页面或切换社区时重新随机，不固定排序。"
+                    ]
+                  },
+                  {
+                    "title": "商家区标题",
+                    "items": [
+                      "左侧<span class=\"token token-action\">「逛逛社区好店」</span>。",
+                      "右侧<span class=\"token token-action\">「查看全部」</span>入口。"
+                    ]
+                  },
+                  {
+                    "title": "空状态",
+                    "items": [
+                      "无商家时展示<span class=\"token token-action\">「当前社区暂无参与活动的商家」</span>。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "注册弹窗 · 新用户注册",
+                "desc": "未注册用户点击<span class=\"token token-action\">「一键领取」</span>或<span class=\"token token-action\">「我的券」</span>时弹出。",
+                "groups": [
+                  {
+                    "title": "触发条件",
+                    "items": [
+                      "未注册用户点击<span class=\"token token-action\">「一键领取」</span>。",
+                      "未注册用户点击<span class=\"token token-action\">「我的券」</span>浮标。"
+                    ]
+                  },
+                  {
+                    "title": "弹窗内容",
+                    "items": [
+                      "顶部标题：<span class=\"token token-action\">「领取优惠券」</span>。",
+                      "中部说明：<span class=\"token token-action\">「授权注册即可一键领取<span class=\"token token-page\">【当前浏览社区】</span>活动优惠！」</span>，明确当前领取的奖励归属，跟随页面社区显示，不随换绑变化。",
+                      "绑定社区卡片：<span class=\"token token-action\">「绑定社区：XX」</span>+ 右侧<span class=\"token token-action\">「更换绑定社区」</span>按钮。"
+                    ]
+                  },
+                  {
+                    "title": "更换绑定社区",
+                    "items": [
+                      "点击<span class=\"token token-action\">「更换绑定社区」</span>弹出社区选择面板，选完后关闭面板回到注册弹窗。",
+                      "更换的是注册绑定社区，不影响当前活动页的社区。",
+                      "更换后绑定社区卡片中的社区名更新为所选社区。",
+                      "不更换则默认绑定当前浏览的社区。",
+                      "更换后卡片下方显示提示：<span class=\"token token-action\">「注册后将归属 YY 社区，该社区活动与通知将推送给您」</span>；未更换不显示。",
+                      "注册后支持在个人中心修改归属社区，此处为轻量告知，不做二次确认。"
+                    ]
+                  },
+                  {
+                    "title": "弹窗按钮",
+                    "items": [
+                      "<span class=\"token token-action\">「暂不领取」</span>：关闭弹层，返回浏览状态。",
+                      "<span class=\"token token-action\">「注册并领取」</span>：以所选社区完成注册，自动返回活动页刷新，不跳离当前社区页面。"
+                    ]
+                  },
+                  {
+                    "title": "异常处理",
+                    "items": [
+                      "授权失败提示<span class=\"token token-action\">「请授权手机号以继续」</span>，可重试。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "企微群入口 · 加入社区福利群",
+                "desc": "一键领取下方蓝色横幅，不同社区对应不同企微群。",
+                "groups": [
+                  {
+                    "title": "位置",
+                    "items": [
+                      "位于<span class=\"token token-action\">「一键领取」</span>按钮下方。",
+                      "蓝色渐变横幅，左侧文本、右侧群聊图标。"
+                    ]
+                  },
+                  {
+                    "title": "文案",
+                    "items": [
+                      "标题：<span class=\"token token-action\">「加入 XX 社区福利群」</span>，跟随当前社区名称变化。",
+                      "副标题：<span class=\"token token-action\">「获取 XX 社区最新活动与优惠」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "联动",
+                    "items": [
+                      "切换社区后，群入口配置同步切换。",
+                      "不同社区对应不同企微群入口。"
+                    ]
+                  },
+                  {
+                    "title": "交互",
+                    "items": [
+                      "点击按钮后，企微官方能力接管，用户点击确认即可加入对应社区福利群，无需扫码。",
+                      "不同社区配置不同<span class=\"token token-action\">「加入群聊」</span>入口，切换社区后按钮指向对应企微群。",
+                      "加群为自愿操作，不作为领券或使用优惠券的前置条件。"
+                    ]
+                  },
+                  {
+                    "title": "配置",
+                    "items": [
+                      "每个社区在企微管理后台<span class=\"token token-action\">「客户联系 → 加客户 → 加入群聊 → 在小程序中加入群聊」</span>中独立创建配置。",
+                      "配置后获取按钮接入参数，在小程序页面中引用即可。",
+                      "该配置永不过期，无需定时刷新。每个入口最多绑定 5 个客户群，每群 200 人，满员自动建新群。",
+                      "未配置的社区不展示此模块，空状态下不展示此模块。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "分享 · 分享活动页",
+                "desc": "社区选择器右侧分享按钮，触发微信原生分享。",
+                "groups": [
+                  {
+                    "title": "位置",
+                    "items": [
+                      "社区选择器右侧，分享图标按钮。",
+                      "无活动内容的社区不展示分享按钮。"
+                    ]
+                  },
+                  {
+                    "title": "交互",
+                    "items": [
+                      "点击分享按钮后，底部滑出分享面板。",
+                      "面板包含两个并排选项：<span class=\"token token-action\">「小程序转发」</span><span class=\"token token-action\">「海报转发」</span>+<span class=\"token token-action\">「取消」</span>。",
+                      "小程序转发：调起微信转发弹窗，可转发给好友或群聊。分享卡片使用固定活动标题和活动宣传图，不使用页面截图；分享链接包含当前社区，他人通过分享进入时自动打开对应社区的活动页。",
+                      "海报转发：调起微信图片转发，转发当前社区对应的活动海报图片。"
+                    ]
+                  },
+                  {
+                    "title": "分享卡片规格",
+                    "items": [
+                      "分享标题：<span class=\"token token-action\">「社区清凉福利节」</span>（固定，不带日期）。",
+                      "分享图比例 5:4（建议 500×400px），大小小于 200KB，图片由运营提供，随活动配置维护。"
+                    ]
+                  },
+                  {
+                    "title": "海报规格",
+                    "items": [
+                      "每个社区一张成品海报（含小程序码），运营制作后按社区挂载。",
+                      "前端按当前社区读取对应海报，海报 URL 配置在活动配置中。",
+                      "海报带来的回流：用户扫描海报上的小程序码进入，来源记为扫码。"
+                    ]
+                  },
+                  {
+                    "title": "无活动社区处理",
+                    "items": [
+                      "当前社区无活动内容时隐藏分享按钮。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "订阅消息 · 活动通知授权",
+                "desc": "一键领取完成后弹出微信订阅消息申请，不强制，选择后均关闭弹窗。",
+                "groups": [
+                  {
+                    "title": "触发时机",
+                    "items": [
+                      "一键领取完成后，结果弹窗关闭时弹出。",
+                      "无论用户此前是否已注册，领取成功后才触发订阅引导。"
+                    ]
+                  },
+                  {
+                    "title": "弹窗内容",
+                    "items": [
+                      "标题：<span class=\"token token-action\">「开启活动通知」</span>。",
+                      "描述：<span class=\"token token-action\">「开启后，您将收到优惠券到期提醒、社区活动通知等消息」</span>。",
+                      "按钮：<span class=\"token token-action\">「暂不开启」</span>/<span class=\"token token-action\">「允许」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "与领取关系",
+                    "items": [
+                      "订阅弹窗在领取完成后独立弹出，不影响领取流程。",
+                      "用户选择<span class=\"token token-action\">「允许」</span>或<span class=\"token token-action\">「暂不开启」</span>均关闭弹窗，不阻塞后续操作。"
+                    ]
+                  },
+                  {
+                    "title": "完整链路",
+                    "items": [
+                      "未注册用户：点击一键领取 → 注册弹窗 → 点击<span class=\"token token-action\">「注册并领取」</span> → 领取流程 → 结果弹窗 → 订阅弹窗。",
+                      "已注册用户：点击一键领取 → 领取流程 → 结果弹窗 → 订阅弹窗。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "活动落地页",
+              "states": [
+                {
+                  "label": "主状态",
+                  "url": "prototype/activity-landing.html?v=6&state=default"
+                },
+                {
+                  "label": "全部已领取",
+                  "url": "prototype/activity-landing.html?v=6&state=collected"
+                },
+                {
+                  "label": "新用户未注册",
+                  "url": "prototype/activity-landing.html?v=6&state=unregistered"
+                },
+                {
+                  "label": "活动已结束",
+                  "url": "prototype/activity-landing.html?v=6&state=ended"
+                },
+                {
+                  "label": "空状态",
+                  "url": "prototype/activity-landing.html?v=6&state=empty"
+                }
+              ]
+            }
+          },
+          {
+            "id": "活动配置",
+            "tab": "活动配置",
+            "title": "活动配置",
+            "type": "mobile",
+            "location": "活动页所有需前端协助维护的配置项集中在此。当前前端硬编码，不排除评审后改为后端下发。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "配置项",
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>配置项</th><th>说明</th></tr></thead><tbody><tr><td>活动名称、副标题</td><td>页面标题区展示</td></tr><tr><td>活动时间</td><td>活动开始/结束日期，用于<span class=\"token token-action\">「活动已结束」</span>判断</td></tr><tr><td>参与活动商家清单</td><td>参与活动的商家 ID 集合，商家自带所属社区字段，切换社区时按当前社区筛选展示对应商家</td></tr><tr><td>券关键词</td><td>如<span class=\"token token-action\">「<span class=\"token token-page\">【福利节】</span>」</span>，券列表筛选</td></tr><tr><td>分享标题</td><td>分享卡片标题（固定，不带日期）</td></tr><tr><td>分享图</td><td>活动宣传图，用于分享卡片展示</td></tr><tr><td>海报图</td><td>按社区配置的海报 URL 映射，每个社区一张含小程序码的成品海报</td></tr></tbody></table></div>"
+              }
+            ],
+            "prototype": null
+          },
+          {
+            "id": "企微群聊接入指导",
+            "tab": "企微群聊接入指导",
+            "title": "企微群聊接入指导",
+            "type": "mobile",
+            "location": "活动页接入企微官方<span class=\"token token-action\">「在小程序中加入群聊」</span>能力。不同社区在企微管理后台独立创建配置，在小程序中生成按钮，用户点击即可加入对应社区福利群。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "流程图",
+                "html": "<p>企微管理后台<span class=\"token token-action\">「客户联系 → 加客户 → 加入群聊」</span></p><ol><li>选择<span class=\"token token-action\">「在小程序中加入群聊」</span><ol><li>创建配置并绑定群聊（最多 5 个群）</li><li>获取按钮接入参数</li></ol></li><li>配置到小程序页面<ol><li>不同社区使用不同接入参数</li></ol></li><li>用户点击<span class=\"token token-action\">「加入社区福利群」</span>按钮<ol><li>企微原生流程接管</li><li>用户确认 → 直接入群</li></ol></li></ol>"
+              },
+              {
+                "title": "官方能力说明",
+                "html": "<ul><li><strong>能力名称</strong>：在小程序中加入群聊（企微管理后台<span class=\"token token-action\">「客户联系 → 加客户 → 加入群聊」</span>）</li><li><strong>有效期</strong>：永不过期，配置一次即可</li><li><strong>群容量</strong>：每个入口最多绑定 5 个客户群，每群 200 人，满员自动建新群</li><li><strong>用户操作</strong>：点击按钮 → 确认 → 入群，无需扫码</li></ul>"
+              },
+              {
+                "title": "社区配置",
+                "html": "<p>每个试点社区在企微管理后台独立创建一个<span class=\"token token-action\">「在小程序中加入群聊」</span>配置，获取对应的接入参数后，在小程序中按社区区分引用。</p><div class=\"table-scroll\"><table><thead><tr><th>社区</th><th>说明</th></tr></thead><tbody><tr><td>南医大社区</td><td>独立配置，绑定南医大社区福利群</td></tr><tr><td>沙顶社区</td><td>独立配置，绑定沙顶社区福利群</td></tr><tr><td>金沙街</td><td>独立配置，绑定金沙街福利群</td></tr></tbody></table></div>"
+              }
+            ],
+            "prototype": null
+          },
+          {
+            "id": "we-分析埋点需求",
+            "tab": "We 分析埋点需求",
+            "title": "We 分析埋点需求",
+            "type": "mobile",
+            "location": "活动页关键交互节点通过微信 We 分析前端上报，覆盖页面进入、领券、注册、订阅、商家浏览、分享、加群等完整链路。先定义通用属性，再列出每个事件及其上传参数，最后给出基于这些事件的漏斗与参考数值。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "一、通用属性",
+                "html": "<p>以下属性所有事件必带，事件块中不再重复列出。</p><div class=\"table-scroll\"><table><thead><tr><th>属性ID</th><th>属性名称</th><th>数据类型</th><th>取值说明</th></tr></thead><tbody><tr><td>user_id</td><td>用户ID</td><td>字符</td><td>已注册用户传用户唯一标识，未注册传空字符串</td></tr><tr><td>community</td><td>社区ID</td><td>字符</td><td>事件发生时的社区 ID</td></tr><tr><td>is_registered</td><td>是否已注册</td><td>整数</td><td>0 未注册，1 已注册</td></tr></tbody></table></div><p>系统自动采集属性（app_state、device、page_path、networktype 等 12 项）由 We 分析自动携带，不手动上报。</p>"
+              },
+              {
+                "title": "1. activity_page_enter · 活动页-页面进入",
+                "html": "<p>触发时机：进入活动页时（首次加载）</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>页面来源</td><td>source</td><td>字符</td><td>notice 公告 / share 分享 / scan 扫码</td></tr></tbody></table></div><p>支撑指标：各社区访问量、来源占比、全部漏斗入口。</p>"
+              },
+              {
+                "title": "2. activity_page_leave · 活动页-页面离开",
+                "html": "<p>触发时机：离开活动页时（切后台 / 关闭 / 跳转）</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>浏览时长</td><td>duration_seconds</td><td>整数</td><td>进入至离开的秒数，多次进出每次重置计时</td></tr></tbody></table></div><p>支撑指标：人均停留时长、页面吸引力。</p>"
+              },
+              {
+                "title": "3. activity_page_empty · 活动页-空状态展示",
+                "html": "<p>触发时机：当前社区无券且无商家，展示空状态时</p><p>无业务参数。</p><p>支撑指标：空社区监控。</p>"
+              },
+              {
+                "title": "4. community_switch · 社区切换-切换结果",
+                "html": "<p>触发时机：用户在社区面板点击目标社区并确认后</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>切换前社区</td><td>from_community</td><td>字符</td><td>切换前社区 ID</td></tr><tr><td>切换后社区</td><td>to_community</td><td>字符</td><td>切换后社区 ID</td></tr></tbody></table></div><p>支撑指标：跨社区浏览行为、热门社区。</p>"
+              },
+              {
+                "title": "5. coupon_section_show · 券-券区曝光",
+                "html": "<p>触发时机：券列表区域首次进入可视区</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>券总张数</td><td>coupon_count</td><td>整数</td><td>当前社区含关键词的券数量</td></tr></tbody></table></div><p>支撑指标：券区曝光率（领券漏斗第 2 步）。</p>"
+              },
+              {
+                "title": "6. coupon_claim_start_click · 券-一键领取点击",
+                "html": "<p>触发时机：点击<span class=\"token token-action\">「一键领取」</span>按钮时</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>可领券总数</td><td>coupon_count</td><td>整数</td><td>当前可领取的券数量</td></tr></tbody></table></div><p>支撑指标：领取点击率（领券漏斗第 3 步）。</p>"
+              },
+              {
+                "title": "7. coupon_claim_result · 券-一键领取结果",
+                "html": "<p>触发时机：全部券领取完成、结果弹窗展示时</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>成功张数</td><td>success_count</td><td>整数</td><td>领取成功的券数</td></tr><tr><td>失败张数</td><td>fail_count</td><td>整数</td><td>领取失败的券数</td></tr><tr><td>总张数</td><td>total_count</td><td>整数</td><td>本次尝试领取的券数</td></tr><tr><td>领取耗时</td><td>duration_ms</td><td>整数</td><td>第一张开始到最后一张完成的毫秒数</td></tr></tbody></table></div><p>支撑指标：领取成功率、人均领券张数（领券漏斗第 4 步）。</p>"
+              },
+              {
+                "title": "8. shop_section_show · 商家-商家区曝光",
+                "html": "<p>触发时机：商家列表区域首次进入可视区</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>商家总数</td><td>shop_count</td><td>整数</td><td>当前社区参与活动的商家数量</td></tr></tbody></table></div><p>支撑指标：商家区曝光率（商家漏斗第 1 步）。</p>"
+              },
+              {
+                "title": "9. shop_card_show · 商家-卡片曝光",
+                "html": "<p>触发时机：单张商家卡片首次进入可视区，每张卡独立上报</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>商家ID</td><td>shop_id</td><td>字符</td><td>商家唯一标识</td></tr><tr><td>商家名称</td><td>shop_name</td><td>字符</td><td>商家名称</td></tr></tbody></table></div><p>支撑指标：单卡可见率（商家漏斗第 2 步）。</p>"
+              },
+              {
+                "title": "10. shop_card_click · 商家-卡片点击",
+                "html": "<p>触发时机：点击商家卡片时</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>商家ID</td><td>shop_id</td><td>字符</td><td>商家唯一标识</td></tr><tr><td>商家名称</td><td>shop_name</td><td>字符</td><td>商家名称</td></tr></tbody></table></div><p>支撑指标：商家点击率、商家关注排名（商家漏斗第 3 步）。</p>"
+              },
+              {
+                "title": "11. register_dialog_confirm_click · 注册-确认点击",
+                "html": "<p>触发时机：点击<span class=\"token token-action\">「注册并领取」</span>按钮时</p><p>无业务参数。</p><p>支撑指标：注册确认率（注册漏斗第 2 步）。</p>"
+              },
+              {
+                "title": "12. register_dialog_skip_click · 注册-暂不领取点击",
+                "html": "<p>触发时机：点击<span class=\"token token-action\">「暂不领取」</span>按钮时</p><p>无业务参数。</p><p>支撑指标：注册流失节点。</p>"
+              },
+              {
+                "title": "13. register_success · 注册-注册成功",
+                "html": "<p>触发时机：注册接口返回成功时</p><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>是否新用户</td><td>is_new_user</td><td>整数</td><td>0 已有账号重新绑定，1 首次注册</td></tr></tbody></table></div><p>支撑指标：注册成功率、新用户数（注册漏斗第 3 步）。</p>"
+              },
+              {
+                "title": "14. subscribe_dialog_allow_click · 订阅-允许点击",
+                "html": "<p>触发时机：订阅引导弹窗中点击<span class=\"token token-action\">「允许」</span>时</p><p>无业务参数。</p><p>支撑指标：订阅授权率（订阅漏斗第 2 步）。</p>"
+              },
+              {
+                "title": "15. subscribe_dialog_deny_click · 订阅-暂不开启点击",
+                "html": "<p>触发时机：订阅引导弹窗中点击<span class=\"token token-action\">「暂不开启」</span>时</p><p>无业务参数。</p><p>支撑指标：订阅流失节点。</p>"
+              },
+              {
+                "title": "16. share_button_click · 分享-分享按钮点击",
+                "html": "<p>触发时机：点击<span class=\"token token-action\">「分享活动」</span>按钮时</p><p>无业务参数。</p><p>支撑指标：分享传播率（传播漏斗第 1 步）。</p>"
+              },
+              {
+                "title": "17. share_miniapp_click · 分享-小程序转发点击",
+                "html": "<p>触发时机：在分享面板中点击<span class=\"token token-action\">「小程序转发」</span>时</p><p>无业务参数。</p><p>支撑指标：分享方式占比（小程序转发）。</p>"
+              },
+              {
+                "title": "18. share_poster_click · 分享-海报转发点击",
+                "html": "<p>触发时机：在分享面板中点击<span class=\"token token-action\">「海报转发」</span>时</p><p>无业务参数。</p><p>支撑指标：分享方式占比（海报转发），按社区拆分。</p>"
+              },
+              {
+                "title": "19. wecom_group_join_click · 企微群-入口点击",
+                "html": "<p>触发时机：点击<span class=\"token token-action\">「加入 XX 社区福利群」</span>横幅时</p><p>无业务参数。</p><p>支撑指标：加群点击率。</p>"
+              },
+              {
+                "title": "20. fab_my_coupon_click · 浮标-我的券点击",
+                "html": "<p>触发时机：点击右下角<span class=\"token token-action\">「我的券」</span>浮标时</p><p>无业务参数。</p><p>支撑指标：已注册 / 未注册用户行为区分。</p>"
+              },
+              {
+                "title": "21. activity_ended_show · 活动已结束-展示",
+                "html": "<p>触发时机：活动时间外进入页面时</p><p>无业务参数。</p><p>支撑指标：过期访问量监控。</p>"
+              },
+              {
+                "title": "二、关键漏斗与参考数值",
+                "html": "<p>漏斗基于上述事件数据计算，每步可得到对应转化率。以下参考数值为首期经验值，首场活动结束后按实际数据校准。</p><div class=\"table-scroll\"><table><thead><tr><th>漏斗</th><th>事件链路</th><th>参考数值</th></tr></thead><tbody><tr><td>领券主漏斗</td><td>页面进入 → 券区曝光 → 一键领取点击 → 领取成功</td><td>券区曝光率 &gt; 80%；领取点击率 &gt; 30%；成功率 &gt; 95%</td></tr><tr><td>注册漏斗</td><td>未注册用户触发领券或我的券 → 确认注册 → 注册成功</td><td>注册确认率 &gt; 50%；注册成功率 &gt; 95%</td></tr><tr><td>订阅漏斗</td><td>领取完成 → 允许授权</td><td>订阅授权率 &gt; 40%</td></tr><tr><td>商家漏斗</td><td>商家区曝光 → 单卡曝光 → 卡片点击</td><td>单卡可见率 &gt; 80%；卡片点击率 &gt; 5%</td></tr><tr><td>传播漏斗</td><td>分享按钮点击 → 分享回流进入</td><td>回流率 &gt; 1（一次分享带回超过一人）</td></tr></tbody></table></div><p>计算口径说明：</p><ul><li>券区曝光率 = coupon_section_show / activity_page_enter</li><li>领取点击率 = coupon_claim_start_click / coupon_section_show</li><li>领取成功率 = coupon_claim_result 中 success_count / total_count</li><li>注册确认率 = register_dialog_confirm_click /（coupon_claim_start_click + fab_my_coupon_click，均为未注册用户）</li><li>注册成功率 = register_success / register_dialog_confirm_click</li><li>订阅授权率 = subscribe_dialog_allow_click / coupon_claim_result</li><li>单卡可见率 = shop_card_show / shop_section_show（按卡累计）</li><li>卡片点击率 = shop_card_click / shop_card_show</li><li>回流率 = activity_page_enter（source=share）/ share_button_click</li></ul>"
+              },
+              {
+                "title": "三、事件总表",
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>序号</th><th>事件ID</th><th>事件名称</th><th>业务参数（不含通用属性）</th><th>所属漏斗</th></tr></thead><tbody><tr><td>1</td><td>activity_page_enter</td><td>活动页-页面进入</td><td>source</td><td>全部漏斗入口</td></tr><tr><td>2</td><td>activity_page_leave</td><td>活动页-页面离开</td><td>duration_seconds</td><td>停留时长</td></tr><tr><td>3</td><td>activity_page_empty</td><td>活动页-空状态展示</td><td>—</td><td>空社区监控</td></tr><tr><td>4</td><td>community_switch</td><td>社区切换-切换结果</td><td>from_community, to_community</td><td>跨社区行为</td></tr><tr><td>5</td><td>coupon_section_show</td><td>券-券区曝光</td><td>coupon_count</td><td>领券漏斗</td></tr><tr><td>6</td><td>coupon_claim_start_click</td><td>券-一键领取点击</td><td>coupon_count</td><td>领券漏斗</td></tr><tr><td>7</td><td>coupon_claim_result</td><td>券-一键领取结果</td><td>success_count, fail_count, total_count, duration_ms</td><td>领券漏斗</td></tr><tr><td>8</td><td>shop_section_show</td><td>商家-商家区曝光</td><td>shop_count</td><td>商家漏斗</td></tr><tr><td>9</td><td>shop_card_show</td><td>商家-卡片曝光</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>10</td><td>shop_card_click</td><td>商家-卡片点击</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>11</td><td>register_dialog_confirm_click</td><td>注册-确认点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>12</td><td>register_dialog_skip_click</td><td>注册-暂不领取点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>13</td><td>register_success</td><td>注册-注册成功</td><td>is_new_user</td><td>注册漏斗</td></tr><tr><td>14</td><td>subscribe_dialog_allow_click</td><td>订阅-允许点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>15</td><td>subscribe_dialog_deny_click</td><td>订阅-暂不开启点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>16</td><td>share_button_click</td><td>分享-分享按钮点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>17</td><td>share_miniapp_click</td><td>分享-小程序转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>18</td><td>share_poster_click</td><td>分享-海报转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>19</td><td>wecom_group_join_click</td><td>企微群-入口点击</td><td>—</td><td>加群指标</td></tr><tr><td>20</td><td>fab_my_coupon_click</td><td>浮标-我的券点击</td><td>—</td><td>注册漏斗入口 / 行为区分</td></tr><tr><td>21</td><td>activity_ended_show</td><td>活动已结束-展示</td><td>—</td><td>过期监控</td></tr><tr><td>20</td><td>fab_my_coupon_click</td><td>浮标-我的券点击</td><td>—</td><td>行为区分</td></tr><tr><td>21</td><td>activity_ended_show</td><td>活动已结束-展示</td><td>—</td><td>过期监控</td></tr></tbody></table></div>"
+              }
+            ],
+            "prototype": null
+          }
+        ]
+      },
+      {
+        "id": "功能二-领券中心-tab",
+        "no": "二",
+        "title": "功能二 · 领券中心 Tab",
+        "desc": "领券中心新增「8月福利节」Tab，复用六一活动专场的实现方式。",
+        "summary": "领券中心新增<span class=\"token token-action\">「8月福利节」</span>Tab，复用六一活动专场的实现方式。",
+        "pages": [
+          {
+            "id": "领券中心-8月福利节",
+            "tab": "领券中心 · 8月福利节",
+            "title": "领券中心 · 8月福利节",
+            "type": "mobile",
+            "location": "",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "Tab · 8月福利节",
+                "desc": "在现有 Tab 中新增<span class=\"token token-action\">「8月福利节」</span>，点击后按券名称关键词<span class=\"token token-page\">【福利节】</span>筛选优惠券",
+                "groups": [
+                  {
+                    "title": "结构",
+                    "items": [
+                      "Tabs 区域新增<span class=\"token token-action\">「8月福利节」</span>入口，视觉突出（渐变色+动画粒子，沿用六一活动 Tab 样式）。",
+                      "Tab 默认展示位置靠前。"
+                    ]
+                  },
+                  {
+                    "title": "筛选规则",
+                    "items": [
+                      "选中 Tab 后直接筛选券名称包含<span class=\"token token-action\">「<span class=\"token token-page\">【福利节】</span>」</span>的优惠券。",
+                      "运营在 PC 后台建券时，券名称以<span class=\"token token-action\">「<span class=\"token token-page\">【福利节】</span>」</span>开头即可自动归集。"
+                    ]
+                  },
+                  {
+                    "title": "与现有功能关系",
+                    "items": [
+                      "不影响其他 Tab 的筛选逻辑。",
+                      "搜索框在整个领券中心页面统一工作，不因选中本 Tab 而额外限制搜索范围。",
+                      "单张券领取交互不变，复用现有免费领/积分兑换能力。"
+                    ]
+                  },
+                  {
+                    "title": "与活动页联动",
+                    "items": [
+                      "活动页券区<span class=\"token token-action\">「查看全部」</span>跳转至领券中心<span class=\"token token-action\">「8月福利节」</span>Tab。",
+                      "跳转后默认选中<span class=\"token token-action\">「8月福利节」</span>，展示筛选结果。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "筛选规则 · 关键词过滤",
+                "desc": "按券名称包含<span class=\"token token-action\">「<span class=\"token token-page\">【福利节】</span>」</span>筛选，复用现有券列表数据，无需新增接口"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "空状态 · 无结果提示",
+                "desc": "无命中时展示<span class=\"token token-action\">「暂无8月福利节优惠券」</span>"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "领券中心 · 8月福利节",
+              "states": [
+                {
+                  "label": "领券中心 · 8月福利节",
+                  "url": "prototype/coupon-center-august.html"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能三-消息订阅配置",
+        "no": "三",
+        "title": "功能三 · 消息订阅配置",
+        "desc": "在现有「消息订阅」面板的「市集」模块下新增 1 个子项。活动页订阅弹窗中用户一旦授权，即",
+        "summary": "在现有<span class=\"token token-action\">「消息订阅」</span>面板的<span class=\"token token-action\">「市集」</span>模块下新增 1 个子项。活动页订阅弹窗中用户一旦授权，即开启面板内所有订阅子项。",
+        "pages": [
+          {
+            "id": "消息订阅-市集模块",
+            "tab": "消息订阅 · 市集模块",
+            "title": "消息订阅 · 市集模块",
+            "type": "mobile",
+            "location": "",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "子项 · 市集 · 社区活动通知",
+                "desc": "消息订阅面板<span class=\"token token-action\">「市集」</span>分组下新增 1 个子项"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "交互 · 授权即全开",
+                "desc": "活动页订阅弹窗用户点<span class=\"token token-action\">「允许」</span>后，开启面板内全部子项"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "消息订阅 · 市集模块",
+              "states": [
+                {
+                  "label": "消息订阅 · 市集模块",
+                  "url": "prototype/notification-settings.html"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ];
+    /* GENERATED_PRD_DATA_END */
+
+    const sectionNav = document.getElementById("sectionNav");
+    const featureNav = document.getElementById("featureNav");
+    const sectionNavLabel = document.getElementById("sectionNavLabel");
+    const featureNavLabel = document.getElementById("featureNavLabel");
+    const featureTitle = document.getElementById("featureTitle");
+    const featureSummary = document.getElementById("featureSummary");
+    const pageTabs = document.getElementById("pageTabs");
+    const workspace = document.getElementById("workspace");
+    const docKicker = document.getElementById("docKicker");
+    const pageTitle = document.getElementById("pageTitle");
+    const docScroll = document.getElementById("docScroll");
+    const protoKicker = document.getElementById("protoKicker");
+    const protoTitle = document.getElementById("protoTitle");
+    const protoStage = document.getElementById("protoStage");
+    const stateBar = document.getElementById("stateBar");
+    const openProto = document.getElementById("openProto");
+    const protoFullscreen = document.getElementById("protoFullscreen");
+    const protoFullscreenTitle = document.getElementById("protoFullscreenTitle");
+    const protoFullscreenStage = document.getElementById("protoFullscreenStage");
+    const closeProtoFullscreen = document.getElementById("closeProtoFullscreen");
+    const protoHead = document.querySelector(".proto-head");
+    const layout = document.querySelector(".layout");
+    const content = document.querySelector(".content");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    let activeSectionId = SECTION_DATA[0]?.id || null;
+    let activeFeatureId = DATA[0].id;
+    let activePageId = DATA[0].pages[0].id;
+    let activeStateIndex = 0;
+    let loadTimer = null;
+
+    const collapseIcon = '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M15 9l-3 3 3 3"></path></svg>';
+    const expandIcon = '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M13 9l3 3-3 3"></path></svg>';
+
+    document.body.classList.toggle("large-mode", PRD_MODE === "large");
+    sectionNavLabel.hidden = PRD_MODE === "large" || SECTION_DATA.length === 0;
+    featureNavLabel.hidden = PRD_MODE === "large";
+    featureNavLabel.textContent = "需求说明";
+
+    function refitPrototype() {
+      const page = currentPage();
+      if (!page || !page.prototype) return;
+      page.prototype.kind === "mobile" ? fitMobileFrame() : fitPcFrame();
+    }
+
+    function syncSidebarToggle() {
+      const collapsed = layout.classList.contains("sidebar-collapsed");
+      sidebarToggle.innerHTML = collapsed ? expandIcon : collapseIcon;
+      sidebarToggle.title = collapsed ? "展开左侧菜单" : "收起左侧菜单";
+      sidebarToggle.setAttribute("aria-label", sidebarToggle.title);
+    }
+
+    sidebarToggle.addEventListener("click", () => {
+      layout.classList.toggle("sidebar-collapsed");
+      syncSidebarToggle();
+      setTimeout(refitPrototype, 180);
+    });
+
+    function currentSection() {
+      return SECTION_DATA.find(item => item.id === activeSectionId);
+    }
+
+    function currentFeature() {
+      return DATA.find(item => item.id === activeFeatureId) || DATA[0];
+    }
+
+    function currentPage() {
+      const feature = currentFeature();
+      return feature.pages.find(item => item.id === activePageId) || feature.pages[0];
+    }
+
+    function abs(url) {
+      return new URL(url, window.location.href).href;
+    }
+
+    function fitFullscreenFrame() {
+      const frame = protoFullscreenStage.querySelector(".proto-fullscreen-frame");
+      if (!frame) return;
+      const baseW = Number(frame.dataset.baseW) || 375;
+      const baseH = Number(frame.dataset.baseH) || 812;
+      const rect = protoFullscreenStage.getBoundingClientRect();
+      const padding = 28;
+      const scale = Math.min((rect.width - padding * 2) / baseW, (rect.height - padding * 2) / baseH);
+      const safeScale = Math.max(scale, .2);
+      const displayW = baseW * safeScale;
+      const displayH = baseH * safeScale;
+      frame.style.left = Math.max((rect.width - displayW) / 2, 0) + "px";
+      frame.style.top = Math.max((rect.height - displayH) / 2, 0) + "px";
+      frame.style.transform = `scale(${safeScale.toFixed(4)})`;
+    }
+
+    function openPrototypeFullscreen() {
+      const page = currentPage();
+      const proto = page && page.prototype;
+      if (!proto || !proto.states || !proto.states.length) return;
+      const state = proto.states[activeStateIndex] || proto.states[0];
+      const kind = proto.kind === "mobile" ? "mobile" : "pc";
+      const baseW = Number(proto.width) || (kind === "mobile" ? 375 : 1920);
+      const baseH = Number(proto.height) || (kind === "mobile" ? 812 : 1080);
+
+      protoFullscreenTitle.textContent = proto.states.length > 1 ? `${proto.title} · ${state.label}` : proto.title;
+      protoFullscreenStage.innerHTML = "";
+
+      const frame = document.createElement("div");
+      frame.className = `proto-fullscreen-frame ${kind}`;
+      frame.dataset.baseW = String(baseW);
+      frame.dataset.baseH = String(baseH);
+      frame.style.width = baseW + "px";
+      frame.style.height = baseH + "px";
+
+      const iframe = document.createElement("iframe");
+      iframe.src = abs(state.url);
+      iframe.title = protoFullscreenTitle.textContent;
+      iframe.onload = () => {
+        hideIframeScrollbar(iframe);
+        setTimeout(() => runAction(iframe, state.action), 180);
+      };
+      frame.appendChild(iframe);
+      protoFullscreenStage.appendChild(frame);
+
+      protoFullscreen.classList.add("show");
+      protoFullscreen.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(fitFullscreenFrame);
+    }
+
+    function closePrototypeFullscreen() {
+      protoFullscreen.classList.remove("show");
+      protoFullscreen.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      protoFullscreenStage.innerHTML = "";
+      openProto.focus();
+    }
+
+    openProto.addEventListener("click", openPrototypeFullscreen);
+    closeProtoFullscreen.addEventListener("click", closePrototypeFullscreen);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && protoFullscreen.classList.contains("show")) closePrototypeFullscreen();
+    });
+
+    function renderSectionNav() {
+      sectionNav.innerHTML = SECTION_DATA.map(section => `
+        <button class="feature-btn ${section.id === activeSectionId ? "active" : ""}" data-section="${section.id}">
+          <span class="feature-name">${section.title}</span>
+        </button>
+      `).join("");
+
+      sectionNav.querySelectorAll(".feature-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeSectionId = btn.dataset.section;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderFeatureNav() {
+      featureNav.innerHTML = DATA.map(feature => `
+        <button class="feature-btn ${!activeSectionId && feature.id === activeFeatureId ? "active" : ""}" data-feature="${feature.id}">
+          <span class="feature-name">${feature.title}</span>
+        </button>
+      `).join("");
+
+      featureNav.querySelectorAll(".feature-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const target = DATA.find(item => item.id === btn.dataset.feature);
+          if (!target) return;
+          activeSectionId = null;
+          activeFeatureId = target.id;
+          activePageId = target.pages[0].id;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderTabs() {
+      if (activeSectionId) {
+        pageTabs.innerHTML = "";
+        return;
+      }
+      const feature = currentFeature();
+      pageTabs.innerHTML = feature.pages.map(page => `
+        <button class="page-tab ${page.id === activePageId ? "active" : ""}" data-page="${page.id}">${page.tab}</button>
+      `).join("");
+
+      pageTabs.querySelectorAll(".page-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activePageId = btn.dataset.page;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderDoc() {
+      const section = currentSection();
+      if (section) {
+        featureTitle.textContent = section.title;
+        featureSummary.innerHTML = section.summary;
+        docKicker.textContent = "基础内容";
+        pageTitle.textContent = section.title;
+        docScroll.innerHTML = section.blocks.map(block => `
+          <div class="block">
+            <h3>${block.title}</h3>
+            ${block.html || `<ul>${(block.list || []).map(item => `<li>${item}</li>`).join("")}</ul>`}
+          </div>
+        `).join("");
+        docScroll.scrollTop = 0;
+        return;
+      }
+
+      const feature = currentFeature();
+      const page = currentPage();
+      featureTitle.textContent = feature.title;
+      featureSummary.innerHTML = feature.summary;
+      const kickerMap = {
+        overview: "业务需求",
+        pc: "PC端页面需求",
+        mobile: "移动端页面需求",
+        merchant: "商家端页面需求",
+        message: "消息需求",
+        task: "任务需求",
+        table: "底表设计需求"
+      };
+      docKicker.textContent = kickerMap[page.type] || "需求说明";
+      pageTitle.textContent = page.title;
+
+      const changes = page.changes || [];
+      const changeHtml = changes.map(change => {
+        const body = renderChangeBody(change);
+        return `
+          <div class="change-item">
+            <span class="tag ${change.type}">${change.label}</span>
+            <div class="change-body">
+              <strong>${change.title}</strong>
+              ${body}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const notes = page.notes && page.notes.length
+        ? `<div class="block"><h3>补充说明</h3><ul>${page.notes.map(item => `<li>${item}</li>`).join("")}</ul></div>`
+        : "";
+
+      const detailBlocks = (page.blocks || []).map(block => `
+        <div class="block">
+          <h3>${block.title}</h3>
+          ${block.html}
+        </div>
+      `).join("");
+
+      const pageLead = ['pc', 'mobile', 'merchant'].includes(page.type)
+        ? `
+          ${page.location ? `<div class="block"><h3>页面位置</h3><p>${page.location}</p></div>` : ""}
+          ${changeHtml ? `<div class="block"><h3>本页改动</h3><div class="change-list">${changeHtml}</div></div>` : ""}
+        `
+        : "";
+
+      docScroll.innerHTML = `${pageLead}${detailBlocks}${notes}`;
+      docScroll.scrollTop = 0;
+    }
+
+    function renderChangeBody(change) {
+      if (change.groups) {
+        return `<ol class="rule-groups">${change.groups.map(group => `
+          <li><span class="rule-title">${group.title}</span><ol>${group.items.map(item => `<li>${item}</li>`).join("")}</ol></li>
+        `).join("")}</ol>`;
+      }
+      if (change.list) return `<ol>${change.list.map(item => `<li>${item}</li>`).join("")}</ol>`;
+      return `<p>${change.desc}</p>`;
+    }
+
+    function hideIframeScrollbar(iframe) {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const style = doc.createElement("style");
+        style.textContent = "html, body, * { scrollbar-width: none !important; -ms-overflow-style: none !important; } ::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }";
+        doc.head.appendChild(style);
+      } catch (e) {
+        console.warn("skip iframe style", e);
+      }
+    }
+
+    function runAction(iframe, action) {
+      if (!action) return;
+      try {
+        const win = iframe.contentWindow;
+        const fn = win && win[action.fn];
+        if (typeof fn === "function") fn.apply(win, action.args || []);
+      } catch (e) {
+        console.warn("skip iframe action", e);
+      }
+    }
+
+    function fitPcFrame() {
+      const wrap = protoStage.querySelector(".pc-stage");
+      const iframe = protoStage.querySelector("iframe");
+      if (!wrap || !iframe) return;
+      const rect = wrap.getBoundingClientRect();
+      let body = null;
+      let root = null;
+      try {
+        const doc = iframe.contentDocument;
+        body = doc && doc.body;
+        root = doc && doc.documentElement;
+      } catch (e) {
+        console.warn("skip iframe size inspect", e);
+      }
+      const baseW = Math.max(
+        Number(iframe.dataset.baseW) || 1920,
+        body ? body.scrollWidth : 0,
+        body ? body.offsetWidth : 0,
+        root ? root.scrollWidth : 0,
+        root ? root.offsetWidth : 0
+      );
+      const baseH = Math.max(
+        Number(iframe.dataset.baseH) || 1080,
+        body ? body.scrollHeight : 0,
+        body ? body.offsetHeight : 0,
+        root ? root.scrollHeight : 0,
+        root ? root.offsetHeight : 0
+      );
+      const scale = Math.min(rect.width / baseW, rect.height / baseH);
+      iframe.style.width = baseW + "px";
+      iframe.style.height = baseH + "px";
+      iframe.style.transform = `scale(${Math.max(scale, .2).toFixed(4)})`;
+    }
+
+    function fitMobileFrame() {
+      const shell = protoStage.querySelector(".phone-shell");
+      if (!shell) return;
+      const rect = protoStage.getBoundingClientRect();
+      const scale = Math.min((rect.width - 28) / 375, (rect.height - 28) / 812, 1);
+      shell.style.transform = `scale(${Math.max(scale, .52).toFixed(4)})`;
+    }
+
+    function renderStateBar(page) {
+      const states = page.prototype.states;
+      if (!states || states.length <= 1) {
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        return;
+      }
+      protoHead.classList.add("has-states");
+      stateBar.innerHTML = states.map((state, index) => `
+        <button class="state-btn ${index === activeStateIndex ? "active" : ""}" data-index="${index}">${state.label}</button>
+      `).join("");
+
+      stateBar.querySelectorAll(".state-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeStateIndex = Number(btn.dataset.index);
+          renderPrototype();
+        });
+      });
+    }
+
+    function renderPrototype() {
+      if (activeSectionId) {
+        workspace.className = "workspace doc-only";
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        openProto.disabled = true;
+        protoStage.innerHTML = "";
+        return;
+      }
+
+      const page = currentPage();
+      const proto = page.prototype;
+      if (!proto || !proto.states || !proto.states.length) {
+        workspace.className = "workspace doc-only";
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        openProto.disabled = true;
+        protoStage.innerHTML = "";
+        return;
+      }
+      const states = proto.states;
+      const state = states[activeStateIndex] || states[0];
+      const kind = proto.kind;
+
+      workspace.className = `workspace ${kind === "mobile" ? "mobile" : "pc"}`;
+      protoKicker.textContent = kind === "mobile" ? "移动端原型" : "PC端原型";
+      protoTitle.textContent = states.length > 1 ? `${proto.title} · ${state.label}` : proto.title;
+      openProto.disabled = false;
+      renderStateBar(page);
+
+      clearTimeout(loadTimer);
+      loadTimer = setTimeout(() => {
+        protoStage.innerHTML = "";
+        const iframe = document.createElement("iframe");
+          iframe.src = abs(state.url);
+          iframe.dataset.baseW = String(proto.width || 1920);
+          iframe.dataset.baseH = String(proto.height || 1080);
+          iframe.onload = () => {
+            iframe.style.opacity = "1";
+            hideIframeScrollbar(iframe);
+          setTimeout(() => runAction(iframe, state.action), 180);
+          kind === "mobile" ? fitMobileFrame() : fitPcFrame();
+        };
+
+        if (kind === "mobile") {
+          const shell = document.createElement("div");
+          shell.className = "phone-shell";
+          shell.appendChild(iframe);
+          protoStage.appendChild(shell);
+          requestAnimationFrame(fitMobileFrame);
+        } else {
+          const wrap = document.createElement("div");
+          wrap.className = "pc-stage";
+          wrap.appendChild(iframe);
+          protoStage.appendChild(wrap);
+          requestAnimationFrame(fitPcFrame);
+        }
+      }, 80);
+    }
+
+    function renderAll() {
+      renderSectionNav();
+      renderFeatureNav();
+      renderTabs();
+      renderDoc();
+      renderPrototype();
+      content.scrollTop = 0;
+    }
+
+    window.addEventListener("resize", () => {
+      refitPrototype();
+      fitFullscreenFrame();
+    });
+
+    syncSidebarToggle();
+    renderAll();
+  </script>
+</body>
+</html>
