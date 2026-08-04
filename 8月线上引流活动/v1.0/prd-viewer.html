@@ -2034,7 +2034,17 @@
       if (!shell) return;
       const rect = protoStage.getBoundingClientRect();
       const scale = Math.min((rect.width - 28) / 375, (rect.height - 28) / 812, 1);
-      shell.style.transform = `scale(${Math.max(scale, .52).toFixed(4)})`;
+      const s = Math.max(scale, 0.3);
+      shell.style.width = (375 * s) + "px";
+      shell.style.height = (812 * s) + "px";
+      shell.style.transform = "";
+      const frame = shell.querySelector("iframe");
+      if (frame) {
+        frame.style.width = "375px";
+        frame.style.height = "812px";
+        frame.style.transformOrigin = "top left";
+        frame.style.transform = `scale(${s.toFixed(4)})`;
+      }
     }
 
     function renderStateBar(page) {
