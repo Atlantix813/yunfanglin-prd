@@ -949,7 +949,7 @@
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-august-activity.md 自动生成，MD SHA256: 0de24fc18f8d90a8a63bb599a0eb81272be8fae49a33fd97e7b8103b67364cfe
+    // 由 prd-august-activity.md 自动生成，MD SHA256: d42f46d75a3f2f631cd31d31bb1e0cc2efb4e9a4316b9db158d73bc21cb36134
     const PRD_MODE = "small";
     const SECTION_DATA = [
       {
@@ -1364,8 +1364,10 @@
                   {
                     "title": "触发时机",
                     "items": [
-                      "一键领取完成后，结果弹窗关闭时弹出。",
-                      "无论用户此前是否已注册，领取成功后才触发订阅引导。"
+                      "一键领取完成后，结果弹窗关闭时，先判断用户订阅消息推送开关状态。",
+                      "订阅开关已打开 → 不弹出订阅弹窗，直接结束流程。",
+                      "订阅开关未打开（含首次用户、以及曾关闭过推送的用户）→ 弹出订阅引导弹窗。",
+                      "订阅开关状态以平台内部<span class=\"token token-action\">「消息订阅」</span>面板记录为准（后端存储），非微信授权状态。"
                     ]
                   },
                   {
@@ -1386,8 +1388,9 @@
                   {
                     "title": "完整链路",
                     "items": [
-                      "未注册用户：点击一键领取 → 注册弹窗 → 点击<span class=\"token token-action\">「注册并领取」</span> → 领取流程 → 结果弹窗 → 订阅弹窗。",
-                      "已注册用户：点击一键领取 → 领取流程 → 结果弹窗 → 订阅弹窗。"
+                      "未注册用户：点击一键领取 → 注册弹窗 → 点击<span class=\"token token-action\">「注册并领取」</span> → 领取流程 → 结果弹窗 → 判断订阅开关（未开则弹订阅窗）。",
+                      "已注册用户（订阅开关已开）：点击一键领取 → 领取流程 → 结果弹窗 → 结束。",
+                      "已注册用户（订阅开关未开）：点击一键领取 → 领取流程 → 结果弹窗 → 订阅弹窗。"
                     ]
                   }
                 ]
@@ -1402,23 +1405,23 @@
               "states": [
                 {
                   "label": "主状态",
-                  "url": "prototype/activity-landing.html?v=6&state=default"
+                  "url": "prototype/activity-landing.html?state=default"
                 },
                 {
                   "label": "全部已领取",
-                  "url": "prototype/activity-landing.html?v=6&state=collected"
+                  "url": "prototype/activity-landing.html?state=collected"
                 },
                 {
                   "label": "新用户未注册",
-                  "url": "prototype/activity-landing.html?v=6&state=unregistered"
+                  "url": "prototype/activity-landing.html?state=unregistered"
                 },
                 {
                   "label": "活动已结束",
-                  "url": "prototype/activity-landing.html?v=6&state=ended"
+                  "url": "prototype/activity-landing.html?state=ended"
                 },
                 {
                   "label": "空状态",
-                  "url": "prototype/activity-landing.html?v=6&state=empty"
+                  "url": "prototype/activity-landing.html?state=empty"
                 }
               ]
             }
@@ -1760,7 +1763,11 @@
     }
 
     function abs(url) {
-      return new URL(url, window.location.href).href;
+      const u = new URL(url, window.location.href);
+      if (url && !url.startsWith("about:")) {
+        u.searchParams.set("ts", Date.now());
+      }
+      return u.href;
     }
 
     function fitFullscreenFrame() {

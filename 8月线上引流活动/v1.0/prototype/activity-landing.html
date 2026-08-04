@@ -3,6 +3,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>居民端 · 活动落地页</title>
 <link rel="stylesheet" href="mobile-components.css">
@@ -286,6 +289,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   var p = new URLSearchParams(location.search);
   var s = p.get('state') || 'default';
   var isUnregistered = false;
+  var isSubscribed = false; // 模拟后端订阅开关状态：true=已开启推送
   var isRegisterSheet = false;
   var currentCommunity = '南医大社区';
 
@@ -354,10 +358,15 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   });
   el('resultOkBtn').addEventListener('click', function(){
     hideDialog('resultDialog');
-    showDialog('subscribeDialog');
+    if(!isSubscribed){
+      showDialog('subscribeDialog');
+    }
   });
 
-  el('subscribeAllowBtn').addEventListener('click', function(){ hideDialog('subscribeDialog'); });
+  el('subscribeAllowBtn').addEventListener('click', function(){
+    isSubscribed = true;
+    hideDialog('subscribeDialog');
+  });
   el('subscribeDenyBtn').addEventListener('click', function(){ hideDialog('subscribeDialog'); });
 
   // 社区树交互
@@ -470,8 +479,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
           el('claimBtn').className = 'm-btn m-btn-disabled';
           el('claimBtn').textContent = '已领取';
           document.querySelectorAll('.coupon-tag').forEach(function(t){ t.textContent = '已领取'; t.style.color = '#16b36a'; });
-          el('resultMsg').textContent = '您已成功领取全部优惠券';
-          el('resultSub').textContent = '';
+          el('resultMsg').innerHTML = '您已成功领取全部优惠券<span style="display:block;font-size:12px;color:#999;margin-top:4px" id="resultSub"></span>';
           showDialog('resultDialog');
         }, 500);
       }

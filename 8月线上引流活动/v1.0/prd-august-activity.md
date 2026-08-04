@@ -26,11 +26,11 @@
 
 #### 居民端活动页
 
-<!-- prototype: src="prototype/activity-landing.html?v=6&state=default" width="375" height="812" title="活动落地页 · 主状态" -->
-<!-- prototype: src="prototype/activity-landing.html?v=6&state=collected" width="375" height="812" title="活动落地页 · 全部已领取" -->
-<!-- prototype: src="prototype/activity-landing.html?v=6&state=unregistered" width="375" height="812" title="活动落地页 · 新用户未注册" -->
-<!-- prototype: src="prototype/activity-landing.html?v=6&state=ended" width="375" height="812" title="活动落地页 · 活动已结束" -->
-<!-- prototype: src="prototype/activity-landing.html?v=6&state=empty" width="375" height="812" title="活动落地页 · 空状态" -->
+<!-- prototype: src="prototype/activity-landing.html?state=default" width="375" height="812" title="活动落地页 · 主状态" -->
+<!-- prototype: src="prototype/activity-landing.html?state=collected" width="375" height="812" title="活动落地页 · 全部已领取" -->
+<!-- prototype: src="prototype/activity-landing.html?state=unregistered" width="375" height="812" title="活动落地页 · 新用户未注册" -->
+<!-- prototype: src="prototype/activity-landing.html?state=ended" width="375" height="812" title="活动落地页 · 活动已结束" -->
+<!-- prototype: src="prototype/activity-landing.html?state=empty" width="375" height="812" title="活动落地页 · 空状态" -->
 
 ##### 页面位置
 
@@ -202,8 +202,10 @@
 ###### 订阅消息 · 活动通知授权
 
 1. 触发时机
-   1. 一键领取完成后，结果弹窗关闭时弹出。
-   2. 无论用户此前是否已注册，领取成功后才触发订阅引导。
+   1. 一键领取完成后，结果弹窗关闭时，先判断用户订阅消息推送开关状态。
+   2. 订阅开关已打开 → 不弹出订阅弹窗，直接结束流程。
+   3. 订阅开关未打开（含首次用户、以及曾关闭过推送的用户）→ 弹出订阅引导弹窗。
+   4. 订阅开关状态以平台内部「消息订阅」面板记录为准（后端存储），非微信授权状态。
 2. 弹窗内容
    1. 标题：「开启活动通知」。
    2. 描述：「开启后，您将收到优惠券到期提醒、社区活动通知等消息」。
@@ -212,8 +214,9 @@
    1. 订阅弹窗在领取完成后独立弹出，不影响领取流程。
    2. 用户选择「允许」或「暂不开启」均关闭弹窗，不阻塞后续操作。
 4. 完整链路
-   1. 未注册用户：点击一键领取 → 注册弹窗 → 点击「注册并领取」 → 领取流程 → 结果弹窗 → 订阅弹窗。
-   2. 已注册用户：点击一键领取 → 领取流程 → 结果弹窗 → 订阅弹窗。
+   1. 未注册用户：点击一键领取 → 注册弹窗 → 点击「注册并领取」 → 领取流程 → 结果弹窗 → 判断订阅开关（未开则弹订阅窗）。
+   2. 已注册用户（订阅开关已开）：点击一键领取 → 领取流程 → 结果弹窗 → 结束。
+   3. 已注册用户（订阅开关未开）：点击一键领取 → 领取流程 → 结果弹窗 → 订阅弹窗。
 
 ###### 企微群入口 · 加入社区福利群
 
@@ -579,6 +582,7 @@
 3. 消息订阅面板为云芳邻内部配置面板，各子项开关由平台自身控制推送内容，不依赖微信多模板。
 4. 用户可在「消息订阅」面板中手动关闭或开启个别子项。
 5. 用户点击「暂不开启」则仅关闭弹窗，不发起模板授权。
+6. 后端记录的用户订阅开关状态作为活动页订阅弹窗的展示依据：开关已打开则不弹窗，未打开（含曾手动关闭的用户）则弹窗引导重新开启。
 
 ###### 手动推送
 
