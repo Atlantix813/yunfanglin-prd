@@ -269,6 +269,8 @@
       min-height: 0;
       overflow-y: auto;
       overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     .feature-head {
@@ -276,6 +278,7 @@
       background: #fff;
       border-bottom: 1px solid var(--line);
       min-width: 0;
+      flex: none;
     }
 
     .feature-head h1 {
@@ -303,6 +306,7 @@
       position: sticky;
       top: 0;
       z-index: 4;
+      flex: none;
     }
 
     .page-tab {
@@ -334,7 +338,7 @@
       gap: 16px;
       padding: 16px;
       overflow: hidden;
-      height: calc(100vh - 74px - 54px);
+      flex: 1;
     }
 
     .workspace.pc {
