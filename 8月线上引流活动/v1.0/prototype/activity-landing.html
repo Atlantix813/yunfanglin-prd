@@ -138,7 +138,12 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
 <div class="m-dialog-overlay" id="resultDialog" data-style-ok>
   <div class="m-dialog-box" style="width:300px" data-style-ok>
     <div class="m-dialog-body" style="text-align:center" data-style-ok>
-      <p style="font-size:15px;font-weight:600;margin:0" id="resultMsg">您已成功领取全部优惠券<span style="display:block;font-size:12px;color:#999;margin-top:4px" id="resultSub"></span></p>
+      <p style="font-size:16px;font-weight:700;margin:0 0 14px" id="resultMsg">已成功领取社区优惠</p>
+      <div style="text-align:left;background:#F7F9FC;border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.8;color:#5B6573" data-style-ok>
+        <div>· 优惠券在活动时间内有效，过期作废</div>
+        <div>· 进入卡包点击优惠券，到店出示核销码即可使用</div>
+        <div>· 可前往云芳邻小程序—我的卡包查看，或点击右下角「我的券」浮标进入</div>
+      </div>
     </div>
     <div class="m-dialog-actions">
       <button id="resultOkBtn">好的</button>
@@ -479,7 +484,6 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
           el('claimBtn').className = 'm-btn m-btn-disabled';
           el('claimBtn').textContent = '已领取';
           document.querySelectorAll('.coupon-tag').forEach(function(t){ t.textContent = '已领取'; t.style.color = '#16b36a'; });
-          el('resultMsg').innerHTML = '您已成功领取全部优惠券<span style="display:block;font-size:12px;color:#999;margin-top:4px" id="resultSub"></span>';
           showDialog('resultDialog');
         }, 500);
       }

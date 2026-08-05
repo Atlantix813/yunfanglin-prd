@@ -953,7 +953,7 @@
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-august-activity.md 自动生成，MD SHA256: d42f46d75a3f2f631cd31d31bb1e0cc2efb4e9a4316b9db158d73bc21cb36134
+    // 由 prd-august-activity.md 自动生成，MD SHA256: e38c7a97bcc149b4443286f386758f8198d0ab8dddec5254f9dba9df5e5c5c02
     const PRD_MODE = "small";
     const SECTION_DATA = [
       {
@@ -1003,7 +1003,7 @@
           },
           {
             "title": "一键领取",
-            "html": "<ul><li>串行逐张调用现有单张领券接口</li><li>成功/失败分别计数，完成后统一弹窗（只区分&quot;全部成功&quot;和&quot;部分失败&quot;，不逐条报错）</li><li>领取期间按钮禁用防重复点击</li></ul>"
+            "html": "<ul><li>复用现有批量领券接口，一次提交可领券 ID 列表</li><li>成功/失败分别统计用于埋点，弹窗表现统一（<span class=\"token token-action\">「已成功领取社区优惠」</span>+ 指引区）</li><li>领取期间按钮禁用防重复点击</li></ul>"
           },
           {
             "title": "活动时间",
@@ -1015,7 +1015,7 @@
           },
           {
             "title": "现有接口依赖",
-            "html": "<div class=\"table-scroll\"><table><thead><tr><th>接口</th><th>用途</th></tr></thead><tbody><tr><td>组织树/社区列表</td><td>社区切换面板</td></tr><tr><td>商家列表（含商家ID、名称、头图、社区字段）</td><td>商家卡片区</td></tr><tr><td>领券中心券列表（含券名称、面额、门槛、库存、所属商家ID、有效期）</td><td>活动券区</td></tr><tr><td>单张领券</td><td>一键领取逐张调用</td></tr><tr><td>用户已领券查询</td><td>判断已领取状态</td></tr><tr><td>用户注册/授权</td><td>注册弹窗流程</td></tr></tbody></table></div>"
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>接口</th><th>用途</th></tr></thead><tbody><tr><td>组织树/社区列表</td><td>社区切换面板</td></tr><tr><td>商家列表（含商家ID、名称、头图、社区字段）</td><td>商家卡片区</td></tr><tr><td>领券中心券列表（含券名称、面额、门槛、库存、所属商家ID、有效期）</td><td>活动券区</td></tr><tr><td>批量领券</td><td>一键领取一次提交可领券 ID 列表</td></tr><tr><td>用户已领券查询</td><td>判断已领取状态</td></tr><tr><td>用户注册/授权</td><td>注册弹窗流程</td></tr></tbody></table></div>"
           }
         ]
       }
@@ -1146,12 +1146,16 @@
                     "items": [
                       "点击后仅领取可领券列表中的券，已领或不可领的自动跳过。",
                       "全屏遮罩，中央显示<span class=\"token token-action\">「当前正领取优惠券，请稍等」</span>和实时进度。",
-                      "串行逐张调用单张领券接口，失败成功分别统计。",
+                      "调用批量领券接口，一次提交可领券 ID，成功失败分别统计。",
                       "全部领取完成后遮罩消失。",
                       "弹出结果弹窗：",
-                      "全部成功：<span class=\"token token-action\">「您已成功领取全部优惠券」</span>。",
-                      "部分失败：<span class=\"token token-action\">「部分优惠券领取失败」</span>，不逐条列出失败原因。",
-                      "弹窗点击<span class=\"token token-action\">「好的」</span>关闭。",
+                      "主文案统一为<span class=\"token token-action\">「已成功领取社区优惠」</span>，不区分全部成功或部分失败。",
+                      "弹窗内展示指引区（预设文字）：",
+                      "有效期提示：优惠券在活动时间内有效，过期作废。",
+                      "使用方式：进入卡包点击优惠券，到店出示核销码即可使用。",
+                      "卡包入口：可前往云芳邻小程序—我的卡包查看，或点击右下角<span class=\"token token-action\">「我的券」</span>浮标进入。",
+                      "弹窗仅保留<span class=\"token token-action\">「好的」</span>关闭按钮。",
+                      "弹窗点击<span class=\"token token-action\">「好的」</span>关闭，关闭后继续走订阅判断逻辑（未开启订阅则弹出订阅弹窗）。",
                       "领取完成后刷新可领券列表，如无可领券则按钮变为置灰<span class=\"token token-action\">「已领取」</span>。",
                       "执行期间按钮不可重复点击。"
                     ]
@@ -1502,7 +1506,7 @@
               },
               {
                 "title": "6. coupon_claim_result · 券-一键领取结果",
-                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>全部券领取完成、结果弹窗展示时</td><td>领取成功率、人均领券张数（领券漏斗第 3 步）。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>成功张数</td><td>success_count</td><td>整数</td><td>领取成功的券数</td></tr><tr><td>失败张数</td><td>fail_count</td><td>整数</td><td>领取失败的券数</td></tr><tr><td>总张数</td><td>total_count</td><td>整数</td><td>本次尝试领取的券数</td></tr><tr><td>领取耗时</td><td>duration_ms</td><td>整数</td><td>第一张开始到最后一张完成的毫秒数</td></tr></tbody></table></div>"
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>全部券领取完成、结果弹窗展示时</td><td>人均领券张数（领券漏斗第 3 步）。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>总张数</td><td>total_count</td><td>整数</td><td>本次尝试领取的券数</td></tr><tr><td>领取耗时</td><td>duration_ms</td><td>整数</td><td>领取完成的毫秒数</td></tr></tbody></table></div>"
               },
               {
                 "title": "7. shop_card_show · 商家-卡片曝光",
@@ -1558,11 +1562,11 @@
               },
               {
                 "title": "二、关键漏斗与参考数值",
-                "html": "<p>漏斗基于上述事件数据计算，每步可得到对应转化率。以下参考数值为首期经验值，首场活动结束后按实际数据校准。</p><div class=\"table-scroll\"><table><thead><tr><th>漏斗</th><th>事件链路</th><th>参考数值</th></tr></thead><tbody><tr><td>领券主漏斗</td><td>页面进入 → 一键领取点击 → 领取成功</td><td>领取点击率 &gt; 30%；成功率 &gt; 95%</td></tr><tr><td>注册漏斗</td><td>未注册用户触发领券或我的券 → 确认注册 → 注册成功</td><td>注册确认率 &gt; 50%；注册成功率 &gt; 95%</td></tr><tr><td>订阅漏斗</td><td>领取完成 → 允许授权</td><td>订阅授权率 &gt; 40%</td></tr><tr><td>商家漏斗</td><td>单卡曝光 → 卡片点击</td><td>卡片点击率 &gt; 5%</td></tr><tr><td>传播漏斗</td><td>分享按钮点击 → 分享回流进入</td><td>回流率 &gt; 1（一次分享带回超过一人）</td></tr></tbody></table></div><p>计算口径说明：</p><ul><li>领取点击率 = coupon_claim_start_click / activity_page_enter</li><li>领取成功率 = coupon_claim_result 中 success_count / total_count</li><li>注册确认率 = register_dialog_confirm_click /（coupon_claim_start_click + fab_my_coupon_click，均为未注册用户）</li><li>注册成功率 = register_success / register_dialog_confirm_click</li><li>订阅授权率 = subscribe_dialog_allow_click / coupon_claim_result</li><li>卡片点击率 = shop_card_click / shop_card_show</li><li>回流率 = activity_page_enter（source=share）/ share_button_click</li></ul>"
+                "html": "<p>漏斗基于上述事件数据计算，每步可得到对应转化率。以下参考数值为首期经验值，首场活动结束后按实际数据校准。</p><div class=\"table-scroll\"><table><thead><tr><th>漏斗</th><th>事件链路</th><th>参考数值</th></tr></thead><tbody><tr><td>领券主漏斗</td><td>页面进入 → 一键领取点击 → 领取成功</td><td>领取点击率 &gt; 30%；成功率 &gt; 95%</td></tr><tr><td>注册漏斗</td><td>未注册用户触发领券或我的券 → 确认注册 → 注册成功</td><td>注册确认率 &gt; 50%；注册成功率 &gt; 95%</td></tr><tr><td>订阅漏斗</td><td>领取完成 → 允许授权</td><td>订阅授权率 &gt; 40%</td></tr><tr><td>商家漏斗</td><td>单卡曝光 → 卡片点击</td><td>卡片点击率 &gt; 5%</td></tr><tr><td>传播漏斗</td><td>分享按钮点击 → 分享回流进入</td><td>回流率 &gt; 1（一次分享带回超过一人）</td></tr></tbody></table></div><p>计算口径说明：</p><ul><li>领取点击率 = coupon_claim_start_click / activity_page_enter</li><li>注册确认率 = register_dialog_confirm_click /（coupon_claim_start_click + fab_my_coupon_click，均为未注册用户）</li><li>注册成功率 = register_success / register_dialog_confirm_click</li><li>订阅授权率 = subscribe_dialog_allow_click / coupon_claim_result</li><li>卡片点击率 = shop_card_click / shop_card_show</li><li>回流率 = activity_page_enter（source=share）/ share_button_click</li></ul>"
               },
               {
                 "title": "三、事件总表",
-                "html": "<div class=\"table-scroll\"><table><thead><tr><th>序号</th><th>事件ID</th><th>事件名称</th><th>业务参数（不含通用属性）</th><th>所属漏斗</th></tr></thead><tbody><tr><td>1</td><td>activity_page_enter</td><td>活动页-页面进入</td><td>source</td><td>全部漏斗入口</td></tr><tr><td>2</td><td>activity_page_leave</td><td>活动页-页面离开</td><td>duration_seconds, duration_bucket</td><td>停留时长</td></tr><tr><td>3</td><td>activity_page_empty</td><td>活动页-空状态展示</td><td>—</td><td>空社区监控</td></tr><tr><td>4</td><td>community_switch</td><td>社区切换-切换结果</td><td>from_community, to_community</td><td>跨社区行为</td></tr><tr><td>5</td><td>coupon_claim_start_click</td><td>券-一键领取点击</td><td>coupon_count</td><td>领券漏斗</td></tr><tr><td>6</td><td>coupon_claim_result</td><td>券-一键领取结果</td><td>success_count, fail_count, total_count, duration_ms</td><td>领券漏斗</td></tr><tr><td>7</td><td>shop_card_show</td><td>商家-卡片曝光</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>8</td><td>shop_card_click</td><td>商家-卡片点击</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>9</td><td>register_dialog_confirm_click</td><td>注册-确认点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>10</td><td>register_dialog_skip_click</td><td>注册-暂不领取点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>11</td><td>register_success</td><td>注册-注册成功</td><td>is_new_user</td><td>注册漏斗</td></tr><tr><td>12</td><td>subscribe_dialog_allow_click</td><td>订阅-允许点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>13</td><td>subscribe_dialog_deny_click</td><td>订阅-暂不开启点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>14</td><td>share_button_click</td><td>分享-分享按钮点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>15</td><td>share_miniapp_click</td><td>分享-小程序转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>16</td><td>share_poster_click</td><td>分享-海报转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>17</td><td>wecom_group_join_click</td><td>企微群-入口点击</td><td>—</td><td>加群指标</td></tr><tr><td>18</td><td>fab_my_coupon_click</td><td>浮标-我的券点击</td><td>—</td><td>注册漏斗入口 / 行为区分</td></tr><tr><td>19</td><td>activity_ended_show</td><td>活动已结束-展示</td><td>—</td><td>过期监控</td></tr></tbody></table></div>"
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>序号</th><th>事件ID</th><th>事件名称</th><th>业务参数（不含通用属性）</th><th>所属漏斗</th></tr></thead><tbody><tr><td>1</td><td>activity_page_enter</td><td>活动页-页面进入</td><td>source</td><td>全部漏斗入口</td></tr><tr><td>2</td><td>activity_page_leave</td><td>活动页-页面离开</td><td>duration_seconds, duration_bucket</td><td>停留时长</td></tr><tr><td>3</td><td>activity_page_empty</td><td>活动页-空状态展示</td><td>—</td><td>空社区监控</td></tr><tr><td>4</td><td>community_switch</td><td>社区切换-切换结果</td><td>from_community, to_community</td><td>跨社区行为</td></tr><tr><td>5</td><td>coupon_claim_start_click</td><td>券-一键领取点击</td><td>coupon_count</td><td>领券漏斗</td></tr><tr><td>6</td><td>coupon_claim_result</td><td>券-一键领取结果</td><td>total_count, duration_ms</td><td>领券漏斗</td></tr><tr><td>7</td><td>shop_card_show</td><td>商家-卡片曝光</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>8</td><td>shop_card_click</td><td>商家-卡片点击</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>9</td><td>register_dialog_confirm_click</td><td>注册-确认点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>10</td><td>register_dialog_skip_click</td><td>注册-暂不领取点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>11</td><td>register_success</td><td>注册-注册成功</td><td>is_new_user</td><td>注册漏斗</td></tr><tr><td>12</td><td>subscribe_dialog_allow_click</td><td>订阅-允许点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>13</td><td>subscribe_dialog_deny_click</td><td>订阅-暂不开启点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>14</td><td>share_button_click</td><td>分享-分享按钮点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>15</td><td>share_miniapp_click</td><td>分享-小程序转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>16</td><td>share_poster_click</td><td>分享-海报转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>17</td><td>wecom_group_join_click</td><td>企微群-入口点击</td><td>—</td><td>加群指标</td></tr><tr><td>18</td><td>fab_my_coupon_click</td><td>浮标-我的券点击</td><td>—</td><td>注册漏斗入口 / 行为区分</td></tr><tr><td>19</td><td>activity_ended_show</td><td>活动已结束-展示</td><td>—</td><td>过期监控</td></tr></tbody></table></div>"
               }
             ],
             "prototype": null
