@@ -1,4 +1,4 @@
-<!-- prototype-states: default, collected, unregistered, ended, empty -->
+<!-- prototype-states: default, collected, unregistered, unregistered-existing, ended, empty -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -161,7 +161,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
 
 <!-- 注册弹窗 -->
 <div class="m-dialog-overlay" id="registerDialog" data-style-ok>
-  <div class="m-dialog-box" style="width:320px" data-style-ok>
+  <div class="m-dialog-box" id="registerDialogBox" style="width:320px;transition:padding .2s" data-style-ok>
     <div class="m-dialog-body" style="text-align:left" data-style-ok>
       <strong style="font-size:16px;display:block;text-align:center;margin-bottom:8px" data-style-ok>领取优惠券</strong>
       <p style="font-size:13px;color:#666;text-align:center;margin:0 0 14px" data-style-ok>授权注册即可一键领取 <span style="color:#1890FF;font-weight:700" id="regClaimCommunity">南医大社区</span> 活动优惠！</p>
@@ -370,12 +370,15 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
 
   function showRegisterDialog(){
     resetRegHint();
-    // 已有社区用户：隐藏绑定社区卡片及更换绑定社区交互，注册保留原社区
+    var body = el('registerDialog').querySelector('.m-dialog-body');
+    // 已有社区用户：隐藏绑定社区卡片及更换绑定社区交互，注册保留原社区，弹窗更紧凑
     if(hasCommunity){
       el('regBindCard').style.display = 'none';
       el('regBindTip').style.display = 'none';
+      if(body) body.style.padding = '16px 20px 12px';
     } else {
       el('regBindCard').style.display = 'flex';
+      if(body) body.style.padding = '';
     }
     showDialog('registerDialog');
   }
@@ -639,6 +642,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
     el('autoCardTip').style.display = '';
     el('couponCenterGuide').style.display = 'none';
     el('wecomStickyBar').style.display = 'flex';
+    hasCommunity = false;
 
     switch(st){
       case 'collected':
@@ -647,6 +651,9 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
         break;
       case 'unregistered':
         isUnregistered = true; showRegisterDialog();
+        break;
+      case 'unregistered-existing':
+        hasCommunity = true; isUnregistered = true; showRegisterDialog();
         break;
       case 'ended':
         el('claimBtn').textContent = '活动已结束'; el('claimBtn').disabled = true; el('claimBtn').className = 'm-btn m-btn-disabled';

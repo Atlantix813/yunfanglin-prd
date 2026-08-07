@@ -29,6 +29,7 @@
 <!-- prototype: src="prototype/activity-landing.html?state=default" width="375" height="812" title="活动落地页 · 主状态" -->
 <!-- prototype: src="prototype/activity-landing.html?state=collected" width="375" height="812" title="活动落地页 · 全部已领取" -->
 <!-- prototype: src="prototype/activity-landing.html?state=unregistered" width="375" height="812" title="活动落地页 · 新用户未注册" -->
+<!-- prototype: src="prototype/activity-landing.html?state=unregistered-existing" width="375" height="812" title="活动落地页 · 老用户补手机号" -->
 <!-- prototype: src="prototype/activity-landing.html?state=ended" width="375" height="812" title="活动落地页 · 活动已结束" -->
 <!-- prototype: src="prototype/activity-landing.html?state=empty" width="375" height="812" title="活动落地页 · 空状态" -->
 
