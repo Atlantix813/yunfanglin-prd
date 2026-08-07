@@ -953,7 +953,7 @@
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-august-activity.md 自动生成，MD SHA256: e38c7a97bcc149b4443286f386758f8198d0ab8dddec5254f9dba9df5e5c5c02
+    // 由 prd-august-activity.md 自动生成，MD SHA256: a3a1ba3e6be55b9b994486b525968bd882b6e3ed280b641b91d2ae0f23ac9573
     const PRD_MODE = "small";
     const SECTION_DATA = [
       {
@@ -999,7 +999,7 @@
           },
           {
             "title": "数据获取",
-            "html": "<div class=\"table-scroll\"><table><thead><tr><th>数据</th><th>来源</th><th>过滤逻辑</th></tr></thead><tbody><tr><td>社区列表</td><td>全区组织树接口</td><td>—</td></tr><tr><td>商家列表</td><td>现有商家列表接口</td><td>取活动配置<span class=\"token token-action\">「参与活动商家清单」</span>，按当前社区筛选，支持分页加载</td></tr><tr><td>活动券列表</td><td>现有领券中心券列表接口</td><td>前端按所选社区 + 券名称关键词双重过滤</td></tr><tr><td>用户已领券状态</td><td>现有用户已领券查询</td><td>用于判断每张券是否已领取</td></tr></tbody></table></div>"
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>数据</th><th>来源</th><th>过滤逻辑</th></tr></thead><tbody><tr><td>社区列表</td><td>全区组织树接口</td><td>—</td></tr><tr><td>商家列表</td><td>现有商家列表接口</td><td>取活动配置<span class=\"token token-action\">「参与活动商家清单」</span>，按当前社区筛选，支持分页加载</td></tr><tr><td>活动券列表</td><td>现有领券中心券列表接口</td><td>前端按社区 + 券名称关键词双重过滤，再剔除非免费、不符新客资格、达限领上限的券</td></tr><tr><td>用户已领券状态</td><td>现有用户已领券查询</td><td>判断每张券是否已领取；历史领券记录用于核对每人限领上限</td></tr></tbody></table></div><p>待确认：券列表接口需返回消耗积分、适用人群、每人限领字段（默认具备）；<span class=\"token token-action\">「新客资格」</span>判断已有现成接口，但接口具体逻辑待研发核对（是否直接返回过滤后结果，或需前端结合核销记录判断）。</p>"
           },
           {
             "title": "一键领取",
@@ -1015,7 +1015,7 @@
           },
           {
             "title": "现有接口依赖",
-            "html": "<div class=\"table-scroll\"><table><thead><tr><th>接口</th><th>用途</th></tr></thead><tbody><tr><td>组织树/社区列表</td><td>社区切换面板</td></tr><tr><td>商家列表（含商家ID、名称、头图、社区字段）</td><td>商家卡片区</td></tr><tr><td>领券中心券列表（含券名称、面额、门槛、库存、所属商家ID、有效期）</td><td>活动券区</td></tr><tr><td>批量领券</td><td>一键领取一次提交可领券 ID 列表</td></tr><tr><td>用户已领券查询</td><td>判断已领取状态</td></tr><tr><td>用户注册/授权</td><td>注册弹窗流程</td></tr></tbody></table></div>"
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>接口</th><th>用途</th></tr></thead><tbody><tr><td>组织树/社区列表</td><td>社区切换面板</td></tr><tr><td>商家列表（含商家ID、名称、头图、社区字段）</td><td>商家卡片区</td></tr><tr><td>领券中心券列表（含券名称、面额、门槛、库存、所属商家ID、有效期、消耗积分、适用人群、每人限领）</td><td>活动券区</td></tr><tr><td>批量领券</td><td>一键领取一次提交可领券 ID 列表</td></tr><tr><td>用户已领券查询</td><td>判断已领取状态</td></tr><tr><td>用户注册/授权</td><td>注册弹窗流程</td></tr></tbody></table></div>"
           }
         ]
       }
@@ -1081,7 +1081,15 @@
                     "title": "结构",
                     "items": [
                       "活动名称、副标题。",
-                      "活动时间范围胶囊标签。"
+                      "活动时间范围胶囊标签。",
+                      "右下角纯文字按钮<span class=\"token token-action\">「活动规则」</span>。"
+                    ]
+                  },
+                  {
+                    "title": "活动规则弹窗",
+                    "items": [
+                      "点击<span class=\"token token-action\">「活动规则」</span>底部滑出弹窗，展示活动规则详情。",
+                      "规则内容覆盖：活动时间、参与商家、优惠券说明等，具体内容待运营确认。"
                     ]
                   },
                   {
@@ -1114,9 +1122,15 @@
                     "items": [
                       "调两组接口：用户所选社区的券列表（按名称关键词如<span class=\"token token-page\">【福利节】</span>过滤）、用户已领券列表。",
                       "券列表按所选社区筛选，切换社区后重新拉取。",
-                      "从活动券列表中剔除已下架的券和库存为 0 的券，得到有效活动券。",
-                      "已领券：有效活动券中，用户已经领取过的那些（含已使用、未使用状态）。",
-                      "可领券：有效活动券中，用户还没领过的那些。"
+                      "剔除以下券，得到可展示券列表：",
+                      "已下架的券。",
+                      "库存为 0 的券。",
+                      "非免费券（需要消耗积分兑换的券）。",
+                      "仅新客券（适用人群=仅新客）但当前用户不符合新客条件（已在该券所属商家核销过优惠券）的券。",
+                      "当前用户已领取张数达到每人限领上限的券。",
+                      "判断规则：上述条件任一不满足，该券不展示在列表，也不参与一键领取。",
+                      "已领券：可展示券列表中，用户已经领取过的那些（含已使用、未使用状态）。",
+                      "可领券：可展示券列表中，用户还没领过的那些。"
                     ]
                   },
                   {
@@ -1185,7 +1199,8 @@
                     "title": "卡片内容",
                     "items": [
                       "商家名称。",
-                      "距您 xxm（仅已注册且已授权定位的用户显示，新用户或不授权定位则不展示此字段）。",
+                      "距您 xxm（仅已注册且已授权定位的用户显示）。",
+                      "无距离时（新用户、未授权定位或无距离数据）展示商家简介替代。",
                       "点击进入商家详情页。"
                     ]
                   },
@@ -1234,20 +1249,27 @@
                   {
                     "title": "触发条件",
                     "items": [
-                      "未注册用户点击<span class=\"token token-action\">「一键领取」</span>。",
-                      "未注册用户点击<span class=\"token token-action\">「我的券」</span>浮标。"
+                      "用户无手机号时，点击<span class=\"token token-action\">「一键领取」</span>或<span class=\"token token-action\">「我的券」</span>浮标弹出注册弹窗。",
+                      "用户已有手机号时不弹注册弹窗，直接进入领取流程。"
                     ]
                   },
                   {
                     "title": "弹窗内容",
                     "items": [
                       "顶部标题：<span class=\"token token-action\">「领取优惠券」</span>。",
-                      "中部说明：<span class=\"token token-action\">「授权注册即可一键领取<span class=\"token token-page\">【当前浏览社区】</span>活动优惠！」</span>，明确当前领取的奖励归属，跟随页面社区显示，不随换绑变化。",
-                      "绑定社区卡片：<span class=\"token token-action\">「绑定社区：XX」</span>+ 右侧<span class=\"token token-action\">「更换绑定社区」</span>按钮。"
+                      "中部说明：<span class=\"token token-action\">「授权注册即可一键领取<span class=\"token token-page\">【当前浏览社区】</span>活动优惠！」</span>，跟随页面社区显示。",
+                      "绑定社区卡片：<span class=\"token token-action\">「绑定社区：XX」</span>+ 右侧<span class=\"token token-action\">「更换绑定社区」</span>按钮，仅无社区的全新用户展示。"
                     ]
                   },
                   {
-                    "title": "更换绑定社区",
+                    "title": "两种用户场景",
+                    "items": [
+                      "无手机号 + 无社区（全新用户）：展示绑定社区卡片，支持更换绑定社区。",
+                      "无手机号 + 已有社区（老用户补手机号）：不展示绑定社区卡片及更换绑定社区交互。"
+                    ]
+                  },
+                  {
+                    "title": "更换绑定社区（仅全新用户）",
                     "items": [
                       "点击<span class=\"token token-action\">「更换绑定社区」</span>弹出社区选择面板，选完后关闭面板回到注册弹窗。",
                       "更换的是注册绑定社区，不影响当前活动页的社区。",
@@ -1258,10 +1280,18 @@
                     ]
                   },
                   {
+                    "title": "注册结果",
+                    "items": [
+                      "全新用户：以所选社区（默认当前浏览社区）完成注册。",
+                      "已有社区用户：授权获取手机号后保留原有社区信息，不变更。",
+                      "授权成功后自动继续领取流程，不要求再次点击。"
+                    ]
+                  },
+                  {
                     "title": "弹窗按钮",
                     "items": [
                       "<span class=\"token token-action\">「暂不领取」</span>：关闭弹层，返回浏览状态。",
-                      "<span class=\"token token-action\">「注册并领取」</span>：以所选社区完成注册，自动返回活动页刷新，不跳离当前社区页面。"
+                      "<span class=\"token token-action\">「注册并领取」</span>：按对应场景完成注册，自动返回活动页刷新，不跳离当前社区页面。"
                     ]
                   },
                   {
@@ -1276,20 +1306,20 @@
                 "type": "add",
                 "label": "新增",
                 "title": "企微群入口 · 加入社区福利群",
-                "desc": "一键领取下方蓝色横幅，不同社区对应不同企微群。",
+                "desc": "一键领取下方蓝色横幅 + 页面底部贴底常驻横幅，不同社区对应不同企微群。",
                 "groups": [
                   {
                     "title": "位置",
                     "items": [
-                      "位于<span class=\"token token-action\">「一键领取」</span>按钮下方。",
-                      "蓝色渐变横幅，左侧文本、右侧群聊图标。"
+                      "页面底部贴底常驻横幅，全宽展示。",
+                      "一键领取下方保留原有蓝色横幅入口（两处并存）。"
                     ]
                   },
                   {
                     "title": "文案",
                     "items": [
-                      "标题：<span class=\"token token-action\">「加入 XX 社区福利群」</span>，跟随当前社区名称变化。",
-                      "副标题：<span class=\"token token-action\">「获取 XX 社区最新活动与优惠」</span>。"
+                      "贴底横幅：<span class=\"token token-action\">「加入 XX 社区企微群聊获取福利信息」</span>+ 右侧<span class=\"token token-action\">「关闭」</span>（弱化）+<span class=\"token token-action\">「加入」</span>（强化）按钮。",
+                      "原有横幅：标题<span class=\"token token-action\">「加入 XX 社区福利群」</span>，副标题<span class=\"token token-action\">「获取 XX 社区最新活动与优惠」</span>，跟随当前社区名称变化。"
                     ]
                   },
                   {
@@ -1300,10 +1330,20 @@
                     ]
                   },
                   {
+                    "title": "贴底横幅展示规则",
+                    "items": [
+                      "每天首次打开页面时展示一次。",
+                      "用户操作（点击关闭或加入）后当天不再显示，次日重新显示。",
+                      "使用本地存储按日期记录展示状态。",
+                      "不判断用户是否已加入群聊，加群前后均按上述规则展示。"
+                    ]
+                  },
+                  {
                     "title": "交互",
                     "items": [
-                      "点击按钮后，企微官方能力接管，用户点击确认即可加入对应社区福利群，无需扫码。",
-                      "不同社区配置不同<span class=\"token token-action\">「加入群聊」</span>入口，切换社区后按钮指向对应企微群。",
+                      "点击<span class=\"token token-action\">「加入」</span>后，企微官方能力接管，用户点击确认即可加入对应社区福利群，无需扫码；同时当天不再显示。",
+                      "点击<span class=\"token token-action\">「关闭」</span>直接隐藏横幅，当天不再显示。",
+                      "原有蓝色横幅点击后同样进入企微官方入群流程。",
                       "加群为自愿操作，不作为领券或使用优惠券的前置条件。"
                     ]
                   },
@@ -1317,6 +1357,12 @@
                     ]
                   }
                 ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "活动规则 · 活动规则弹窗",
+                "desc": "主视觉卡片右下角<span class=\"token token-action\">「活动规则」</span>文字按钮，底部滑出弹窗展示规则详情。"
               },
               {
                 "type": "add",

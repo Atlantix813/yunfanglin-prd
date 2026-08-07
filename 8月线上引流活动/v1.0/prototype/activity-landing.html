@@ -50,6 +50,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
       <div style="font-size:24px;font-weight:900;color:#1890FF">社区清凉福利节</div>
       <div style="font-size:13px;color:#666;margin-top:6px">好券在手 家门口就能用</div>
       <div style="background:#1890FF;color:#fff;display:inline-block;padding:4px 14px;border-radius:12px;font-size:12px;font-weight:700;margin-top:10px">8.15 — 8.31</div>
+      <button id="activityRuleBtn" style="position:absolute;right:10px;bottom:8px;border:0;background:none;color:#1890FF;font-size:12px;cursor:pointer">活动规则</button>
     </section>
 
     <!-- 限时活动券 标题 -->
@@ -124,7 +125,14 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   </div>
 
 <!-- 我的券浮标 -->
-<div id="myCouponFab" class="fab-trigger" style="position:fixed;bottom:30px;right:16px;z-index:20;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FF6B9D,#E91E63);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(233,30,99,.35)" data-style-ok><span style="font-size:16px">券</span><span>我的</span></div>
+<div id="myCouponFab" class="fab-trigger" style="position:fixed;bottom:76px;right:16px;z-index:20;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#FF6B9D,#E91E63);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(233,30,99,.35)" data-style-ok><span style="font-size:16px">券</span><span>我的</span></div>
+
+<!-- 企微贴底横幅 -->
+<div id="wecomStickyBar" style="position:fixed;bottom:0;left:0;right:0;z-index:19;display:none;background:#fff;border-top:1px solid #E5EAF2;padding:10px 16px;align-items:center;justify-content:space-between;gap:10px" data-style-ok>
+  <span style="font-size:13px;color:#333;flex:1;min-width:0">加入 <span style="color:#1890FF;font-weight:700" id="stickyCommunity">南医大社区</span> 企微群聊获取福利信息</span>
+  <button id="wecomStickyClose" style="border:0;background:none;color:#B0B8C4;font-size:12px;padding:6px 8px;cursor:pointer">关闭</button>
+  <button id="wecomStickyJoin" style="border:0;border-radius:8px;background:#1890FF;color:#fff;font-size:13px;font-weight:700;padding:8px 18px;cursor:pointer">加入</button>
+</div>
 
 <!-- 领取加载遮罩 -->
 <div id="collectOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center" data-style-ok>
@@ -157,7 +165,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
     <div class="m-dialog-body" style="text-align:left" data-style-ok>
       <strong style="font-size:16px;display:block;text-align:center;margin-bottom:8px" data-style-ok>领取优惠券</strong>
       <p style="font-size:13px;color:#666;text-align:center;margin:0 0 14px" data-style-ok>授权注册即可一键领取 <span style="color:#1890FF;font-weight:700" id="regClaimCommunity">南医大社区</span> 活动优惠！</p>
-      <div style="display:flex;align-items:center;justify-content:space-between;background:#F5F7FA;border-radius:8px;padding:12px 14px" data-style-ok>
+      <div id="regBindCard" style="display:flex;align-items:center;justify-content:space-between;background:#F5F7FA;border-radius:8px;padding:12px 14px" data-style-ok>
         <span style="font-size:13px;color:#333">绑定社区：<span style="color:#1890FF;font-weight:700" id="regBrowseCommunity">南医大社区</span></span>
         <button id="switchCommunityBtn" style="border:0;background:none;color:#1890FF;font-size:12px;cursor:pointer;white-space:nowrap;padding:0" data-style-ok>更换绑定社区</button>
       </div>
@@ -180,6 +188,19 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
     <div class="m-dialog-actions">
       <button id="subscribeDenyBtn">暂不开启</button>
       <button id="subscribeAllowBtn">允许</button>
+    </div>
+  </div>
+</div>
+
+<!-- 活动规则弹窗 -->
+<div class="m-sheet-overlay" id="activityRuleSheet" data-style-ok>
+  <div class="m-sheet" style="padding:0" data-style-ok>
+    <div class="m-sheet-handle" style="margin:12px auto 8px"></div>
+    <div style="text-align:center;font-size:16px;font-weight:700;color:#333;padding:0 0 12px">活动规则</div>
+    <div style="padding:0 20px 28px;font-size:13px;line-height:2;color:#5B6573">
+      <div><strong>活动时间：</strong><span style="color:#999">待运营确认</span></div>
+      <div><strong>参与商家：</strong><span style="color:#999">待运营确认</span></div>
+      <div><strong>优惠券说明：</strong><span style="color:#999">待运营确认</span></div>
     </div>
   </div>
 </div>
@@ -294,6 +315,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   var p = new URLSearchParams(location.search);
   var s = p.get('state') || 'default';
   var isUnregistered = false;
+  var hasCommunity = false; // 模拟用户已有社区：true=老用户补手机号（隐藏绑定社区卡片）
   var isSubscribed = false; // 模拟后端订阅开关状态：true=已开启推送
   var isRegisterSheet = false;
   var currentCommunity = '南医大社区';
@@ -306,6 +328,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
     el('regClaimCommunity').textContent = name;
     el('wecomTitle').textContent = '加入' + name + '福利群';
     el('wecomSub').textContent = '获取' + name + '最新活动与优惠';
+    el('stickyCommunity').textContent = name;
     if(shopPool[name] && shopPool[name].length){
       // 有活动内容：恢复完整页面
       el('heroCard').style.display = '';
@@ -347,6 +370,13 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
 
   function showRegisterDialog(){
     resetRegHint();
+    // 已有社区用户：隐藏绑定社区卡片及更换绑定社区交互，注册保留原社区
+    if(hasCommunity){
+      el('regBindCard').style.display = 'none';
+      el('regBindTip').style.display = 'none';
+    } else {
+      el('regBindCard').style.display = 'flex';
+    }
     showDialog('registerDialog');
   }
 
@@ -440,6 +470,32 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
     // 跳转企微官方群引导页
   });
 
+  // 贴底横幅：每天首次打开显示一次
+  function showWecomStickyIfToday(){
+    var today = new Date().toDateString();
+    var lastShown = localStorage.getItem('wecomStickyDate');
+    if(lastShown !== today){
+      el('wecomStickyBar').style.display = 'flex';
+    }
+  }
+  function hideWecomStickyForToday(){
+    localStorage.setItem('wecomStickyDate', new Date().toDateString());
+    el('wecomStickyBar').style.display = 'none';
+  }
+  el('wecomStickyClose').addEventListener('click', hideWecomStickyForToday);
+  el('wecomStickyJoin').addEventListener('click', function(){
+    hideWecomStickyForToday();
+    // 跳转企微官方群引导页
+  });
+
+  // 活动规则弹窗
+  el('activityRuleBtn').addEventListener('click', function(){
+    showDialog('activityRuleSheet');
+  });
+  el('activityRuleSheet').addEventListener('click', function(e){
+    if(e.target === el('activityRuleSheet')) hideDialog('activityRuleSheet');
+  });
+
   el('shareBtn').addEventListener('click', function(){
     showDialog('shareSheet');
   });
@@ -493,7 +549,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   // 商家数据源（参与活动商家清单：按社区关联，商家自带社区字段）
   var shopPool = {
     '南医大社区': [
-      {name:'邻里小厨', emoji:'🍳', grad:'linear-gradient(135deg,#B3E5FC,#4FC3F7)', dist:'120m'},
+      {name:'邻里小厨', emoji:'🍳', grad:'linear-gradient(135deg,#B3E5FC,#4FC3F7)', desc:'社区家常菜馆，主打街坊口味'},
       {name:'洁家家政', emoji:'🏠', grad:'linear-gradient(135deg,#FFE0B2,#FFB74D)', dist:'280m'},
       {name:'好邻居便利店', emoji:'🏪', grad:'linear-gradient(135deg,#C8E6C9,#81C784)', dist:'150m'},
       {name:'阳光亲子馆', emoji:'👶', grad:'linear-gradient(135deg,#F8BBD0,#F48FB1)', dist:'320m'},
@@ -520,7 +576,8 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   var loading = false;
 
   function shopCardHtml(shop){
-    return '<div style="width:calc(50% - 5px);background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div class="shop-img" style="background:'+shop.grad+'">'+shop.emoji+'</div><div class="shop-info"><div style="font-weight:600;font-size:13px">'+shop.name+'</div><div style="font-size:11px;color:#999;margin-top:2px">距您 '+shop.dist+'</div></div></div>';
+    var sub = shop.dist ? ('距您 ' + shop.dist) : (shop.desc || '');
+    return '<div style="width:calc(50% - 5px);background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div class="shop-img" style="background:'+shop.grad+'">'+shop.emoji+'</div><div class="shop-info"><div style="font-weight:600;font-size:13px">'+shop.name+'</div><div style="font-size:11px;color:#999;margin-top:2px">'+sub+'</div></div></div>';
   }
 
   function renderShops(){
@@ -581,6 +638,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
     el('couponListRow').style.display = 'flex';
     el('autoCardTip').style.display = '';
     el('couponCenterGuide').style.display = 'none';
+    el('wecomStickyBar').style.display = 'flex';
 
     switch(st){
       case 'collected':
@@ -605,6 +663,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
         el('myCouponFab').style.display = 'none';
         el('wecomBanner').style.display = 'none';
         el('shareBtn').style.display = 'none';
+        el('wecomStickyBar').style.display = 'none';
         el('emptyState').style.display = 'block';
         break;
     }
@@ -612,6 +671,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
 
   applyState(s);
   renderShops();
+  showWecomStickyIfToday();
 })();
 </script>
 </body>
