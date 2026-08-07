@@ -338,9 +338,21 @@
 
 | 属性ID | 属性名称 | 数据类型 | 取值说明 |
 | --- | --- | --- | --- |
-| user_id | 用户ID | 字符 | 已注册用户传用户唯一标识，未注册传空字符串 |
-| community | 社区ID | 字符 | 事件发生时的社区 ID |
+| user_id | 用户ID | 字符 | 用户唯一标识，未注册传空字符串 |
 | is_registered | 是否已注册 | 整数 | 0 未注册，1 已注册 |
+| nickname | 姓名 | 字符 | 用户姓名，可为空 |
+| gender | 性别 | 整数 | 0 未知，1 男，2 女 |
+| user_role | 角色 | 字符 | 如「普通居民」 |
+| wechat_bind | 微信绑定状态 | 整数 | 0 未绑定，1 已绑定 |
+| invite_code | 填写邀请码 | 字符 | 注册时填写的邀请码，可为空 |
+| invite_type | 邀请码类型 | 字符 | 个人 / 组织 |
+| user_status | 账号状态 | 整数 | 0 无效，1 有效 |
+| community | 社区 | 字符 | 当前浏览社区（居民视角） |
+| org_id | 组织ID | 字符 | 管理权限绑定的组织 |
+| org_name | 组织名称 | 字符 | 如江高镇 |
+| org_type | 组织类型 | 字符 | 区 / 镇 / 街道 / 社区 / 村 |
+| is_community | 是否社区 | 整数 | 0 否，1 是 |
+| parent_org | 上级组织 | 字符 | 如江高镇 |
 
 系统自动采集属性（app_state、device、page_path、networktype 等 12 项）由 We 分析自动携带，不手动上报。
 
@@ -348,11 +360,14 @@
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
-| 进入活动页时（首次加载） | 各社区访问量、来源占比、全部漏斗入口。 |
+| 进入活动页时（首次加载） | 各社区访问量、来源占比、页面状态监控、全部漏斗入口。 |
 
 | 参数 | 属性ID | 类型 | 取值说明 |
 | --- | --- | --- | --- |
 | 页面来源 | source | 字符 | notice 公告 / share 分享 / scan 扫码 |
+| 页面状态 | page_status | 整数 | 1 正常 / 2 空状态（无活动内容）/ 3 活动已结束 |
+
+说明：空状态展示与活动已结束不再作为独立事件上报，通过 page_status 参数随页面进入一并记录。
 
 ##### 2. activity_page_leave · 活动页-页面离开
 
@@ -375,24 +390,19 @@
 | 4 | 30-60s |
 | 5 | 60s 以上 |
 
-##### 3. activity_page_empty · 活动页-空状态展示
+##### 3. community_switch · 社区切换-切换结果
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
-| 当前社区无券且无商家，展示空状态时 | 空社区监控。 |
-
-##### 4. community_switch · 社区切换-切换结果
-
-| 触发时机 | 支撑指标 |
-| --- | --- |
-| 用户在社区面板点击目标社区并确认后 | 跨社区浏览行为、热门社区。 |
+| 用户在社区面板点击目标社区并确认后 | 跨社区浏览行为、热门社区、切换后空社区监控。 |
 
 | 参数 | 属性ID | 类型 | 取值说明 |
 | --- | --- | --- | --- |
 | 切换前社区 | from_community | 字符 | 切换前社区 ID |
 | 切换后社区 | to_community | 字符 | 切换后社区 ID |
+| 页面状态 | page_status | 整数 | 切换后新社区的状态：1 正常 / 2 空状态 / 3 活动已结束 |
 
-##### 5. coupon_claim_start_click · 券-一键领取点击
+##### 4. coupon_claim_start_click · 券-一键领取点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -402,7 +412,7 @@
 | --- | --- | --- | --- |
 | 可领券总数 | coupon_count | 整数 | 当前可领取的券数量 |
 
-##### 6. coupon_claim_result · 券-一键领取结果
+##### 5. coupon_claim_result · 券-一键领取结果
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -413,7 +423,7 @@
 | 总张数 | total_count | 整数 | 本次尝试领取的券数 |
 | 领取耗时 | duration_ms | 整数 | 领取完成的毫秒数 |
 
-##### 7. shop_card_show · 商家-卡片曝光
+##### 6. shop_card_show · 商家-卡片曝光
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -424,7 +434,7 @@
 | 商家ID | shop_id | 字符 | 商家唯一标识 |
 | 商家名称 | shop_name | 字符 | 商家名称 |
 
-##### 8. shop_card_click · 商家-卡片点击
+##### 7. shop_card_click · 商家-卡片点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -435,19 +445,19 @@
 | 商家ID | shop_id | 字符 | 商家唯一标识 |
 | 商家名称 | shop_name | 字符 | 商家名称 |
 
-##### 9. register_dialog_confirm_click · 注册-确认点击
+##### 8. register_dialog_confirm_click · 注册-确认点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 点击「注册并领取」按钮时 | 注册确认率（注册漏斗第 2 步）。 |
 
-##### 10. register_dialog_skip_click · 注册-暂不领取点击
+##### 9. register_dialog_skip_click · 注册-暂不领取点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 点击「暂不领取」按钮时 | 注册流失节点。 |
 
-##### 11. register_success · 注册-注册成功
+##### 10. register_success · 注册-注册成功
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -457,53 +467,47 @@
 | --- | --- | --- | --- |
 | 是否新用户 | is_new_user | 整数 | 0 已有账号重新绑定，1 首次注册 |
 
-##### 12. subscribe_dialog_allow_click · 订阅-允许点击
+##### 11. subscribe_dialog_allow_click · 订阅-允许点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 订阅引导弹窗中点击「允许」时 | 订阅授权率（订阅漏斗第 2 步）。 |
 
-##### 13. subscribe_dialog_deny_click · 订阅-暂不开启点击
+##### 12. subscribe_dialog_deny_click · 订阅-暂不开启点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 订阅引导弹窗中点击「暂不开启」时 | 订阅流失节点。 |
 
-##### 14. share_button_click · 分享-分享按钮点击
+##### 13. share_button_click · 分享-分享按钮点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 点击「分享活动」按钮时 | 分享传播率（传播漏斗第 1 步）。 |
 
-##### 15. share_miniapp_click · 分享-小程序转发点击
+##### 14. share_miniapp_click · 分享-小程序转发点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 在分享面板中点击「小程序转发」时 | 分享方式占比（小程序转发）。 |
 
-##### 16. share_poster_click · 分享-海报转发点击
+##### 15. share_poster_click · 分享-海报转发点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 在分享面板中点击「海报转发」时 | 分享方式占比（海报转发），按社区拆分。 |
 
-##### 17. wecom_group_join_click · 企微群-入口点击
+##### 16. wecom_group_join_click · 企微群-入口点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
-| 点击「加入 XX 社区福利群」横幅时 | 加群点击率。 |
+| 点击企微群入口（贴底横幅或原有横幅）时 | 加群点击率。 |
 
-##### 18. fab_my_coupon_click · 浮标-我的券点击
+##### 17. fab_my_coupon_click · 浮标-我的券点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 点击右下角「我的券」浮标时 | 已注册 / 未注册用户行为区分。 |
-
-##### 19. activity_ended_show · 活动已结束-展示
-
-| 触发时机 | 支撑指标 |
-| --- | --- |
-| 活动时间外进入页面时 | 过期访问量监控。 |
 
 ##### 二、关键漏斗与参考数值
 
@@ -526,30 +530,28 @@
 - 卡片点击率 = shop_card_click / shop_card_show
 - 回流率 = activity_page_enter（source=share）/ share_button_click
 
-
 ##### 三、事件总表
 
 | 序号 | 事件ID | 事件名称 | 业务参数（不含通用属性） | 所属漏斗 |
 | --- | --- | --- | --- | --- |
-| 1 | activity_page_enter | 活动页-页面进入 | source | 全部漏斗入口 |
+| 1 | activity_page_enter | 活动页-页面进入 | source, page_status | 全部漏斗入口 |
 | 2 | activity_page_leave | 活动页-页面离开 | duration_seconds, duration_bucket | 停留时长 |
-| 3 | activity_page_empty | 活动页-空状态展示 | — | 空社区监控 |
-| 4 | community_switch | 社区切换-切换结果 | from_community, to_community | 跨社区行为 |
-| 5 | coupon_claim_start_click | 券-一键领取点击 | coupon_count | 领券漏斗 |
-| 6 | coupon_claim_result | 券-一键领取结果 | total_count, duration_ms | 领券漏斗 |
-| 7 | shop_card_show | 商家-卡片曝光 | shop_id, shop_name | 商家漏斗 |
-| 8 | shop_card_click | 商家-卡片点击 | shop_id, shop_name | 商家漏斗 |
-| 9 | register_dialog_confirm_click | 注册-确认点击 | — | 注册漏斗 |
-| 10 | register_dialog_skip_click | 注册-暂不领取点击 | — | 注册漏斗 |
-| 11 | register_success | 注册-注册成功 | is_new_user | 注册漏斗 |
-| 12 | subscribe_dialog_allow_click | 订阅-允许点击 | — | 订阅漏斗 |
-| 13 | subscribe_dialog_deny_click | 订阅-暂不开启点击 | — | 订阅漏斗 |
-| 14 | share_button_click | 分享-分享按钮点击 | — | 传播漏斗 |
-| 15 | share_miniapp_click | 分享-小程序转发点击 | — | 传播漏斗 |
-| 16 | share_poster_click | 分享-海报转发点击 | — | 传播漏斗 |
-| 17 | wecom_group_join_click | 企微群-入口点击 | — | 加群指标 |
-| 18 | fab_my_coupon_click | 浮标-我的券点击 | — | 注册漏斗入口 / 行为区分 |
-| 19 | activity_ended_show | 活动已结束-展示 | — | 过期监控 |
+| 3 | community_switch | 社区切换-切换结果 | from_community, to_community, page_status | 跨社区行为 |
+| 4 | coupon_claim_start_click | 券-一键领取点击 | coupon_count | 领券漏斗 |
+| 5 | coupon_claim_result | 券-一键领取结果 | total_count, duration_ms | 领券漏斗 |
+| 6 | shop_card_show | 商家-卡片曝光 | shop_id, shop_name | 商家漏斗 |
+| 7 | shop_card_click | 商家-卡片点击 | shop_id, shop_name | 商家漏斗 |
+| 8 | register_dialog_confirm_click | 注册-确认点击 | — | 注册漏斗 |
+| 9 | register_dialog_skip_click | 注册-暂不领取点击 | — | 注册漏斗 |
+| 10 | register_success | 注册-注册成功 | is_new_user | 注册漏斗 |
+| 11 | subscribe_dialog_allow_click | 订阅-允许点击 | — | 订阅漏斗 |
+| 12 | subscribe_dialog_deny_click | 订阅-暂不开启点击 | — | 订阅漏斗 |
+| 13 | share_button_click | 分享-分享按钮点击 | — | 传播漏斗 |
+| 14 | share_miniapp_click | 分享-小程序转发点击 | — | 传播漏斗 |
+| 15 | share_poster_click | 分享-海报转发点击 | — | 传播漏斗 |
+| 16 | wecom_group_join_click | 企微群-入口点击 | — | 加群指标 |
+| 17 | fab_my_coupon_click | 浮标-我的券点击 | — | 注册漏斗入口 / 行为区分 |
+
 ### 功能二 · 领券中心 Tab
 
 需求概述：领券中心新增「8月福利节」Tab，复用六一活动专场的实现方式。

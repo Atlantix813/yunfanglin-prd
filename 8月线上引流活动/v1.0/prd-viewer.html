@@ -953,7 +953,7 @@
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-august-activity.md 自动生成，MD SHA256: 152c88b88012426b457b8ccbeea2f6778fa56afce2d90a3e67f91b7b07690bb9
+    // 由 prd-august-activity.md 自动生成，MD SHA256: 1382debd90f18d0c8bfd814fd7749ecbb1c2576bb41bcf4114f055092e68bc0c
     const PRD_MODE = "small";
     const SECTION_DATA = [
       {
@@ -1531,83 +1531,75 @@
             "blocks": [
               {
                 "title": "一、通用属性",
-                "html": "<p>以下属性所有事件必带，事件块中不再重复列出。</p><div class=\"table-scroll\"><table><thead><tr><th>属性ID</th><th>属性名称</th><th>数据类型</th><th>取值说明</th></tr></thead><tbody><tr><td>user_id</td><td>用户ID</td><td>字符</td><td>已注册用户传用户唯一标识，未注册传空字符串</td></tr><tr><td>community</td><td>社区ID</td><td>字符</td><td>事件发生时的社区 ID</td></tr><tr><td>is_registered</td><td>是否已注册</td><td>整数</td><td>0 未注册，1 已注册</td></tr></tbody></table></div><p>系统自动采集属性（app_state、device、page_path、networktype 等 12 项）由 We 分析自动携带，不手动上报。</p>"
+                "html": "<p>以下属性所有事件必带，事件块中不再重复列出。</p><div class=\"table-scroll\"><table><thead><tr><th>属性ID</th><th>属性名称</th><th>数据类型</th><th>取值说明</th></tr></thead><tbody><tr><td>user_id</td><td>用户ID</td><td>字符</td><td>用户唯一标识，未注册传空字符串</td></tr><tr><td>is_registered</td><td>是否已注册</td><td>整数</td><td>0 未注册，1 已注册</td></tr><tr><td>nickname</td><td>姓名</td><td>字符</td><td>用户姓名，可为空</td></tr><tr><td>gender</td><td>性别</td><td>整数</td><td>0 未知，1 男，2 女</td></tr><tr><td>user_role</td><td>角色</td><td>字符</td><td>如<span class=\"token token-action\">「普通居民」</span></td></tr><tr><td>wechat_bind</td><td>微信绑定状态</td><td>整数</td><td>0 未绑定，1 已绑定</td></tr><tr><td>invite_code</td><td>填写邀请码</td><td>字符</td><td>注册时填写的邀请码，可为空</td></tr><tr><td>invite_type</td><td>邀请码类型</td><td>字符</td><td>个人 / 组织</td></tr><tr><td>user_status</td><td>账号状态</td><td>整数</td><td>0 无效，1 有效</td></tr><tr><td>community</td><td>社区</td><td>字符</td><td>当前浏览社区（居民视角）</td></tr><tr><td>org_id</td><td>组织ID</td><td>字符</td><td>管理权限绑定的组织</td></tr><tr><td>org_name</td><td>组织名称</td><td>字符</td><td>如江高镇</td></tr><tr><td>org_type</td><td>组织类型</td><td>字符</td><td>区 / 镇 / 街道 / 社区 / 村</td></tr><tr><td>is_community</td><td>是否社区</td><td>整数</td><td>0 否，1 是</td></tr><tr><td>parent_org</td><td>上级组织</td><td>字符</td><td>如江高镇</td></tr></tbody></table></div><p>系统自动采集属性（app_state、device、page_path、networktype 等 12 项）由 We 分析自动携带，不手动上报。</p>"
               },
               {
                 "title": "1. activity_page_enter · 活动页-页面进入",
-                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>进入活动页时（首次加载）</td><td>各社区访问量、来源占比、全部漏斗入口。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>页面来源</td><td>source</td><td>字符</td><td>notice 公告 / share 分享 / scan 扫码</td></tr></tbody></table></div>"
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>进入活动页时（首次加载）</td><td>各社区访问量、来源占比、页面状态监控、全部漏斗入口。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>页面来源</td><td>source</td><td>字符</td><td>notice 公告 / share 分享 / scan 扫码</td></tr><tr><td>页面状态</td><td>page_status</td><td>整数</td><td>1 正常 / 2 空状态（无活动内容）/ 3 活动已结束</td></tr></tbody></table></div><p>说明：空状态展示与活动已结束不再作为独立事件上报，通过 page_status 参数随页面进入一并记录。</p>"
               },
               {
                 "title": "2. activity_page_leave · 活动页-页面离开",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>离开活动页时（切后台 / 关闭 / 跳转）</td><td>人均停留时长、页面吸引力。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>浏览时长</td><td>duration_seconds</td><td>整数</td><td>进入至离开的秒数，多次进出每次重置计时，用于均值/中位数统计</td></tr><tr><td>时长分桶</td><td>duration_bucket</td><td>整数</td><td>按浏览时长分桶，用于分布统计，配合字典翻译为区间标签</td></tr></tbody></table></div><p>分桶规则：</p><div class=\"table-scroll\"><table><thead><tr><th>bucket 值</th><th>区间</th></tr></thead><tbody><tr><td>1</td><td>0-10s</td></tr><tr><td>2</td><td>10-20s</td></tr><tr><td>3</td><td>20-30s</td></tr><tr><td>4</td><td>30-60s</td></tr><tr><td>5</td><td>60s 以上</td></tr></tbody></table></div>"
               },
               {
-                "title": "3. activity_page_empty · 活动页-空状态展示",
-                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>当前社区无券且无商家，展示空状态时</td><td>空社区监控。</td></tr></tbody></table></div>"
+                "title": "3. community_switch · 社区切换-切换结果",
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>用户在社区面板点击目标社区并确认后</td><td>跨社区浏览行为、热门社区、切换后空社区监控。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>切换前社区</td><td>from_community</td><td>字符</td><td>切换前社区 ID</td></tr><tr><td>切换后社区</td><td>to_community</td><td>字符</td><td>切换后社区 ID</td></tr><tr><td>页面状态</td><td>page_status</td><td>整数</td><td>切换后新社区的状态：1 正常 / 2 空状态 / 3 活动已结束</td></tr></tbody></table></div>"
               },
               {
-                "title": "4. community_switch · 社区切换-切换结果",
-                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>用户在社区面板点击目标社区并确认后</td><td>跨社区浏览行为、热门社区。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>切换前社区</td><td>from_community</td><td>字符</td><td>切换前社区 ID</td></tr><tr><td>切换后社区</td><td>to_community</td><td>字符</td><td>切换后社区 ID</td></tr></tbody></table></div>"
-              },
-              {
-                "title": "5. coupon_claim_start_click · 券-一键领取点击",
+                "title": "4. coupon_claim_start_click · 券-一键领取点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>点击<span class=\"token token-action\">「一键领取」</span>按钮时</td><td>领取点击率（领券漏斗第 2 步）。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>可领券总数</td><td>coupon_count</td><td>整数</td><td>当前可领取的券数量</td></tr></tbody></table></div>"
               },
               {
-                "title": "6. coupon_claim_result · 券-一键领取结果",
+                "title": "5. coupon_claim_result · 券-一键领取结果",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>全部券领取完成、结果弹窗展示时</td><td>人均领券张数（领券漏斗第 3 步）。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>总张数</td><td>total_count</td><td>整数</td><td>本次尝试领取的券数</td></tr><tr><td>领取耗时</td><td>duration_ms</td><td>整数</td><td>领取完成的毫秒数</td></tr></tbody></table></div>"
               },
               {
-                "title": "7. shop_card_show · 商家-卡片曝光",
+                "title": "6. shop_card_show · 商家-卡片曝光",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>单张商家卡片首次进入可视区，每张卡独立上报</td><td>单卡曝光量、商家关注度（商家漏斗第 1 步）。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>商家ID</td><td>shop_id</td><td>字符</td><td>商家唯一标识</td></tr><tr><td>商家名称</td><td>shop_name</td><td>字符</td><td>商家名称</td></tr></tbody></table></div>"
               },
               {
-                "title": "8. shop_card_click · 商家-卡片点击",
+                "title": "7. shop_card_click · 商家-卡片点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>点击商家卡片时</td><td>商家点击率、商家关注排名（商家漏斗第 2 步）。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>商家ID</td><td>shop_id</td><td>字符</td><td>商家唯一标识</td></tr><tr><td>商家名称</td><td>shop_name</td><td>字符</td><td>商家名称</td></tr></tbody></table></div>"
               },
               {
-                "title": "9. register_dialog_confirm_click · 注册-确认点击",
+                "title": "8. register_dialog_confirm_click · 注册-确认点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>点击<span class=\"token token-action\">「注册并领取」</span>按钮时</td><td>注册确认率（注册漏斗第 2 步）。</td></tr></tbody></table></div>"
               },
               {
-                "title": "10. register_dialog_skip_click · 注册-暂不领取点击",
+                "title": "9. register_dialog_skip_click · 注册-暂不领取点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>点击<span class=\"token token-action\">「暂不领取」</span>按钮时</td><td>注册流失节点。</td></tr></tbody></table></div>"
               },
               {
-                "title": "11. register_success · 注册-注册成功",
+                "title": "10. register_success · 注册-注册成功",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>注册接口返回成功时</td><td>注册成功率、新用户数（注册漏斗第 3 步）。</td></tr></tbody></table></div><div class=\"table-scroll\"><table><thead><tr><th>参数</th><th>属性ID</th><th>类型</th><th>取值说明</th></tr></thead><tbody><tr><td>是否新用户</td><td>is_new_user</td><td>整数</td><td>0 已有账号重新绑定，1 首次注册</td></tr></tbody></table></div>"
               },
               {
-                "title": "12. subscribe_dialog_allow_click · 订阅-允许点击",
+                "title": "11. subscribe_dialog_allow_click · 订阅-允许点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>订阅引导弹窗中点击<span class=\"token token-action\">「允许」</span>时</td><td>订阅授权率（订阅漏斗第 2 步）。</td></tr></tbody></table></div>"
               },
               {
-                "title": "13. subscribe_dialog_deny_click · 订阅-暂不开启点击",
+                "title": "12. subscribe_dialog_deny_click · 订阅-暂不开启点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>订阅引导弹窗中点击<span class=\"token token-action\">「暂不开启」</span>时</td><td>订阅流失节点。</td></tr></tbody></table></div>"
               },
               {
-                "title": "14. share_button_click · 分享-分享按钮点击",
+                "title": "13. share_button_click · 分享-分享按钮点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>点击<span class=\"token token-action\">「分享活动」</span>按钮时</td><td>分享传播率（传播漏斗第 1 步）。</td></tr></tbody></table></div>"
               },
               {
-                "title": "15. share_miniapp_click · 分享-小程序转发点击",
+                "title": "14. share_miniapp_click · 分享-小程序转发点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>在分享面板中点击<span class=\"token token-action\">「小程序转发」</span>时</td><td>分享方式占比（小程序转发）。</td></tr></tbody></table></div>"
               },
               {
-                "title": "16. share_poster_click · 分享-海报转发点击",
+                "title": "15. share_poster_click · 分享-海报转发点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>在分享面板中点击<span class=\"token token-action\">「海报转发」</span>时</td><td>分享方式占比（海报转发），按社区拆分。</td></tr></tbody></table></div>"
               },
               {
-                "title": "17. wecom_group_join_click · 企微群-入口点击",
-                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>点击<span class=\"token token-action\">「加入 XX 社区福利群」</span>横幅时</td><td>加群点击率。</td></tr></tbody></table></div>"
+                "title": "16. wecom_group_join_click · 企微群-入口点击",
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>点击企微群入口（贴底横幅或原有横幅）时</td><td>加群点击率。</td></tr></tbody></table></div>"
               },
               {
-                "title": "18. fab_my_coupon_click · 浮标-我的券点击",
+                "title": "17. fab_my_coupon_click · 浮标-我的券点击",
                 "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>点击右下角<span class=\"token token-action\">「我的券」</span>浮标时</td><td>已注册 / 未注册用户行为区分。</td></tr></tbody></table></div>"
-              },
-              {
-                "title": "19. activity_ended_show · 活动已结束-展示",
-                "html": "<div class=\"table-scroll\"><table><thead><tr><th>触发时机</th><th>支撑指标</th></tr></thead><tbody><tr><td>活动时间外进入页面时</td><td>过期访问量监控。</td></tr></tbody></table></div>"
               },
               {
                 "title": "二、关键漏斗与参考数值",
@@ -1615,7 +1607,7 @@
               },
               {
                 "title": "三、事件总表",
-                "html": "<div class=\"table-scroll\"><table><thead><tr><th>序号</th><th>事件ID</th><th>事件名称</th><th>业务参数（不含通用属性）</th><th>所属漏斗</th></tr></thead><tbody><tr><td>1</td><td>activity_page_enter</td><td>活动页-页面进入</td><td>source</td><td>全部漏斗入口</td></tr><tr><td>2</td><td>activity_page_leave</td><td>活动页-页面离开</td><td>duration_seconds, duration_bucket</td><td>停留时长</td></tr><tr><td>3</td><td>activity_page_empty</td><td>活动页-空状态展示</td><td>—</td><td>空社区监控</td></tr><tr><td>4</td><td>community_switch</td><td>社区切换-切换结果</td><td>from_community, to_community</td><td>跨社区行为</td></tr><tr><td>5</td><td>coupon_claim_start_click</td><td>券-一键领取点击</td><td>coupon_count</td><td>领券漏斗</td></tr><tr><td>6</td><td>coupon_claim_result</td><td>券-一键领取结果</td><td>total_count, duration_ms</td><td>领券漏斗</td></tr><tr><td>7</td><td>shop_card_show</td><td>商家-卡片曝光</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>8</td><td>shop_card_click</td><td>商家-卡片点击</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>9</td><td>register_dialog_confirm_click</td><td>注册-确认点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>10</td><td>register_dialog_skip_click</td><td>注册-暂不领取点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>11</td><td>register_success</td><td>注册-注册成功</td><td>is_new_user</td><td>注册漏斗</td></tr><tr><td>12</td><td>subscribe_dialog_allow_click</td><td>订阅-允许点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>13</td><td>subscribe_dialog_deny_click</td><td>订阅-暂不开启点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>14</td><td>share_button_click</td><td>分享-分享按钮点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>15</td><td>share_miniapp_click</td><td>分享-小程序转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>16</td><td>share_poster_click</td><td>分享-海报转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>17</td><td>wecom_group_join_click</td><td>企微群-入口点击</td><td>—</td><td>加群指标</td></tr><tr><td>18</td><td>fab_my_coupon_click</td><td>浮标-我的券点击</td><td>—</td><td>注册漏斗入口 / 行为区分</td></tr><tr><td>19</td><td>activity_ended_show</td><td>活动已结束-展示</td><td>—</td><td>过期监控</td></tr></tbody></table></div>"
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>序号</th><th>事件ID</th><th>事件名称</th><th>业务参数（不含通用属性）</th><th>所属漏斗</th></tr></thead><tbody><tr><td>1</td><td>activity_page_enter</td><td>活动页-页面进入</td><td>source, page_status</td><td>全部漏斗入口</td></tr><tr><td>2</td><td>activity_page_leave</td><td>活动页-页面离开</td><td>duration_seconds, duration_bucket</td><td>停留时长</td></tr><tr><td>3</td><td>community_switch</td><td>社区切换-切换结果</td><td>from_community, to_community, page_status</td><td>跨社区行为</td></tr><tr><td>4</td><td>coupon_claim_start_click</td><td>券-一键领取点击</td><td>coupon_count</td><td>领券漏斗</td></tr><tr><td>5</td><td>coupon_claim_result</td><td>券-一键领取结果</td><td>total_count, duration_ms</td><td>领券漏斗</td></tr><tr><td>6</td><td>shop_card_show</td><td>商家-卡片曝光</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>7</td><td>shop_card_click</td><td>商家-卡片点击</td><td>shop_id, shop_name</td><td>商家漏斗</td></tr><tr><td>8</td><td>register_dialog_confirm_click</td><td>注册-确认点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>9</td><td>register_dialog_skip_click</td><td>注册-暂不领取点击</td><td>—</td><td>注册漏斗</td></tr><tr><td>10</td><td>register_success</td><td>注册-注册成功</td><td>is_new_user</td><td>注册漏斗</td></tr><tr><td>11</td><td>subscribe_dialog_allow_click</td><td>订阅-允许点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>12</td><td>subscribe_dialog_deny_click</td><td>订阅-暂不开启点击</td><td>—</td><td>订阅漏斗</td></tr><tr><td>13</td><td>share_button_click</td><td>分享-分享按钮点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>14</td><td>share_miniapp_click</td><td>分享-小程序转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>15</td><td>share_poster_click</td><td>分享-海报转发点击</td><td>—</td><td>传播漏斗</td></tr><tr><td>16</td><td>wecom_group_join_click</td><td>企微群-入口点击</td><td>—</td><td>加群指标</td></tr><tr><td>17</td><td>fab_my_coupon_click</td><td>浮标-我的券点击</td><td>—</td><td>注册漏斗入口 / 行为区分</td></tr></tbody></table></div>"
               }
             ],
             "prototype": null
