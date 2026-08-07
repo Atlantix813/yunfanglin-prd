@@ -553,25 +553,25 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   var shopPool = {
     '南医大社区': [
       {name:'邻里小厨', emoji:'🍳', grad:'linear-gradient(135deg,#B3E5FC,#4FC3F7)', desc:'社区家常菜馆，主打街坊口味'},
-      {name:'洁家家政', emoji:'🏠', grad:'linear-gradient(135deg,#FFE0B2,#FFB74D)', dist:'280m'},
-      {name:'好邻居便利店', emoji:'🏪', grad:'linear-gradient(135deg,#C8E6C9,#81C784)', dist:'150m'},
-      {name:'阳光亲子馆', emoji:'👶', grad:'linear-gradient(135deg,#F8BBD0,#F48FB1)', dist:'320m'},
-      {name:'邻里药房', emoji:'💊', grad:'linear-gradient(135deg,#D1C4E9,#9575CD)', dist:'410m'},
-      {name:'阿婆糖水铺', emoji:'🍧', grad:'linear-gradient(135deg,#FFF9C4,#FFD54F)', dist:'560m'},
-      {name:'城南理发店', emoji:'💈', grad:'linear-gradient(135deg,#B2EBF2,#4DD0E1)', dist:'680m'},
-      {name:'鲜果时光', emoji:'🍉', grad:'linear-gradient(135deg,#FCE4EC,#F48FB1)', dist:'720m'}
+      {name:'洁家家政', emoji:'🏠', grad:'linear-gradient(135deg,#FFE0B2,#FFB74D)', desc:'专业家政服务，支持日常保洁与深度清洁'},
+      {name:'好邻居便利店', emoji:'🏪', grad:'linear-gradient(135deg,#C8E6C9,#81C784)', desc:'社区便民便利店，日常所需一站购齐'},
+      {name:'阳光亲子馆', emoji:'👶', grad:'linear-gradient(135deg,#F8BBD0,#F48FB1)', desc:'亲子早教与游乐，陪伴孩子快乐成长'},
+      {name:'邻里药房', emoji:'💊', grad:'linear-gradient(135deg,#D1C4E9,#9575CD)', desc:'社区药房，常用药品齐全，药师在线咨询'},
+      {name:'阿婆糖水铺', emoji:'🍧', grad:'linear-gradient(135deg,#FFF9C4,#FFD54F)', desc:'老字号糖水铺，手工现煮，街坊最爱'},
+      {name:'城南理发店', emoji:'💈', grad:'linear-gradient(135deg,#B2EBF2,#4DD0E1)', desc:'社区理发，师傅手艺好，价格实惠'},
+      {name:'鲜果时光', emoji:'🍉', grad:'linear-gradient(135deg,#FCE4EC,#F48FB1)', desc:'新鲜水果每日直供，产地直采'}
     ],
     '沙顶社区': [
-      {name:'沙顶茶餐厅', emoji:'🍜', grad:'linear-gradient(135deg,#FFE0B2,#FF8A65)', dist:'90m'},
-      {name:'老张烧腊', emoji:'🍗', grad:'linear-gradient(135deg,#FFCDD2,#E57373)', dist:'210m'},
-      {name:'沙顶粮油店', emoji:'🌾', grad:'linear-gradient(135deg,#D7CCC8,#A1887F)', dist:'340m'},
-      {name:'康乐诊所', emoji:'🏥', grad:'linear-gradient(135deg,#B3E5FC,#4FC3F7)', dist:'450m'},
-      {name:'沙顶花店', emoji:'💐', grad:'linear-gradient(135deg,#E1BEE7,#BA68C8)', dist:'590m'}
+      {name:'沙顶茶餐厅', emoji:'🍜', grad:'linear-gradient(135deg,#FFE0B2,#FF8A65)', desc:'地道港式茶餐厅，招牌奶茶与烧味'},
+      {name:'老张烧腊', emoji:'🍗', grad:'linear-gradient(135deg,#FFCDD2,#E57373)', desc:'广式烧腊老店，蜜汁叉烧每日现烤'},
+      {name:'沙顶粮油店', emoji:'🌾', grad:'linear-gradient(135deg,#D7CCC8,#A1887F)', desc:'粮油米面零售，送货上门'},
+      {name:'康乐诊所', emoji:'🏥', grad:'linear-gradient(135deg,#B3E5FC,#4FC3F7)', desc:'社区诊所，常见病诊疗与健康咨询'},
+      {name:'沙顶花店', emoji:'💐', grad:'linear-gradient(135deg,#E1BEE7,#BA68C8)', desc:'鲜花绿植，节日花束定制配送'}
     ],
     '金沙社区': [
-      {name:'金沙生鲜超市', emoji:'🥬', grad:'linear-gradient(135deg,#C8E6C9,#66BB6A)', dist:'100m'},
-      {name:'金沙早餐店', emoji:'🥟', grad:'linear-gradient(135deg,#FFF9C4,#FFCA28)', dist:'230m'},
-      {name:'金沙药房', emoji:'💊', grad:'linear-gradient(135deg,#D1C4E9,#9575CD)', dist:'360m'}
+      {name:'金沙生鲜超市', emoji:'🥬', grad:'linear-gradient(135deg,#C8E6C9,#66BB6A)', desc:'生鲜果蔬超市，每日新鲜上架'},
+      {name:'金沙早餐店', emoji:'🥟', grad:'linear-gradient(135deg,#FFF9C4,#FFCA28)', desc:'早餐小吃，现做现卖'},
+      {name:'金沙药房', emoji:'💊', grad:'linear-gradient(135deg,#D1C4E9,#9575CD)', desc:'社区药房，医保定点，用药指导'}
     ]
   };
   var pageSize = 4;
@@ -579,8 +579,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   var loading = false;
 
   function shopCardHtml(shop){
-    var sub = shop.dist ? ('距您 ' + shop.dist) : (shop.desc || '');
-    return '<div style="width:calc(50% - 5px);background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div class="shop-img" style="background:'+shop.grad+'">'+shop.emoji+'</div><div class="shop-info"><div style="font-weight:600;font-size:13px">'+shop.name+'</div><div style="font-size:11px;color:#999;margin-top:2px">'+sub+'</div></div></div>';
+    return '<div style="width:calc(50% - 5px);background:#fff;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)"><div class="shop-img" style="background:'+shop.grad+'">'+shop.emoji+'</div><div class="shop-info"><div style="font-weight:600;font-size:13px">'+shop.name+'</div><div style="font-size:11px;color:#999;margin-top:2px">'+(shop.desc||'')+'</div></div></div>';
   }
 
   function renderShops(){
