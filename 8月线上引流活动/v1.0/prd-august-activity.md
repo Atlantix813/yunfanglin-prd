@@ -360,7 +360,7 @@
 
 平台配置说明：新增属性（表中带字典的 6 项 + 纯文本 3 项）已通过 We 分析批量导入，key_type 用枚举 `KEY_TYPE_STRING` / `KEY_TYPE_INT64`，字典列填字典名称（dict_name）；平台配置格式与批量导入 JSON 模板见 `08_埋点设计/02_We分析平台配置指南.md`。
 
-##### 1. activity_page_enter · 活动页-页面进入
+##### 1. activity_page_enter · 活动页-进入
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -373,7 +373,7 @@
 
 说明：空状态展示与活动已结束不再作为独立事件上报，通过 page_status 参数随页面进入一并记录。
 
-##### 2. activity_page_leave · 活动页-页面离开
+##### 2. activity_page_leave · 活动页-离开
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -394,7 +394,7 @@
 | 4 | 30-60s |
 | 5 | 60s 以上 |
 
-##### 3. community_switch · 社区切换-切换结果
+##### 3. community_switch · 社区切换
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -406,7 +406,7 @@
 | 切换后社区 | to_community | 字符 | 切换后社区 ID |
 | 页面状态 | page_status | 整数 | 切换后新社区的状态：1 正常 / 2 空状态 / 3 活动已结束 |
 
-##### 4. coupon_claim_start_click · 券-一键领取点击
+##### 4. coupon_claim_start_click · 一键领取_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -416,7 +416,7 @@
 | --- | --- | --- | --- |
 | 可领券总数 | coupon_count | 整数 | 当前可领取的券数量 |
 
-##### 5. coupon_claim_result · 券-一键领取结果
+##### 5. coupon_claim_result · 一键领取_结果
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -427,7 +427,7 @@
 | 总张数 | total_count | 整数 | 本次尝试领取的券数 |
 | 领取耗时 | duration_ms | 整数 | 领取完成的毫秒数 |
 
-##### 6. shop_card_show · 商家-卡片曝光
+##### 6. shop_card_show · 商家卡片-曝光
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -438,7 +438,7 @@
 | 商家ID | shop_id | 字符 | 商家唯一标识 |
 | 商家名称 | shop_name | 字符 | 商家名称 |
 
-##### 7. shop_card_click · 商家-卡片点击
+##### 7. shop_card_click · 商家卡片_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -449,19 +449,19 @@
 | 商家ID | shop_id | 字符 | 商家唯一标识 |
 | 商家名称 | shop_name | 字符 | 商家名称 |
 
-##### 8. register_dialog_confirm_click · 注册-确认点击
+##### 8. register_dialog_confirm_click · 注册弹窗-确认_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 点击「注册并领取」按钮时 | 注册确认率（注册漏斗第 2 步）。 |
 
-##### 9. register_dialog_skip_click · 注册-暂不领取点击
+##### 9. register_dialog_skip_click · 注册弹窗-暂不领取_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 点击「暂不领取」按钮时 | 注册流失节点。 |
 
-##### 10. register_success · 注册-注册成功
+##### 10. register_success · 注册成功
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -471,43 +471,43 @@
 | --- | --- | --- | --- |
 | 是否新用户 | is_new_user | 整数 | 0 已有账号重新绑定，1 首次注册 |
 
-##### 11. subscribe_dialog_allow_click · 订阅-允许点击
+##### 11. subscribe_dialog_allow_click · 订阅弹窗-允许_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 订阅引导弹窗中点击「允许」时 | 订阅授权率（订阅漏斗第 2 步）。 |
 
-##### 12. subscribe_dialog_deny_click · 订阅-暂不开启点击
+##### 12. subscribe_dialog_deny_click · 订阅弹窗-暂不开启_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 订阅引导弹窗中点击「暂不开启」时 | 订阅流失节点。 |
 
-##### 13. share_button_click · 分享-分享按钮点击
+##### 13. share_button_click · 分享-按钮_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 点击「分享活动」按钮时 | 分享传播率（传播漏斗第 1 步）。 |
 
-##### 14. share_miniapp_click · 分享-小程序转发点击
+##### 14. share_miniapp_click · 分享-小程序转发_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 在分享面板中点击「小程序转发」时 | 分享方式占比（小程序转发）。 |
 
-##### 15. share_poster_click · 分享-海报转发点击
+##### 15. share_poster_click · 分享-海报转发_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 在分享面板中点击「海报转发」时 | 分享方式占比（海报转发），按社区拆分。 |
 
-##### 16. wecom_group_join_click · 企微群-入口点击
+##### 16. wecom_group_join_click · 企微群-入口_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
 | 点击企微群入口（贴底横幅或原有横幅）时 | 加群点击率。 |
 
-##### 17. fab_my_coupon_click · 浮标-我的券点击
+##### 17. fab_my_coupon_click · 浮标-我的券_点击
 
 | 触发时机 | 支撑指标 |
 | --- | --- |
@@ -538,23 +538,23 @@
 
 | 序号 | 事件ID | 事件名称 | 业务参数（不含通用属性） | 所属漏斗 |
 | --- | --- | --- | --- | --- |
-| 1 | activity_page_enter | 活动页-页面进入 | source, page_status | 全部漏斗入口 |
-| 2 | activity_page_leave | 活动页-页面离开 | duration_seconds, duration_bucket | 停留时长 |
-| 3 | community_switch | 社区切换-切换结果 | from_community, to_community, page_status | 跨社区行为 |
-| 4 | coupon_claim_start_click | 券-一键领取点击 | coupon_count | 领券漏斗 |
-| 5 | coupon_claim_result | 券-一键领取结果 | total_count, duration_ms | 领券漏斗 |
-| 6 | shop_card_show | 商家-卡片曝光 | shop_id, shop_name | 商家漏斗 |
-| 7 | shop_card_click | 商家-卡片点击 | shop_id, shop_name | 商家漏斗 |
-| 8 | register_dialog_confirm_click | 注册-确认点击 | — | 注册漏斗 |
-| 9 | register_dialog_skip_click | 注册-暂不领取点击 | — | 注册漏斗 |
-| 10 | register_success | 注册-注册成功 | is_new_user | 注册漏斗 |
-| 11 | subscribe_dialog_allow_click | 订阅-允许点击 | — | 订阅漏斗 |
-| 12 | subscribe_dialog_deny_click | 订阅-暂不开启点击 | — | 订阅漏斗 |
-| 13 | share_button_click | 分享-分享按钮点击 | — | 传播漏斗 |
-| 14 | share_miniapp_click | 分享-小程序转发点击 | — | 传播漏斗 |
-| 15 | share_poster_click | 分享-海报转发点击 | — | 传播漏斗 |
-| 16 | wecom_group_join_click | 企微群-入口点击 | — | 加群指标 |
-| 17 | fab_my_coupon_click | 浮标-我的券点击 | — | 注册漏斗入口 / 行为区分 |
+| 1 | activity_page_enter | 活动页-进入 | source, page_status | 全部漏斗入口 |
+| 2 | activity_page_leave | 活动页-离开 | duration_seconds, duration_bucket | 停留时长 |
+| 3 | community_switch | 社区切换 | from_community, to_community, page_status | 跨社区行为 |
+| 4 | coupon_claim_start_click | 一键领取_点击 | coupon_count | 领券漏斗 |
+| 5 | coupon_claim_result | 一键领取_结果 | total_count, duration_ms | 领券漏斗 |
+| 6 | shop_card_show | 商家卡片-曝光 | shop_id, shop_name | 商家漏斗 |
+| 7 | shop_card_click | 商家卡片_点击 | shop_id, shop_name | 商家漏斗 |
+| 8 | register_dialog_confirm_click | 注册弹窗-确认_点击 | — | 注册漏斗 |
+| 9 | register_dialog_skip_click | 注册弹窗-暂不领取_点击 | — | 注册漏斗 |
+| 10 | register_success | 注册成功 | is_new_user | 注册漏斗 |
+| 11 | subscribe_dialog_allow_click | 订阅弹窗-允许_点击 | — | 订阅漏斗 |
+| 12 | subscribe_dialog_deny_click | 订阅弹窗-暂不开启_点击 | — | 订阅漏斗 |
+| 13 | share_button_click | 分享-按钮_点击 | — | 传播漏斗 |
+| 14 | share_miniapp_click | 分享-小程序转发_点击 | — | 传播漏斗 |
+| 15 | share_poster_click | 分享-海报转发_点击 | — | 传播漏斗 |
+| 16 | wecom_group_join_click | 企微群-入口_点击 | — | 加群指标 |
+| 17 | fab_my_coupon_click | 浮标-我的券_点击 | — | 注册漏斗入口 / 行为区分 |
 
 ### 功能二 · 领券中心 Tab
 
