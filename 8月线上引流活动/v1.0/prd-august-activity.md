@@ -358,7 +358,7 @@
 
 系统自动采集属性（app_state、device、page_path、networktype 等 12 项）由 We 分析自动携带，不手动上报。
 
-平台配置说明：新增属性（表中带字典的 6 项 + 纯文本 3 项）已通过 We 分析批量导入，key_type 用枚举 `KEY_TYPE_STRING` / `KEY_TYPE_INT64`，字典列填字典名称（dict_name）；平台配置格式与批量导入 JSON 模板见 `08_埋点设计/02_We分析平台配置指南.md`。
+平台配置说明：新增属性（表中带字典的 6 项 + 纯文本 3 项）及事件业务参数属性 12 个已通过 We 分析批量导入，key_type 用枚举 `KEY_TYPE_STRING` / `KEY_TYPE_INT64`，字典列填字典名称（dict_name）；17 个事件已全部批量导入成功，与下文事件总表逐项对应；平台配置格式与批量导入 JSON 模板见 `08_埋点设计/02_We分析平台配置指南.md`。
 
 ##### 1. activity_page_enter · 活动页-进入
 
