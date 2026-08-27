@@ -963,7 +963,7 @@
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-august-activity.md 自动生成，MD SHA256: 1517396f238c12b2aa6ec008e779cc4e963f3872478d5013ade4279eee0a5c0e
+    // 由 prd-august-activity.md 自动生成，MD SHA256: 0cc2faf8f52b2c79a121b7ef0ada6d0632273fa9495a101e6abefa563e6aee82
     const PRD_MODE = "small";
     const SECTION_DATA = [
       {
@@ -1124,7 +1124,8 @@
                     "items": [
                       "多张券横向滚动排列（首屏露出 3 张）。",
                       "每张券仅展示面额和门槛描述，不设领取按钮。",
-                      "已领取的券底部显示<span class=\"token token-action\">「已领取」</span>标记。"
+                      "已领取的券底部显示<span class=\"token token-action\">「已领取」</span>标记。",
+                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>未领取的券不显示<span class=\"token token-action\">「已领取」</span>标记；仅通过已领券列表区分已领取与未领取。</span>"
                     ]
                   },
                   {
@@ -1137,7 +1138,10 @@
                       "库存为 0 的券。",
                       "非免费券（需要消耗积分兑换的券）。",
                       "仅新客券（适用人群=仅新客）但当前用户不符合新客条件（已在该券所属商家核销过优惠券）的券。",
+                      "<span class=\"token token-del\">当前用户已领取张数达到每人限领上限的券。</span>",
+                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动：已达限领上限的券不再剔除】</span>领取达到上限后，券仍展示在列表中，显示<span class=\"token token-action\">「已领取」</span>标签；该券不可再次领取。</span>",
                       "<span class=\"token token-del\">判断规则：上述条件任一不满足，该券不展示在列表，也不参与一键领取。</span>",
+                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>判断规则：上述条件任一不满足，该券不展示在列表，也不参与一键领取；已达限领上限的券除外，仍展示但标记<span class=\"token token-action\">「已领取」</span>，不参与一键领取。</span>",
                       "已领券：可展示券列表中，用户已经领取过的那些（含已使用、未使用状态，及已达限领上限的券）。",
                       "可领券：可展示券列表中，用户还没领过的那些。"
                     ]
@@ -1170,9 +1174,11 @@
                       "点击后仅领取可领券列表中的券，已领或不可领的自动跳过。",
                       "全屏遮罩，中央显示<span class=\"token token-action\">「当前正领取优惠券，请稍等」</span>和实时进度。",
                       "调用批量领券接口，一次提交可领券 ID，成功失败分别统计。",
+                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>进页面时由前端记录本次可领券 ID 清单；进入页面后可领券清单可能发生变化（如券库存归零），领取时部分券可能领取失败。</span>",
                       "全部领取完成后遮罩消失。",
                       "弹出结果弹窗：",
                       "<span class=\"token token-del\">主文案统一为<span class=\"token token-action\">「已成功领取社区优惠」</span>，不区分全部成功或部分失败。</span>",
+                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>全部领取成功：主文案<span class=\"token token-action\">「已成功领取社区优惠」</span>；部分券领取失败：领取失败时弹出 toast 直接覆盖在成功弹窗上方，提示<span class=\"token token-action\">「领取成功，券已下发到卡包（部分券因库存不足领取失败）」</span>。</span>",
                       "弹窗内展示指引区（预设文字）：",
                       "有效期提示：优惠券在活动时间内有效，过期作废。",
                       "使用方式：进入卡包点击优惠券，到店出示核销码即可使用。",
@@ -1180,7 +1186,8 @@
                       "弹窗仅保留<span class=\"token token-action\">「好的」</span>关闭按钮。",
                       "弹窗点击<span class=\"token token-action\">「好的」</span>关闭，关闭后继续走订阅判断逻辑（未开启订阅则弹出订阅弹窗）。",
                       "领取完成后刷新可领券列表，如无可领券则按钮变为置灰<span class=\"token token-action\">「已领取」</span>。",
-                      "执行期间按钮不可重复点击。"
+                      "执行期间按钮不可重复点击。",
+                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>部分券领取失败时的重试逻辑：每次领取成功后重新拉取接口券数据，对剩余未成功领取的券再次发起领取，直至全部处理完。</span>"
                     ]
                   },
                   {
