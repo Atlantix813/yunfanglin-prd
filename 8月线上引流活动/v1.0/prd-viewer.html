@@ -505,6 +505,29 @@
       font-weight: 700;
     }
 
+    .token-del .tag,
+    .token-new .tag {
+      display: inline-block;
+      margin-right: 4px;
+      padding: 0 4px;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.6;
+      vertical-align: 1px;
+    }
+
+    .token-del .tag {
+      color: #999999;
+      border: 1px solid #cccccc;
+      text-decoration: none;
+    }
+
+    .token-new .tag {
+      color: #E23C39;
+      border: 1px solid #E23C39;
+    }
+
     .md-code {
       background: #f6f8fa;
       border: 1px solid #e8ecf1;
@@ -963,7 +986,7 @@
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-august-activity.md 自动生成，MD SHA256: 0cc2faf8f52b2c79a121b7ef0ada6d0632273fa9495a101e6abefa563e6aee82
+    // 由 prd-august-activity.md 自动生成，MD SHA256: 27ff94e4199850755d98c0abcf5b0506a78960ce5331d573f73eca055666b3c9
     const PRD_MODE = "small";
     const SECTION_DATA = [
       {
@@ -988,7 +1011,7 @@
         "blocks": [
           {
             "title": "需求清单",
-            "html": "<div class=\"table-scroll\"><table><thead><tr><th>类型</th><th>项目</th><th>内容</th><th>说明</th></tr></thead><tbody><tr><td>新增</td><td>页面</td><td><span class=\"token token-action\">「8月活动落地页」</span></td><td>承接公告流量，展示社区商家和优惠券，支持一键领取</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「一键领取」</span></td><td>全屏遮罩展示进度，逐张领取，完成后弹窗展示结果；<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>支持部分失败重试，失败时 toast 覆盖提示</span></td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「社区切换」</span></td><td>底部滑出面板切换活动社区，页面内容跟随刷新</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「领券中心 Tab」</span></td><td>领券中心新增<span class=\"token token-action\">「8月福利节」</span>Tab，按券名称关键词筛选</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「加入社区福利群」</span></td><td>一键领取下方展示群聊入口，不同社区对应不同企微群</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「分享」</span></td><td>活动页分享按钮，触发微信分享能力</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「订阅消息」</span></td><td>一键领取完成后弹窗引导用户授权订阅，授权后开启所有订阅子项</td></tr><tr><td>新增</td><td>埋点</td><td><span class=\"token token-action\">「We 分析事件上报」</span></td><td>活动页关键交互节点上报，支撑指标与漏斗分析</td></tr><tr><td>新增</td><td>配置</td><td><span class=\"token token-action\">「消息订阅面板」</span></td><td>市集模块新增<span class=\"token token-action\">「社区活动通知」</span>子项，支持手动群发推送</td></tr></tbody></table></div>"
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>类型</th><th>项目</th><th>内容</th><th>说明</th></tr></thead><tbody><tr><td>新增</td><td>页面</td><td><span class=\"token token-action\">「8月活动落地页」</span></td><td>承接公告流量，展示社区商家和优惠券，支持一键领取</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「一键领取」</span></td><td>全屏遮罩展示进度，逐张领取，完成后弹窗展示结果；<span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>支持部分失败重试，失败时 toast 覆盖提示</span></td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「社区切换」</span></td><td>底部滑出面板切换活动社区，页面内容跟随刷新</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「领券中心 Tab」</span></td><td>领券中心新增<span class=\"token token-action\">「8月福利节」</span>Tab，按券名称关键词筛选</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「加入社区福利群」</span></td><td>一键领取下方展示群聊入口，不同社区对应不同企微群</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「分享」</span></td><td>活动页分享按钮，触发微信分享能力</td></tr><tr><td>新增</td><td>交互</td><td><span class=\"token token-action\">「订阅消息」</span></td><td>一键领取完成后弹窗引导用户授权订阅，授权后开启所有订阅子项</td></tr><tr><td>新增</td><td>埋点</td><td><span class=\"token token-action\">「We 分析事件上报」</span></td><td>活动页关键交互节点上报，支撑指标与漏斗分析</td></tr><tr><td>新增</td><td>配置</td><td><span class=\"token token-action\">「消息订阅面板」</span></td><td>市集模块新增<span class=\"token token-action\">「社区活动通知」</span>子项，支持手动群发推送</td></tr></tbody></table></div>"
           }
         ]
       },
@@ -1009,11 +1032,11 @@
           },
           {
             "title": "数据获取",
-            "html": "<div class=\"table-scroll\"><table><thead><tr><th>数据</th><th>来源</th><th>过滤逻辑</th></tr></thead><tbody><tr><td>社区列表</td><td>全区组织树接口</td><td>—</td></tr><tr><td>商家列表</td><td>现有商家列表接口</td><td>取活动配置<span class=\"token token-action\">「参与活动商家清单」</span>，按当前社区筛选，支持分页加载</td></tr><tr><td>活动券列表</td><td>现有领券中心券列表接口</td><td>前端按社区 + 券名称关键词双重过滤，再剔除<span class=\"token token-del\">达限领上限的</span>下架、库存为 0、非免费、不符新客资格的券；<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>已达限领上限的券不剔除，仍展示并标记<span class=\"token token-action\">「已领取」</span></span></td></tr><tr><td>用户已领券状态</td><td>现有用户已领券查询</td><td>判断每张券是否已领取；历史领券记录用于核对每人限领上限</td></tr></tbody></table></div><p>待确认：券列表接口需返回消耗积分、适用人群、每人限领字段（默认具备）；<span class=\"token token-action\">「新客资格」</span>判断已有现成接口，但接口具体逻辑待研发核对（是否直接返回过滤后结果，或需前端结合核销记录判断）。</p>"
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>数据</th><th>来源</th><th>过滤逻辑</th></tr></thead><tbody><tr><td>社区列表</td><td>全区组织树接口</td><td>—</td></tr><tr><td>商家列表</td><td>现有商家列表接口</td><td>取活动配置<span class=\"token token-action\">「参与活动商家清单」</span>，按当前社区筛选，支持分页加载</td></tr><tr><td>活动券列表</td><td>现有领券中心券列表接口</td><td>前端按社区 + 券名称关键词双重过滤，再剔除<span class=\"token token-del\"><span class=\"tag\">删除</span>达限领上限的</span>下架、库存为 0、非免费、不符新客资格的券；<span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>已达限领上限的券不剔除，仍展示并标记<span class=\"token token-action\">「已领取」</span></span></td></tr><tr><td>用户已领券状态</td><td>现有用户已领券查询</td><td>判断每张券是否已领取；历史领券记录用于核对每人限领上限</td></tr></tbody></table></div><p>待确认：券列表接口需返回消耗积分、适用人群、每人限领字段（默认具备）；<span class=\"token token-action\">「新客资格」</span>判断已有现成接口，但接口具体逻辑待研发核对（是否直接返回过滤后结果，或需前端结合核销记录判断）。</p>"
           },
           {
             "title": "一键领取",
-            "html": "<ul><li>复用现有批量领券接口，一次提交可领券 ID 列表</li><li>成功/失败分别统计用于埋点，弹窗表现统一（<span class=\"token token-action\">「已成功领取社区优惠」</span>+ 指引区）</li><li>领取期间按钮禁用防重复点击</li><li><span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>进页面时前端记录本次可领券 ID 清单；领取过程中部分券可能失败（如券库存归零），每次领取成功后重新拉取接口券数据，对剩余未成功的券再次发起领取，直至全部处理完</span></li><li><span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>部分券领取失败时，失败 toast 直接覆盖在成功弹窗上方，提示<span class=\"token token-action\">「领取成功，券已下发到卡包（部分券因库存不足领取失败）」</span></span></li></ul>"
+            "html": "<ul><li>复用现有批量领券接口，一次提交可领券 ID 列表</li><li>成功/失败分别统计用于埋点，弹窗表现统一（<span class=\"token token-action\">「已成功领取社区优惠」</span>+ 指引区）</li><li>领取期间按钮禁用防重复点击</li><li><span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>进页面时前端记录本次可领券 ID 清单；领取过程中部分券可能失败（如券库存归零），每次领取成功后重新拉取接口券数据，对剩余未成功的券再次发起领取，直至全部处理完</span></li><li><span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>部分券领取失败时，失败 toast 直接覆盖在成功弹窗上方，提示<span class=\"token token-action\">「领取成功，券已下发到卡包（部分券因库存不足领取失败）」</span></span></li></ul>"
           },
           {
             "title": "活动时间",
@@ -1125,7 +1148,7 @@
                       "多张券横向滚动排列（首屏露出 3 张）。",
                       "每张券仅展示面额和门槛描述，不设领取按钮。",
                       "已领取的券底部显示<span class=\"token token-action\">「已领取」</span>标记。",
-                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>未领取的券不显示<span class=\"token token-action\">「已领取」</span>标记；仅通过已领券列表区分已领取与未领取。</span>"
+                      "<span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>未领取的券不显示<span class=\"token token-action\">「已领取」</span>标记；仅通过已领券列表区分已领取与未领取。</span>"
                     ]
                   },
                   {
@@ -1138,10 +1161,10 @@
                       "库存为 0 的券。",
                       "非免费券（需要消耗积分兑换的券）。",
                       "仅新客券（适用人群=仅新客）但当前用户不符合新客条件（已在该券所属商家核销过优惠券）的券。",
-                      "<span class=\"token token-del\">当前用户已领取张数达到每人限领上限的券。</span>",
-                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动：已达限领上限的券不再剔除】</span>领取达到上限后，券仍展示在列表中，显示<span class=\"token token-action\">「已领取」</span>标签；该券不可再次领取。</span>",
-                      "<span class=\"token token-del\">判断规则：上述条件任一不满足，该券不展示在列表，也不参与一键领取。</span>",
-                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>判断规则：上述条件任一不满足，该券不展示在列表，也不参与一键领取；已达限领上限的券除外，仍展示但标记<span class=\"token token-action\">「已领取」</span>，不参与一键领取。</span>",
+                      "<span class=\"token token-del\"><span class=\"tag\">删除</span>当前用户已领取张数达到每人限领上限的券。</span>",
+                      "<span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动：已达限领上限的券不再剔除】</span>领取达到上限后，券仍展示在列表中，显示<span class=\"token token-action\">「已领取」</span>标签；该券不可再次领取。</span>",
+                      "<span class=\"token token-del\"><span class=\"tag\">删除</span>判断规则：上述条件任一不满足，该券不展示在列表，也不参与一键领取。</span>",
+                      "<span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>判断规则：上述条件任一不满足，该券不展示在列表，也不参与一键领取；已达限领上限的券除外，仍展示但标记<span class=\"token token-action\">「已领取」</span>，不参与一键领取。</span>",
                       "已领券：可展示券列表中，用户已经领取过的那些（含已使用、未使用状态，及已达限领上限的券）。",
                       "可领券：可展示券列表中，用户还没领过的那些。"
                     ]
@@ -1174,11 +1197,11 @@
                       "点击后仅领取可领券列表中的券，已领或不可领的自动跳过。",
                       "全屏遮罩，中央显示<span class=\"token token-action\">「当前正领取优惠券，请稍等」</span>和实时进度。",
                       "调用批量领券接口，一次提交可领券 ID，成功失败分别统计。",
-                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>进页面时由前端记录本次可领券 ID 清单；进入页面后可领券清单可能发生变化（如券库存归零），领取时部分券可能领取失败。</span>",
+                      "<span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>进页面时由前端记录本次可领券 ID 清单；进入页面后可领券清单可能发生变化（如券库存归零），领取时部分券可能领取失败。</span>",
                       "全部领取完成后遮罩消失。",
                       "弹出结果弹窗：",
-                      "<span class=\"token token-del\">主文案统一为<span class=\"token token-action\">「已成功领取社区优惠」</span>，不区分全部成功或部分失败。</span>",
-                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>全部领取成功：主文案<span class=\"token token-action\">「已成功领取社区优惠」</span>；部分券领取失败：领取失败时弹出 toast 直接覆盖在成功弹窗上方，提示<span class=\"token token-action\">「领取成功，券已下发到卡包（部分券因库存不足领取失败）」</span>。</span>",
+                      "<span class=\"token token-del\"><span class=\"tag\">删除</span>主文案统一为<span class=\"token token-action\">「已成功领取社区优惠」</span>，不区分全部成功或部分失败。</span>",
+                      "<span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>全部领取成功：主文案<span class=\"token token-action\">「已成功领取社区优惠」</span>；部分券领取失败：领取失败时弹出 toast 直接覆盖在成功弹窗上方，提示<span class=\"token token-action\">「领取成功，券已下发到卡包（部分券因库存不足领取失败）」</span>。</span>",
                       "弹窗内展示指引区（预设文字）：",
                       "有效期提示：优惠券在活动时间内有效，过期作废。",
                       "使用方式：进入卡包点击优惠券，到店出示核销码即可使用。",
@@ -1187,7 +1210,7 @@
                       "弹窗点击<span class=\"token token-action\">「好的」</span>关闭，关闭后继续走订阅判断逻辑（未开启订阅则弹出订阅弹窗）。",
                       "领取完成后刷新可领券列表，如无可领券则按钮变为置灰<span class=\"token token-action\">「已领取」</span>。",
                       "执行期间按钮不可重复点击。",
-                      "<span class=\"token token-new\"><span class=\"token token-page\">【8月27日改动】</span>部分券领取失败时的重试逻辑：每次领取成功后重新拉取接口券数据，对剩余未成功领取的券再次发起领取，直至全部处理完。</span>"
+                      "<span class=\"token token-new\"><span class=\"tag\">调整</span><span class=\"token token-page\">【8月27日改动】</span>部分券领取失败时的重试逻辑：每次领取成功后重新拉取接口券数据，对剩余未成功领取的券再次发起领取，直至全部处理完。</span>"
                     ]
                   },
                   {
