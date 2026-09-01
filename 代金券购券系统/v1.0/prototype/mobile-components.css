@@ -123,7 +123,9 @@ button { cursor:pointer; }
 .m-notice-close { width:18px; height:18px; border:0; background:transparent; color:#FFB347; }
 
 /* Tab、搜索与筛选 */
-.m-tab-bar { height:48px; display:flex; align-items:center; gap:28px; padding:0 20px; background:var(--m-page-bg); }
+.m-tab-bar { height:48px; display:flex; align-items:center; gap:28px; padding:0 20px; background:var(--m-page-bg); overflow-x:auto; scrollbar-width:none; -ms-overflow-style:none; -webkit-overflow-scrolling:touch; }
+.m-tab-bar::-webkit-scrollbar { display:none; }
+.m-tab-bar .m-tab-item { flex:0 0 auto; white-space:nowrap; }
 .m-tab-item { height:48px; display:flex; align-items:center; position:relative; color:var(--m-text-3); font-size:15px; }
 .m-tab-item.active { color:var(--m-text); font-weight:700; }
 .m-tab-item.active::after { content:''; position:absolute; left:50%; bottom:0; transform:translateX(-50%); width:20px; height:3px; border-radius:2px; background:var(--m-primary); }
