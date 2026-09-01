@@ -986,7 +986,7 @@
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-voucher-purchase.md 自动生成，MD SHA256: 11474be57e6a637a9ef2e594c3a6069aec1f9ccfc8a19b10416478a0359a3daa
+    // 由 prd-voucher-purchase.md 自动生成，MD SHA256: 380b315c6a026230c18720b55309974188bd640255878ce7b8deba58e7f7a7d0
     const PRD_MODE = "large";
     const SECTION_DATA = [];
 
@@ -1086,6 +1086,1462 @@
               {
                 "title": "数据写入",
                 "html": "<p>无（决策记录文档，无业务数据写入）。</p>"
+              }
+            ],
+            "prototype": null
+          }
+        ]
+      },
+      {
+        "id": "业务流程总览",
+        "title": "业务流程总览",
+        "desc": "业务流程总览相关需求。",
+        "summary": "业务流程总览相关需求。",
+        "pages": [
+          {
+            "id": "业务流程总览",
+            "tab": "业务流程总览",
+            "title": "业务流程总览",
+            "type": "overview",
+            "location": "",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "主流程",
+                "html": "<ol><li>商家发布代金券：设置券名、面额（如 50 元）、售价（如 40 元）、库存、有效期、使用说明（含使用条件，如满 80 元可用）。</li><li>居民在<span class=\"token token-page\">【代金券】</span>列表浏览，进入详情页查看券信息与商家信息，确认购买。</li><li>居民提交订单并发起微信支付，支付成功后订单进入 <span class=\"token token-field\">[待使用]</span> 状态。</li><li>居民到店消费，结账时出示核销码，商家扫码核销，券面额（50 元）抵扣账单。</li><li>账单抵扣后的剩余金额由商家线下补收，不走云芳邻。</li><li>核销成功后自动发起分账：平台从商家特约商户号将抽佣金额分到平台商户号，剩余金额解冻留在商家特约商户号可用余额。</li><li>订单进入 <span class=\"token token-field\">[已核销]</span> 状态，居民收到核销成功通知。</li></ol>"
+              },
+              {
+                "title": "业务流程图（按业务流分 tab）",
+                "html": "<p>下列流程图按业务流组织，判断节点为数据库/字段级，分支覆盖各状态流转：</p><ul><li>商家进件主链：<strong>串行主线 + 超管异步引导</strong>——提交创建申请单 → 超管扫统一链接核对联系信息（不影响审核）→ 平台审核（1-3 工作日，通过/驳回分支）→ 审核通过后判定是否账户验证（法人本人当超管免验证；需验证主体完成汇款/法人扫码）→ 签约 → 开通权限 → 特约商户号回写；超管侧全部操作通过同一链接按状态分步引导。</li><li>进件异常分支：审核驳回（同编号覆盖重提）、30 天作废（重新发起新申请单）。</li><li>结算账户修改子流程：商家申请 → 微信审核（可打 0.01 元验证新卡）→ 驳回重发 / 成功回写；每天限 5 次。</li><li>商家注销子流程：清账校验五清单 → 微信注销申请（审核中/驳回换单/成功）→ 遗留资金全额清退 → 商家状态转已注销。</li><li>商家发券：按券类型（免费/付费）与进件完成状态分流，付费券需进件完成，提交后平台审核。</li><li>免费券领取：0 元订单，无支付、无分账、无退款；过期仅状态标记。</li><li>到店核销：校验订单归属、订单状态、有效期；核销成功后付费券进入分账、免费券无资金流。</li><li>分账（分账记录视角）：付费券核销 → 创建分账记录（待分账）→ 是否延长分账（PC 人工）→ 到达预计分账日期由每日分账任务执行（唯一条件=待分账且到期，不判断订单主状态）→ 已分账 / 分账异常。<span class=\"token token-action\">「已终止（退款）」</span>不经过分账流程：退款审核通过走微信退款成功那一刻，由退款流程回写分账状态，此后记录不再满足待分账条件，任务天然不执行。</li><li>退款（三分支，先判断单状态再判触发方）：① 订单未核销（待使用）——用户申请创建退款记录（免审核，自动通过）直接微信退款；平台/系统创建（过期任务等）创建退款记录后走人工审核；两条路都先创建退款记录（订单转退款中、核销码隐藏）；② 订单已核销——退款仅平台/系统触发（居民联系客服），创建退款记录后人工审核，通过后按分账状态分流：待分账走微信退款（成功后分账记录回写<span class=\"token token-action\">「已终止（退款）」</span>节点转终态），已分账走平台垫付（垫付弹窗审核通过即视为垫付完成，不调微信退款、不分账回退），售后转<span class=\"token token-action\">「已退款待追回」</span>；③ 追回为一次性动作：与商家线下协商后，追回弹窗一次回填实际追回金额/追回时间/备注，保存后售后转<span class=\"token token-action\">「已追回」</span>（无部分追回、无全额判断），平台损失=微信手续费+商家未追回金额。</li></ul>"
+              },
+              {
+                "title": "资金流转",
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>环节</th><th>资金去向</th></tr></thead><tbody><tr><td>居民支付 40 元</td><td>进入<strong>商家特约商户号</strong>（下单时传分账标识），处于冻结状态，商家不可动用</td></tr><tr><td>未核销期间</td><td>资金冻结在商家特约商户号，居民可申请退款（从冻结资金直接原路退）或等待过期自动退款</td></tr><tr><td>核销成功</td><td>平台发起分账：抽佣金额从商家特约商户号 → 平台商户号（准实时到账，平台可提现）；剩余 40 − 抽佣（扣除支付手续费后）自动解冻留在商家特约商户号</td></tr><tr><td>商家收款</td><td>商家所得在特约商户号可用余额，商家按微信侧规则提现到结算银行卡（平台可通过提现引导支持）</td></tr><tr><td>退款</td><td>未核销/已核销未分账：微信原路全额退款（分账记录转<span class=\"token token-action\">「已终止（退款）」</span>）；已核销已分账：平台线下垫付（不调微信退款、不分账回退），后续与商家线下协商追回</td></tr></tbody></table></div>"
+              },
+              {
+                "title": "订单状态机",
+                "html": "<div class=\"table-scroll\"><table><thead><tr><th>状态</th><th>含义</th><th>进入条件</th><th>可执行操作</th></tr></thead><tbody><tr><td><span class=\"token token-field\">[待支付]</span></td><td>已下单未付款</td><td>提交订单</td><td>继续支付；超时未支付自动关闭</td></tr><tr><td><span class=\"token token-field\">[已关闭]</span></td><td>支付超时或用户取消</td><td>超时 / 取消</td><td>无</td></tr><tr><td><span class=\"token token-field\">[待使用]</span></td><td>已支付未核销</td><td>支付成功</td><td>出示核销码；申请退款</td></tr><tr><td><span class=\"token token-field\">[已核销]</span></td><td>商家已扫码核销</td><td>核销成功</td><td>查看核销记录；协商退款（平台介入）</td></tr><tr><td><span class=\"token token-field\">[退款中]</span></td><td>退款处理中</td><td>申请退款 / 过期自动退款</td><td>无</td></tr><tr><td><span class=\"token token-field\">[已退款]</span></td><td>退款完成</td><td>原路退款成功</td><td>无</td></tr><tr><td><span class=\"token token-field\">[已过期]</span></td><td>超过有效期未核销</td><td>有效期到期</td><td>自动进入退款流程</td></tr></tbody></table></div><p><strong>免费券（0 元券）分支</strong>：免费券订单不走支付、不分账，状态机简化，无 <span class=\"token token-field\">[待支付]</span>、<span class=\"token token-field\">[退款中]</span>、<span class=\"token token-field\">[已退款]</span>（0 元无资金可退）：</p><div class=\"table-scroll\"><table><thead><tr><th>状态</th><th>含义</th><th>进入条件</th><th>可执行操作</th></tr></thead><tbody><tr><td><span class=\"token token-field\">[已领取]</span></td><td>免费券已领取，0 元订单已生成</td><td>点击<span class=\"token token-page\">【免费领取】</span></td><td>出示核销码</td></tr><tr><td><span class=\"token token-field\">[待使用]</span></td><td>已领取未核销</td><td>领取成功即进入（无支付环节）</td><td>出示核销码</td></tr><tr><td><span class=\"token token-field\">[已核销]</span></td><td>商家已扫码核销</td><td>核销成功</td><td>查看核销记录</td></tr><tr><td><span class=\"token token-field\">[已过期]</span></td><td>超过有效期未核销</td><td>有效期到期</td><td>仅状态标记，无退款动作</td></tr></tbody></table></div>"
+              },
+              {
+                "title": "与现有优惠券系统的边界",
+                "html": "<ul><li>代金券：商品属性，走订单支付流程，在<span class=\"token token-page\">【我的订单】</span>查看，核销后触发分账。</li><li>优惠券：领取属性，在<span class=\"token token-page\">【我的卡包】</span>查看，核销后无资金流，本期不做任何调整。</li><li>两者的核销码、核销入口、页面归属完全独立，不共用状态和记录。</li></ul>"
+              },
+              {
+                "title": "技术实现要点",
+                "html": "<p>&gt; 方案：<strong>微信支付 · 普通服务商特约商户模式</strong>（2026-08-18 评审确认：收付通因服务商号已有越景特约商户无法开通，退回普通服务商）。前置条件：平台入驻普通服务商（服务商商户号），商家进件为特约商户；资金进入特约商户号并冻结（分账冻结期 30 天），核销后平台发起分账抽佣。接口清单参考普通服务商特约商户进件与分账 API。</p>"
+              },
+              {
+                "title": "原型计划",
+                "html": "<p>原型待需求评审通过后制作，按 `04_HTML原型设计` 规范输出：</p><ul><li>C 端原型：代金券列表、详情、订单确认、支付结果、我的订单、订单详情。</li><li>商家端原型：代金券发布、管理列表、核销页、订单与收入。</li><li>PC 端原型：商家进件管理、代金券审核、订单管理、退款处理、分账结算、抽佣配置。</li></ul>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1197,
+              "height": 2140,
+              "title": "业务流",
+              "states": [
+                {
+                  "label": "商家进件 · 主链",
+                  "url": "prototype/flow-onboarding-main.html"
+                },
+                {
+                  "label": "商家进件 · 异常分支",
+                  "url": "prototype/flow-onboarding-abnormal.html"
+                },
+                {
+                  "label": "结算账户修改子流程",
+                  "url": "prototype/flow-settlement-modify.html"
+                },
+                {
+                  "label": "商家注销子流程",
+                  "url": "prototype/flow-merchant-cancel.html"
+                },
+                {
+                  "label": "商家发券",
+                  "url": "prototype/flow-issue.html"
+                },
+                {
+                  "label": "免费券领取",
+                  "url": "prototype/flow-free.html"
+                },
+                {
+                  "label": "到店核销",
+                  "url": "prototype/flow-verify.html"
+                },
+                {
+                  "label": "分账记录（待分账/已分账/异常/已终止）",
+                  "url": "prototype/flow-profit.html"
+                },
+                {
+                  "label": "退款（未核销 / 已核销未分账 / 已核销已分账）",
+                  "url": "prototype/refund.html"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "小程序页面",
+        "title": "小程序页面",
+        "desc": "小程序页面相关需求。",
+        "summary": "小程序页面相关需求。",
+        "pages": [
+          {
+            "id": "居民端代金券列表页",
+            "tab": "居民端代金券列表页",
+            "title": "居民端代金券列表页",
+            "type": "mobile",
+            "location": "<span class=\"token token-page\">【首页】</span>金刚区或<span class=\"token token-page\">【服务】</span>页新增<span class=\"token token-page\">【代金券】</span>入口，或由运营配置的入口位进入；<span class=\"token token-page\">【市集】</span>页内也可保留代金券商品入口。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>展示当前社区可购买的全部代金券商品，让居民按商家和优惠幅度快速找到想买的券。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li>顶部：按社区展示范围，沿用现有社区识别逻辑。</li><li><strong>代金券卡片列表：两种形态（按券类型枚举）</strong><ul><li>付费券卡片：<ul><li>券名：取券记录券名字段展示，黑色常规字体，最多两行超出省略</li><li>优惠金额：取售价，红色加粗大字（含 ¥ 符号），如 ¥84</li><li>面额（划线原价）：取券记录面额，灰色小字 + 删除线，如 ¥100</li><li>折扣标签：按 售价 ÷ 面额 计算折扣值（如 84/100 = 8.4 折），红色细边框小标签，位于售价右侧</li><li>类型标签：取券记录分类字段（如&quot;超市/餐饮/生活服务&quot;），边框圆角小标签，位于标题下方</li><li>店铺名：显示发券商家名称（取商家字段），灰色小字，位于类型标签右侧</li><li>距离：若用户已在地图选点，按选点坐标与商家坐标计算距离并展示（如&quot;距您 6.5km&quot;）；未选点则隐藏</li><li>已售数据：取券记录已售数量，灰色小字，位于卡片左下（如&quot;已售 128&quot;）</li><li>购买按钮：见下方按钮状态</li></ul></li><li>免费券卡片：<ul><li>优惠金额：显示&quot;免费&quot;（绿色加粗），不展示售价与划线原价</li><li>类型标签：显示&quot;免费券&quot;（绿色边框标签）</li><li>其余字段与付费券卡片一致；按钮为&quot;免费领取&quot;</li></ul></li></ul></li><li><strong>购买按钮：三种状态（按券类型与库存枚举）</strong><ul><li>立即购买：付费券且库存 &gt; 0 时显示，蓝底白字、圆角，位于卡片右下侧，可点击，点击跳转<span class=\"token token-page\">【居民端代金券详情页】</span></li><li>已售罄：付费券库存 = 0 时显示，按钮置灰不可点击，点击无跳转（卡片点击仍可进详情）</li><li>免费领取：免费券时显示，绿色底白字，圆角，位于卡片右下侧，可点击，点击跳转<span class=\"token token-page\">【居民端代金券详情页】</span>（free 状态）</li></ul></li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>展示范围与排序<ol><li>默认展示当前社区上架中的代金券商品。</li><li>已下架、库存为 0、不在可售时间内的商品不展示。</li><li>排序规则：按发布时间倒序，后续版本可支持筛选（按商家、按品类）。</li></ol></li><li>状态展示<ol><li>售罄商品置灰，按钮显示&quot;已售罄&quot;且不可点击。</li><li>未到可售时间的商品展示&quot;即将开售&quot;。</li></ol></li><li>空状态<ol><li>当前社区无代金券商品时展示空状态与引导文案&quot;看看其他社区的好券&quot;。</li></ol></li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<p>点击<span class=\"token token-page\">【立即购买】</span>进入<span class=\"token token-page\">【居民端代金券详情页】</span>；点击卡片其他区域同样进入详情页。</p>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>商品信息加载失败时展示失败态与<span class=\"token token-page\">【重试】</span>按钮。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>无新增写入，仅读取商品列表与库存状态。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 代金券列表页",
+              "states": [
+                {
+                  "label": "列表",
+                  "url": "prototype/voucher-list.html?state=list"
+                },
+                {
+                  "label": "售罄",
+                  "url": "prototype/voucher-list.html?state=soldout"
+                },
+                {
+                  "label": "空状态",
+                  "url": "prototype/voucher-list.html?state=empty"
+                },
+                {
+                  "label": "新客券与非新客拦截",
+                  "url": "prototype/voucher-list.html?state=newcomer"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端代金券详情页",
+            "tab": "居民端代金券详情页",
+            "title": "居民端代金券详情页",
+            "type": "mobile",
+            "location": "由<span class=\"token token-page\">【居民端代金券列表页】</span>点击商品卡片进入。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>完整展示券的价值与使用规则，让居民在付款前明确&quot;实付多少、得到多少、怎么用、怎么退&quot;。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>券信息区（头部卡片）</strong>：<ul><li>券名：取券记录券名字段，大号加粗黑色，如&quot;天天简餐40元代50元代金券&quot;</li><li>优惠金额：取售价，红色特大加粗；免费券显示&quot;免费&quot;（绿色加粗）</li><li>面额（划线原价）：取券记录面额，灰色删除线</li><li>折扣标签：按 售价 ÷ 面额 计算，红色边框标签（免费券不展示）</li><li>券标签：分类标签（如&quot;餐饮&quot;&quot;天天优惠&quot;），彩色细边框小标签，位于券名上方</li><li>服务标签：随时退 / 免预约 / 每单限 1 张（绿色小字+对勾图标），位于券名下</li><li>已售数据：取已售数量 + 售卖进度条（如&quot;已售 356 / 已售 62%&quot;），进度条橙色</li></ul></li><li>商家信息：商家名（红色店标圆图 + 名称）、门店地址、联系电话、营业状态（沿用现有商家数据），点击商家区跳转店铺首页</li><li><strong>使用规则区</strong>：<ul><li>有效期：付费券显示&quot;购买后 22 天内有效&quot;；免费券显示&quot;领取后 22 天内有效&quot;</li><li>使用时间：适用时段（如每天 10:00-21:00），无限制则显示&quot;全天可用&quot;</li><li>剩余库存：取库存字段（免费券不展示）</li><li>使用说明文本：规则条目按条展示（有序列表）：<ol><li>到店消费结账时出示核销码，商家扫码核销，券面额直接抵扣账单</li><li>账单超出券面额的部分由商家线下补收</li><li>退款规则——付费券（红色提醒&quot;未核销可申请退款，过期未使用将自动原路退款&quot;）；免费券（提醒&quot;过期自动失效，不产生退款&quot;）</li></ol></li></ul></li><li>邻居评价区：评价标签流（如&quot;味道好&quot;&quot;离得近&quot;），彩色圆角标签，来自商家评价数据（可选）</li><li><strong>底部固定操作栏</strong>：<ul><li>现价：取售价，红色（免费券显示&quot;免费&quot;绿色）</li><li>折扣说明：如&quot;8折 · 原价 ¥50&quot;（免费券不展示）</li><li>按钮：三种状态（按券类型与库存枚举）：<ul><li>立即购买：付费券且库存 &gt; 0，红色渐变圆角，可点击，点击跳转<span class=\"token token-page\">【居民端订单确认页】</span>；<strong>新客券先经接口判断新客资格</strong>（未在本店核销过代金券），非新客弹出报错弹窗“该券仅限新客购买”，不可进入下单</li><li>已售罄：付费券库存 = 0，按钮置灰不可点击</li><li>免费领取：免费券，绿色渐变圆角，可点击，点击跳转<span class=\"token token-page\">【居民端订单确认页】</span>（free 分支）</li></ul></li></ul></li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>券快照<ol><li>居民购买时看到的价格、面额、有效期、使用规则，支付后不可变更，以购买时快照为准。</li></ol></li><li>库存与状态<ol><li>库存不足时<span class=\"token token-page\">【立即购买】</span>不可点击，展示&quot;已售罄&quot;。</li></ol></li><li>退款说明<ol><li>详情页明确展示退款规则：未核销可申请退款，过期未核销自动原路退款，已核销不支持自行退款。</li></ol></li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击<span class=\"token token-page\">【立即购买】</span>进入<span class=\"token token-page\">【居民端订单确认页】</span>。</li><li>点击商家电话可拨打电话（沿用现有能力）。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>商品已下架或已删除时，进入详情页展示&quot;商品已下架&quot;提示。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>记录详情页浏览行为（用于埋点与转化分析）。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 代金券详情页",
+              "states": [
+                {
+                  "label": "在售状态",
+                  "url": "prototype/voucher-detail.html?state=onsale"
+                },
+                {
+                  "label": "免费券",
+                  "url": "prototype/voucher-detail.html?state=free"
+                },
+                {
+                  "label": "已售罄",
+                  "url": "prototype/voucher-detail.html?state=soldout"
+                },
+                {
+                  "label": "已下架",
+                  "url": "prototype/voucher-detail.html?state=offshelf"
+                },
+                {
+                  "label": "新客券拦截",
+                  "url": "prototype/voucher-detail.html?state=newcomer"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端订单确认页",
+            "tab": "居民端订单确认页",
+            "title": "居民端订单确认页",
+            "type": "mobile",
+            "location": "由<span class=\"token token-page\">【居民端代金券详情页】</span>点击<span class=\"token token-page\">【立即购买】</span>进入。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>确认购买数量、实付金额、支付方式，完成下单。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>商品信息</strong>：券名（取订单商品快照）、券面额、售价（免费券显示&quot;免费&quot;绿色 + &quot;免费领取 · 面额 ¥50&quot;说明）、购买数量（本期固定 1 张）</li><li><strong>购买说明</strong>：<ul><li>使用人：显示&quot;本账号微信实名用户&quot;（固定文案）</li><li>支付方式：付费券显示&quot;微信支付&quot;；<strong>免费券隐藏该行</strong>（无支付环节）</li><li>实付金额：付费券取售价（红色加粗）；免费券隐藏（固定 0 元）</li><li>提示语：付费券&quot;未核销可申请退款，过期自动原路退款。到店出示核销码即可使用&quot;；免费券&quot;领取后生成 0 元订单，不进入支付和分账；到店出示核销码即可使用&quot;</li></ul></li><li><strong>底部操作栏按钮：两种状态</strong><ul><li>确认支付：付费券显示，蓝底白字，点击拉起微信支付；支付成功跳转账结果页，取消/失败停留并提示</li><li>确认领取：免费券显示，绿色底白字，点击直接生成 0 元订单进入 <span class=\"token token-field\">[已领取]</span>，跳转订单详情页</li></ul></li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>购买数量本期固定 1 张，不提供数量选择。</li><li>页面顶部明确展示&quot;未核销可申请退款，过期自动原路退款&quot;。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击<span class=\"token token-page\">【确认支付】</span>发起微信支付，拉起支付确认面板。</li><li>支付成功后进入<span class=\"token token-page\">【居民端支付结果页】</span>。</li><li>支付取消或失败，停留在当前页并提示，可重新发起支付。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<ul><li>支付取消：提示&quot;已取消支付&quot;，按钮恢复可点击。</li><li>支付失败：提示&quot;支付失败，请重试&quot;。</li><li>商品库存变化：下单时校验库存，库存不足提示&quot;手慢了，已被抢光&quot;。</li></ul>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>创建代金券订单，状态为 <span class=\"token token-field\">[待支付]</span>，记录商品快照、售价、商家信息、有效期与使用规则。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 订单确认页",
+              "states": [
+                {
+                  "label": "付费券",
+                  "url": "prototype/order-confirm.html?state=default"
+                },
+                {
+                  "label": "免费券",
+                  "url": "prototype/order-confirm.html?state=free"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端支付结果页",
+            "tab": "居民端支付结果页",
+            "title": "居民端支付结果页",
+            "type": "mobile",
+            "location": "支付回调成功后由<span class=\"token token-page\">【居民端订单确认页】</span>进入。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>明确告知支付结果与券的去处，降低居民&quot;付完找不到&quot;的困惑。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>支付成功态</strong>：<ul><li>成功图标（绿色对勾）+ 状态文案&quot;支付成功&quot;</li><li>券名 + 实付金额（红色加粗）</li><li>有效期提示&quot;购买后 22 天内有效&quot;</li><li>主按钮<span class=\"token token-page\">【查看订单】</span>（蓝底白字，点击进订单详情）+ 次按钮<span class=\"token token-page\">【继续逛逛】</span>（白底描边，点击回列表页）</li></ul></li><li><strong>支付失败态</strong>：<ul><li>失败图标（红色）+ 失败原因文案</li><li>按钮<span class=\"token token-page\">【重新支付】</span>（蓝底白字，点击回到订单确认页重试）</li></ul></li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>支付成功后同时发送<span class=\"token token-page\">【购券成功通知】</span>订阅消息。</li><li>页面明确提示&quot;券可在<span class=\"token token-page\">【我的订单】</span>中查看，到店出示核销码&quot;。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击<span class=\"token token-page\">【查看订单】</span>进入<span class=\"token token-page\">【居民端订单详情页】</span>。</li><li>点击<span class=\"token token-page\">【继续逛逛】</span>返回<span class=\"token token-page\">【居民端代金券列表页】</span>。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>支付结果无法确认时展示&quot;支付结果确认中&quot;状态，以订单状态为准。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>更新订单状态为 <span class=\"token token-field\">[待使用]</span>，写入支付单信息。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 支付结果页",
+              "states": [
+                {
+                  "label": "支付成功",
+                  "url": "prototype/pay-result.html?state=success"
+                },
+                {
+                  "label": "支付失败",
+                  "url": "prototype/pay-result.html?state=fail"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端我的订单页",
+            "tab": "居民端我的订单页",
+            "title": "居民端我的订单页",
+            "type": "mobile",
+            "location": "<span class=\"token token-page\">【我的】</span>页<span class=\"token token-action\">「代金券」</span>模块订单状态入口（待付款 / 待使用 / 已退款 / 全部订单）进入。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>集中展示居民购买的全部代金券订单及状态，与优惠券卡包彻底分离。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>顶部状态 Tab</strong>：全部 / 待付款 / 待使用 / 已核销 / 退款中 / 已退款 / 已过期（免费券），选中项黑色加粗 + 蓝色下划线，数字角标展示对应数量</li><li><strong>订单卡片</strong>（一条订单一张卡，枚举状态）：<ul><li>店铺名：取商家名称，左上黑色加粗</li><li>状态：右上角文字（按状态枚举）：<ul><li>待使用：蓝色文字</li><li>已核销：绿色文字</li><li>已退款：灰色文字</li><li>已领取（免费券）：绿色文字</li></ul></li><li>券名：取订单券名，两行内省略</li><li>有效期：待使用订单显示&quot;有效期至 X 月 X 日&quot;，到期前 3 天红色高亮&quot;剩 3 天&quot;</li><li>金额：付费券取售价红色加粗；免费券显示&quot;免费&quot;绿色；已退款显示划线原价</li><li>操作按钮（按订单状态 × 售后状态枚举）：<ul><li>待付款 → <span class=\"token token-page\">【继续支付】</span></li><li>待使用 + 无售后 → <span class=\"token token-page\">【出示核销码】</span>（蓝底白字）+<span class=\"token token-page\">【申请退款】</span>（白底描边，点击弹退款原因弹窗）；免费券显示&quot;已领取&quot;标签，<span class=\"token token-page\">【出示核销码】</span>为绿色底白字</li><li>退款中（待审核/微信退款中/退款失败待人工）→ 不显示核销码，<span class=\"token token-page\">【联系客服】</span></li><li>已核销 → <span class=\"token token-page\">【查看详情】</span><span class=\"token token-page\">【联系客服】</span></li><li>已退款（已退款/已退款待追回/已追回）→ <span class=\"token token-page\">【查看详情】</span></li><li>已关闭 → <span class=\"token token-page\">【查看详情】</span></li><li>免费券过期 → 页面展示&quot;已过期&quot;标签（底层状态仍为待使用，无操作按钮）</li></ul></li><li>卡片点击：整卡可点击进入订单详情页（按钮点击不触发卡片跳转）</li></ul></li><li><strong>空状态</strong>：无订单时居中显示&quot;暂无订单&quot; + 引导文案&quot;去逛逛市集，买一张超值代金券吧&quot;</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>列表按订单创建时间倒序。</li><li>状态 Tab 数字角标展示对应数量。</li><li><span class=\"token token-field\">[待使用]</span> 订单展示剩余有效天数，即将过期（3 天内）高亮提示。</li><li>免费券过期不创建退款记录、不进入退款中/已退款，页面按有效期展示&quot;已过期&quot;；付费券过期由系统自动创建退款单走微信退款。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击订单卡片进入<span class=\"token token-page\">【居民端订单详情页】</span>。</li><li>点击<span class=\"token token-page\">【出示核销码】</span>展示大号核销码供商家扫码。</li><li>点击<span class=\"token token-page\">【申请退款】</span>进入退款确认（未核销订单可用）。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>空订单时展示空状态与引导&quot;去逛逛代金券&quot;。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>无新增写入，仅读取订单列表。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 我的订单页",
+              "states": [
+                {
+                  "label": "订单列表",
+                  "url": "prototype/my-orders.html?state=list"
+                },
+                {
+                  "label": "空状态",
+                  "url": "prototype/my-orders.html?state=empty"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端订单详情页",
+            "tab": "居民端订单详情页",
+            "title": "居民端订单详情页",
+            "type": "mobile",
+            "location": "由<span class=\"token token-page\">【居民端我的订单页】</span>点击订单卡片进入。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>完整展示单笔订单的状态、券信息、核销码、核销记录与退款信息。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<p><strong>状态区</strong></p><ul><li>订单状态与说明：按状态枚举</li><li>待使用：大字&quot;待使用&quot;（黑色），小字&quot;到店结账时出示核销码，商家扫码核销&quot;</li><li>已领取（免费券）：大字&quot;已领取&quot;（绿色），小字&quot;免费券已生成订单，到店出示核销码&quot;</li><li>已核销：大字&quot;已核销&quot;（绿色），小字&quot;核销时间 X 月 X 日 · 门店名&quot;</li><li>已退款：大字&quot;已退款&quot;（灰色），小字&quot;退款金额 ¥40 · 原路退回微信支付&quot;</li><li>退款中：大字&quot;退款中&quot;（橙色），小字&quot;退款处理中，暂不可使用&quot;；隐藏核销码区与申请退款按钮</li><li>已过期（免费券）：大字&quot;已过期&quot;（灰色），小字&quot;免费券已过有效期&quot;</li></ul><p><strong>核销码区</strong>（<span class=\"token token-field\">[待使用]</span>/<span class=\"token token-field\">[已领取]</span> 显示，其他状态整区隐藏）</p><ul><li>核销码数字：大号等宽加粗 30px，字母间距加宽，如&quot;8890 6623 4410&quot;；取当前核销码字段，60 秒自动刷新</li><li>提示文案：灰色小字&quot;核销码每 60 秒自动刷新&quot;，位于码下方</li><li>手动刷新：常显（与自动刷新并存），点击立即刷新；刷新失败保留旧码并提示&quot;刷新失败，请手动刷新&quot;</li></ul><p><strong>券信息区</strong></p><ul><li>券名：取订单快照券名</li><li>有效期至：付费券&quot;购买后 22 天内有效&quot; / 免费券&quot;领取后 22 天内有效&quot;</li><li>使用说明：&quot;每单限用 1 张；超出面额部分到店补收&quot;</li></ul><p><strong>商家信息区</strong></p><ul><li>商家名：取商家名称</li><li>地址：取门店地址</li><li>电话：蓝色可点击，点击调起拨号</li></ul><p><strong>金额区</strong></p><ul><li>实付金额：付费券红色加粗 ¥40；免费券&quot;免费（¥0）&quot;绿色</li><li>平台服务费：付费券&quot;已含在商家结算中&quot;；免费券 ¥0</li><li>分账金额：付费券 ¥2.00；免费券 ¥0</li></ul><p><strong>操作区</strong>（底部固定，按钮按状态枚举）</p><ul><li><span class=\"token token-page\">【出示核销码】</span>：<span class=\"token token-field\">[待使用]</span>/<span class=\"token token-field\">[已领取]</span> 显示，蓝底白字，点击进入亮屏核销码页（全屏大码便于扫码）</li><li><span class=\"token token-page\">【申请退款】</span>：仅 <span class=\"token token-field\">[待使用]</span> 付费券且无售后显示，白底描边，点击弹退款原因弹窗，确认后订单进 <span class=\"token token-field\">[退款中]</span> 并关闭弹窗（系统自动审核通过，直接进入微信退款）</li><li><span class=\"token token-page\">【联系商家】</span>：所有状态显示，蓝底白字，点击调起拨号</li><li><span class=\"token token-page\">【联系客服】</span>：<span class=\"token token-field\">[已核销]</span> 与 <span class=\"token token-field\">[退款中]</span> 状态显示，蓝底白字，点击拉起<strong>微信客服工具会话</strong>（沿用平台现有微信客服接入方式，无需新建客服系统；已核销不提供退款按钮，退款中隐藏核销码）</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>核销码：60 秒自动刷新；刷新失败保留旧码 + 手动刷新入口；过期/已核销后整区隐藏。</li><li>过期处理：付费券已过期未核销 → 状态区&quot;已过期，系统正在自动退款&quot;（系统已自动创建退款单）；免费券已过期 → 页面展示&quot;已过期&quot;，底层状态保持待使用，无退款动作。</li><li>取值口径：金额取订单快照（购买时固化）；日期统一&quot;X月X日&quot;。</li><li>退款进度：退款中显示&quot;退款处理中，暂不可使用&quot;与&quot;预计 1-3 个工作日到账&quot;，隐藏核销码；退款完成显示到账结果；已退款订单不允许再次申请退款。</li><li>免费券：实付/手续费/服务费/分账金额一律 ¥0，仅保留核销记录。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>申请退款（付费券待使用）：点击<span class=\"token token-page\">【申请退款】</span>→ 弹退款原因弹窗 → 确认后订单进 <span class=\"token token-field\">[退款中]</span> → 平台处理完成进 <span class=\"token token-field\">[已退款]</span>，结果消息通知。</li><li>退款原因弹窗：预设原因（暂时不想使用 / 商家诱导线下交易 / 商家拒绝履约）+<span class=\"token token-action\">「其他原因」</span>——选择<span class=\"token token-action\">「其他原因」</span>时显示自由文本输入框（必填，最多 100 字），用户可自行描述纠纷详情；原因随退款单写入<span class=\"token token-page\">【退款记录表】</span>，用于平台甄别与飞单/履约问题监控。</li><li>纠纷处理边界：<strong>核销前争议走线上退款</strong>（按上述退款流程）；<strong>核销后争议走人工处理</strong>（订单已核销无居民退款入口，用户通过<span class=\"token token-page\">【联系客服】</span>进入微信客服工具反馈，由平台人工介入后在 PC 创建退款记录：未分账走微信退款、已分账走平台垫付，见<span class=\"token token-page\">【PC端退款处理页】</span>）。</li><li>核销流程：到店出示码 → 商家扫码核销 → 订单变 <span class=\"token token-field\">[已核销]</span>，核销码区隐藏、状态区更新。</li><li>免费券：无退款按钮，仅联系商家/客服。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>核销码刷新失败时提供手动刷新入口。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>退款申请写入退款单；核销状态由商家侧核销动作更新。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 订单详情页",
+              "states": [
+                {
+                  "label": "待使用",
+                  "url": "prototype/order-detail.html?state=unused"
+                },
+                {
+                  "label": "免费券已领取",
+                  "url": "prototype/order-detail.html?state=free"
+                },
+                {
+                  "label": "已核销",
+                  "url": "prototype/order-detail.html?state=verified"
+                },
+                {
+                  "label": "已退款",
+                  "url": "prototype/order-detail.html?state=refunded"
+                },
+                {
+                  "label": "退款原因弹窗",
+                  "url": "prototype/order-detail.html?state=refund-modal"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端市集首页改版",
+            "tab": "居民端市集首页改版",
+            "title": "居民端市集首页改版",
+            "type": "mobile",
+            "location": "底部 Tab 栏<span class=\"token token-page\">【市集】</span>进入，即<span class=\"token token-action\">「云邻市集」</span>首页，是代金券购券的 C 端主入口。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "顶部区域 · <span class=\"token token-action\">「消息」</span>入口",
+                "desc": "在微信胶囊按钮左侧增加消息图标，带未读红点，点击进入消息中心。"
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "快捷入口区 · 3 个圆形图标",
+                "desc": "原领券中心横幅上方新增快捷入口区：领券中心、平台活动、商家活动。"
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "Banner 区 · 轮播图",
+                "desc": "原领券中心横幅升级为轮播图，复用 PC 轮播图管理新增市集页点位，可配置跳转目标。"
+              },
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "分类 Tab · <span class=\"token token-action\">「周边好店」</span><span class=\"token token-action\">「超值代金券」</span>",
+                "desc": "原<span class=\"token token-action\">「活动推广」</span><span class=\"token token-action\">「好店」</span>两个 Tab 调整为<span class=\"token token-action\">「周边好店」</span><span class=\"token token-action\">「超值代金券」</span>，默认选中周边好店。"
+              },
+              {
+                "type": "delete",
+                "label": "删除",
+                "title": "筛选区 · 种类、社区筛选",
+                "desc": "社区已由顶部社区切换承担，移除种类与社区筛选；保留搜索框，按商家名/券名搜索好店与代金券。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "好店卡片 · 券面额提醒",
+                "desc": "商家在售代金券时，卡片展示<span class=\"token token-action\">「84 元代 100 元」</span>类提醒文字（最多 2 张），仅作提醒，点击整卡进入店铺首页。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "代金券卡片 · 购买卡片",
+                "desc": "代金券 Tab 展示券商品卡片：图片、标题、现价、折扣标签、划线原价、商家、距离与<span class=\"token token-page\">【购买】</span>按钮。"
+              }
+            ],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>承接代金券购券的主流量入口：好店发现与代金券购买在同一页完成，通过双 Tab 与券面额提醒缩短从逛到买的路径。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>顶部导航区</strong>：标题 + 消息入口（胶囊左侧，未读红点）</li><li><strong>搜索框</strong>：按商家名 / 券名搜索好店与代金券</li><li><strong>快捷入口区</strong>：领券中心 / 平台活动 / 商家活动，3 个圆形图标</li><li><strong>Banner 区</strong>：运营配置轮播（首帧默认领券中心）</li><li><strong>分类 Tab</strong>：周边好店｜超值代金券，默认周边好店</li><li><strong>内容区</strong>：好店卡片列表（含券面额提醒）或代金券卡片列表（结构见上方代金券卡片明细）</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>社区维度跟随顶部社区切换：好店与代金券列表均按当前社区过滤。</li><li>代金券 Tab 默认按距离最近排序，售罄置底；好店 Tab 沿用现有排序。</li><li>轮播与快捷入口无配置内容时对应区域不展示。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击好店卡片进入<span class=\"token token-page\">【居民端店铺首页】</span>；点击代金券卡片或<span class=\"token token-page\">【购买】</span>/<span class=\"token token-page\">【免费领取】</span>进入<span class=\"token token-page\">【居民端代金券详情页】</span>。</li><li>点击搜索框输入商家名/券名，结果覆盖好店与代金券。</li><li>点击领券中心进入现有<span class=\"token token-page\">【领券中心】</span>页面。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<ol><li>无代金券商品：代金券 Tab 展示空态文案&quot;看看其他社区的好券&quot;。</li><li>搜索无结果：展示空结果提示，可清除条件重试。</li></ol>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>本页无数据写入；仅浏览与跳转，购买/领取的数据写入发生在<span class=\"token token-page\">【居民端代金券详情页】</span>与<span class=\"token token-page\">【居民端订单确认页】</span>。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 市集首页改版",
+              "states": [
+                {
+                  "label": "周边好店Tab",
+                  "url": "prototype/market-home.html?state=shops"
+                },
+                {
+                  "label": "超值代金券Tab",
+                  "url": "prototype/market-home.html?state=vouchers"
+                },
+                {
+                  "label": "代金券售罄",
+                  "url": "prototype/market-home.html?state=voucher-soldout"
+                },
+                {
+                  "label": "空状态",
+                  "url": "prototype/market-home.html?state=empty"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端店铺首页改造",
+            "tab": "居民端店铺首页改造",
+            "title": "居民端店铺首页改造",
+            "type": "mobile",
+            "location": "由市集<span class=\"token token-page\">【周边好店】</span>卡片、推广详情<span class=\"token token-page\">【进店逛逛】</span>进入的商家主页。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "Tab 栏 · <span class=\"token token-action\">「代金券」</span>Tab",
+                "desc": "商家主页 Tab 栏最左新增<span class=\"token token-page\">【代金券】</span>，<strong>默认选中</strong>，承载该商家在售代金券列表。原 Tab（活动推广/品牌故事/营业信息）及页面其余结构（头图/店铺信息卡/地址栏/底部操作栏）保持不变。"
+              }
+            ],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>在商家主页内让居民直接浏览并购买该商家的代金券，缩短&quot;看到店 → 买到券&quot;的路径；代金券作为商家主页默认展示的第一个内容 Tab。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>店铺头图</strong>：商家头图大图区，右上角刷新按钮</li><li><strong>店铺信息卡</strong>（叠压头图底部）：<ul><li>店铺名：黑色加粗大字</li><li>营业状态标签：营业中（蓝框蓝字）/ 已打烊（灰框灰字）</li><li>所属社区：灰色标签</li><li>商家简介：灰色小字，最多两行</li></ul></li><li><strong>地址栏</strong>：定位图标 + 详细地址 + 距您距离；右侧黄色圆形电话按钮，点击拨打</li><li><strong>Tab 栏</strong>：代金券｜活动推广｜品牌故事｜营业信息，选中项黑色加粗 + 蓝色下划线，默认选中代金券</li><li><strong>代金券列表区</strong>（<span class=\"token token-field\">[代金券]</span> Tab 内容区，白卡容器，纵向排列每券一卡）<ul><li>券名：取商品券名，黑色加粗 14px，超长省略</li><li>现价：付费券红色加粗（小号 ¥ 符号 + 整数价）；免费券&quot;免费&quot;（绿色）</li><li>折扣标签：折扣 = 售价 ÷ 面额，红色边框小标签（如&quot;8折&quot;）；免费券不显示</li><li>划线原价：取券面额，灰色小字加删除线；免费券不显示</li><li>类型标签：按券记录枚举——新客券带<span class=\"token token-page\">【新客券】</span>橙色边框标签；免费券带<span class=\"token token-page\">【免费券】</span>绿色标签（条件：按券类型/适用人群显示，普通付费券无标签）</li><li>已售数量：灰色小字&quot;已售 N&quot;</li><li>操作按钮：按状态枚举——付费券在售<span class=\"token token-action\">「购买」</span>蓝底白字可点击 / 免费券在售<span class=\"token token-action\">「免费领取」</span>绿底白字可点击 / 已售罄<span class=\"token token-action\">「已售罄」</span>置灰不可点击（卡片仍可进详情）/ 达每人限领上限<span class=\"token token-action\">「已领取」</span>置灰不可点击</li><li>卡片点击：点击卡片任意区域进入<span class=\"token token-page\">【居民端代金券详情页】</span>；新客券购买/领取先经接口新客资格判断</li></ul></li><li><strong>底部操作栏</strong>：<span class=\"token token-page\">【电话】</span>描边按钮 + <span class=\"token token-page\">【立即导航】</span>蓝底主按钮</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>列表排序：按上架时间倒序（最新发布的在前），售罄券不置底（与市集代金券 Tab 口径一致）。</li><li>取值口径：现价取券售价、划线价取券面额、折扣按售价 ÷ 面额计算后保留一位小数去尾零。</li><li>列表仅展示 <span class=\"token token-field\">[已上架]</span> 状态的代金券；待审核/已下架券不在本页出现。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>进入页面默认展示<span class=\"token token-page\">【代金券】</span>Tab 内容；点击其他 Tab 切换到对应既有内容（活动推广/品牌故事/营业信息）。</li><li>点击代金券卡片或<span class=\"token token-page\">【购买】</span>/<span class=\"token token-page\">【免费领取】</span>进入<span class=\"token token-page\">【居民端代金券详情页】</span>。</li><li>新客券领取/购买时接口判断新客资格（未在该商家核销过代金券），非新客弹出报错弹窗，点击<span class=\"token token-page\">【我知道了】</span>关闭后停留本页。</li><li>底部<span class=\"token token-page\">【电话】</span>拨打商家电话，<span class=\"token token-page\">【立即导航】</span>调起微信导航到店。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<ol><li>新客资格不满足：报错弹窗“该券仅限新客，您已在本店核销过代金券”。</li><li>商家无在售代金券：内容区展示空态文案“本店暂无可购买代金券，去市集看看其他好券”。</li></ol>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>本页无数据写入；购买/领取行为的数据写入发生在<span class=\"token token-page\">【居民端订单确认页】</span>与<span class=\"token token-page\">【居民端代金券详情页】</span>对应环节。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 店铺首页",
+              "states": [
+                {
+                  "label": "代金券Tab默认",
+                  "url": "prototype/shop-home.html?state=voucher"
+                },
+                {
+                  "label": "代金券售罄",
+                  "url": "prototype/shop-home.html?state=soldout"
+                },
+                {
+                  "label": "代金券空态",
+                  "url": "prototype/shop-home.html?state=empty"
+                }
+              ]
+            }
+          },
+          {
+            "id": "居民端个人中心改造",
+            "tab": "居民端个人中心改造",
+            "title": "居民端个人中心改造",
+            "type": "mobile",
+            "location": "底部 Tab 栏<span class=\"token token-page\">【我的】</span>进入的个人中心页。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "代金券模块 · 订单状态直达入口",
+                "desc": "积分横幅下方新增<span class=\"token token-action\">「代金券」</span>模块：待付款 / 待使用 / 已退款 / 全部订单四个状态入口；待付款、待使用用红色角标显示数量。"
+              }
+            ],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>让居民从个人中心直达代金券订单的各个处理阶段（待付款 / 待使用），缩短订单处理路径；同时保留商家后台、卡包等既有入口。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>个人信息头</strong>：头像、姓名与性别、角色标签（居民/管理员，各带所属社区）、个人信息入口</li><li><strong>我的积分横幅</strong>：积分值与价值、积分兑换 / 去赚积分入口</li><li><strong>代金券模块</strong>（本期新增）：标题&quot;代金券&quot; + 四个状态入口（结构见上方代金券模块明细）</li><li><strong>功能宫格</strong>：我的卡包、领券中心、商家后台、我的活动、消息中心、消息订阅、邀请码、联系客服</li><li><strong>底部 Tab</strong>：首页 / 服务 / 邻里 / 市集 / 我的</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>角标数量实时读取订单表计数：待付款 = <span class=\"token token-field\">[待支付]</span> 订单数；待使用 = <span class=\"token token-field\">[待使用]</span> 订单数；数量为 0 时对应角标隐藏。</li><li>各入口点击均跳转目标页面并定位到对应状态筛选；无对应数据时目标页展示空态。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击待付款 / 待使用 / 已退款 / 全部订单进入<span class=\"token token-page\">【居民端我的订单页】</span>对应 Tab。</li><li>点击<span class=\"token token-page\">【商家后台】</span>进入商家管理后台（进件状态决定后台内代金券能力，见商家端导航章节）。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>订单计数查询失败时角标不显示（不阻塞页面），不提示错误。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>本页无数据写入；角标数量为读取口径（实时查询订单表计数）。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "居民端原型 · 个人中心",
+              "states": [
+                {
+                  "label": "代金券订单模块",
+                  "url": "prototype/profile.html?state=default"
+                },
+                {
+                  "label": "角标展示",
+                  "url": "prototype/profile.html?state=order-reddot"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "商家端页面",
+        "title": "商家端页面",
+        "desc": "商家端页面相关需求。",
+        "summary": "商家端页面相关需求。",
+        "pages": [
+          {
+            "id": "商家端代金券发布页",
+            "tab": "商家端代金券发布页",
+            "title": "商家端代金券发布页",
+            "type": "merchant",
+            "location": "商家后台<span class=\"token token-page\">【代金券管理】</span>内<span class=\"token token-page\">【发布代金券】</span>。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>让商家自主创建代金券商品，支持付费券（40 购 50 类）与免费券（0 元）两种类型。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>基本信息</strong>：<ul><li>代金券名称：输入框，必填，最多 20 字，占位&quot;如：40元代50元代金券&quot;</li><li>券类型：单选切换（付费券 / 免费券），默认选中付费券；<strong>进件未完成时付费券选项禁用</strong>（灰色不可选）</li><li>适用人群：单选（全部用户 / 仅新客），默认全部用户——<strong>复用现有优惠券模块<span class=\"token token-action\">「新客券」</span>能力</strong>（新客判定：未在该商家核销过代金券）</li><li>适用门店：当前店铺（商家多门店时可切换）</li></ul></li><li><strong>价格与库存</strong>：<ul><li>券面额：数字输入，必填，如 50（免费券同样必填，用于核销抵扣与展示）</li><li>售价：付费券必填（须小于面额）；<strong>免费券隐藏该输入</strong>，显示&quot;免费券售价固定为 ¥0，领取后生成 0 元订单，不进入支付和分账&quot;</li><li>发售库存：数字输入，必填</li><li><strong>每人限领张数</strong>：数字输入，默认 1；领取达到上限后券仍展示并标记<span class=\"token token-action\">「已领取」</span>，不可再次领取（<strong>复用现有优惠券模块限领能力</strong>）</li></ul></li><li><strong>有效期</strong>：可售时间（开始/结束，日期选择器）、使用有效期（&quot;购买后 22 天内有效&quot; / 免费券&quot;领取后 22 天内有效&quot;）</li><li><strong>使用说明</strong>：使用规则文本（多行，最多 300 字；使用条件如“满 80 元可用”、时段限制等写入规则文本）</li><li><strong>抽佣提示</strong>：付费券显示当前平台抽佣比例与示例（如&quot;每售出 1 张预计到账约 ¥38 元&quot;）；免费券显示绿色提示&quot;免费券无抽佣、无分账&quot;</li><li><strong>底部操作</strong>：<span class=\"token token-page\">【存草稿】</span>（白底描边）<span class=\"token token-page\">【提交审核】</span>（蓝底白字，提交后变&quot;待平台审核&quot;置灰）</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>售价必须小于面额（付费券），否则提交校验失败并提示&quot;售价需低于面额&quot;。</li><li><strong>免费券校验</strong>：券类型=免费券时售价固定 0，无需校验售价；面额必填（用于核销抵扣与展示&quot;免费领 50 元券&quot;）；新发布的免费券同样进入 <span class=\"token token-field\">[待审核]</span>。</li><li><strong>发券权限</strong>：开店成功（商家状态=正常）即可发布免费券、优惠券、推广；<strong>付费代金券需完成微信进件</strong>（已回写特约商户号），进件未完成时付费券类型不可选，提示&quot;商家进件未完成，暂不可发布付费券&quot;。</li><li><strong>限领与人群</strong>（复用现有优惠券模块能力）：每人限领张数默认 1，达上限后 C 端仍展示券卡片并标记<span class=\"token token-action\">「已领取」</span>，不可再次购买。<strong>新客券</strong>：C 端列表与详情对所有用户展示并带<span class=\"token token-page\">【新客券】</span>标签；点击领取/购买时接口判断新客资格（未在该商家核销过代金券），非新客弹出报错弹窗“该券仅限新客，您已在本店核销过代金券”，不可下单。</li><li>抽佣说明：付费券发布页展示当前平台抽佣比例（继承平台配置），并展示示例&quot;每售出 1 张，商家预计到账 X 元&quot;；<strong>免费券无抽佣、无分账、无手续费</strong>。</li><li>新发布的代金券进入 <span class=\"token token-field\">[待审核]</span> 状态，由平台审核通过后上架。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击<span class=\"token token-page\">【提交审核】</span>后进入待审核状态，审核通过前商家可编辑或撤回。</li><li>审核通过后不可编辑价格与库存等关键字段，需下架后编辑。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>库存、有效期、价格校验失败时在对应字段下方提示。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>创建代金券商品记录，状态为 <span class=\"token token-field\">[待审核]</span>；记录 <span class=\"token token-field\">[券类型]</span>（paid/free），免费券售价记 0。<strong>券上不存抽佣比例</strong>——抽佣在下单时按商家当前生效比例计算并固化到订单。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "商家端原型 · 代金券发布页",
+              "states": [
+                {
+                  "label": "付费券编辑",
+                  "url": "prototype/voucher-create.html?state=default"
+                },
+                {
+                  "label": "免费券编辑",
+                  "url": "prototype/voucher-create.html?state=free"
+                },
+                {
+                  "label": "开店完成待进件",
+                  "url": "prototype/voucher-create.html?state=store-ready"
+                },
+                {
+                  "label": "已提交审核",
+                  "url": "prototype/voucher-create.html?state=submitted"
+                }
+              ]
+            }
+          },
+          {
+            "id": "商家端代金券管理列表",
+            "tab": "商家端代金券管理列表",
+            "title": "商家端代金券管理列表",
+            "type": "merchant",
+            "location": "商家后台<span class=\"token token-page\">【代金券管理】</span>列表。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>管理商家名下全部代金券商品的状态与数据。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>顶部状态 Tab</strong>：已上架 / 待审核 / 已下架 / 已售罄，选中项黑粗 + 蓝下划线</li><li><strong>代金券卡片</strong>（一条一张卡，字段如下）：<ul><li>券名：取商品券名，黑色加粗</li><li>状态标签：右上角（已上架=绿色 / 待审核=蓝色 / 已下架=灰色 / 已售罄=灰色；免费券显示&quot;免费券 · 已上架&quot;并标注&quot;资金/分账 ¥0&quot;）</li><li>销售统计：已售数量、已核销数量、售价（红色加粗；免费券&quot;免费&quot;绿色）</li><li>库存进度条：剩余/总量（如&quot;720/1000&quot;），售罄时进度条橙色</li><li>面额说明：如&quot;面额 ¥50 · 核销率 81%&quot;（免费券&quot;面额 ¥50 · 资金/分账 ¥0&quot;）</li><li>操作按钮（按状态枚举）：<ul><li>已上架 → <span class=\"token token-page\">【复制】</span><span class=\"token token-page\">【补库存】</span><span class=\"token token-page\">【下架】</span>（危险红字）</li><li>待审核 → <span class=\"token token-page\">【撤回】</span><span class=\"token token-page\">【编辑】</span></li><li>已下架/已结束 → <span class=\"token token-page\">【编辑】</span><span class=\"token token-page\">【上架】</span><span class=\"token token-page\">【复制】</span></li><li>已售罄 → <span class=\"token token-page\">【复制】</span><span class=\"token token-page\">【补库存】</span>（蓝底主按钮）</li></ul></li></ul></li><li><strong>底部固定</strong>：<span class=\"token token-page\">【发布代金券】</span>按钮（蓝底白字，点击进发布页）</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>已售罄券展示补货入口<span class=\"token token-page\">【补库存】</span>。</li><li>已结束券引导&quot;复制重新发布&quot;。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击<span class=\"token token-page\">【补库存】</span>可增加库存数量。</li><li>点击<span class=\"token token-page\">【复制】</span>复制原券配置生成新草稿。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>无。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>上下架、补库存、复制操作写回商品表。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "商家端原型 · 代金券管理列表",
+              "states": [
+                {
+                  "label": "列表",
+                  "url": "prototype/voucher-manage.html?state=list"
+                },
+                {
+                  "label": "售罄",
+                  "url": "prototype/voucher-manage.html?state=soldout"
+                }
+              ]
+            }
+          },
+          {
+            "id": "商家端核销页",
+            "tab": "商家端核销页",
+            "title": "商家端核销页",
+            "type": "merchant",
+            "location": "商家后台<span class=\"token token-page\">【核销】</span>入口，沿用现有优惠券核销页的扫码交互，核销对象区分&quot;优惠券 / 代金券&quot;。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>商家扫码核销居民的代金券，核销成功后自动触发分账。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>扫码区</strong>：相机取景框（居中），自动识别核销码类型（代金券 / 优惠券）并进入对应核销流程；识别失败提示&quot;未识别到有效核销码&quot;</li><li><strong>核销结果区（扫码后）</strong>：<ul><li>券名：取订单券名</li><li>面额：券面额</li><li>售价：付费券实付金额；免费券显示&quot;免费&quot;</li><li>核销时间：当前时间</li><li>结果状态：两种（按核销结果枚举）：<ul><li>核销成功：绿色提示&quot;核销成功，分账处理中&quot;（免费券不显示分账提示）</li><li>核销失败：红色提示，区分原因——该券已核销（重复核销）/ 该券已过期 / 该券已退款 / 非本店券</li></ul></li><li>确认按钮：<span class=\"token token-page\">【确认核销】</span>（蓝底白字，确认后提交；免费券同流程）</li></ul></li><li><strong>待核销列表（可选）</strong>：当前门店近期待核销订单（券名 + 用户脱敏 + 时间），点击可代核销</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>核销对象自动识别：核销码区分代金券与优惠券，扫码后进入对应核销流程。</li><li>核销成功后订单状态更新为 <span class=\"token token-field\">[已核销]</span>，页面提示&quot;核销成功，分账处理中&quot;。</li><li>核销失败场景：券已核销（重复核销）、券已过期、券已退款、非本店券，分别给出明确提示。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>扫码 → 展示券信息 → 商家确认<span class=\"token token-page\">【确认核销】</span>。</li><li>核销成功后页面提示分账状态，商家无需再执行任何收款动作。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>重复核销提示&quot;该券已核销&quot;；过期提示&quot;该券已过期&quot;；非本店券提示&quot;该券不属于本店&quot;。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>订单状态更新为 <span class=\"token token-field\">[已核销]</span>，记录核销人、核销时间；触发分账任务。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "商家端原型 · 核销页",
+              "states": [
+                {
+                  "label": "扫码中",
+                  "url": "prototype/merchant-verify.html?state=scan"
+                },
+                {
+                  "label": "核销成功",
+                  "url": "prototype/merchant-verify.html?state=success"
+                },
+                {
+                  "label": "核销失败",
+                  "url": "prototype/merchant-verify.html?state=fail"
+                }
+              ]
+            }
+          },
+          {
+            "id": "商家端订单与收入页",
+            "tab": "商家端订单与收入页",
+            "title": "商家端订单与收入页",
+            "type": "merchant",
+            "location": "商家后台<span class=\"token token-page\">【代金券订单】</span>与<span class=\"token token-page\">【收入明细】</span>。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>查看券的销售、核销、分账与收入情况。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>收入统计面板</strong>：<ul><li>时间范围筛选：今天 / 近7天 / 近30天 / 自定义区间（最长可选 3 个月），切换后统计数字与口径说明联动刷新</li><li>田字四格：累计销售额、累计解冻收入、实际平台服务费、待分账金额（在途），数字加粗、标签灰色小字；下方说明口径</li></ul></li><li><strong>可用余额卡</strong>：特约商户可用余额（微信侧实时查询，大号数字，不随统计面板时间范围变化）+ 小字&quot;核销分账后自动解冻，可在微信支付商户平台提现&quot; + <span class=\"token token-page\">【提现指引】</span>按钮（描边，点击打开微信提现说明）</li><li><strong>资金时间表说明条</strong>：微信结算周期 T+1、核销后 7 天分账解冻、可用余额以微信侧实时为准</li><li><strong>状态 Tab</strong>：全部 / 待核销 / 待分账 / 已分账 / 退款中 / 已退款 / 已退款·待追回 / 已追回</li><li><strong>订单列表筛选</strong>：下单时间筛选（全部 / 近7天 / 近30天 / 自定义区间最长 3 个月），与顶部统计面板的时间范围相互独立</li><li><strong>订单卡片</strong>（每条一卡，按状态枚举）：<ul><li>订单号（黑色加粗）+ 组合标签（待核销=蓝 / 已核销·待分账=绿+蓝 / 已核销·已分账=绿 / 已核销·分账异常=红 / 退款中=橙 / 已退款=灰 / 已退款·待追回=橙 / 已追回=绿）</li><li>券名 + 售价（免费券&quot;免费&quot;绿色）；新客券订单券名旁带<span class=\"token token-page\">【新客券】</span>橙色小标签</li><li>用户脱敏（如&quot;王*（手机号尾号 2233）&quot;）+ 购买/核销时间</li><li>拆账明细（付费券）：微信手续费（约/已结算）、实际平台服务费、商家解冻收入（绿色）</li><li>免费券订单：实付、手续费、服务费、分账金额、到账金额<strong>全部 ¥0.00</strong></li><li>待分账卡片：显示&quot;预计分账日期 X 月 X 日&quot;（取固化预计分账日期）</li><li>退款中卡片：存在未完结退款单时展示，含退款申请时间、退款进度；退款完成后订单流转至 <span class=\"token token-field\">[已退款]</span></li><li>已分账退款订单卡追加展示：原始商家解冻收入、线下退款冲减（红字 -¥xx）、应追回金额、实际追回金额、未追回金额、追回备注（商家端只读，无退款审核与追回按钮）</li><li>分账异常卡片：红色&quot;分账失败，请联系平台处理&quot; + <span class=\"token token-page\">【联系平台】</span>按钮</li></ul></li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>收入口径（随面板时间范围统计）：累计销售额 = 范围内已支付订单实付合计（全口径）；累计解冻收入、实际平台服务费 = 已核销且已分账口径；待分账金额（在途）= 已核销待分账订单的实付合计。</li><li><strong>面板与列表时间独立</strong>：顶部统计面板的时间范围只驱动统计汇总；订单列表使用自己的下单时间筛选，两者互不影响。</li><li>自定义时间范围最长可选 3 个月（面板与列表筛选同规则）。</li><li><strong>售后中口径</strong>：订单存在未完结退款单（退款单状态 = 退款中）即计入&quot;售后中&quot;，无论订单主状态处于待使用或已核销·待分账；退款单完结后订单状态更新为 <span class=\"token token-field\">[已退款]</span>，流转至&quot;已退款&quot; Tab。免费券订单无退款单，不进入售后中/已退款。</li><li><strong>完整拆账展示</strong>：每笔订单卡片展示实付、微信支付手续费、实际平台服务费、商家解冻收入四行明细。金额在订单创建时固化，与分账状态无关。</li><li><strong>手续费精度（结算后即真实）</strong>：未结算订单手续费显示&quot;约 ¥0.24&quot;（按费率预估）；已结算订单回写真实值（核销创建分账记录时查微信净额反推，分账调度触发时兜底补查固化）。</li><li><strong>资金时间表说明</strong>：微信结算周期 T+1，今日新售券资金次日进入特约商户账户并冻结；核销后 7 天分账解冻；冻结金额为净额（实付−手续费）。可用余额以微信侧实时为准，不随统计面板时间范围变化。</li><li>核销分账后商家所得解冻至特约商户号可用余额，商家在微信侧提现；平台不代管商家资金。</li><li><strong>免费券订单</strong>：0 元券订单不进支付与分账，订单记录保留（核销记录用于商家引流统计），实付、微信手续费、平台服务费、分账金额、商家到账金额一律显示 ¥0.00；不占用可用余额、不参与提现。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>顶部切换时间范围（今天/近7天/近30天/自定义），统计面板数字联动刷新；订单列表不受影响。</li><li>点击状态 Tab 切换订单范围；在&quot;订单列表筛选&quot;中切换下单时间范围过滤订单。</li><li>自定义时间范围选择起止日期，最长跨度 3 个月。</li><li>分账异常订单点击<span class=\"token token-page\">【联系平台】</span>通知平台处理。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<ol><li>分账异常订单显示红色&quot;分账失败，请联系平台处理&quot;，提供<span class=\"token token-page\">【联系平台】</span>入口；处理完成后分账状态自动更新。</li><li>售后中订单展示退款进度；退款完成前不可再次发起退款操作。</li><li>自定义时间跨度超过 3 个月时提示&quot;时间范围最长支持 3 个月&quot;。</li></ol>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>无新增写入，仅读取（统计汇总与订单列表均为查询口径；<span class=\"token token-page\">【联系平台】</span>为消息通知动作）。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "商家端原型 · 订单与收入页",
+              "states": [
+                {
+                  "label": "商家端原型 · 订单与收入页",
+                  "url": "prototype/merchant-income.html?state=list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "商家端商家后台导航改造",
+            "tab": "商家端商家后台导航改造",
+            "title": "商家端商家后台导航改造",
+            "type": "pc",
+            "location": "小程序个人中心<span class=\"token token-page\">【商家管理后台】</span>进入后的商家后台首页与导航菜单。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "导航菜单 · <span class=\"token token-action\">「代金券管理」</span><span class=\"token token-action\">「代金券订单」</span>",
+                "desc": "商家后台导航新增<span class=\"token token-page\">【代金券管理】</span>（发布与管理代金券）与<span class=\"token token-page\">【代金券订单】</span>（订单与收入），点击进入对应页面。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "导航菜单 · <span class=\"token token-action\">「代金券核销」</span>",
+                "desc": "核销页入口区分优惠券核销与代金券核销；代金券核销仅商家管理员与核销员可用。"
+              }
+            ],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>让商家从后台导航直达代金券管理、订单与核销能力；进件状态作为入口开关，未发起进件的商家不误入代金券操作。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>代金券菜单组</strong>（新增，位于商家后台导航现有分组内）：<span class=\"token token-page\">【代金券管理】</span>（发布与管理代金券）、<span class=\"token token-page\">【代金券订单】</span>（订单与收入）、<span class=\"token token-page\">【代金券核销】</span>（扫码核销代金券）</li><li><strong>入口状态</strong>：按进件状态枚举——已完成（已回写特约商户号）→ 正常可点击；未完成 → 置灰，点击提示&quot;商家进件未完成，暂不可发布代金券&quot;</li><li><strong>其余菜单</strong>：沿用现有商家后台导航，不新增独立一级入口</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>代金券菜单仅对商家管理员与核销员可见（核销权限沿用现有核销员体系）。</li><li>代金券订单仅展示本商家订单数据，收入按核销（分账）完成口径统计。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击<span class=\"token token-page\">【代金券管理】</span><span class=\"token token-page\">【代金券订单】</span><span class=\"token token-page\">【代金券核销】</span>进入对应页面；进件未完成时代金券相关入口置灰仅可查看提示。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>进件未完成时点击置灰菜单提示&quot;商家进件未完成，暂不可发布代金券&quot;，不跳转。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>本页无数据写入；导航入口仅承接页面跳转，数据写入发生在各目标页面。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "商家端原型 · 商家后台导航",
+              "states": [
+                {
+                  "label": "进件完成",
+                  "url": "prototype/merchant-nav.html?state=ready"
+                },
+                {
+                  "label": "开店完成待进件",
+                  "url": "prototype/merchant-nav.html?state=onboarding-pending"
+                },
+                {
+                  "label": "待提交开店资质",
+                  "url": "prototype/merchant-nav.html?state=store-pending"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "pc端页面",
+        "title": "PC端页面",
+        "desc": "PC端页面相关需求。",
+        "summary": "PC端页面相关需求。",
+        "pages": [
+          {
+            "id": "pc端商家列表-发布商家与进件入口",
+            "tab": "PC端商家列表（发布商家与进件入口）",
+            "title": "PC端商家列表（发布商家与进件入口）",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【商家管理】</span>商家列表页（现有页面）。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "创建商家弹窗 · <span class=\"token token-page\">【发布商家】</span>三步 Tab",
+                "desc": "沿用现有发布商家弹窗：①资质信息 ②商家信息 ③人员配置，保存即生效；上传内容不变。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "列表字段 · 商家状态 + 进件状态",
+                "desc": "商家列表新增<span class=\"token token-field\">[商家状态]</span>列（正常/注销中/已注销，生命周期）与<span class=\"token token-field\">[进件状态]</span>列（与微信 applyment_state 枚举一一对应）及<span class=\"token token-field\">[特约商户号]</span>列。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "行内操作 · <span class=\"token token-action\">「发起进件」</span>",
+                "desc": "<span class=\"token token-field\">[未发起]</span> 与 <span class=\"token token-field\">[已注销]</span> 商家显示；点击打开弹窗填写结算账户与超级管理员并提交，成功后生成进件记录。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "行内操作 · <span class=\"token token-action\">「查看进件」</span>",
+                "desc": "已发起进件的商家显示；点击跳转<span class=\"token token-page\">【商家进件】</span>页跟进该商家记录。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "行内操作 · <span class=\"token token-action\">「发起结算账户修改」</span><span class=\"token token-action\">「申请注销」</span>",
+                "desc": "已完成进件的商家行内显示：行内发起并提交（生成对应记录）；已有进行中申请时弹窗提示&quot;是否查看&quot;，<span class=\"token token-page\">【前往查看】</span>跳转对应列表页并筛选该商家。记录分别在<span class=\"token token-page\">【商家结算账户修改】</span><span class=\"token token-page\">【商家注销】</span>列表页承载。"
+              }
+            ],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>沿用现有商家管理：创建商家（三步 Tab）、维护商家、管理进件入口。<strong>商家创建与微信进件分离</strong>——创建商家沿用现有流程（三步 Tab，保存即生效），进件为独立系统。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>筛选区</strong>：商家名称、所属社区筛选（沿用现有能力）；进件状态筛选（本期新增维度）</li><li><strong>商家列表</strong>（表格）：商家名称、所属社区、门店类型、商家状态（正常/注销中/已注销——商家生命周期）、进件状态（标签：未发起=灰 / 编辑中=灰 / 审核中=蓝 / 待账户验证=橙 / 待签约=橙 / 已完成=绿 / 已驳回=红 / 已作废=灰——与微信 applyment_state 枚举一一对应）、特约商户号、提交时间、行内操作</li><li><strong>行内操作</strong>（按商家状态与进件状态枚举）：未发起进件/已注销 → <span class=\"token token-page\">【发起进件】</span>；已发起进件 → <span class=\"token token-page\">【查看进件】</span>；已完成进件 → <span class=\"token token-page\">【发起结算账户修改】</span><span class=\"token token-page\">【申请注销】</span>（商家主体级操作，行内发起：有进行中申请时弹窗提示&quot;是否查看&quot;，<span class=\"token token-page\">【前往查看】</span>跳转对应列表页并筛选该商家）；已驳回进件 → <span class=\"token token-page\">【驳回原因】</span><span class=\"token token-page\">【编辑】</span></li><li><strong>操作栏</strong>（表格上方）：<span class=\"token token-page\">【创建商家】</span><span class=\"token token-page\">【批量导入】</span><span class=\"token token-page\">【批量导出】</span></li><li><strong>创建商家弹窗</strong>：三步 Tab（资质信息 → 商家信息 → 人员配置 + 保证金），保存即生效</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>进件状态直接采用微信 applyment_state 枚举（编辑中 / 审核中 / 待账户验证 / 待签约 / 开通权限中 / 已完成 / 已驳回 / 已作废），一一对应不归并；串行主线：编辑中/审核中 → 待账户验证（条件）→ 待签约 → 开通权限中 → 已完成。</li><li><span class=\"token token-page\">【发起进件】</span>仅对未发起/已注销商家显示；存在进行中申请单时不显示，防止重复进件。</li><li>结算账户核对不一致（商家私下改卡）的行高亮并标记。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li><span class=\"token token-page\">【创建商家】</span>弹窗内逐步填写，保存即生效；保证金由运营线下收款后在此录入并上传凭证。</li><li><span class=\"token token-page\">【发起进件】</span>在商家列表弹窗填写资料并提交（提交成功生成进件记录）；<span class=\"token token-page\">【查看进件】</span>跳转进件管理页跟进状态。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<ol><li>提交进件时微信接口同步校验失败：展示返回的错误原因（如证件号格式、图片缺失），修改后重提，不生成申请单。</li><li>创建商家必填项（商家名称/关联社区/营业执照/法人信息/保证金金额与凭证）缺失时，对应字段下方红字提示，不允许保存。</li></ol>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>创建商家写商家主表（含 <span class=\"token token-field\">[保证金金额]</span>、<span class=\"token token-field\">[保证金转款凭证 URL]</span>）；提交进件写进件申请记录表并调用微信申请单接口；进件状态、特约商户号由微信审核结果同步回写商家扩展字段。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型",
+              "states": [
+                {
+                  "label": "商家列表 · 列表",
+                  "url": "prototype/pc-merchant-list.html?state=list"
+                },
+                {
+                  "label": "发布商家 · 三步弹窗",
+                  "url": "prototype/pc-merchant-list.html?state=modal"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端商家进件管理页",
+            "tab": "PC端商家进件管理页",
+            "title": "PC端商家进件管理页",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【商家管理】</span>新增<span class=\"token token-page\">【商家进件】</span>。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>跟进进件申请单至完成（取得特约商户号）：跟踪微信审核、账户验证、签约进度，支持签约链接获取与驳回原因查看。<strong>发起新进件不在此页</strong>（入口在<span class=\"token token-page\">【商家列表】</span>）；<strong>修改结算账户、注销为商家主体级操作</strong>，入口在<span class=\"token token-page\">【商家列表/商家详情】</span>，记录分别在<span class=\"token token-page\">【商家结算账户修改】</span><span class=\"token token-page\">【商家注销】</span>列表页承载。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>开店资质（只读引用区）</strong>：商家名称、主体类型、经营者/法人、资质状态——来自创建商家时已提交的资料，本页展示但不可改。</li><li><strong>进件填写信息</strong>（在<span class=\"token token-page\">【商家列表】</span>发起进件时填写，提交成功后生成进件记录）：结算账户类型（下拉：经营者个人银行卡 / 对公银行账户）、开户银行、银行账号、超级管理员（姓名 + 身份证 + 手机号，需与微信实名一致）——进件环节新增字段，创建商家时未收集。</li><li><strong>进件状态区</strong>：<ul><li>进件申请单号：取微信进件申请单号</li><li><strong>进件状态</strong>：直接采用微信 applyment_state 枚举（8 态）——编辑中 / 审核中 / 待账户验证 / 待签约 / 开通权限中 / 已完成 / 已驳回 / 已作废（串行主线，一一对应不归并；页面展示与官方枚举一致，无归并中间态）</li><li>特约商户号：进件完成后回写</li><li>结算卡核对状态：一致 / 不一致（不一致高亮&quot;商家已私下改卡&quot;）</li><li>本页仅展示已发起进件的商家记录；未发起进件的商家在<span class=\"token token-page\">【商家列表】</span>体现</li></ul></li><li><strong>操作区</strong>：按主状态动态显示操作按钮（见操作说明）</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>进件状态流转（串行主线 + 超管异步引导）：① 提交进件调用微信申请单接口，<strong>接口同步校验资料完整性与格式</strong>（秒级返回；请求必下发申请单——校验通过进 <span class=\"token token-field\">[审核中]</span>，不通过进 <span class=\"token token-field\">[编辑中]</span>，重新提交同编号覆盖）；② <strong>核对联系信息</strong>：申请单创建后即可从查询接口获取签约链接（超管侧统一入口，建议转二维码发超管）——超管扫码绑定微信号并核对联系信息，不影响审核；③ <strong>平台审核</strong>（1-3 个工作日）；④ 审核通过后判定是否需<strong>账户验证</strong>（仅需验证主体）：超管用同一链接按页面指引完成验证（汇款/法人扫码，10 天期限）；⑤ <strong>签约</strong>：验证完成（或免验证主体）后超管在同一入口完成签约——页面步骤数随主体不同（需验证 4 步 / 免验证 3 步），一个链接贯穿全程；⑥ 签约完成 → 开通权限（约 30 分钟）→ 特约商户号回写。<strong>全程串行推进，超管侧操作（核对信息/验证/签约）通过同一链接按状态分步引导，公众号自动推送进展。</strong></li><li>超管填写指引：<strong>超级管理员优先填经营者/法人本人</strong>（用其本人实名微信操作）——法人本人当超管可<strong>免账户验证</strong>，签约一步到位；仅经营者不便操作时填负责人（非法人），此时需法人另行配合扫码验证，流程多一个环节。运营代办时严禁填运营自己为超管。</li><li>账户验证期限 10 天（超时自动驳回）；汇款验证金额验证后自动退回，到账等待 1-2 天。</li><li>未获得特约商户号的商家不能发布付费代金券，进件完成前付费券创建入口置灰并提示&quot;进件未完成&quot;；开店成功即可发布免费券、优惠券和推广。</li><li>商家首笔交易后微信将打 0.01 元验证结算银行卡，验证失败时进件状态区提示&quot;结算卡验证失败&quot;。</li><li>已回写特约商户号的商家即可被业务人员授权管理员与核销员。</li><li>申请单 30 天未处理自动作废，状态展示&quot;已作废&quot;；重新发起为全新记录。</li><li>已完成商家做结算账户核对：平台存档结算卡与微信侧生效结算卡不一致时，该行高亮并标记&quot;商家已私下改卡&quot;。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>本页仅展示已发起进件的商家记录；未发起进件的商家不在此页，其发起动作在<span class=\"token token-page\">【商家列表】</span>行内<span class=\"token token-page\">【发起进件】</span>完成。</li><li><span class=\"token token-page\">【获取签约链接】</span>——<span class=\"token token-field\">[审核中 / 待账户验证 / 待签约]</span> 可用；点击打开<strong>二维码弹窗</strong>（展示申请单号 + 二维码示意 + 操作说明），由超管微信扫码：审核中扫码仅绑定微信号+核对联系信息，待账户验证/待签约状态按页面指引完成对应操作。</li><li><span class=\"token token-page\">【驳回原因】</span>——<span class=\"token token-field\">[已驳回]</span> 显示，点击打开<strong>时间轴弹窗</strong>展示驳回信息（提交申请单 → 平台审核驳回原因详情），供运营对照修改资料。</li><li><span class=\"token token-page\">【编辑】</span>——<span class=\"token token-field\">[编辑中 / 已驳回]</span> 可用，点击打开编辑弹窗（结算账户 + 超级管理员信息），弹窗底部<span class=\"token token-page\">【重新提交】</span>按钮：同一申请编号覆盖原申请单重新进入审核（已驳回弹窗顶部同步展示驳回原因）。</li><li><span class=\"token token-page\">【查询进件状态】</span>——<span class=\"token token-field\">[编辑中 / 审核中 / 待账户验证 / 待签约 / 开通权限中]</span> 可用，同步微信申请单状态。</li><li><span class=\"token token-page\">【删除】</span>——已提交申请单不可删除（官方无撤销，30 天自动作废）。</li><li>商家基础信息与微信进件信息支持编辑，编辑记录操作日志。</li><li>修改结算账户 / 申请注销为商家主体级操作，不在本页执行——入口在<span class=\"token token-page\">【PC端商家列表】</span>行内操作，记录见<span class=\"token token-page\">【PC端商家结算账户修改】</span><span class=\"token token-page\">【PC端商家注销】</span>列表页；<span class=\"token token-field\">[已作废]</span> 仅保留<span class=\"token token-page\">【查看进度】</span>，重新发起进件去<span class=\"token token-page\">【商家列表】</span>。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<ul><li>主体类型缺少对应资质资料时提示&quot;缺少营业执照 / 经营者证件&quot;。</li><li>进件被驳回时展示微信驳回原因。</li><li>商家未完成签约时提示&quot;商家尚未签约，无法收款&quot;。</li></ul>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>创建商家记录与进件扩展字段（进件申请单号、进件状态、特约商户号、结算银行信息、注销申请状态）；复用现有商家表并扩展字段；商家扩展表承载进件资质与结算资料。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型 · 商家进件管理",
+              "states": [
+                {
+                  "label": "列表",
+                  "url": "prototype/pc-merchant-onboarding.html?state=list"
+                },
+                {
+                  "label": "进件进度时间线",
+                  "url": "prototype/pc-merchant-onboarding.html?state=progress"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端商家结算账户修改",
+            "tab": "PC端商家结算账户修改",
+            "title": "PC端商家结算账户修改",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【商家管理】</span>新增<span class=\"token token-page\">【商家结算账户修改】</span>。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>承载已签约特约商户的结算账户修改申请记录：发起修改、跟踪微信审核状态（审核中/驳回/成功）、驳回后重新发起。修改成功自动回写商家主记录的当前结算账户。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>筛选区</strong>：商家名称、申请状态（审核中/审核驳回/审核成功）、提交时间范围</li><li><strong>列表</strong>（表格）：修改申请单号、商家、特约商户号、原结算账户（掩码）、新结算账户（掩码）、申请状态（标签：审核中=蓝 / 审核驳回=红 / 审核成功=绿）、驳回原因、提交时间、完成时间、操作</li><li><strong>发起入口在<span class=\"token token-page\">【商家列表】</span>已完成进件商家的行内操作<span class=\"token token-page\">【发起结算账户修改】</span></strong>：行内发起弹窗 → 填写新结算账户（账户类型/开户银行/银行账号）→ 平台侧确认后调微信修改结算账户接口；本页承载记录列表与状态跟踪</li><li><strong>操作（按状态枚举）</strong>：<ul><li>审核中 → <span class=\"token token-page\">【查看申请】</span>（不提供再次提交入口——微信侧审核中无法重复提交）</li><li>审核驳回 → <span class=\"token token-page\">【查看申请】</span><span class=\"token token-page\">【重新发起】</span>（按驳回原因修改后发起新申请单）</li><li>审核成功 → <span class=\"token token-page\">【查看申请】</span>（显示生效结果，已回写商家记录）</li></ul></li><li><strong>进行中拦截</strong>：商家已存在&quot;审核中&quot;的修改申请时，商家列表再次发起会弹窗提示&quot;当前商家有处于进行中的结算账户修改流程，是否查看？&quot;，<span class=\"token token-page\">【前往查看】</span>跳转本列表页并自动筛选该商家</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>状态机为官方三态：审核中 → 审核成功 / 审核驳回；驳回后重新发起为新申请单（与进件驳回同编号覆盖不同）。</li><li>每个特约商户<strong>每天限 5 次</strong>提交；审核中无法再次提交。</li><li>审核过程中微信可能向新结算账户打款 0.01 元验证；大部分审核 1 个自然日内完成，最长 5 个工作日。</li><li>审核成功后自动回写商家主记录的当前结算账户，并同步&quot;结算账户核对&quot;基线。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>发起修改：选择已完成进件的商家 → 填写新结算账户 → 平台确认 → 微信受理生成修改申请单（审核中）。</li><li>审核驳回：按驳回原因修改后<span class=\"token token-page\">【重新发起】</span>（新申请单）。</li><li>审核成功：系统回写商家当前结算账户；后续&quot;结算账户核对&quot;以新账户为基线。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<ol><li>微信受理失败（如银行信息不合法）：展示接口错误原因，修改后重试。</li><li>当日提交达 5 次：提示&quot;今日修改申请已达上限（5 次），请次日再试&quot;。</li><li>非已完成进件的商家不可发起修改。</li></ol>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>写入结算账户修改记录表（修改申请单号、商家、原/新账户、状态、驳回原因、时间、操作人）；审核成功回写商家主记录当前结算账户。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型 · 商家结算账户修改 · 列表",
+              "states": [
+                {
+                  "label": "PC后台原型 · 商家结算账户修改 · 列表",
+                  "url": "prototype/pc-settlement-modify.html?state=list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端商家注销",
+            "tab": "PC端商家注销",
+            "title": "PC端商家注销",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【商家管理】</span>新增<span class=\"token token-page\">【商家注销】</span>。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>承载商家注销申请记录：前置清账校验、提交微信注销申请、跟踪注销状态（审核中/驳回/成功）。注销成功后商家主状态转&quot;已注销&quot;，可重新进件（新申请单）。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>筛选区</strong>：商家名称、注销状态（审核中/审核驳回/注销成功）、提交时间范围</li><li><strong>列表</strong>（表格）：注销申请单号、商家、特约商户号、清账校验结果、注销状态（标签：审核中=蓝 / 审核驳回=红 / 注销成功=绿）、驳回原因、提交时间、完成时间、操作</li><li><strong>发起入口在<span class=\"token token-page\">【商家列表】</span>已完成进件商家的行内操作<span class=\"token token-page\">【申请注销】</span></strong>：行内发起弹窗 → 展示清账校验五清单结果（在售券下架/未核销订单清零/待分账清零/余额提清/无改卡中申请）→ 全部通过后上传纸质注销申请书（打印盖章拍照）→ 调官方注销接口；本页承载记录列表与状态跟踪</li><li><strong>操作（按状态枚举）</strong>：<ul><li>审核中 → <span class=\"token token-page\">【查看申请】</span>（等待微信审核；官方状态含等待商户确认时引导商家扫码确认）</li><li>审核驳回 → <span class=\"token token-page\">【查看申请】</span><span class=\"token token-page\">【重新提交】</span>（换单重新提交，与进件驳回同编号覆盖不同）</li><li>注销成功 → <span class=\"token token-page\">【查看申请】</span>（显示清退资金结果；商家主状态已转&quot;已注销&quot;）</li></ul></li><li><strong>进行中拦截</strong>：商家已存在&quot;审核中&quot;的注销申请时，商家列表再次发起会弹窗提示&quot;当前商家有处于进行中的注销流程，是否查看？&quot;，<span class=\"token token-page\">【前往查看】</span>跳转本列表页并自动筛选该商家</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>状态机为官方三态：审核中（REVIEWING）→ 审核驳回（REJECTED，终态）/ 注销成功（CANCEL_SUCCESS，终态）；驳回后换单重新提交。</li><li>前置清账校验五清单缺一不可：在售券下架、未核销订单清零、待分账清零、余额提清、无改卡中申请。</li><li>注销成功后微信将商户账户遗留资金全额清退；商家主状态转&quot;已注销&quot;，重新进件为全新申请单。</li><li>清账校验未通过时<span class=\"token token-page\">【发起注销】</span>按钮置灰，逐项展示未完成项。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>发起注销：选择商家 → 系统跑清账校验五清单 → 全部通过后上传纸质注销申请书 → 调官方注销接口（生成注销申请单，审核中）。</li><li>审核驳回：按驳回原因处理后<span class=\"token token-page\">【重新提交】</span>（换单）。</li><li>注销成功：商家主状态转&quot;已注销&quot;；换主体场景由商家列表重新<span class=\"token token-page\">【发起进件】</span>。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<ol><li>清账校验未通过：逐项展示&quot;先处理：在售券下架 / 未核销订单 / 待分账 / 余额提现 / 改卡申请&quot;。</li><li>微信注销接口报错&quot;该商户当前不允许注销&quot;：提示存在未完结事项，对照清账清单处理。</li><li>审核驳回：展示驳回原因；重新提交为换单。</li></ol>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>写入商户注销记录表（注销申请单号、商家、清账校验结果、纸质申请书图片、注销状态、驳回原因、时间、操作人）；注销成功回写商家主表状态为&quot;已注销&quot;。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型 · 商家注销 · 列表",
+              "states": [
+                {
+                  "label": "PC后台原型 · 商家注销 · 列表",
+                  "url": "prototype/pc-merchant-cancel.html?state=list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端代金券审核页",
+            "tab": "PC端代金券审核页",
+            "title": "PC端代金券审核页",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【代金券管理】</span>审核 Tab。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>审核商家提交的代金券商品，控制上架质量。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>待审核列表</strong>（表格）：券名、商家、面额/售价（免费券显示&quot;免费&quot;）、库存、有效期、提交时间、类型标签（付费/免费）；行内<span class=\"token token-page\">【审核】</span>操作</li><li><strong>审核详情弹窗</strong>：<ul><li>券配置全字段（券名、面额、售价/免费、有效期、使用说明、库存）</li><li>商家信息（名称、社区、进件完成与否——免费券不校验进件；付费券校验特约商户号已回写）</li><li>历史券表现（可选）</li><li>操作区：<span class=\"token token-page\">【通过】</span>（蓝底白字，通过后上架）+<span class=\"token token-page\">【驳回】</span>（白底描边，填驳回原因，商家端可见）</li></ul></li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>通过后券进入 <span class=\"token token-field\">[已上架]</span> 状态并同步到 C 端。</li><li>驳回需填写驳回原因，商家端可见并可修改后重新提交。</li><li>审核范围检查：售价低于面额、有效期合理、使用说明完整、商家处于启用状态。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击<span class=\"token token-page\">【通过】</span>完成上架。</li><li>点击<span class=\"token token-page\">【驳回】</span>填写原因后提交。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>商家已停用时提示&quot;该商家已停用，无法通过&quot;。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>更新商品审核状态与审核记录。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型 · 代金券审核",
+              "states": [
+                {
+                  "label": "列表",
+                  "url": "prototype/pc-voucher-audit.html?state=list"
+                },
+                {
+                  "label": "审核弹窗",
+                  "url": "prototype/pc-voucher-audit.html?state=modal"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端订单管理页",
+            "tab": "PC端订单管理页",
+            "title": "PC端订单管理页",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【代金券订单】</span>列表。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>查看全平台代金券订单，处理退款与异常。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>筛选区</strong>：订单号、商家、用户（脱敏搜索）、订单状态（下拉：待使用/已领取/待核销/已核销·未分账/已核销·已分账/退款中/已退款/分账异常）、下单时间范围</li><li><strong>列表</strong>（表格）：订单号、商家、券名、用户脱敏信息、实付金额（免费券 ¥0）、订单状态（标签：待使用=蓝/已领取=绿/已核销·未分账=绿/已核销·已分账=灰/退款中=橙/已退款=灰/分账异常=红）、下单时间、核销时间</li><li><strong>操作（按状态枚举）</strong>：<ul><li>待使用 → <span class=\"token token-page\">【退款】</span>（客服侧，点击弹退款确认）</li><li>已核销·未分账 → <span class=\"token token-page\">【退款】</span>（可从冻结资金执行）</li><li>已核销·已分账 → 不显示退款按钮，显示&quot;线下处理&quot;（灰字）</li><li>退款中 → <span class=\"token token-page\">【退款详情】</span></li><li>已领取（免费券） → <span class=\"token token-page\">【详情】</span>仅查看，无退款</li></ul></li><li><strong>异常订单置顶</strong>：分账失败/退款超时订单红色底纹置顶并计数</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>支持按社区、商家维度汇总统计。</li><li>异常订单（分账失败、退款超时）标记并在列表置顶提示。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>点击<span class=\"token token-page\">【退款】</span>进入退款确认（用于已核销协商退款等平台介入场景）。</li><li>退款详情展示退款进度与失败原因。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>退款失败提示原因与重试入口。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>平台介入退款写入退款单，关联订单。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型 · 代金券订单管理",
+              "states": [
+                {
+                  "label": "PC后台原型 · 代金券订单管理",
+                  "url": "prototype/pc-order-manage.html?state=list"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端退款处理页",
+            "tab": "PC端退款处理页",
+            "title": "PC端退款处理页",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【退款管理】</span>。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>集中处理居民退款申请、过期自动退款与已核销协商退款。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>筛选区</strong>：退款单号、订单号、商家、退款场景（未核销主动退款/未核销过期退款/已核销未分账退款/已核销已分账退款）、售后状态（待审核/微信退款中/已驳回/退款失败待人工/已退款/已退款待追回/已追回）、申请时间</li><li><strong>列表</strong>（表格）：退款单号、订单号、商家、退款金额（¥40 等；免费券无退款单）、退款原因（标签：用户主动申请/过期自动退款/商家诱导线下交易/商家拒绝履约/其他原因（用户自填，附用户描述文本）/平台介入·已核销未分账/平台介入·已核销已分账）、退款状态（标签）、申请时间</li><li><strong>操作（按退款原因与状态枚举）</strong>：<ul><li>用户主动申请（未核销） → <span class=\"token token-page\">【同意退款】</span><span class=\"token token-page\">【驳回】</span>（默认自动同意可配置）</li><li>其他原因（用户自填，未核销） → <span class=\"token token-page\">【同意退款】</span><span class=\"token token-page\">【驳回】</span>（不自动同意，人工逐单查看用户描述后处理）</li><li><span class=\"token token-field\">[待审核]</span>（不分场景）→ <span class=\"token token-page\">【审核】</span>：打开统一审核弹窗；分账状态=已分账时弹窗自动切换垫付形态（增加平台垫付金额必填与垫付凭证选填）</li><li>售后列表中&quot;已退款待追回&quot;的退款单 → <span class=\"token token-page\">【追回记录】</span>弹窗：填写 <span class=\"token token-field\">[商家实际追回金额]</span>、<span class=\"token token-field\">[商家未追回金额]</span>、<span class=\"token token-field\">[追回时间]</span>、<span class=\"token token-field\">[追回备注]</span> → 售后转&quot;已追回&quot;；不设部分追回状态，金额纯人工留痕</li><li>退款失败 → <span class=\"token token-page\">【处理】</span>（人工兜底）</li><li>退款原因含&quot;商家诱导线下交易&quot;→ 审核弹窗顶部展示飞单线索标记（用户备注与连续出现提示），审核操作与普通审核一致</li></ul></li><li><strong>飞单核查弹窗</strong>：退款单信息 + 用户备注 + 处理建议 + <span class=\"token token-page\">【驳回退款】</span><span class=\"token token-page\">【同意退款并标记核查】</span></li><li><strong>审核弹窗（统一入口，双形态）</strong>：<span class=\"token token-field\">[待审核]</span> 行内只显示<span class=\"token token-page\">【审核】</span>一个按钮；弹窗基础内容 = 订单信息 + 分账信息 + 退款金额（全额）+ 申请原因 + <span class=\"token token-field\">[审核备注]</span>（必填）+ <span class=\"token token-page\">【审核通过】</span><span class=\"token token-page\">【审核驳回】</span>；分账状态=已分账时弹窗切换为垫付形态：增加 <span class=\"token token-field\">[平台垫付金额]</span>（必填）、垫付凭证截图（选填）、微信手续费（标注平台承担）与商家解冻收入，底部按钮为<span class=\"token token-page\">【审核通过并完成垫付】</span><span class=\"token token-page\">【审核驳回】</span></li><li><strong>追回弹窗（已退款待追回）</strong>：平台垫付金额 + 商家应追回金额 + <span class=\"token token-field\">[商家实际追回金额]</span> + <span class=\"token token-field\">[商家未追回金额]</span> + <span class=\"token token-field\">[追回时间]</span> + <span class=\"token token-field\">[追回备注]</span> + <span class=\"token token-page\">【保存追回记录】</span>——追回为一次性动作，无部分追回/全额追回判断</li><li><strong>失败原因弹窗（退款失败待人工）</strong>：显示微信退款单号、重试次数（上限 3 次）、最近失败原因与建议；弹窗底部<span class=\"token token-page\">【重试】</span>按钮（重新发起微信退款）</li><li>顶部提示：飞单线索计数（退款原因含&quot;商家诱导线下交易&quot;），需人工核查</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>退款原因含&quot;商家诱导线下交易&quot;时在审核弹窗中标记飞单线索（展示用户备注，提示连续出现将暂停代金券合作）；审核流程与普通审核一致，不设独立弹窗。</li><li>过期自动退款由定时任务触发，不占用人工处理量。</li><li><strong>退款统计口径（平台视角）</strong>：销售额毛口径不变，退款额独立统计，两者相减得净额；平台垫付总额、已追回金额、未追回金额（= Σ应追回 − Σ实际追回）单独汇总展示；已分账订单不走微信退款，微信手续费不返还，计入平台损失。</li><li><strong>商家收入口径（商家视角）</strong>：商家解冻收入原始分账明细保留不改（历史事实）；已分账退款通过商家订单卡追加行表达（红字收入冲减 + 应追回/实际追回/未追回金额与追回备注），不修改历史分账数据。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>用户申请的未核销退款：系统自动创建退款记录并自动审核通过，直接进入微信退款；平台/系统创建的退款走人工审核流程。</li><li>退款按<strong>分账状态</strong>三分支处理——① <strong>付费订单未核销退款</strong>：居民申请自动审核通过（平台/系统创建走人工审核），微信全额退款；② <strong>已核销未分账退款</strong>：居民不可直接退款（联系客服），平台在 PC 创建退款记录走人工审核；审核通过时检查分账状态——仍为待分账则微信退款（成功后分账转<span class=\"token token-action\">「已终止（退款）」</span>），已被每日任务分账则自动转③；③ <strong>已核销已分账退款</strong>：平台垫付弹窗，审核通过即视为垫付完成（订单转已退款、售后转已退款待追回），不调微信退款、不分账回退；后续追回弹窗回填追回金额（纯留痕），<span class=\"token token-field\">[平台损失金额]</span> = 微信手续费 + 商家未追回金额。微信退款失败自动重试最多 3 次，仍失败售后转&quot;退款失败待人工&quot;，订单保持退款中不自动恢复。</li><li>驳回需填写原因，用户端可见。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>退款原路退回失败时提示&quot;退款失败，请人工处理&quot;。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>更新退款单状态，联动订单状态与分账回退。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型 · 退款处理",
+              "states": [
+                {
+                  "label": "列表",
+                  "url": "prototype/pc-refund-manage.html?state=list"
+                },
+                {
+                  "label": "飞单核查弹窗",
+                  "url": "prototype/pc-refund-manage.html?state=modal"
+                },
+                {
+                  "label": "线下退款弹窗（已分账）",
+                  "url": "prototype/pc-refund-manage.html?state=offline-refund"
+                },
+                {
+                  "label": "记录收回弹窗",
+                  "url": "prototype/pc-refund-manage.html?state=recover"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端分账与结算页",
+            "tab": "PC端分账与结算页",
+            "title": "PC端分账与结算页",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【分账流水】</span>与<span class=\"token token-page\">【结算报表】</span>。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>查看分账执行情况，保证平台佣金与商家资金可对账。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>筛选区</strong>：订单号、商家、分账状态（待分账/已分账/分账异常/已终止（退款））、核销时间</li><li><strong>分账流水</strong>（表格）：分账单号、订单号、商家、实付金额、支付手续费（结算后准确值，未结算&quot;约&quot;）、抽佣金额、商家解冻收入、分账状态（标签：待分账=橙/已分账=绿/分账异常=红/已终止（退款）=灰）、预计分账日期、分账时间、是否关联退款（是=退款单号+退款时间，否=—）、终止原因<ul><li><strong>待分账订单行内操作</strong>：<span class=\"token token-page\">【延长分账时间】</span>（点击打开弹窗，选择新日期，范围=当前预计分账日期 ～ 付款后第 29 天，需填原因；操作留痕：操作人/时间/原日期/新日期/原因）</li><li>分账异常行内操作：<span class=\"token token-page\">【重新分账】</span><span class=\"token token-page\">【明细】</span></li><li>其他状态：<span class=\"token token-page\">【明细】</span></li></ul></li><li><strong>结算报表</strong>：按商家、按社区、按时间段汇总销售额、核销额、抽佣收入、退款额；支持导出</li><li><strong>商家账户信息</strong>：商家特约商户号、可用余额（微信余额查询接口展示）、提现状态提示</li><li><strong>对账提示</strong>：分账失败、金额不一致订单标记异常（红色置顶）</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>分账状态：待分账、已分账、分账异常、已终止（退款）（无&quot;分账处理中&quot;展示态，受理/查询瞬时窗口由内部分账任务表承接）；<span class=\"token token-action\">「是否关联退款」</span>按订单 ID 关联退款记录展示（退款记录按订单关联，不做分账与退款互相关联）。</li><li>平台抽佣收入口径 = 已分账成功的抽佣金额合计。</li><li>分账金额不得超过&quot;订单实付 − 支付手续费&quot;的净额；分账由商家特约商户号分出抽佣给平台，剩余资金自动解冻归商家。</li><li>商家资金在微信侧托管，平台仅查询展示余额，不代为持有或打款。</li><li><span class=\"token token-field\">[待分账]</span> 订单展示预计分账日期（核销时固化的 T+N 计划时间），便于运营查看缓冲期内的订单。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>分账流水与结算报表支持按条件查询与导出。</li><li>分账失败订单提供<span class=\"token token-page\">【重新分账】</span>入口。</li><li>提供按商家的可用余额查询与提现引导（引导商家在微信侧提现）。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>分账失败且重试仍失败时标记人工处理。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>无新增写入，仅读取。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型 · 分账与结算",
+              "states": [
+                {
+                  "label": "",
+                  "url": "prototype/pc-profit-sharing.html?state=list"
+                },
+                {
+                  "label": "延长分账时间",
+                  "url": "prototype/pc-profit-sharing.html?state=extend"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端抽佣配置页",
+            "tab": "PC端抽佣配置页",
+            "title": "PC端抽佣配置页",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【系统配置】</span>新增<span class=\"token token-page\">【抽佣比例】</span>。",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "页面目标",
+                "html": "<p>平台运营可调整代金券抽佣比例，本期不做默认值，由运营配置生效。</p>"
+              },
+              {
+                "title": "页面结构",
+                "html": "<ul><li><strong>平台级默认抽佣比例</strong>：百分比数字输入（如 5 表示 5%），必填；保存后对新订单生效，历史订单保持原比例（订单创建时固化）；下方示例&quot;实付 40 元，按 5% 抽佣，商家到账 40 − 2 = 38 元&quot;</li><li><strong>分账结算周期 T</strong>：天数数字输入，默认 7 天可调；核销后 T 天由分账调度任务触发；对之后核销的订单生效（预计分账日期按核销时 T 固化）</li><li><strong>适用范围说明</strong>：不配置为全局生效；商家发券时按此比例计算抽佣（免费券不参与抽佣）</li><li><strong>保存</strong>：<span class=\"token token-page\">【保存】</span>按钮（蓝底白字，保存前校验输入合法性：非数字/负数/超 100% 时提示）</li><li>修改记录：记录修改日志与操作人</li></ul>"
+              },
+              {
+                "title": "展示规则",
+                "html": "<ol><li>抽佣基数 = 居民实付金额，不按券面额计算。</li><li>比例调整后对新订单生效，历史订单保持原比例。</li></ol>"
+              },
+              {
+                "title": "操作说明",
+                "html": "<ol><li>修改比例后保存，立即对新订单生效。</li><li>保存前展示示例：&quot;实付 40 元，按 X% 抽佣，商家到账 40 − X 元&quot;。</li></ol>"
+              },
+              {
+                "title": "异常提示",
+                "html": "<p>比例输入不合法（非数字、负数、超 100%）时提示。</p>"
+              },
+              {
+                "title": "数据写入",
+                "html": "<p>写入平台参数配置，记录修改日志与操作人。</p>"
+              }
+            ],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC后台原型 · 抽佣配置",
+              "states": [
+                {
+                  "label": "PC后台原型 · 抽佣配置",
+                  "url": "prototype/pc-commission-config.html?state=default"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "订阅消息",
+        "title": "订阅消息",
+        "desc": "订阅消息相关需求。",
+        "summary": "订阅消息相关需求。",
+        "pages": [
+          {
+            "id": "订阅项总表",
+            "tab": "订阅项总表",
+            "title": "订阅项总表",
+            "type": "message",
+            "location": "",
+            "changes": [],
+            "blocks": [
+              {
+                "title": "",
+                "html": "<p>全部订阅消息（居民侧 + 商家侧）统一走微信订阅消息通道，不建独立消息中心；定义沿用平台<span class=\"token token-action\">「消息订阅项梳理」</span>格式（统一表格：优先级 / 关联功能模块 / 订阅项名称 / 触发通知逻辑 / 消息模板 / 点击跳转）。</p><p><strong>接收人与订阅授权</strong>：居民端订阅项推送给持券/购券居民本人（购券/领券时引导订阅）；商家端订阅项推送给订单/券/分账记录归属商家的商家管理员（核销成功通知发核销操作员本人），商家管理员首次进入<span class=\"token token-page\">【商家后台】</span>时一次性弹窗申请订阅（一次授权覆盖商家侧全部订阅项）；交易强提醒随模板规则生效，未订阅用户不重复打扰。</p><p><strong>优先级定义</strong>：P0 = 资金/交易强相关；P1 = 经营辅助。</p><div class=\"table-scroll\"><table><thead><tr><th>优先级</th><th>端</th><th>关联功能模块</th><th>订阅项名称</th><th>触发通知逻辑</th><th>消息模板（#内容#为适配字段）</th><th>点击跳转</th></tr></thead><tbody><tr><td>P0</td><td>居民端</td><td>代金券订单</td><td><span class=\"token token-page\">【代金券】</span>购券成功通知</td><td>居民支付成功（付费券）或免费券领取成功时推送</td><td>购券成功；券名 #券名#；实付金额 #实付金额#（免费券显示 ¥0）；使用有效期 #有效期#；门店 #商家门店名称#；#推送时间#</td><td><span class=\"token token-page\">【居民端订单详情页】</span>（展示核销码）</td></tr><tr><td>P0</td><td>居民端</td><td>代金券订单</td><td><span class=\"token token-page\">【代金券】</span>核销成功通知</td><td>商家扫码核销成功后推送</td><td>核销成功；券名 #券名#；商家 #商家名称#；核销时间 #核销时间#；#推送时间#</td><td><span class=\"token token-page\">【居民端订单详情页】</span>（已核销状态）</td></tr><tr><td>P1</td><td>居民端</td><td>代金券订单</td><td><span class=\"token token-page\">【代金券】</span>到期提醒通知</td><td>代金券距有效期结束剩余 3 天时推送（持券居民）</td><td>券名 #券名#；商家名称 #商家名称#；到期日期 #到期日期#；剩余金额提示 #剩余金额提示#；#推送时间#</td><td><span class=\"token token-page\">【居民端订单详情页】</span></td></tr><tr><td>P0</td><td>居民端</td><td>代金券订单</td><td><span class=\"token token-page\">【代金券】</span>退款结果通知</td><td>退款处理完成后（成功或失败）推送</td><td>退款结果通知；券名 #券名#；退款金额 #退款金额#；退款状态 #退款状态#（成功/失败）；#推送时间#</td><td><span class=\"token token-page\">【居民端订单详情页】</span>（退款状态）</td></tr><tr><td>P0</td><td>商家端</td><td>代金券订单</td><td><span class=\"token token-page\">【代金券】</span>退款通知</td><td>用户退款成功时，按订单归属商家推送</td><td>您有一笔<span class=\"token token-page\">【代金券订单】</span>已退款；券名 #券名#；退款金额 #退款金额#；#推送时间#；已分账订单退款将通过线下追回协商处理，如有疑问请联系平台</td><td><span class=\"token token-page\">【商家端订单与收入页】</span>（退款订单）</td></tr><tr><td>P0</td><td>商家端</td><td>代金券订单</td><td><span class=\"token token-page\">【代金券】</span>新订单通知</td><td>用户支付成功或免费券领取成功时推送</td><td>您有一笔新的<span class=\"token token-page\">【代金券订单】</span>；券名 #券名#；实付金额 #实付金额#（免费券显示 ¥0）；#推送时间#；请引导顾客到店出示核销码核销</td><td><span class=\"token token-page\">【商家端订单与收入页】</span>（新订单）</td></tr><tr><td>P0</td><td>商家端</td><td>代金券订单</td><td><span class=\"token token-page\">【代金券】</span>核销成功通知（商家侧）</td><td>商家扫码核销成功时，发核销操作员本人</td><td><span class=\"token token-page\">【代金券】</span>核销成功；券名 #券名#；核销时间 #核销时间#；#推送时间#</td><td><span class=\"token token-page\">【商家端核销页】</span>（核销结果）</td></tr><tr><td>P0</td><td>商家端</td><td>分账</td><td><span class=\"token token-page\">【分账】</span>分账成功通知</td><td>分账调度执行成功时推送</td><td>您有一笔<span class=\"token token-page\">【代金券分账】</span>已到账；分账单号 #分账单号#；商家到账 #商家到账金额#；#推送时间#；资金已解冻至特约商户号可用余额，可在微信支付商户平台提现</td><td><span class=\"token token-page\">【商家端订单与收入页】</span>（收入汇总）</td></tr><tr><td>P1</td><td>商家端</td><td>代金券商品</td><td><span class=\"token token-page\">【代金券】</span>审核结果通知</td><td>平台审核通过或驳回时推送，驳回带原因</td><td>您的<span class=\"token token-page\">【代金券】</span>审核结果已出；券名 #券名#；结果 #通过/驳回#；驳回原因 #驳回原因#（通过时不显示）；#推送时间#</td><td><span class=\"token token-page\">【商家端代金券管理列表】</span></td></tr><tr><td>P1</td><td>商家端</td><td>分账</td><td><span class=\"token token-page\">【分账】</span>分账异常通知</td><td>分账重试仍失败进入异常时推送</td><td>您有一笔<span class=\"token token-page\">【代金券分账】</span>处理异常；分账单号 #分账单号#；#推送时间#；平台将介入处理，请联系客服了解详情</td><td><span class=\"token token-page\">【商家端订单与收入页】</span>（分账异常订单）</td></tr></tbody></table></div>"
+              },
+              {
+                "title": "触发事件",
+                "html": "<p>居民支付/免费券领取、商家扫码核销、券距到期 3 天、退款处理完成、分账成功/异常、平台审核结果（详见订阅项总表<span class=\"token token-action\">「触发通知逻辑」</span>列，每个订阅项一行一个触发配置）。</p>"
+              },
+              {
+                "title": "接收人",
+                "html": "<p>居民端订阅项推送给持券/购券居民本人；商家端订阅项推送给订单/券/分账记录归属商家的商家管理员（核销成功通知发核销操作员本人）。</p>"
+              },
+              {
+                "title": "模板内容",
+                "html": "<p>模板文案见订阅项总表<span class=\"token token-action\">「消息模板」</span>列，#适配字段# 发送时填充实际值，免费券订单实付金额显示 ¥0。</p>"
+              },
+              {
+                "title": "落地页",
+                "html": "<p>居民端：<span class=\"token token-page\">【居民端订单详情页】</span>。商家端：<span class=\"token token-page\">【商家端订单与收入页】</span><span class=\"token token-page\">【商家端核销页】</span><span class=\"token token-page\">【商家端代金券管理列表】</span>（按订阅项跳转）。</p>"
+              },
+              {
+                "title": "防打扰说明",
+                "html": "<p>购券成功、核销成功、退款结果、分账到账为交易强提醒，不需要用户额外订阅动作即随授权生效；到期提醒、审核结果、分账异常为经营提醒。消息模板中的 #适配字段# 发送时填充实际值，免费券订单实付金额显示 ¥0。</p>"
               }
             ],
             "prototype": null
