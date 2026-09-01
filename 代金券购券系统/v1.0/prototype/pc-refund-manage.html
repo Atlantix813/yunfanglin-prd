@@ -1,4 +1,4 @@
-<!-- prototype-states: list, modal , offline-refund, recover -->
+<!-- prototype-states: list, modal, offline-refund, recover, fail-reason -->
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -58,28 +58,28 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
             <thead><tr><th>退款单号</th><th>订单号</th><th>订单状态</th><th>分账状态</th><th>售后状态</th><th>退款场景</th><th>发起方</th><th>退款金额</th><th>微信手续费</th><th>申请时间</th><th>完成时间</th><th>操作</th></tr></thead>
             <tbody>
               <tr>
-                <td>RF20260820001</td><td>DD20260807018</td><td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-green">已分账</span></td><td><span class="tag tag-orange">已退款待追回</span></td><td>已核销已分账退款</td><td>平台</td><td>¥84</td><td>¥0.50</td><td>2026-08-20 10:00</td><td>2026-08-20 15:30</td>
+                <td>RF20260820001</td><td>DD20260807018</td><td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-green">已分账</span></td><td><span class="tag tag-orange">已退款待追回</span></td><td>已核销已分账退款</td><td>平台</td><td>¥84</td><td>¥0.50（平台承担）</td><td>2026-08-20 10:00</td><td>2026-08-20 15:30</td>
                 <td><a class="action-link" data-pc-action="open-modal" data-target="#recoverModal">追回记录</a></td>
               </tr>
               <tr>
-                <td>RF20260811004</td><td>DD20260811009</td><td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-orange">待分账</span></td><td><span class="tag tag-orange">待审核</span></td><td>已核销未分账退款</td><td>平台</td><td>¥40</td><td>¥0.24</td><td>2026-08-11 15:40</td><td>—</td>
-                <td><a class="action-link" data-pc-action="open-modal" data-target="#refundAuditModal">审核</a></td>
+                <td>RF20260811004</td><td>DD20260811009</td><td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-orange">待分账</span></td><td><span class="tag tag-orange">待审核</span></td><td>未核销过期退款</td><td>系统</td><td>¥40</td><td>¥0.24</td><td>2026-08-11 15:40</td><td>—</td>
+                <td><a class="action-link" data-pc-action="open-modal" data-target="#refundModal">审核</a></td>
               </tr>
               <tr>
-                <td>RF20260810006</td><td>DD20260808042</td><td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-green">已分账</span></td><td><span class="tag tag-orange">待审核</span></td><td>已核销已分账退款</td><td>平台</td><td>¥84</td><td>¥0.50</td><td>2026-08-10 11:00</td><td>—</td>
-                <td><a class="action-link" data-pc-action="open-modal" data-target="#offlineRefundModal">垫付审核</a></td>
+                <td>RF20260810006</td><td>DD20260808042</td><td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-green">已分账</span></td><td><span class="tag tag-orange">待审核</span></td><td>已核销已分账退款</td><td>平台</td><td>¥84</td><td>¥0.50（平台承担）</td><td>2026-08-10 11:00</td><td>—</td>
+                <td><a class="action-link" data-pc-action="open-modal" data-target="#refundModal">审核</a></td>
               </tr>
               <tr>
-                <td>RF20260809003</td><td>DD20260809015</td><td><span class="tag tag-blue">待使用</span></td><td>未创建</td><td><span class="tag tag-blue">微信退款中</span></td><td>未核销退款</td><td>用户</td><td>¥25</td><td>¥0.15</td><td>2026-08-09 19:20</td><td>—</td>
+                <td>RF20260809003</td><td>DD20260809015</td><td><span class="tag tag-blue">待使用</span></td><td>未创建</td><td><span class="tag tag-orange">待审核</span></td><td>未核销主动退款</td><td>用户</td><td>¥25</td><td>¥0.15</td><td>2026-08-09 19:20</td><td>—</td>
+                <td><a class="action-link" data-pc-action="open-modal" data-target="#refundModal">审核</a></td>
+              </tr>
+              <tr>
+                <td>RF20260808010</td><td>DD20260807030</td><td><span class="tag">已退款</span></td><td>已终止（退款）</td><td><span class="tag tag-green">已退款</span></td><td>未核销过期退款</td><td>系统</td><td>¥40</td><td>¥0.24</td><td>2026-08-08 00:30</td><td>2026-08-08 09:00</td>
                 <td><a class="action-link" data-pc-action="toast" data-message="打开退款详情">详情</a></td>
               </tr>
               <tr>
-                <td>RF20260808010</td><td>DD20260807030</td><td><span class="tag">已退款</span></td><td>已终止（退款）</td><td><span class="tag tag-green">已退款</span></td><td>未核销退款</td><td>系统</td><td>¥40</td><td>¥0.24</td><td>2026-08-08 00:30</td><td>2026-08-08 09:00</td>
-                <td><a class="action-link" data-pc-action="toast" data-message="打开退款详情">详情</a></td>
-              </tr>
-              <tr>
-                <td>RF20260807002</td><td>DD20260806018</td><td><span class="tag tag-green">已核销</span></td><td>未创建</td><td><span class="tag tag-red">退款失败待人工</span></td><td>未核销退款</td><td>系统</td><td>¥90</td><td>¥0.54</td><td>2026-08-07 15:40</td><td>—</td>
-                <td><a class="action-link" data-pc-action="toast" data-message="查看微信失败原因（已重试 3 次）">失败原因</a><span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="已重新发起微信退款">重新重试</a><span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="转人工处理">人工处理</a></td>
+                <td>RF20260807002</td><td>DD20260806018</td><td><span class="tag tag-blue">待使用</span></td><td>未创建</td><td><span class="tag tag-red">退款失败待人工</span></td><td>未核销主动退款</td><td>用户</td><td>¥90</td><td>¥0.54</td><td>2026-08-07 15:40</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="打开退款详情">详情</a><span class="action-sep">|</span><a class="action-link" data-pc-action="open-modal" data-target="#failReasonModal">失败原因</a></td>
               </tr>
             </tbody>
           </table>
@@ -93,23 +93,26 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
 
 <div class="overlay" id="refundModal" hidden>
   <section class="modal modal-md">
-    <header class="modal-header"><h3>飞单线索核查</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+    <header class="modal-header"><h3>退款审核</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
     <div class="modal-body">
       <section class="snapshot-card">
-        <div class="desc-grid">
-          <div class="desc-item"><span class="desc-label">退款单号</span><span class="desc-value">TK20260810006</span></div>
-          <div class="desc-item"><span class="desc-label">订单号</span><span class="desc-value">DD20260808042</span></div>
-          <div class="desc-item"><span class="desc-label">商家</span><span class="desc-value">三元里佳宜购物超市</span></div>
-          <div class="desc-item"><span class="desc-label">退款金额</span><span class="desc-value">¥84</span></div>
-          <div class="desc-item"><span class="desc-label">退款原因</span><span class="desc-value"><span class="tag tag-red">商家诱导线下交易</span></span></div>
-          <div class="desc-item"><span class="desc-label">用户备注</span><span class="desc-value">商家要求先退款再微信转账给我</span></div>
-          <div class="desc-item"><span class="desc-label">处理建议</span><span class="desc-value">正常退款，同时对该商家标记飞单核查；连续出现将暂停代金券合作</span></div>
-        </div>
+        <div class="desc-item"><span class="desc-label">退款单号</span><span class="desc-value">RF20260809003</span></div>
+        <div class="desc-item"><span class="desc-label">订单号</span><span class="desc-value">DD20260808042</span></div>
+        <div class="desc-item"><span class="desc-label">商家</span><span class="desc-value">三元里佳宜购物超市</span></div>
+        <div class="desc-item"><span class="desc-label">订单状态</span><span class="desc-value"><span class="tag tag-green">已核销</span></span></div>
+        <div class="desc-item"><span class="desc-label">分账状态</span><span class="desc-value">待分账</span></div>
+        <div class="desc-item"><span class="desc-label">退款金额</span><span class="desc-value">¥84（全额，不允许部分退款）</span></div>
+        <div class="desc-item"><span class="desc-label">退款原因</span><span class="desc-value"><span class="tag tag-red">商家诱导线下交易</span></span></div>
+        <div class="desc-item"><span class="desc-label">用户备注</span><span class="desc-value">商家要求先退款再微信转账给我</span></div>
       </section>
+      <div class="pc-form-section" style="margin-top:12px">
+        <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>审核备注</label><textarea class="pc-input" rows="3" placeholder="必填，记录审核依据与沟通结果"></textarea></div>
+      </div>
+      <div class="pc-mo-tip">退款原因含"商家诱导线下交易"时标记为飞单线索（连续出现将暂停代金券合作）；审核通过后调用微信退款 API 全额退款。</div>
     </div>
     <footer class="modal-footer">
-      <button class="btn btn-default" data-pc-action="toast" data-message="已驳回该退款申请">驳回退款</button>
-      <button class="btn btn-primary" data-pc-action="toast" data-message="已同意退款并标记核查">同意退款</button>
+      <button class="btn btn-default" data-pc-action="toast" data-message="已驳回，订单恢复原状态">审核驳回</button>
+      <button class="btn btn-primary" data-pc-action="toast" data-message="审核通过，已发起微信退款">审核通过</button>
     </footer>
   </section>
 </div>
@@ -123,6 +126,9 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   if (stParams.get('state') === 'recover'){
     document.getElementById('recoverModal').hidden = false;
   }
+  if (stParams.get('state') === 'fail-reason'){
+    document.getElementById('failReasonModal').hidden = false;
+  }
   if (stParams.get('state') === 'modal'){
     document.getElementById('refundModal').hidden = false;
   }
@@ -131,7 +137,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
 
 <div class="overlay" id="offlineRefundModal" hidden>
   <section class="modal modal-md">
-    <header class="modal-header"><h3>线下退款（已分账订单）</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+    <header class="modal-header"><h3>退款审核（已分账 · 平台垫付）</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
     <div class="modal-body">
       <section class="snapshot-card">
         <div class="desc-item"><span class="desc-label">订单号</span><span class="desc-value">DD20260806018</span></div>
@@ -144,7 +150,8 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
       <div class="pc-form-section" style="margin-top:12px">
         <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>平台垫付金额（元）</label><input class="pc-input" placeholder="与用户沟通确认的实际退款金额" type="number"></div>
         <div class="pc-form-field-dense"><label>商家应追回金额（元）</label><input class="pc-input" value="37.76" type="number"><span class="pc-form-upload-tip">默认取商家解冻收入，可协商调整</span></div>
-        <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>备注</label><textarea class="pc-input" rows="2" placeholder="如：已沟通，平台先行垫付 ¥40"></textarea></div>
+        <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>审核备注</label><textarea class="pc-input" rows="2" placeholder="必填，记录审核依据与沟通结果"></textarea></div>
+        <div class="pc-form-field-dense"><label>垫付凭证</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传截图</span></button><span class="pc-form-upload-tip">线下垫付付款凭证截图，选填，jpg/png，5M 以内</span></div>
       </div>
       <div class="pc-mo-tip">已分账订单不走微信退款、不分账回退（微信侧保持已完成，手续费不返还）；审核通过即视为线下垫付完成，订单转[已退款]、售后转"已退款待追回"，后续通过【追回记录】回填实际追回情况。</div>
     </div>
@@ -157,7 +164,7 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
 
 <div class="overlay" id="recoverModal" hidden>
   <section class="modal modal-sm">
-    <header class="modal-header"><h3>记录收回</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+    <header class="modal-header"><h3>追回记录</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
     <div class="modal-body">
       <section class="snapshot-card">
         <div class="desc-item"><span class="desc-label">退款单号</span><span class="desc-value">RF20260820001</span></div>
@@ -180,28 +187,22 @@ html,body{margin:0;padding:0;overflow:hidden;height:100%}
   </section>
 </div>
 
-  <!-- 退款审核弹窗（未核销 / 已核销未分账共用） -->
-  <div class="overlay" id="refundAuditModal" hidden>
-    <section class="modal modal-md">
-      <header class="modal-header"><h3>退款审核</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+  <!-- 微信退款失败原因弹窗 -->
+  <div class="overlay" id="failReasonModal" hidden>
+    <section class="modal modal-sm">
+      <header class="modal-header"><h3>微信退款失败原因</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
       <div class="modal-body">
         <section class="snapshot-card">
-          <div class="desc-item"><span class="desc-label">订单号</span><span class="desc-value">DD20260811009</span></div>
-          <div class="desc-item"><span class="desc-label">商家</span><span class="desc-value">天天简餐</span></div>
-          <div class="desc-item"><span class="desc-label">订单状态</span><span class="desc-value"><span class="tag tag-green">已核销</span></span></div>
-          <div class="desc-item"><span class="desc-label">分账状态</span><span class="desc-value"><span class="tag tag-orange">待分账</span>（审核通过时若已被每日任务分账，自动转平台垫付流程）</span></div>
-          <div class="desc-item"><span class="desc-label">退款金额</span><span class="desc-value">¥40.00（全额，不允许部分退款）</span></div>
-          <div class="desc-item"><span class="desc-label">申请原因</span><span class="desc-value">商家拒绝履约</span></div>
-          <div class="desc-item"><span class="desc-label">发起方</span><span class="desc-value">平台</span></div>
+          <div class="desc-item"><span class="desc-label">退款单号</span><span class="desc-value">RF20260807002</span></div>
+          <div class="desc-item"><span class="desc-label">微信退款单号</span><span class="desc-value">RE2026080715002233</span></div>
+          <div class="desc-item"><span class="desc-label">重试次数</span><span class="desc-value">3 / 3（已达上限）</span></div>
+          <div class="desc-item"><span class="desc-label">最近失败原因</span><span class="desc-value">NOT_ENOUGH（商户号可用余额不足）</span></div>
+          <div class="desc-item"><span class="desc-label">建议</span><span class="desc-value">商家特约商户号可用余额不足，等待解冻或平台协调后点击重试</span></div>
         </section>
-        <div class="pc-form-section" style="margin-top:12px">
-          <div class="pc-form-field-dense"><label>审核备注</label><textarea class="pc-input" rows="2" placeholder="选填，记录审核依据"></textarea></div>
-        </div>
-        <div class="pc-mo-tip">审核通过后调用微信退款 API 全额退款；微信退款失败自动重试最多 3 次，仍失败转人工处理。</div>
       </div>
       <footer class="modal-footer">
-        <button class="btn btn-default" data-pc-action="toast" data-message="已驳回，订单恢复原状态">审核驳回</button>
-        <button class="btn btn-primary" data-pc-action="toast" data-message="审核通过，已发起微信退款">审核通过</button>
+        <button class="btn btn-default" data-pc-action="close-modal">关闭</button>
+        <button class="btn btn-primary" data-pc-action="toast" data-message="已重新发起微信退款">重试</button>
       </footer>
     </section>
   </div>
