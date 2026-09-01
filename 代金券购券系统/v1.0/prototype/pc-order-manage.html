@@ -1,0 +1,129 @@
+<!-- prototype-states: list -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC后台 · 代金券订单管理</title>
+<link rel="stylesheet" href="组件库样式.css">
+<link rel="stylesheet" href="pc-icons.css">
+<script src="pc-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+</style>
+</head>
+<body>
+
+<div class="yfl-pc-root page-wrapper">
+  <header class="header">
+    <div class="header-left"><div class="header-logo">云芳邻管理系统</div><div class="header-hamburger"><span></span><span></span><span></span></div></div>
+    <div class="header-right"><span class="header-right-item">使用指南</span><span class="header-right-item">消息</span><span class="header-right-item"><span class="avatar">管</span>平台管理员</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" data-pc-group>
+      <div class="sidebar-item"><span class="label">工作台</span></div>
+      <div class="sidebar-item"><span class="label">商家管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item expanded"><span class="label">代金券管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-sub">
+        <div class="sidebar-item" data-pc-action="menu">代金券审核</div>
+        <div class="sidebar-item active" data-pc-action="menu">代金券订单</div>
+      </div>
+      <div class="sidebar-item"><span class="label">退款管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">分账结算</span><span class="arrow">›</span></div>
+    </aside>
+    <section class="main">
+      <nav class="tab-bar" data-pc-group><div class="tab-item active" data-pc-action="tab">代金券订单</div><div class="tab-item" data-pc-action="tab">工作台</div></nav>
+      <div class="content">
+        <div class="page-header"><h1 class="page-title">代金券订单</h1><span class="breadcrumb">代金券管理 / 代金券订单</span></div>
+
+        <div class="filter-card">
+          <div class="filter-row">
+            <div class="filter-field"><label>订单号</label><input placeholder="请输入订单号"></div>
+            <div class="filter-field"><label>商家</label><input placeholder="请输入商家名称"></div>
+            <div class="filter-field"><label>订单状态</label><select><option>全部</option><option>待付款</option><option>待使用</option><option>已核销</option><option>退款中</option><option>已退款</option><option>已关闭</option></select></div>
+            <div class="filter-field"><label>下单时间</label><input placeholder="请选择日期范围"></div>
+            <button class="btn btn-primary" data-pc-action="query">查询</button>
+            <button class="btn btn-default" data-pc-action="reset">重置</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="op-bar">
+            <button class="btn btn-outline" data-pc-action="toast" data-message="已创建导出任务">批量导出</button>
+            <span style="font-size:13px;color:#E9305A">异常订单（分账失败/退款超时）<b>2</b> 条已置顶</span>
+          </div>
+          <table class="pc-table">
+            <thead><tr><th>订单号</th><th>商家</th><th>代金券</th><th>用户</th><th>实付金额</th><th>订单状态</th><th>分账状态</th><th>售后状态</th><th>下单时间</th><th>核销时间</th><th>退款时间</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr style="background:#FFF7F7">
+                <td>DD20260810020</td><td>美邻家政服务</td><td>90元代120元代金券</td><td>135****6670</td><td>¥90</td>
+                <td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-red">分账异常</span></td><td>—</td><td>2026-08-10 09:12</td><td>2026-08-10 14:05</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="前往分账结算页处理">详情</a><span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="前往分账结算页处理">前往分账处理</a></td>
+              </tr>
+              <tr>
+                <td>DD20260810001</td><td>天天简餐</td><td>40元代50元代金券</td><td>135****8812</td><td>¥40</td>
+                <td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-orange">待分账</span></td><td>—</td><td>2026-08-10 08:30</td><td>2026-08-10 12:20</td><td>—</td>
+                <td><a class="action-link" data-pc-action="open-modal" data-target="#refundConfirmModal">发起退款</a><span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="打开订单详情">详情</a></td>
+              </tr>
+              <tr>
+                <td>DD20260809015</td><td>天天简餐</td><td>25元代30元代金券</td><td>135****3321</td><td>¥25</td>
+                <td><span class="tag tag-blue">待使用</span></td><td>未创建</td><td>—</td><td>2026-08-09 18:05</td><td>—</td><td>—</td>
+                <td><a class="action-link" data-pc-action="open-modal" data-target="#refundConfirmModal">发起退款</a><span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="打开订单详情">详情</a></td>
+              </tr>
+              <tr>
+                <td>DD20260807018</td><td>三元里佳宜购物超市</td><td>84元代100元代金券</td><td>135****2233</td><td>¥84</td>
+                <td><span class="tag tag-green">已核销</span></td><td><span class="tag tag-green">已分账</span></td><td>—</td><td>2026-08-07 16:40</td><td>2026-08-07 18:10</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="已分账订单需平台垫付，请前往【退款处理】页创建退款记录">发起退款</a><span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="打开订单详情">详情</a></td>
+              </tr>
+              <tr>
+                <td>DD20260806022</td><td>天天简餐</td><td>40元代50元代金券</td><td>135****9901</td><td>¥40</td>
+                <td><span class="tag tag-orange">退款中</span></td><td>待分账</td><td>微信退款中</td><td>2026-08-06 12:00</td><td>—</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="打开退款详情">退款详情</a></td>
+              </tr>
+              <tr>
+                <td>DD20260808042</td><td>三元里佳宜购物超市</td><td>84元代100元代金券</td><td>135****2233</td><td>¥84</td>
+                <td><span class="tag">已退款</span></td><td>已分账</td><td>已退款待追回</td><td>2026-08-08 16:40</td><td>—</td><td>2026-08-25 10:00</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="打开退款详情">退款详情</a></td>
+              </tr>
+              <tr>
+                <td>DD20260815008</td><td>天天简餐</td><td>免费领50元代金券</td><td>135****5512</td><td>¥0</td>
+                <td><span class="tag tag-green">已核销</span></td><td>不适用</td><td>—</td><td>2026-08-15 09:20</td><td>2026-08-16 11:00</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="打开免费券订单详情">详情</a></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination"><span class="total">共 1,286 条</span><select class="pg-select"><option>10条/页</option></select><button class="pg active" data-pc-action="page">1</button><button class="pg" data-pc-action="page">2</button><button class="pg" data-pc-action="page">3</button></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="overlay" id="refundConfirmModal" hidden>
+  <section class="modal modal-sm">
+    <header class="modal-header"><h3>退款确认</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+    <div class="modal-body">
+      <section class="snapshot-card">
+        <div class="desc-item"><span class="desc-label">订单号</span><span class="desc-value">DD20260814002</span></div>
+        <div class="desc-item"><span class="desc-label">代金券</span><span class="desc-value">天天简餐40元代50元代金券</span></div>
+        <div class="desc-item"><span class="desc-label">实付金额</span><span class="desc-value">¥40.00</span></div>
+        <div class="desc-item"><span class="desc-label">订单状态</span><span class="desc-value"><span class="tag tag-blue">待使用</span></span></div>
+        <div class="desc-item"><span class="desc-label">退款方式</span><span class="desc-value">微信原路退回（冻结资金出款，手续费按比例返还）</span></div>
+      </section>
+      <div class="pc-form-section" style="margin-top:12px">
+        <div class="pc-form-field-dense"><label>退款原因</label><select class="pc-input"><option>用户主动申请</option><option>商家诱导线下交易</option><option>商家拒绝履约</option><option>其他原因（用户自填）</option></select></div>
+        <div class="pc-form-field-dense"><label>备注</label><textarea class="pc-input" rows="2" placeholder="选填，记录客服沟通情况"></textarea></div>
+      </div>
+    </div>
+    <footer class="modal-footer">
+      <button class="btn btn-default" data-pc-action="close-modal">取消</button>
+      <button class="btn btn-primary" data-pc-action="toast" data-message="已发起退款，等待微信结果回调">确认退款</button>
+    </footer>
+  </section>
+</div>
+</body>
+</html>

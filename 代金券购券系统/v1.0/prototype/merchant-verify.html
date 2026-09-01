@@ -1,0 +1,112 @@
+<!-- prototype-states: scan, success, fail -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>商家端 · 核销页（代金券）</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+
+.mv-scan{background:#fff;margin-top:10px;padding:28px 16px;text-align:center}
+.mv-scan-box{width:180px;height:180px;margin:0 auto;border:2px dashed #b7c4d4;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#b7c4d4}
+.mv-scan-box .cam{width:64px;height:64px;border-radius:50%;background:#f2f6fb;display:flex;align-items:center;justify-content:center;color:#5a6a80}
+.mv-scan-tip{margin-top:14px;font-size:13px;color:#86909c}
+.mv-manual{margin-top:8px;font-size:13px;color:var(--m-primary);cursor:pointer}
+
+.mv-result{margin-top:10px;background:#fff;padding:18px 16px}
+.mv-status{display:flex;align-items:center;gap:10px}
+.mv-status-icon{width:44px;height:44px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.mv-status-name{font-size:16px;font-weight:800}
+.mv-status-sub{font-size:12px;color:#86909c;margin-top:3px}
+.mv-rows{margin-top:14px;border-top:1px solid #f2f4f8;padding-top:10px}
+.mv-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
+.mv-row .label{color:#86909c}
+.mv-row .value{font-weight:600}
+.mv-note{margin-top:12px;background:#f7f9fc;border-radius:4px;padding:10px 12px;font-size:12px;color:#86909c;line-height:1.7}
+.mv-actions{margin-top:14px;display:flex;gap:10px}
+</style>
+</head>
+<body>
+
+<div class="yfl-c-root is-blue-nav m-phone">
+<div class="m-phone-screen">
+
+  <div class="m-status-bar">
+    <span class="time">9:41</span>
+    <div class="m-status-icons">
+      <svg width="16" height="10" viewBox="0 0 16 10"><rect y="6" width="3" height="4" rx=".5" fill="currentColor"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="currentColor"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="currentColor"/><rect x="12" width="3" height="10" rx=".5" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="currentColor"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <div class="m-nav-bar">
+    <button class="back" aria-label="返回">‹</button>
+    <span class="title">扫码核销</span>
+    <div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+  </div>
+
+  <div class="m-page-scroll">
+  <main class="m-page-content">
+
+    <!-- 扫码区 -->
+    <section class="mv-scan" id="scanArea">
+      <div class="mv-scan-box"><span class="cam"><span class="yfl-icon yfl-icon--32" data-icon="scan"></span></span></div>
+      <div class="mv-scan-tip">扫描居民出示的核销码（自动识别代金券 / 优惠券）</div>
+      <div class="mv-manual" data-m-action="toast" data-message="打开输入核销码">手动输入核销码</div>
+    </section>
+
+    <!-- 核销结果 -->
+    <section class="mv-result" id="resultArea" style="display:none">
+      <div class="mv-status">
+        <div class="mv-status-icon" id="resultIcon" style="background:#00b578">✓</div>
+        <div>
+          <div class="mv-status-name" id="resultName">核销成功</div>
+          <div class="mv-status-sub" id="resultSub">分账处理中，商家无需再操作收款</div>
+        </div>
+      </div>
+      <div class="mv-rows">
+        <div class="mv-row"><span class="label">代金券</span><span class="value" id="rName">天天简餐40元代50元代金券</span></div>
+        <div class="mv-row"><span class="label">面额</span><span class="value">¥50</span></div>
+        <div class="mv-row"><span class="label">居民实付</span><span class="value">¥40</span></div>
+        <div class="mv-row"><span class="label">核销时间</span><span class="value" id="rTime">2026-08-11 10:20</span></div>
+      </div>
+      <div class="mv-note" id="rNote">券面额 ¥50 已抵扣账单，剩余金额请向居民线下补收。平台抽佣将在分账完成后自动扣取。</div>
+      <div class="mv-actions">
+        <button class="m-action-primary" data-m-action="toast" data-message="继续扫码">继续核销</button>
+      </div>
+    </section>
+
+  </main>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var st = params.get('state') || 'scan';
+  if (st === 'success' || st === 'fail'){
+    document.getElementById('scanArea').style.display = 'none';
+    document.getElementById('resultArea').style.display = 'block';
+  }
+  if (st === 'fail'){
+    var icon = document.getElementById('resultIcon');
+    icon.style.background = '#e9305a';
+    icon.textContent = '!';
+    document.getElementById('resultName').textContent = '核销失败';
+    document.getElementById('resultSub').textContent = '该券不属于本店';
+    document.getElementById('rName').textContent = '其他门店代金券';
+    document.getElementById('rNote').textContent = '请核对券归属门店，确认后重试或联系平台。';
+  }
+})();
+</script>
+</body>
+</html>

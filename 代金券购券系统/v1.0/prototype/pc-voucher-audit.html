@@ -1,0 +1,121 @@
+<!-- prototype-states: list, modal -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC后台 · 代金券审核</title>
+<link rel="stylesheet" href="组件库样式.css">
+<link rel="stylesheet" href="pc-icons.css">
+<script src="pc-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+</style>
+</head>
+<body>
+
+<div class="yfl-pc-root page-wrapper">
+  <header class="header">
+    <div class="header-left"><div class="header-logo">云芳邻管理系统</div><div class="header-hamburger"><span></span><span></span><span></span></div></div>
+    <div class="header-right"><span class="header-right-item">使用指南</span><span class="header-right-item">消息</span><span class="header-right-item"><span class="avatar">管</span>平台管理员</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" data-pc-group>
+      <div class="sidebar-item"><span class="label">工作台</span></div>
+      <div class="sidebar-item"><span class="label">商家管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item expanded"><span class="label">代金券管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-sub">
+        <div class="sidebar-item active" data-pc-action="menu">代金券审核</div>
+        <div class="sidebar-item" data-pc-action="menu">代金券订单</div>
+      </div>
+      <div class="sidebar-item"><span class="label">退款管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">分账结算</span><span class="arrow">›</span></div>
+    </aside>
+    <section class="main">
+      <nav class="tab-bar" data-pc-group><div class="tab-item active" data-pc-action="tab">代金券审核</div><div class="tab-item" data-pc-action="tab">工作台</div></nav>
+      <div class="content">
+        <div class="page-header"><h1 class="page-title">代金券审核</h1><span class="breadcrumb">代金券管理 / 代金券审核</span></div>
+
+        <div class="filter-card">
+          <div class="filter-row">
+            <div class="filter-field"><label>代金券名称</label><input placeholder="请输入券名"></div>
+            <div class="filter-field"><label>商家</label><input placeholder="请输入商家名称"></div>
+            <div class="filter-field"><label>审核状态</label><select><option>待审核</option><option>已通过</option><option>已驳回</option></select></div>
+            <div class="filter-field"><label>提交时间</label><input placeholder="请选择日期范围"></div>
+            <button class="btn btn-primary" data-pc-action="query">查询</button>
+            <button class="btn btn-default" data-pc-action="reset">重置</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="op-bar"><span style="font-size:13px;color:#86909C">待审核 <b style="color:#FF7D00">5</b> 条，请及时处理</span></div>
+          <table class="pc-table">
+            <thead><tr><th>代金券名称</th><th>商家</th><th>面额</th><th>售价</th><th>库存</th><th>有效期</th><th>提交时间</th><th>审核状态</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>天天简餐40元代50元代金券</td><td>天天简餐</td><td>¥50</td><td>¥40</td><td>1000</td><td>购后30天</td><td>2026-08-10 16:20</td>
+                <td><span class="tag tag-orange">待审核</span></td>
+                <td><a class="action-link" data-pc-action="open-modal" data-target="#auditModal">审核</a></td>
+              </tr>
+              <tr>
+                <td>美邻家政90元代120元代金券</td><td>美邻家政服务</td><td>¥120</td><td>¥90</td><td>300</td><td>购后45天</td><td>2026-08-10 15:02</td>
+                <td><span class="tag tag-orange">待审核</span></td>
+                <td><a class="action-link" data-pc-action="open-modal" data-target="#auditModal">审核</a></td>
+              </tr>
+              <tr>
+                <td>三元里佳宜84元代100元代金券</td><td>三元里佳宜购物超市</td><td>¥100</td><td>¥84</td><td>2000</td><td>购后30天</td><td>2026-08-09 18:30</td>
+                <td><span class="tag tag-green">已通过</span></td>
+                <td><a class="action-link" data-pc-action="toast" data-message="已下架">下架</a></td>
+              </tr>
+              <tr>
+                <td>羊城鲜果10元代20元代金券</td><td>羊城鲜果档</td><td>¥20</td><td>¥10</td><td>500</td><td>购后15天</td><td>2026-08-08 10:00</td>
+                <td><span class="tag tag-red">已驳回</span></td>
+                <td><a class="action-link" data-pc-action="toast" data-message="驳回原因：优惠力度异常">驳回原因</a></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination"><span class="total">共 42 条</span><select class="pg-select"><option>10条/页</option></select><button class="pg active" data-pc-action="page">1</button><button class="pg" data-pc-action="page">2</button><button class="pg" data-pc-action="page">3</button></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="overlay" id="auditModal" hidden>
+  <section class="modal modal-md">
+    <header class="modal-header"><h3>代金券审核</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+    <div class="modal-body">
+      <section class="snapshot-card">
+        <div class="desc-grid">
+          <div class="desc-item"><span class="desc-label">代金券名称</span><span class="desc-value bold">天天简餐40元代50元代金券</span></div>
+          <div class="desc-item"><span class="desc-label">商家</span><span class="desc-value">天天简餐（南医大店）</span></div>
+          <div class="desc-item"><span class="desc-label">面额 / 售价</span><span class="desc-value">¥50 / ¥40</span></div>
+          <div class="desc-item"><span class="desc-label">库存</span><span class="desc-value">1000 张</span></div>
+          
+          <div class="desc-item"><span class="desc-label">有效期</span><span class="desc-value">购买后 22 天内有效</span></div>
+          <div class="desc-item"><span class="desc-label">使用说明</span><span class="desc-value">每单限用1张；到店出示核销码；超出面额部分到店补收</span></div>
+          <div class="desc-item"><span class="desc-label">商家进件状态</span><span class="desc-value"><span class="tag tag-green">已完成</span></span></div>
+        </div>
+      </section>
+    </div>
+    <footer class="modal-footer">
+      <button class="btn btn-default" data-pc-action="toast" data-message="已驳回，商家端可见原因">驳回</button>
+      <button class="btn btn-primary" data-pc-action="toast" data-message="已通过并上架">通过</button>
+    </footer>
+  </section>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  if (params.get('state') === 'modal'){
+    document.getElementById('auditModal').hidden = false;
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!-- prototype-states: default, order-reddot -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>居民端 · 个人中心改造</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+/* 官方「我的」页：整页 flex column，无 absolute */
+.pf-screen{height:var(--m-screen-height);display:flex;flex-direction:column;background:#F5F7FA;overflow:hidden}
+.pf-scroll{flex:1;overflow-y:auto;background:linear-gradient(180deg,#D6E6FB 0%,#EAF2FD 180px,#F5F7FA 260px);scrollbar-width:none}
+.pf-scroll::-webkit-scrollbar{display:none}
+.pf-head{display:flex;align-items:flex-start;gap:14px;padding:16px 16px 18px}
+.pf-avatar{width:64px;height:64px;border-radius:50%;border:2px solid #fff;background:linear-gradient(#F6C7AE 0 42%,#77BAF2 42%);flex-shrink:0;box-sizing:border-box}
+.pf-right{flex:1;min-width:0;display:flex;flex-direction:column;gap:7px;padding-top:2px}
+.pf-name-row{display:flex;align-items:center;gap:6px}
+.pf-name{font-size:17px;font-weight:700;color:#1D2733}
+.pf-sex{width:16px;height:16px;border-radius:50%;background:var(--m-primary);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
+.pf-tag-row{display:flex;align-items:center;gap:6px;min-width:0}
+.pf-tag{height:16px;padding:0 6px;border-radius:8px;display:inline-flex;align-items:center;color:#fff;font-size:10px;font-weight:600;flex-shrink:0}
+.pf-tag.orange{background:#FFB938}
+.pf-tag.blue{background:var(--m-primary)}
+.pf-addr{color:var(--m-text-2);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pf-link{margin-left:auto;flex-shrink:0;padding:5px 12px;border-radius:16px 0 0 16px;background:rgba(255,255,255,.9);color:var(--m-text-2);font-size:12px;align-self:flex-start;margin-top:-2px;margin-right:-16px}
+.pf-points{margin:0 12px;height:88px;position:relative;overflow:hidden;color:#fff;background:linear-gradient(135deg,#4A90F7,#3168D4);border-radius:12px;box-shadow:0 4px 16px rgba(63,134,245,.18);flex-shrink:0}
+.pf-points-label{position:absolute;left:24px;top:16px;font-size:12px;opacity:.9}
+.pf-points-value{position:absolute;left:28px;top:34px;font-size:20px;font-weight:700}
+.pf-points-worth{position:absolute;left:18px;top:58px;font-size:10px;opacity:.76}
+.pf-points-action{position:absolute;top:16px;display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff}
+.pf-points-action.exchange{left:170px}
+.pf-points-action.earn{left:280px}
+.pf-points-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#fff;font-size:16px}
+.pf-points-text{font-size:12px;white-space:nowrap}
+.pf-orders{margin:14px 12px 0;background:#fff;border-radius:14px;padding:14px 8px 12px;box-shadow:0 2px 10px rgba(30,50,90,.04)}
+.pf-orders-title{font-size:14px;font-weight:700;color:#1D2733;padding:0 10px 12px}
+.pf-orders-grid{display:grid;grid-template-columns:repeat(4,1fr)}
+.pf-order-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;position:relative}
+.pf-order-icon{width:26px;height:26px;color:#4E5969;display:flex;align-items:center;justify-content:center;position:relative}
+.pf-order-badge{position:absolute;top:-6px;right:-10px;min-width:16px;height:16px;border-radius:8px;background:#E9305A;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 4px;box-sizing:border-box}
+.pf-order-badge[hidden]{display:none}
+.pf-order-label{font-size:12px;color:#1D2733}
+.pf-grid-card{margin:14px 12px 0;background:#fff;border-radius:14px;padding:18px 8px 8px;box-shadow:0 2px 10px rgba(30,50,90,.04)}
+.pf-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:22px 4px}
+.pf-grid-item{display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer}
+.pf-grid-icon{width:26px;height:26px;color:#4E5969;display:flex;align-items:center;justify-content:center;position:relative}
+.pf-grid-icon .dot{position:absolute;top:-3px;right:-5px;min-width:8px;height:8px;border-radius:4px;background:#e9305a}
+.pf-grid-icon .dot[hidden]{display:none}
+.pf-grid-label{font-size:13px;color:#1D2733;line-height:1}
+.pf-bottom{display:flex;align-items:center;background:#fff;border-top:1px solid #F2F3F5;padding:6px 12px 10px;flex-shrink:0}
+.pf-tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;color:#86909C}
+.pf-tab.active{color:var(--m-primary)}
+.pf-tab img{width:24px;height:24px}
+</style>
+</head>
+<body>
+
+<div class="yfl-c-root is-blue-nav">
+<div class="pf-screen">
+
+  <div class="m-status-bar">
+    <span class="time">9:41</span>
+    <div class="m-status-icons">
+      <svg width="16" height="10" viewBox="0 0 16 10"><rect y="6" width="3" height="4" rx=".5" fill="currentColor"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="currentColor"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="currentColor"/><rect x="12" width="3" height="10" rx=".5" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="currentColor"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <div class="m-nav-bar">
+    <span class="title">云芳邻</span>
+    <div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+  </div>
+
+  <div class="pf-scroll">
+    <div class="pf-head">
+      <div class="pf-avatar"></div>
+      <div class="pf-right">
+        <div class="pf-name-row"><span class="pf-name">陈阿姨</span><span class="pf-sex">♀</span></div>
+        <div class="pf-tag-row"><span class="pf-tag orange">居民</span><span class="pf-addr">白云区-白云湖街道-A社区</span></div>
+        <div class="pf-tag-row"><span class="pf-tag blue">管理员</span><span class="pf-addr">白云区-白云湖街道-A社区</span></div>
+      </div>
+      <span class="pf-link">个人信息</span>
+    </div>
+
+    <div class="pf-points">
+      <div class="pf-points-label">我的积分</div>
+      <div class="pf-points-value">1988</div>
+      <div class="pf-points-worth">（价值19.88元）</div>
+      <div class="pf-points-action exchange"><span class="pf-points-icon">🎁</span><span class="pf-points-text">积分兑换</span></div>
+      <div class="pf-points-action earn"><span class="pf-points-icon">🪙</span><span class="pf-points-text">去赚积分</span></div>
+    </div>
+
+    <!-- 我的代金券订单（状态直达入口，红角标=待处理数量） -->
+    <div class="pf-orders">
+      <div class="pf-orders-title">代金券</div>
+      <div class="pf-orders-grid">
+        <div class="pf-order-item" data-m-action="toast" data-message="进入待付款订单">
+          <span class="pf-order-icon"><span class="yfl-icon yfl-icon--22" data-icon="card-wallet"></span><span class="pf-order-badge" id="badgePay">1</span></span>
+          <span class="pf-order-label">待付款</span>
+        </div>
+        <div class="pf-order-item" data-m-action="toast" data-message="进入待使用订单">
+          <span class="pf-order-icon"><span class="yfl-icon yfl-icon--22" data-icon="market"></span><span class="pf-order-badge" id="badgeUse">2</span></span>
+          <span class="pf-order-label">待使用</span>
+        </div>
+        <div class="pf-order-item" data-m-action="toast" data-message="进入已退款订单">
+          <span class="pf-order-icon"><span class="yfl-icon yfl-icon--22" data-icon="coupon-add"></span></span>
+          <span class="pf-order-label">已退款</span>
+        </div>
+        <div class="pf-order-item" data-m-action="toast" data-message="进入全部订单">
+          <span class="pf-order-icon"><span class="yfl-icon yfl-icon--22" data-icon="guide"></span></span>
+          <span class="pf-order-label">全部订单</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="pf-grid-card">
+      <div class="pf-grid">
+        <div class="pf-grid-item" data-m-action="toast" data-message="进入我的卡包">
+          <span class="pf-grid-icon"><span class="yfl-icon yfl-icon--22" data-icon="card-wallet"></span></span>
+          <span class="pf-grid-label">我的卡包</span>
+        </div>
+        <div class="pf-grid-item" data-m-action="toast" data-message="进入领券中心">
+          <span class="pf-grid-icon"><span class="yfl-icon yfl-icon--22" data-icon="coupon-add"></span></span>
+          <span class="pf-grid-label">领券中心</span>
+        </div>
+        <div class="pf-grid-item" data-m-action="toast" data-message="进入商家管理后台">
+          <span class="pf-grid-icon"><span class="yfl-icon yfl-icon--22" data-icon="store"></span></span>
+          <span class="pf-grid-label">商家后台</span>
+        </div>
+        <div class="pf-grid-item" data-m-action="toast" data-message="我的活动"><span class="pf-grid-icon"><span class="yfl-icon yfl-icon--22" data-icon="activity-list"></span></span><span class="pf-grid-label">我的活动</span></div>
+        <div class="pf-grid-item" data-m-action="toast" data-message="消息中心"><span class="pf-grid-icon"><span class="yfl-icon yfl-icon--22" data-icon="message"></span></span><span class="pf-grid-label">消息中心</span></div>
+        <div class="pf-grid-item" data-m-action="toast" data-message="消息订阅"><span class="pf-grid-icon"><span class="yfl-icon yfl-icon--22" data-icon="notification"></span></span><span class="pf-grid-label">消息订阅</span></div>
+        <div class="pf-grid-item" data-m-action="toast" data-message="邀请码"><span class="pf-grid-icon"><span class="yfl-icon yfl-icon--22" data-icon="guide"></span></span><span class="pf-grid-label">邀请码</span></div>
+        <div class="pf-grid-item" data-m-action="toast" data-message="联系客服"><span class="pf-grid-icon"><span class="yfl-icon yfl-icon--22" data-icon="help"></span></span><span class="pf-grid-label">联系客服</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pf-bottom">
+    <div class="pf-tab" data-m-action="tab"><img src="icons/icon_home_selected@2x.png" alt=""><span>首页</span></div>
+    <div class="pf-tab" data-m-action="tab"><img src="icons/icon_service_default@2x.png" alt=""><span>服务</span></div>
+    <div class="pf-tab" data-m-action="tab"><img src="icons/icon_neighbor_default@2x.png" alt=""><span>邻里</span></div>
+    <div class="pf-tab" data-m-action="tab"><img src="icons/icon_market_default@2x.png" alt=""><span>市集</span></div>
+    <div class="pf-tab active" data-m-action="tab"><img src="icons/icon_my_default@2x.png" alt=""><span>我的</span></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var st = params.get('state') || 'default';
+  if (st === 'order-reddot'){
+    // 红点态演示：待付款/待使用角标显示（默认已显示，此态用于强制展示）
+    var b1 = document.getElementById('badgePay');
+    var b2 = document.getElementById('badgeUse');
+    if (b1) b1.hidden = false;
+    if (b2) b2.hidden = false;
+  }
+})();
+</script>
+</body>
+</html>

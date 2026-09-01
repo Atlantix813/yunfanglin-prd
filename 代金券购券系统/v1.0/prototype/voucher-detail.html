@@ -1,0 +1,242 @@
+<!-- prototype-states: onsale, free, soldout, offshelf, newcomer -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>居民端 · 代金券详情页</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+
+/* 头部背景：暖色美食氛围（生活气息） */
+.vd-bg{position:relative;height:150px;background:linear-gradient(160deg,#ffe3c9 0%,#ffd0a3 55%,#ffbf85 100%);overflow:hidden}
+.vd-bg .circle{position:absolute;border-radius:50%;background:rgba(255,255,255,.35)}
+.vd-bg .c1{width:110px;height:110px;right:-24px;top:-30px}
+.vd-bg .c2{width:64px;height:64px;left:24px;top:70px;background:rgba(255,255,255,.28)}
+.vd-bg .c3{width:34px;height:34px;right:76px;bottom:-10px;background:rgba(255,255,255,.30)}
+.vd-bg .steam{position:absolute;width:10px;height:10px;border-radius:50%;background:rgba(255,255,255,.55);animation:none}
+.vd-bg .s1{left:60px;top:34px}
+.vd-bg .s2{left:100px;top:18px}
+.vd-bg .s3{right:120px;top:40px}
+.vd-bg-text{position:absolute;left:16px;bottom:10px;color:rgba(180,90,30,.55);font-size:12px}
+
+/* 券主体卡片（覆盖在背景上） */
+.vd-card{position:relative;margin:-44px 12px 0;border-radius:12px;background:#fff;padding:16px;box-shadow:0 6px 20px rgba(120,60,20,.12)}
+.vd-tags{display:flex;gap:6px}
+.vd-tag{border-radius:3px;padding:1px 6px;font-size:11px;line-height:16px}
+.vd-tag.cat{color:#e9305a;border:1px solid #e9305a;background:#fff5f6}
+.vd-tag.off{color:#86909c;border:1px solid #e0e4ea;background:#fafbfc}.vd-tag.newcomer{color:#FF8F1F;border:1px solid #FF8F1F;background:#FFF7EC}
+.vd-name{margin-top:8px;font-size:17px;font-weight:800;color:var(--m-text);line-height:1.45}
+.vd-price{display:flex;align-items:baseline;gap:8px;margin-top:8px}
+.vd-now{font-size:32px;font-weight:800;color:#e9305a}
+.vd-now small{font-size:16px}
+.vd-discount{font-size:12px;color:#e9305a;border:1px solid #e9305a;border-radius:3px;padding:1px 5px}
+.vd-origin{font-size:14px;color:#b0b8c4;text-decoration:line-through}
+.vd-perks{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+.vd-perk{display:flex;align-items:center;gap:3px;font-size:11px;color:#00a75c}
+.vd-perk .yfl-icon{color:#00a75c}
+.vd-sale{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px dashed #f0f2f5;font-size:11px;color:#86909c}
+.vd-progress{flex:1;height:5px;border-radius:3px;background:#f2f4f8;overflow:hidden}
+.vd-progress i{display:block;height:100%;background:#ff8f1f}
+
+/* 区块卡 */
+.vd-section{margin:10px 12px 0;background:#fff;border-radius:10px;padding:14px 16px}
+.vd-title{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
+.vd-title .more{font-size:12px;color:var(--m-primary);font-weight:400}
+.vd-shop{display:flex;align-items:center;gap:10px}
+.vd-shop-logo{width:42px;height:42px;border-radius:50%;background:#fff1ec;color:#e9654a;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
+.vd-shop-name{font-size:14px;font-weight:600}
+.vd-shop-meta{font-size:11px;color:#86909c;margin-top:3px}
+.vd-shop-arrow{color:#c0c8d4;font-size:14px;margin-left:auto}
+.vd-rows{margin-top:6px}
+.vd-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;font-size:13px}
+.vd-row .label{color:#86909c}
+.vd-row .value{color:var(--m-text);text-align:right;max-width:70%}
+.vd-rule-text{font-size:13px;color:var(--m-text);line-height:1.9}
+.vd-rule-text .danger{color:#e9305a}
+/* 邻居评价 */
+.vd-comments{display:flex;gap:8px;flex-wrap:wrap}
+.vd-comment{font-size:12px;padding:5px 12px;border-radius:14px}
+.vd-comment.c1{background:#fff2e8;color:#d46b08}
+.vd-comment.c2{background:#e8f7ef;color:#00a75c}
+.vd-comment.c3{background:#e8f1ff;color:#2f6fed}
+.vd-comment.c4{background:#f4eefb;color:#8b5cf6}
+/* 底部操作条 */
+.vd-bar{position:fixed;left:0;right:0;bottom:0;width:375px;margin:0 auto;height:56px;background:#fff;border-top:1px solid #f0f2f5;display:flex;align-items:center;padding:0 16px;gap:14px;box-sizing:border-box}
+.vd-bar-price{display:flex;flex-direction:column;line-height:1.25}
+.vd-bar-now{font-size:22px;font-weight:800;color:#e9305a}
+.vd-bar-now small{font-size:13px}
+.vd-bar-sub{font-size:11px;color:#b0b8c4}
+.vd-buy{flex:1;height:40px;border:0;border-radius:20px;color:#fff;font-size:16px;font-weight:700;background:linear-gradient(90deg,#ff6b4a,#f53f3f);cursor:pointer}
+.vd-buy.disabled{background:#c9cdd4}.vd-free-label{display:none;font-size:22px;font-weight:800;color:#00a75c}.vd-free .vd-now,.vd-free .vd-discount,.vd-free .vd-origin,.vd-free .vd-bar-sub{display:none}.vd-free .vd-free-label{display:inline}.vd-free .vd-buy{background:linear-gradient(90deg,#19b578,#00a75c)}.vd-free .vd-title:first-child .more{display:none}
+.vd-page{padding-bottom:70px}
+.vd-rule-mt{margin-top:6px}
+.vd-share{position:absolute;right:104px;top:13px;color:var(--m-text-3)}
+.vd-error-box{width:280px;background:#fff;border-radius:12px;padding:20px 16px;text-align:center}.vd-error-title{font-size:15px;font-weight:700;color:#1D2733}.vd-error-msg{font-size:13px;color:#86909C;margin-top:10px;line-height:1.6}.vd-error-btn{margin-top:16px;width:100%;height:38px;border:0;border-radius:19px;background:#3491FA;color:#fff;font-size:14px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div class="yfl-c-root is-blue-nav m-phone">
+<div class="m-phone-screen">
+
+  <div class="m-status-bar">
+    <span class="time">9:41</span>
+    <div class="m-status-icons">
+      <svg width="16" height="10" viewBox="0 0 16 10"><rect y="6" width="3" height="4" rx=".5" fill="currentColor"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="currentColor"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="currentColor"/><rect x="12" width="3" height="10" rx=".5" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="currentColor"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <div class="m-nav-bar">
+    <button class="back" aria-label="返回">‹</button>
+    <span class="title">代金券详情</span>
+    <span class="yfl-icon yfl-icon--18 vd-share" data-icon="share" aria-hidden="true"></span>
+    <div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+  </div>
+
+  <div class="m-page-scroll">
+  <main class="m-page-content vd-page">
+
+    <!-- 头部背景：暖色美食氛围 -->
+    <div class="vd-bg">
+      <span class="circle c1"></span>
+      <span class="circle c2"></span>
+      <span class="circle c3"></span>
+      <span class="steam s1"></span>
+      <span class="steam s2"></span>
+      <span class="steam s3"></span>
+      <span class="vd-bg-text">热气腾腾 · 到家门口的美味</span>
+    </div>
+
+    <!-- 券主体卡片 -->
+    <section class="vd-card">
+      <div class="vd-tags">
+        <span class="vd-tag cat">餐饮</span><span class="vd-tag newcomer">新客券</span>
+        <span class="vd-tag off">天天优惠</span>
+      </div>
+      <div class="vd-name" id="vdName">天天简餐40元代50元代金券</div>
+      <div class="vd-price">
+        <span class="vd-now"><small>¥</small>40</span>
+        <span class="vd-free-label">免费</span>
+         <span class="vd-discount">8折</span>
+        <span class="vd-origin">¥50</span>
+      </div>
+      <div class="vd-perks">
+        <span class="vd-perk"><span class="yfl-icon yfl-icon--14" data-icon="check"></span>随时退</span>
+        <span class="vd-perk"><span class="yfl-icon yfl-icon--14" data-icon="check"></span>免预约</span>
+        <span class="vd-perk"><span class="yfl-icon yfl-icon--14" data-icon="check"></span>每单限 1 张</span>
+      </div>
+      <div class="vd-sale">
+        <span>已售 356</span>
+        <div class="vd-progress"><i style="width:62%"></i></div>
+        <span>已售 62%</span>
+      </div>
+    </section>
+
+    <!-- 适用门店 -->
+    <section class="vd-section">
+      <div class="vd-title">适用门店 <span class="more">共 2 家 ›</span></div>
+      <div class="vd-shop" data-m-action="toast" data-message="进入店铺首页">
+        <div class="vd-shop-logo">简餐</div>
+        <div>
+          <div class="vd-shop-name">天天简餐（南医大店）</div>
+          <div class="vd-shop-meta">营业中 · 距您 1.2km · 南医大社区 19 栋底商 102</div>
+        </div>
+        <span class="vd-shop-arrow">›</span>
+      </div>
+    </section>
+
+    <!-- 购买须知 -->
+    <section class="vd-section">
+      <div class="vd-title">购买须知</div>
+      <div class="vd-rows">
+        <div class="vd-row"><span class="label">有效期</span><span class="value">购买后 22 天内有效</span></div>
+        <div class="vd-row"><span class="label">使用时间</span><span class="value">每天 10:00 - 21:00</span></div>
+        <div class="vd-row"><span class="label">剩余库存</span><span class="value">356 张</span></div>
+      </div>
+      <div class="vd-rule-text vd-rule-mt" id="ruleText">
+        1. 到店消费结账时出示核销码，商家扫码核销，券面额直接抵扣账单。<br>
+        2. 账单超出券面额的部分由商家线下补收。<br>
+        3. <span class="danger">未核销可申请退款，过期未使用将自动原路退款。</span>
+      </div>
+    </section>
+
+    <!-- 邻居评价 -->
+    <section class="vd-section">
+      <div class="vd-title">邻居怎么说</div>
+      <div class="vd-comments">
+        <span class="vd-comment c1">味道好</span>
+        <span class="vd-comment c2">服务热情</span>
+        <span class="vd-comment c3">离得近</span>
+        <span class="vd-comment c4">性价比高</span>
+        <span class="vd-comment c1">环境干净</span>
+      </div>
+    </section>
+
+  </main>
+  </div>
+
+  <!-- 底部操作条 -->
+  <div class="vd-bar">
+    <div class="vd-bar-price">
+      <span class="vd-bar-now"><small>¥</small>40</span>
+      <span class="vd-free-label">免费</span>
+       <span class="vd-bar-sub">8折 · 原价 ¥50</span>
+    </div>
+    <button class="vd-buy" id="buyBtn" data-m-action="toast" data-message="进入订单确认页">立即购买</button>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var st = params.get('state') || 'onsale';
+  var btn = document.getElementById('buyBtn');
+  if (st === 'free'){
+    document.querySelector('.m-phone-screen').classList.add('vd-free');
+    document.getElementById('vdName').textContent = '社区暖心餐饮免费领 50 元代金券';
+    document.querySelector('.vd-perks').innerHTML = '<span class="vd-perk"><span class="yfl-icon yfl-icon--14" data-icon="check"></span>免费领取</span><span class="vd-perk"><span class="yfl-icon yfl-icon--14" data-icon="check"></span>到店核销</span><span class="vd-perk"><span class="yfl-icon yfl-icon--14" data-icon="check"></span>每人限领 1 张</span>';
+    document.getElementById('ruleText').innerHTML = '1. 领取后生成 0 元订单，到店消费时出示核销码。<br>2. 券面额直接抵扣账单，超出部分由商家线下补收。<br>3. <span class="danger">免费券过期自动失效，不产生退款。</span>';
+    btn.textContent = '免费领取';
+    btn.dataset.message = '已领取，进入订单详情';
+  }
+  if (st === 'soldout'){
+    btn.className = 'vd-buy disabled';
+    btn.textContent = '已售罄';
+    btn.disabled = true;
+  }
+  if (st === 'offshelf'){
+    btn.className = 'vd-buy disabled';
+    btn.textContent = '商品已下架';
+    btn.disabled = true;
+  }
+})();
+</script>
+
+<div class="vd-dialog" id="newcomerError" hidden><div class="vd-error-box"><div class="vd-error-title">无法购买</div><div class="vd-error-msg">该券仅限新客购买<br>您已在本店核销过代金券，不符合新客条件</div><button class="vd-error-btn" id="closeNewcomerError">我知道了</button></div></div>
+<script>
+(function(){
+  var params=new URLSearchParams(location.search), st=params.get('state');
+  if(st==='newcomer'){
+    var buy=document.getElementById('buyBtn');
+    var err=document.getElementById('newcomerError');
+    if(buy&&err){
+      buy.dataset.mAction='';
+      buy.addEventListener('click',function(){ err.hidden=false; });
+      document.getElementById('closeNewcomerError').addEventListener('click',function(){ err.hidden=true; });
+      err.addEventListener('click',function(e){ if(e.target===err) err.hidden=true; });
+    }
+  }
+})();
+</script>
+</body>
+</html>

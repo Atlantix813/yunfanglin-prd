@@ -1,0 +1,35 @@
+/* 由图标工具.mjs根据图标清单生成，请勿手工修改。 */
+.yfl-icon{display:inline-block;width:1em;height:1em;flex:0 0 auto;background-color:currentColor;-webkit-mask-image:var(--yfl-icon);mask-image:var(--yfl-icon);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:center;mask-position:center;-webkit-mask-size:contain;mask-size:contain;vertical-align:-.125em}
+.yfl-icon--14{width:14px;height:14px}
+.yfl-icon--16{width:16px;height:16px}
+.yfl-icon--18{width:18px;height:18px}
+.yfl-icon--20{width:20px;height:20px}
+.yfl-icon--24{width:24px;height:24px}
+.yfl-pc-root .yfl-icon[data-icon="add"]{--yfl-icon:url("./icons/pc/add.svg")}
+.yfl-pc-root .yfl-icon[data-icon="approved"]{--yfl-icon:url("./icons/pc/approved.svg")}
+.yfl-pc-root .yfl-icon[data-icon="calendar"]{--yfl-icon:url("./icons/pc/calendar.svg")}
+.yfl-pc-root .yfl-icon[data-icon="chevron-left"]{--yfl-icon:url("./icons/pc/chevron-left.svg")}
+.yfl-pc-root .yfl-icon[data-icon="chevron-right"]{--yfl-icon:url("./icons/pc/chevron-right.svg")}
+.yfl-pc-root .yfl-icon[data-icon="close"]{--yfl-icon:url("./icons/pc/close.svg")}
+.yfl-pc-root .yfl-icon[data-icon="delete"]{--yfl-icon:url("./icons/pc/delete.svg")}
+.yfl-pc-root .yfl-icon[data-icon="download"]{--yfl-icon:url("./icons/pc/download.svg")}
+.yfl-pc-root .yfl-icon[data-icon="edit"]{--yfl-icon:url("./icons/pc/edit.svg")}
+.yfl-pc-root .yfl-icon[data-icon="empty"]{--yfl-icon:url("./icons/pc/empty.svg")}
+.yfl-pc-root .yfl-icon[data-icon="export"]{--yfl-icon:url("./icons/pc/export.svg")}
+.yfl-pc-root .yfl-icon[data-icon="filter"]{--yfl-icon:url("./icons/pc/filter.svg")}
+.yfl-pc-root .yfl-icon[data-icon="guide"]{--yfl-icon:url("./icons/pc/guide.svg")}
+.yfl-pc-root .yfl-icon[data-icon="home"]{--yfl-icon:url("./icons/pc/home.svg")}
+.yfl-pc-root .yfl-icon[data-icon="image"]{--yfl-icon:url("./icons/pc/image.svg")}
+.yfl-pc-root .yfl-icon[data-icon="info"]{--yfl-icon:url("./icons/pc/info.svg")}
+.yfl-pc-root .yfl-icon[data-icon="maximize"]{--yfl-icon:url("./icons/pc/maximize.svg")}
+.yfl-pc-root .yfl-icon[data-icon="message"]{--yfl-icon:url("./icons/pc/message.svg")}
+.yfl-pc-root .yfl-icon[data-icon="pending"]{--yfl-icon:url("./icons/pc/pending.svg")}
+.yfl-pc-root .yfl-icon[data-icon="play"]{--yfl-icon:url("./icons/pc/play.svg")}
+.yfl-pc-root .yfl-icon[data-icon="reset"]{--yfl-icon:url("./icons/pc/reset.svg")}
+.yfl-pc-root .yfl-icon[data-icon="review"]{--yfl-icon:url("./icons/pc/review.svg")}
+.yfl-pc-root .yfl-icon[data-icon="search"]{--yfl-icon:url("./icons/pc/search.svg")}
+.yfl-pc-root .yfl-icon[data-icon="statistics"]{--yfl-icon:url("./icons/pc/statistics.svg")}
+.yfl-pc-root .yfl-icon[data-icon="store"]{--yfl-icon:url("./icons/pc/store.svg")}
+.yfl-pc-root .yfl-icon[data-icon="upload"]{--yfl-icon:url("./icons/pc/upload.svg")}
+.yfl-pc-root .yfl-icon[data-icon="users"]{--yfl-icon:url("./icons/pc/users.svg")}
+.yfl-pc-root .yfl-icon[data-icon="view"]{--yfl-icon:url("./icons/pc/view.svg")}

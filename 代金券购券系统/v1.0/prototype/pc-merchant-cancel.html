@@ -1,0 +1,122 @@
+<!-- prototype-states: list, pending -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC后台 · 商家注销</title>
+<link rel="stylesheet" href="组件库样式.css">
+<link rel="stylesheet" href="pc-icons.css">
+<script src="pc-components.js" defer></script>
+</head>
+<body>
+
+<div class="yfl-pc-root page-wrapper">
+  <header class="header">
+    <div class="header-left"><div class="header-logo">云芳邻管理系统</div><div class="header-hamburger"><span></span><span></span><span></span></div></div>
+    <div class="header-right"><span class="header-right-item">使用指南</span><span class="header-right-item">消息</span><span class="header-right-item"><span class="avatar">管</span>平台管理员</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" data-pc-group>
+      <div class="sidebar-item"><span class="label">工作台</span></div>
+      <div class="sidebar-item expanded"><span class="label">商家管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-sub">
+        <div class="sidebar-item"><span class="label">商家列表</span></div>
+        <div class="sidebar-item"><span class="label">商家结算账户修改</span></div>
+        <div class="sidebar-item active" data-pc-action="menu">商家注销</div>
+        <div class="sidebar-item"><span class="label">商家进件</span></div>
+      </div>
+      <div class="sidebar-item"><span class="label">代金券管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">退款管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">分账结算</span><span class="arrow">›</span></div>
+    </aside>
+    <section class="main">
+      <nav class="tab-bar" data-pc-group><div class="tab-item active" data-pc-action="tab">商家注销</div><div class="tab-item" data-pc-action="tab">工作台</div></nav>
+      <div class="content">
+        <div class="page-header"><h1 class="page-title">商家注销</h1><span class="breadcrumb">商家管理 / 商家注销</span></div>
+
+        <div class="filter-card">
+          <div class="filter-row">
+            <div class="filter-field"><label>商家名称</label><input class="pc-input" placeholder="请输入商家名称"></div>
+            <div class="filter-field"><label>注销状态</label><select class="pc-input"><option>全部</option><option>审核中</option><option>审核驳回</option><option>注销成功</option></select></div>
+            <div class="filter-field"><label>提交时间</label><input class="pc-input" type="date"></div>
+            <button class="btn btn-primary" data-pc-action="query">查询</button>
+            <button class="btn btn-default" data-pc-action="reset">重置</button>
+          </div>
+        </div>
+
+        <div class="table-card">
+          <div style="margin-bottom:12px"><button class="btn btn-primary" data-demo-intercept data-merchant="康倍达药房" data-message="当前商家有处于进行中的注销流程，是否查看？（演示：康倍达药房 审核中）">演示：发起注销（拦截）</button><span style="font-size:13px;color:#86909c;margin-left:10px">模拟商家列表点击【申请注销】时存在审核中申请的拦截效果</span></div>
+          <table class="pc-table">
+            <thead><tr><th>注销申请单号</th><th>商家</th><th>特约商户号</th><th>清账校验</th><th>注销状态</th><th>驳回原因</th><th>提交时间</th><th>操作</th></tr></thead>
+            <tbody id="listBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="overlay" id="pendingModal" hidden>
+    <section class="modal modal-sm">
+      <header class="modal-header"><h3>提示</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+      <div class="modal-body"><p id="pendingMsg" style="font-size:14px;line-height:1.7;color:#465568"></p></div>
+      <footer class="modal-footer">
+        <button class="btn btn-default" data-pc-action="close-modal">取消</button>
+        <button class="btn btn-primary" id="gotoView">前往查看</button>
+      </footer>
+    </section>
+  </div>
+
+<script>
+(function(){
+  var ROWS = [
+    { no:'MC20260824001', name:'邻家小厨', mch:'1900009999', check:'五清单全部通过', state:'success', reason:'—', time:'2026-08-24 14:00' },
+    { no:'MC20260823002', name:'康倍达药房', mch:'—', check:'五清单全部通过', state:'auditing', reason:'—', time:'2026-08-23 11:00' },
+    { no:'MC20260822001', name:'老班长快餐', mch:'1900007777', check:'五清单全部通过', state:'reject', reason:'纸质注销申请书盖章不清晰', time:'2026-08-22 09:30' }
+  ];
+  var STATE = {
+    auditing: { label:'审核中', cls:'tag-blue' },
+    reject:   { label:'审核驳回', cls:'tag-red' },
+    success:  { label:'注销成功', cls:'tag-green' }
+  };
+  var tbody = document.getElementById('listBody');
+  function render(){
+    tbody.innerHTML = ROWS.map(function(row){
+      var st = STATE[row.state];
+      var ops = (row.state==='auditing' ? '<a class="action-link" data-pc-action="toast" data-message="查看申请详情">查看申请</a>' :
+        row.state==='reject' ? '<a class="action-link" data-pc-action="toast" data-message="查看申请详情">查看申请</a><span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="已换单重新提交注销申请">重新提交</a>' :
+        '<a class="action-link" data-pc-action="toast" data-message="查看申请详情（遗留资金已清退）">查看申请</a>');
+      return '<tr>' +
+        '<td>'+row.no+'</td>' +
+        '<td>'+row.name+'</td>' +
+        '<td>'+row.mch+'</td>' +
+        '<td class="pc-mo-sub">'+row.check+'</td>' +
+        '<td><span class="tag '+st.cls+'">'+st.label+'</span></td>' +
+        '<td class="pc-mo-sub">'+(row.reason||'—')+'</td>' +
+        '<td>'+row.time+'</td>' +
+        '<td>'+ops+'</td>' +
+      '</tr>';
+    }).join('');
+  }
+  render();
+  var btns = document.querySelectorAll('[data-demo-intercept]');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var modal = document.getElementById('pendingModal');
+      document.getElementById('pendingMsg').textContent = b.dataset.message;
+      modal.hidden = false;
+      document.getElementById('gotoView').addEventListener('click', function(){
+        modal.hidden = true;
+        var t = document.createElement('div');
+        t.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);background:#1d2733;color:#fff;padding:10px 18px;border-radius:6px;font-size:13px;z-index:9999';
+        t.textContent = '已跳转并筛选：' + b.dataset.merchant;
+        document.body.appendChild(t);
+        setTimeout(function(){ t.style.display='none'; }, 2000);
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

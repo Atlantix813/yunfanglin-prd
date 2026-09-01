@@ -1,0 +1,166 @@
+<!-- prototype-states: list, soldout -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>商家端 · 代金券管理列表</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+
+.vm-card{margin-bottom:10px;background:#fff;padding:14px;box-shadow:var(--m-shadow)}
+.vm-head{display:flex;justify-content:space-between;align-items:center}
+.vm-name{font-size:14px;font-weight:700;line-height:1.4}
+.vm-stats{display:flex;gap:14px;margin-top:10px;font-size:12px;color:#86909c}
+.vm-stats b{color:var(--m-text);font-weight:600}
+.vm-stock{margin-top:10px;display:flex;align-items:center;gap:8px;font-size:12px;color:#86909c}
+.vm-progress{flex:1;height:5px;border-radius:3px;background:#eef0f4;overflow:hidden}
+.vm-progress i{display:block;height:100%;background:var(--m-primary)}
+.vm-foot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid #f2f4f8}
+.vm-price{font-size:13px;color:#86909c}
+.vm-price b{font-size:15px;color:#e9305a}
+.vm-actions{display:flex;gap:8px}
+.vm-btn{height:28px;padding:0 12px;border-radius:4px;font-size:12px;border:1px solid #d5dce6;background:#fff;color:var(--m-text);cursor:pointer}
+.vm-btn.danger{color:#e9305a;border-color:#ffb3c0}
+.vm-btn.primary{background:var(--m-primary);border-color:var(--m-primary);color:#fff}
+</style>
+</head>
+<body>
+
+<div class="yfl-c-root is-blue-nav m-phone">
+<div class="m-phone-screen">
+
+  <div class="m-status-bar">
+    <span class="time">9:41</span>
+    <div class="m-status-icons">
+      <svg width="16" height="10" viewBox="0 0 16 10"><rect y="6" width="3" height="4" rx=".5" fill="currentColor"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="currentColor"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="currentColor"/><rect x="12" width="3" height="10" rx=".5" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="currentColor"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <div class="m-nav-bar">
+    <button class="back" aria-label="返回">‹</button>
+    <span class="title">代金券管理</span>
+    <div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+  </div>
+
+  <div class="m-page-scroll">
+  <main class="m-page-content">
+
+    <div class="m-tab-bar" data-m-group>
+      <div class="m-tab-item active" data-m-action="tab">已上架</div>
+      <div class="m-tab-item" data-m-action="tab">待审核</div>
+      <div class="m-tab-item" data-m-action="tab">已下架</div>
+      <div class="m-tab-item" data-m-action="tab">已售罄</div>
+    </div>
+
+    <div style="margin-top:10px">
+
+      <article class="vm-card">
+        <div class="vm-head">
+          <div class="vm-name">天天简餐40元代50元代金券</div>
+          <span class="m-status-tag green">已上架</span>
+        </div>
+        <div class="vm-stats">
+          <span>已售 <b>356</b></span>
+          <span>已核销 <b>289</b></span>
+          <span>售价 <b style="color:#e9305a">¥40</b></span>
+        </div>
+        <div class="vm-stock"><span>库存</span><div class="vm-progress"><i style="width:72%"></i></div><span>720/1000</span></div>
+        <div class="vm-foot">
+          <span class="vm-price">面额 ¥50 · 核销率 81%</span>
+          <div class="vm-actions">
+            <button class="vm-btn" data-m-action="toast" data-message="已复制草稿">复制</button>
+            <button class="vm-btn" data-m-action="toast" data-message="已补库存">补库存</button>
+            <button class="vm-btn danger" data-m-action="toast" data-message="已下架">下架</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="vm-card">
+        <div class="vm-head">
+          <div class="vm-name">天天简餐25元代30元代金券</div>
+          <span class="m-status-tag blue">待审核</span>
+        </div>
+        <div class="vm-stats">
+          <span>已售 <b>0</b></span>
+          <span>已核销 <b>0</b></span>
+          <span>售价 <b style="color:#e9305a">¥25</b></span>
+        </div>
+        <div class="vm-stock"><span>库存</span><div class="vm-progress"><i style="width:0%"></i></div><span>0/500</span></div>
+        <div class="vm-foot">
+          <span class="vm-price">面额 ¥30</span>
+          <div class="vm-actions">
+            <button class="vm-btn" data-m-action="toast" data-message="已撤回">撤回</button>
+            <button class="vm-btn" data-m-action="toast" data-message="打开编辑页">编辑</button>
+          </div>
+        </div>
+      </article>
+
+      <!-- 免费券：仅展示领取与核销数据，资金字段固定为 0 -->
+      <article class="vm-card">
+        <div class="vm-head">
+          <div class="vm-name">社区暖心餐饮免费领 50 元代金券</div>
+          <span class="m-status-tag green">免费券 · 已上架</span>
+        </div>
+        <div class="vm-stats">
+          <span>已领取 <b>86</b></span>
+          <span>已核销 <b>42</b></span>
+          <span>售价 <b style="color:#00a75c">免费</b></span>
+        </div>
+        <div class="vm-stock"><span>库存</span><div class="vm-progress"><i style="width:43%;background:#00a75c"></i></div><span>414/500</span></div>
+        <div class="vm-foot">
+          <span class="vm-price">面额 ¥50 · 资金/分账 ¥0</span>
+          <div class="vm-actions"><button class="vm-btn" data-m-action="toast" data-message="已复制草稿">复制</button><button class="vm-btn danger" data-m-action="toast" data-message="已下架">下架</button></div>
+        </div>
+      </article>
+
+      <article class="vm-card" id="soldoutCard">
+        <div class="vm-head">
+          <div class="vm-name">天天简餐20元代25元代金券</div>
+          <span class="m-status-tag">已售罄</span>
+        </div>
+        <div class="vm-stats">
+          <span>已售 <b>500</b></span>
+          <span>已核销 <b>438</b></span>
+          <span>售价 <b style="color:#e9305a">¥20</b></span>
+        </div>
+        <div class="vm-stock"><span>库存</span><div class="vm-progress"><i style="width:100%;background:#ff8f1f"></i></div><span>0/500</span></div>
+        <div class="vm-foot">
+          <span class="vm-price">面额 ¥25 · 已抢光</span>
+          <div class="vm-actions">
+            <button class="vm-btn" data-m-action="toast" data-message="已复制草稿">复制</button>
+            <button class="vm-btn primary" data-m-action="toast" data-message="补库存成功">补库存</button>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+  </main>
+  </div>
+
+  <footer class="m-fixed-actions">
+    <button class="m-action-primary" data-m-action="toast" data-message="进入发布页">发布代金券</button>
+  </footer>
+
+</div>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var st = params.get('state') || 'list';
+  if (st === 'soldout'){
+    document.getElementById('soldoutCard').scrollIntoView({block:'center'});
+  }
+})();
+</script>
+</body>
+</html>

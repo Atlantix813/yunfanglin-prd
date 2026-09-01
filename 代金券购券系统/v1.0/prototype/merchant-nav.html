@@ -1,0 +1,143 @@
+<!-- prototype-states: ready, store-ready, onboarding-pending, store-pending -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>商家端 · 商家后台导航改造</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+
+.mn-head{background:#fff;padding:16px;display:flex;align-items:center;gap:12px}
+.mn-logo{width:48px;height:48px;border-radius:10px;background:#eef3fb;display:flex;align-items:center;justify-content:center;font-size:24px;color:#b7c4d4;flex-shrink:0}
+.mn-name{font-size:16px;font-weight:800}
+.mn-meta{font-size:12px;color:#86909c;margin-top:3px}
+.mn-status{font-size:11px;color:#ff8f1f;background:#fff7ec;border-radius:3px;padding:1px 6px;margin-left:6px}
+
+.mn-grid{margin-top:10px;padding:18px 12px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px 8px;background:#fff;box-shadow:var(--m-shadow)}
+.mn-item{display:flex;flex-direction:column;align-items:center;gap:6px;border:0;background:none;cursor:pointer}
+.mn-icon{width:44px;height:44px;border-radius:12px;background:#f2f6fb;color:var(--m-text-3);display:flex;align-items:center;justify-content:center;position:relative}
+.mn-label{font-size:12px;color:var(--m-text);line-height:1}
+.mn-item.disabled .mn-icon{background:#f5f6f8;color:#c3cbd6}
+.mn-item.disabled .mn-label{color:#b0b8c4}
+.mn-lock{position:absolute;right:-2px;bottom:-2px;width:16px;height:16px;border-radius:50%;background:#e9305a;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center}
+.mn-badge{position:absolute;top:2px;right:2px;min-width:16px;height:16px;border-radius:8px;background:#e9305a;color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.mn-sec{font-size:12px;color:#86909c;padding:14px 4px 4px}
+.mn-tip{margin-top:10px;background:#fff7ec;border-radius:4px;padding:10px 12px;font-size:12px;color:#b25a00;line-height:1.7}
+</style>
+</head>
+<body>
+
+<div class="yfl-c-root is-blue-nav m-phone">
+<div class="m-phone-screen">
+
+  <div class="m-status-bar">
+    <span class="time">9:41</span>
+    <div class="m-status-icons">
+      <svg width="16" height="10" viewBox="0 0 16 10"><rect y="6" width="3" height="4" rx=".5" fill="currentColor"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="currentColor"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="currentColor"/><rect x="12" width="3" height="10" rx=".5" fill="currentColor"/></svg>
+      <svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="currentColor"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <div class="m-nav-bar">
+    <button class="back hidden" aria-label="返回">‹</button>
+    <span class="title">商家管理后台</span>
+    <div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div>
+  </div>
+
+  <div class="m-page-scroll">
+  <main class="m-page-content">
+
+    <section class="mn-head">
+      <div class="mn-logo">店</div>
+      <div>
+        <div class="mn-name">天天简餐<span class="mn-status" id="onboardTag">已完成进件</span></div>
+        <div class="mn-meta">管理员：陈老板 · 门店：南医大社区 19 栋底商</div>
+      </div>
+    </section>
+
+    <div class="mn-tip" id="onboardTip" style="display:none"></div>
+
+    <div class="mn-sec">代金券</div>
+    <div class="mn-grid" data-m-group>
+      <button class="mn-item" id="voucherCreate" data-m-action="toast" data-message="进入代金券发布页">
+        <span class="mn-icon"><span class="yfl-icon yfl-icon--22" data-icon="coupon-add"></span></span>
+        <span class="mn-label">发布代金券</span>
+      </button>
+      <button class="mn-item" id="voucherManage" data-m-action="toast" data-message="进入代金券管理列表">
+        <span class="mn-icon"><span class="yfl-icon yfl-icon--22" data-icon="coupon"></span><span class="mn-badge">3</span></span>
+        <span class="mn-label">代金券管理</span>
+      </button>
+      <button class="mn-item" id="voucherOrder" data-m-action="toast" data-message="进入代金券订单与收入">
+        <span class="mn-icon"><span class="yfl-icon yfl-icon--22" data-icon="market"></span></span>
+        <span class="mn-label">代金券订单</span>
+      </button>
+    </div>
+
+    <div class="mn-sec">经营</div>
+    <div class="mn-grid" data-m-group>
+      <button class="mn-item" data-m-action="toast" data-message="店铺信息">
+        <span class="mn-icon"><span class="yfl-icon yfl-icon--22" data-icon="store"></span></span>
+        <span class="mn-label">店铺信息</span>
+      </button>
+      <button class="mn-item" data-m-action="toast" data-message="推广管理">
+        <span class="mn-icon"><span class="yfl-icon yfl-icon--22" data-icon="upload"></span></span>
+        <span class="mn-label">推广管理</span>
+      </button>
+      <button class="mn-item" data-m-action="toast" data-message="优惠券管理">
+        <span class="mn-icon"><span class="yfl-icon yfl-icon--22" data-icon="coupon"></span></span>
+        <span class="mn-label">优惠券管理</span>
+      </button>
+      <button class="mn-item" id="voucherVerify" data-m-action="toast" data-message="进入核销页">
+        <span class="mn-icon"><span class="yfl-icon yfl-icon--22" data-icon="scan"></span></span>
+        <span class="mn-label">扫码核销</span>
+      </button>
+      <button class="mn-item" data-m-action="toast" data-message="营业时间">
+        <span class="mn-icon"><span class="yfl-icon yfl-icon--22" data-icon="clock"></span></span>
+        <span class="mn-label">营业时间</span>
+      </button>
+    </div>
+
+  </main>
+  </div>
+
+</div>
+</div>
+
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var st = params.get('state') || 'ready';
+  var tag = document.getElementById('onboardTag');
+  var tip = document.getElementById('onboardTip');
+  function lockAll(message){
+    tip.textContent = message;
+    tip.style.display = 'block';
+    ['voucherCreate','voucherManage','voucherOrder','voucherVerify'].forEach(function(id){
+      var item = document.getElementById(id);
+      item.classList.add('disabled');
+      item.querySelector('.mn-icon').innerHTML = '<span class="yfl-icon yfl-icon--22" data-icon="coupon"></span><span class="mn-lock">锁</span>';
+      item.removeAttribute('data-m-action');
+      item.onclick = function(){ };
+    });
+  }
+  if (st === 'ready') tag.textContent = '已完成进件';
+  if (st === 'store-ready' || st === 'onboarding-pending'){
+    tag.textContent = '开店已完成 · 待进件';
+    tip.textContent = '已完成开店资质，可发布 0 元券、现有优惠券和商家推广；完成普通服务商 API 进件后才能发布付费券。';
+    tip.style.display = 'block';
+  }
+  if (st === 'store-pending'){
+    tag.textContent = '待提交开店资质';
+    lockAll('请先提交并完成开店资质，开店后才能发布优惠券、推广和代金券。');
+  }
+})();
+</script>
+</body>
+</html>

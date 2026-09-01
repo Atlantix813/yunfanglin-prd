@@ -1,0 +1,275 @@
+<!-- prototype-states: list, modal -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC后台 · 商家列表</title>
+<link rel="stylesheet" href="组件库样式.css">
+<link rel="stylesheet" href="pc-icons.css">
+<script src="pc-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+.pc-mo-sub{font-size:12px;color:#86909C}
+.pc-mo-layer{position:fixed;left:0;top:0;right:0;bottom:0;width:100vw;height:100vh;z-index:1100;display:flex;align-items:center;justify-content:center}
+.pc-mo-select{appearance:none;-webkit-appearance:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23A9AEB8'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 12px center #fff;padding-right:34px;cursor:pointer}
+.pc-mo-close-icon{color:#86909C;pointer-events:none}
+/* 发布商家三步弹窗（复用组件库：pc-form-grid-3 / pc-form-field-dense / pc-form-upload / modal-xxl） */
+.pc-mo-steps{margin-bottom:10px}
+.pc-mo-step-panel{display:none}
+.pc-mo-step-panel.show{display:block}
+.pc-mo-layer .modal-body{padding:18px 24px 8px}
+.pc-mo-radio{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#1D2733;margin-right:16px}
+.pc-mo-radio input{accent-color:#3491FA}
+.pc-mo-map-btn{background:#3491FA;color:#fff;border:0;border-radius:4px;padding:7px 20px;font-size:13px;margin-top:10px;cursor:pointer}
+.pc-mo-switch{display:flex;align-items:center;gap:10px;margin-top:2px}
+.pc-mo-tip{color:#86909C;font-size:12px;margin-top:6px}
+</style>
+</head>
+<body>
+
+<div class="yfl-pc-root page-wrapper">
+  <header class="header">
+    <div class="header-left"><div class="header-logo">云芳邻管理系统</div><div class="header-hamburger"><span></span><span></span><span></span></div></div>
+    <div class="header-right"><span class="header-right-item">使用指南</span><span class="header-right-item">消息</span><span class="header-right-item"><span class="avatar">管</span>平台管理员</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" data-pc-group>
+      <div class="sidebar-item"><span class="label">工作台</span></div>
+      <div class="sidebar-item expanded"><span class="label">商家管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-sub">
+        <div class="sidebar-item active" data-pc-action="menu">商家列表</div>
+        <div class="sidebar-item" data-pc-action="menu">商家入驻情况</div>
+        <div class="sidebar-item" data-pc-action="menu">商家进件</div>
+      </div>
+      <div class="sidebar-item"><span class="label">代金券管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">退款管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">分账结算</span><span class="arrow">›</span></div>
+    </aside>
+    <section class="main">
+      <nav class="tab-bar" data-pc-group><div class="tab-item active" data-pc-action="tab">商家列表</div><div class="tab-item" data-pc-action="tab">工作台</div></nav>
+      <div class="content">
+        <div class="page-header"><h1 class="page-title">商家列表</h1><span class="breadcrumb">商家管理 / 商家列表</span></div>
+
+        <div class="filter-card">
+          <div class="filter-row">
+            <div class="filter-field"><label>商家名称</label><input placeholder="请输入商家名称"></div>
+            <div class="filter-field"><label>商家类型</label><select class="pc-mo-select"><option>请选择</option><option>服务类</option><option>餐饮类</option><option>零售类</option></select></div>
+            <div class="filter-field"><label>联系人电话</label><input placeholder="请输入"></div>
+            <div class="filter-field"><label>关联社区</label><input placeholder="请输入"></div>
+            <div class="filter-field"><label>进件状态</label><select class="pc-mo-select">
+              <option>全部</option><option>未进件</option><option>审核中</option><option>待账户验证</option><option>待签约</option><option>已完成</option><option>已驳回</option><option>已注销</option>
+            </select></div>
+            <button class="btn btn-primary" data-pc-action="query">查询</button>
+            <button class="btn btn-default" data-pc-action="reset">重置</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="op-bar">
+            <button class="btn btn-outline" data-pc-action="open-modal" data-target="#createModal"><span class="op-icon yfl-icon yfl-icon--14" data-icon="add" aria-hidden="true"></span>创建商家</button>
+            <button class="btn btn-outline" data-pc-action="toast" data-message="已创建批量导入任务"><span class="op-icon yfl-icon yfl-icon--14" data-icon="upload" aria-hidden="true"></span>批量导入</button>
+            <button class="btn btn-outline" data-pc-action="toast" data-message="已创建导出任务">批量导出</button>
+            <span style="font-size:12px;color:#86909C;margin-left:auto">创建商家沿用现有流程；微信进件在【商家进件】独立发起</span>
+          </div>
+          <table class="pc-table">
+            <thead>
+              <tr><th>序号</th><th>商家名称</th><th>商家类型</th><th>联系人电话</th><th>联系人姓名</th><th>关联社区</th><th>商家管理员</th><th>商家管理员手机号</th><th>最后登录时间</th><th>营业状态</th><th>商家状态</th><th>进件状态</th><th>更新时间</th><th style="min-width:260px">操作</th></tr>
+            </thead>
+            <tbody id="mlBody"></tbody>
+          </table>
+          <div class="pagination"><span class="total">共 148 条</span><select class="pg-select"><option>10条/页</option></select><button class="pg active" data-pc-action="page">1</button><button class="pg" data-pc-action="page">2</button><button class="pg" data-pc-action="page">3</button></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+  <!-- 发布商家弹窗（照线上：资质信息 → 商家信息 → 人员配置 三步） -->
+  <div class="overlay pc-mo-layer" id="createModal" hidden>
+    <section class="modal modal-xxl">
+      <header class="modal-header"><h3>发布商家</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16 pc-mo-close-icon" data-icon="close"></span></button></header>
+      <div class="modal-body">
+        <div class="pc-stepper pc-mo-steps">
+          <div class="pc-step active" data-step="0"><span class="pc-step-index">1</span><span>资质信息</span></div>
+          <div class="pc-step" data-step="1"><span class="pc-step-index">2</span><span>商家信息</span></div>
+          <div class="pc-step" data-step="2"><span class="pc-step-index">3</span><span>人员配置</span></div>
+        </div>
+
+        <!-- 第一步：资质信息 -->
+        <div class="pc-mo-step-panel show" data-panel="0">
+          <section class="pc-form-section"><h3 class="pc-form-section-title">商家基础信息</h3>
+            <div class="pc-form-grid-3">
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>商家名称</label><input class="pc-input" placeholder="请输入"><span class="pc-form-count">0/20</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>关联社区</label><select class="pc-input pc-mo-select"><option>白云区</option><option>南医大社区</option><option>沙顶社区</option></select></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>合伙人类型</label><span class="pc-mo-radio"><input type="radio" name="partner" checked>普通商家</span><span class="pc-mo-radio"><input type="radio" name="partner">组织合伙人</span><span class="pc-mo-radio"><input type="radio" name="partner">个人合伙人</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>联系人姓名</label><input class="pc-input" placeholder="请输入"><span class="pc-form-count">0/10</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>联系人电话</label><input class="pc-input" placeholder="请输入"><span class="pc-form-count">0/20</span></div>
+              <div class="pc-form-field-dense"><label>店铺地址</label><select class="pc-input pc-mo-select"><option>请选择省市区</option></select><span class="pc-form-count">0/50</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>门头上传</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传图片</span></button><span class="pc-form-upload-tip">图片格式为jpg、png，限制图片大小为5M</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>店铺坐标</label><input class="pc-input" placeholder=""><button class="pc-mo-map-btn" type="button">地图选址</button></div>
+            </div>
+          </section>
+          <section class="pc-form-section"><h3 class="pc-form-section-title">营业执照信息</h3>
+            <div class="pc-form-grid-3">
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>营业执照号码</label><input class="pc-input" placeholder="请输入"><span class="pc-form-count">0/50</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>营业执照截止时间</label><input class="pc-input" placeholder="请选择日期"></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>营业执照上传</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传图片</span></button><span class="pc-form-upload-tip">图片格式为jpg、png，限制图片大小为5M</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>合伙人资质证明上传</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传图片</span></button><span class="pc-form-upload-tip">图片格式为jpg、png，限制图片大小为5M</span></div>
+            </div>
+          </section>
+          <section class="pc-form-section"><h3 class="pc-form-section-title">法人信息</h3>
+            <div class="pc-form-grid-3">
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>法人姓名</label><input class="pc-input" placeholder="请输入"><span class="pc-form-count">0/10</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>法人身份证号</label><input class="pc-input" placeholder="请输入"><span class="pc-form-count">0/20</span></div>
+              <div class="pc-form-field-dense"><label>法人身份证人像面上传</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传图片</span></button><span class="pc-form-upload-tip">图片格式为jpg、png，限制图片大小为5M</span></div>
+              <div class="pc-form-field-dense"><label>法人身份证国徽面上传</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传图片</span></button><span class="pc-form-upload-tip">图片格式为jpg、png，限制图片大小为5M</span></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- 第二步：商家信息 -->
+        <div class="pc-mo-step-panel" data-panel="1">
+          <section class="pc-form-section"><h3 class="pc-form-section-title">商家信息</h3>
+            <div class="pc-form-grid-3">
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>商家电话(门店)</label><input class="pc-input" placeholder="请输入"><span class="pc-form-count">0/20</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>商家电话(老板)</label><input class="pc-input" placeholder="请输入"><span class="pc-form-count">0/20</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>商家类型</label><select class="pc-input pc-mo-select"><option>请选择</option><option>服务类</option><option>餐饮类</option><option>零售类</option></select></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>商家简介</label><textarea class="form-textarea" placeholder="请输入"></textarea><span class="pc-form-count">0/50</span></div>
+            </div>
+          </section>
+          <section class="pc-form-section"><h3 class="pc-form-section-title">店铺装修</h3>
+            <div class="pc-form-grid-2">
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>商家头像上传</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传图片</span></button><span class="pc-form-upload-tip">图片格式为jpg、png，限制图片大小为5M</span></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>头部轮播图上传（最多3张）</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传图片</span></button><span class="pc-form-upload-tip">图片格式为jpg、png，限制图片大小为5M</span></div>
+            </div>
+          </section>
+          <section class="pc-form-section"><h3 class="pc-form-section-title">营业设置</h3>
+            <div class="pc-mo-switch"><span style="font-size:13px;font-weight:600;color:#272E3B">是否允许营业</span><span class="switch-track on" data-pc-action="toggle"><span class="switch-thumb"></span></span></div>
+          </section>
+        </div>
+
+        <!-- 第三步：人员配置 -->
+        <div class="pc-mo-step-panel" data-panel="2">
+          <section class="pc-form-section"><h3 class="pc-form-section-title">人员配置</h3>
+            <div class="pc-form-grid-2">
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>商家管理员</label><input class="pc-input" placeholder="请输入姓名/手机号搜索"></div>
+              <div class="pc-form-field-dense"><label>核销员</label><input class="pc-input" placeholder="请输入姓名/手机号搜索核销员"></div>
+            </div>
+            <div class="pc-mo-tip">商家管理员：仅可选择含有【商家】角色的云芳邻用户账号。</div>
+            <div class="pc-mo-tip">核销员：可分配多个核销员，辅助管理员处理日常核销事务。</div>
+          </section>
+          <section class="pc-form-section"><h3 class="pc-form-section-title">保证金</h3>
+            <div class="pc-form-grid-2">
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>保证金金额（元）</label><input class="pc-input" placeholder="线下收款后录入金额" type="number"></div>
+              <div class="pc-form-field-dense"><label><span class="pc-mo-req">*</span>保证金转款凭证</label><button class="pc-form-upload" data-pc-action="upload"><span class="plus">+</span><span>上传凭证</span></button><span class="pc-form-upload-tip">转账记录/收款码收款截图，jpg、png，5M 以内</span></div>
+            </div>
+            <div class="pc-mo-tip">保证金线下收取（转账/收款码），运营录入金额并上传转款凭证存档；商家退出/注销时依据凭证对账退还。</div>
+          </section>
+        </div>
+
+      </div>
+      <footer class="modal-footer">
+        <button class="btn btn-primary" id="saveStep">保存</button>
+        <button class="btn btn-default" id="prevStep" style="display:none">上一步</button>
+        <button class="btn btn-primary" id="nextStep">下一步</button>
+        <button class="btn btn-primary" id="submitStep" style="display:none">提交</button>
+        <button class="btn btn-default" data-pc-action="close-modal">取消</button>
+      </footer>
+    </section>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var step=0;
+  var steps=[document.querySelector('[data-step="0"]'),document.querySelector('[data-step="1"]'),document.querySelector('[data-step="2"]')];
+  var panels=[document.querySelector('[data-panel="0"]'),document.querySelector('[data-panel="1"]'),document.querySelector('[data-panel="2"]')];
+  var prev=document.getElementById('prevStep'), next=document.getElementById('nextStep'), save=document.getElementById('saveStep'), submit=document.getElementById('submitStep');
+
+  function toast(msg){
+    var el=document.createElement('div');
+    el.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:#1d2733;color:#fff;padding:10px 18px;border-radius:6px;font-size:13px;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2)';
+    document.body.appendChild(el);
+    el.textContent=msg;
+    setTimeout(function(){ el.style.display='none'; },2200);
+  }
+
+  function go(target){
+    step=target;
+    steps.forEach(function(s,i){ s.className='pc-step'+(i<step?' done':i===step?' active':''); });
+    panels.forEach(function(p,i){ p.classList.toggle('show', i===step); });
+    prev.style.display = step===0 ? 'none':'';
+    next.style.display = step===2 ? 'none':'';
+    submit.style.display = step===2 ? '' : 'none';
+  }
+
+  save.addEventListener('click',function(){ toast('商家已保存'); });
+  prev.addEventListener('click',function(){ if(step>0) go(step-1); });
+  next.addEventListener('click',function(){ if(step<2) go(step+1); });
+  submit.addEventListener('click',function(){
+    toast('发布完成，商家已生效');
+    document.getElementById('createModal').hidden = true;
+    go(0);
+  });
+
+  // 列表渲染（沿用现有商家列表字段）
+  var ROWS = [
+    { seq:1, name:'金沙街丰城家政（优居店）', type:'服务类', phone:'13560032865', contact:'王静', community:'沙顶社区', admin:'黄佩玲', adminPhone:'13318856371', lastLogin:'2026-06-26 12:34:51', service:'营业中', status:'正常', onboard:'未进件', update:'2026-06-26 11:08:53' },
+    { seq:2, name:'天天简餐', type:'餐饮类', phone:'13800138000', contact:'陈老板', community:'南医大社区', admin:'陈老板', adminPhone:'13800138000', lastLogin:'2026-08-20 09:10:22', service:'营业中', status:'正常', onboard:'审核中', update:'2026-08-20 09:10:22' },
+    { seq:3, name:'三元里佳宜购物超市', type:'零售类', phone:'13560032866', contact:'刘伟', community:'南医大社区', admin:'刘伟', adminPhone:'13560032866', lastLogin:'2026-08-18 16:40:05', service:'已打烊', status:'正常', onboard:'已完成', update:'2026-08-18 16:40:05' },
+    { seq:4, name:'美邻家政服务', type:'服务类', phone:'13560032867', contact:'王静', community:'沙顶社区', admin:'王静', adminPhone:'13560032867', lastLogin:'2026-08-19 11:20:44', service:'营业中', status:'正常', onboard:'待签约', update:'2026-08-19 11:20:44' },
+    { seq:5, name:'羊城鲜果档', type:'零售类', phone:'13560032868', contact:'阿强', community:'金碧雅苑社区', admin:'阿强', adminPhone:'13560032868', lastLogin:'2026-08-17 14:30:12', service:'营业中', status:'正常', onboard:'待账户验证', update:'2026-08-17 14:30:12' },
+    { seq:6, name:'邻家小厨', type:'餐饮类', phone:'13560032869', contact:'老李', community:'同德围社区', admin:'老李', adminPhone:'13560032869', lastLogin:'2026-08-16 18:05:33', service:'已打烊', status:'正常', onboard:'未进件', update:'2026-08-16 18:05:33' },
+    { seq:7, name:'老班长快餐', type:'餐饮类', phone:'13560032870', contact:'赵姐', community:'江夏社区', admin:'赵姐', adminPhone:'13560032870', lastLogin:'2026-07-28 12:00:00', service:'营业中', status:'已注销', onboard:'已注销', update:'2026-07-28 12:00:00' }
+  ];
+
+  var tbody=document.getElementById('mlBody');
+  function render(){
+    tbody.innerHTML = ROWS.map(function(r,i){
+      var ops = '<a class="action-link" data-pc-action="toast" data-message="打开商家详情">商家详情</a>' +
+        '<span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="打开修改商家弹窗">修改</a>' +
+        '<span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="打开营业时间弹窗">营业时间</a>';
+      if (r.onboard === '未进件' || r.onboard === '已注销'){
+        ops += '<span class="action-sep">|</span><a class="action-link" data-pc-action="open-modal" data-target="#initiateModal">发起进件</a>';
+      }
+      if (r.onboard === '已完成'){
+        ops += '<span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="打开结算账户修改表单">发起结算账户修改</a>' +
+          '<span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="清账校验五清单通过，已生成注销记录">申请注销</a>';
+      }
+      return '<tr><td>'+r.seq+'</td><td>'+r.name+'</td><td>'+r.type+'</td><td>'+r.phone+'</td><td>'+r.contact+'</td><td>'+r.community+'</td><td>'+r.admin+'</td><td>'+r.adminPhone+'</td><td>'+r.lastLogin+'</td><td>'+r.service+'</td><td>'+r.status+'</td><td>'+r.onboard+'</td><td>'+r.update+'</td><td>'+ops+'</td></tr>';
+    }).join('');
+  }
+  render();
+
+  if (new URLSearchParams(location.search).get('state') === 'modal'){
+    document.getElementById('createModal').hidden = false;
+  }
+})();
+</script>
+
+<script>
+</script>
+
+  <!-- 发起进件弹窗（补录结算账户与超级管理员，开店资质只读引用） -->
+  <div class="overlay" id="initiateModal" hidden>
+    <section class="modal modal-lg">
+      <header class="modal-header"><h3>发起进件 · 补录结算账户与超级管理员</h3><button class="modal-close" data-pc-action="close-modal"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+      <div class="modal-body">
+        <section class="pc-form-section"><h3 class="pc-form-section-title">已完成开店资质（只读引用）</h3>
+          <div class="pc-form-grid"><div class="pc-form-field"><label>商家名称</label><input class="pc-input" value="天天简餐" readonly></div><div class="pc-form-field"><label>主体类型</label><input class="pc-input" value="个体工商户" readonly></div><div class="pc-form-field"><label>经营者/法人</label><input class="pc-input" value="陈老板" readonly></div><div class="pc-form-field"><label>资质状态</label><input class="pc-input" value="已完成开店资质" readonly></div></div>
+        </section>
+        <section class="pc-form-section"><h3 class="pc-form-section-title">本次填写信息</h3>
+          <div class="pc-form-grid"><div class="pc-form-field"><label>结算账户类型</label><select class="pc-input"><option>经营者个人银行卡</option><option>对公银行账户</option></select></div><div class="pc-form-field"><label>开户银行</label><input class="pc-input" placeholder="请输入开户银行"></div><div class="pc-form-field"><label>银行账号</label><input class="pc-input" placeholder="请输入结算卡号"></div><div class="pc-form-field"><label>超级管理员姓名</label><input class="pc-input" placeholder="需与微信实名一致"></div><div class="pc-form-field"><label>超级管理员身份证</label><input class="pc-input" placeholder="请输入证件号"></div><div class="pc-form-field"><label>超级管理员手机号</label><input class="pc-input" placeholder="用于签约与进展通知"></div></div>
+          <div class="pc-form-section-title" style="color:#86909C;font-weight:400">提交后由系统合并开店资质，调用普通服务商特约商户 API；请求必下发申请单：3 秒校验通过进【审核中】，不通过进【编辑中】（重新提交覆盖）。账户验证期限 10 天。</div>
+        </section>
+      </div>
+      <footer class="modal-footer"><button class="btn btn-default" data-pc-action="close-modal">取消</button><button class="btn btn-primary" data-pc-action="toast" data-message="已提交 API 进件，记录见【商家进件】页">提交 API 进件</button></footer>
+    </section>
+  </div>
+</body>
+</html>

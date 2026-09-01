@@ -1,0 +1,70 @@
+<!-- prototype-states: unused, free, verified, refunded, refunding, expired, refund-modal -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>居民端 · 订单详情页</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+.od-state{background:#fff;padding:22px 16px;text-align:center}.od-state-name{font-size:17px;font-weight:800}.od-state-sub{margin-top:5px;font-size:12px;color:#86909c}
+.od-code{background:#fff;margin-top:10px;padding:18px 16px;text-align:center}.od-code-title{font-size:13px;color:#86909c}.od-code-box{width:200px;height:200px;margin:14px auto 0;border:1px solid #e6eaf0;border-radius:12px;display:flex;align-items:center;justify-content:center;background:#fff;padding:8px;box-sizing:border-box}.od-code-box svg{width:100%;height:100%}.od-code-num{font-size:16px;font-weight:700;letter-spacing:2px;color:var(--m-text);margin-top:12px;font-family:ui-monospace,monospace}.od-code-tip{font-size:12px;color:#86909c;margin-top:8px}
+.od-card{margin-top:10px;background:#fff;padding:14px 16px}.od-title{font-size:14px;font-weight:700;margin-bottom:8px}.od-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}.od-row .label{color:#86909c}.od-row .value{text-align:right;max-width:65%}.od-refund{font-size:12px;color:#86909c;background:#f7f9fc;border-radius:4px;padding:8px 10px;margin-top:8px;line-height:1.7}
+.od-free-value{display:none;color:#00a75c;font-weight:700}.od-contact{color:var(--m-primary)}.od-paid-amount{font-weight:700;color:#e9305a}.od-free .od-paid-value{display:none}.od-free .od-free-value{display:inline}.od-free .od-refund{color:#00a75c;background:#effaf4}
+.od-dialog{position:fixed;inset:0;background:rgba(20,30,45,.42);z-index:30;display:flex;align-items:flex-end;justify-content:center}.od-dialog[hidden]{display:none}.od-dialog-box{width:375px;background:#fff;border-radius:16px 16px 0 0;padding:18px 16px 24px;box-sizing:border-box}.od-dialog-head{display:flex;justify-content:space-between;align-items:center}.od-dialog-title{font-size:16px;font-weight:800}.od-dialog-close{border:0;background:none;color:#86909c;width:24px;height:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;border-radius:4px}.od-dialog-close:hover{background:#F2F3F5}.od-reason-list{display:grid;gap:8px;margin-top:16px}.od-reason{display:flex;align-items:center;gap:8px;border:1px solid #e6eaf0;border-radius:8px;padding:10px 12px;font-size:13px;color:var(--m-text)}.od-reason input{accent-color:var(--m-primary)}.od-reason-text{display:none;margin-top:2px;width:100%;box-sizing:border-box;height:72px;border:1px solid #e6eaf0;border-radius:8px;padding:8px 10px;font-size:13px;font-family:inherit;resize:none;color:var(--m-text)}.od-reason-text.show{display:block}.od-reason-text:focus{outline:none;border-color:var(--m-primary)}.od-dialog-actions{display:flex;gap:10px;margin-top:18px}.od-dialog-actions button{flex:1;height:40px;border-radius:20px;border:1px solid #d5dce6;background:#fff;color:var(--m-text);font-size:14px}.od-dialog-actions .primary{border-color:var(--m-primary);background:var(--m-primary);color:#fff}
+</style>
+</head>
+<body>
+<div class="yfl-c-root is-blue-nav m-phone">
+<div class="m-phone-screen">
+  <div class="m-status-bar"><span class="time">9:41</span><div class="m-status-icons"><svg width="16" height="10" viewBox="0 0 16 10"><rect y="6" width="3" height="4" rx=".5" fill="currentColor"/><rect x="4" y="4" width="3" height="6" rx=".5" fill="currentColor"/><rect x="8" y="2" width="3" height="8" rx=".5" fill="currentColor"/><rect x="12" width="3" height="10" rx=".5" fill="currentColor"/></svg><svg width="22" height="10" viewBox="0 0 22 10"><rect x=".5" y=".5" width="18" height="9" rx="2" fill="none" stroke="currentColor"/><rect x="2" y="2" width="15" height="6" rx="1" fill="currentColor"/><rect x="20" y="3" width="1.5" height="4" rx=".5" fill="currentColor"/></svg></div></div>
+  <div class="m-nav-bar"><button class="back" aria-label="返回">‹</button><span class="title">订单详情</span><div class="capsule"><div class="capsule-dots"><span></span><span></span><span></span></div><div class="capsule-divider"></div><div class="capsule-close"><span class="capsule-target"></span></div></div></div>
+  <div class="m-page-scroll"><main class="m-page-content">
+    <section class="od-state" id="stateCard"><div class="od-state-name" id="stateName">待使用</div><div class="od-state-sub" id="stateSub">到店结账时出示核销码，商家扫码核销</div></section>
+    <section class="od-code" id="codeCard"><div class="od-code-title">云芳邻核销码（仅向商家出示）</div><div class="od-code-box" aria-label="核销二维码"><svg viewBox="0 0 200 200" role="img" aria-label="核销二维码示意" data-inline-svg-ok><rect x="0" y="0" width="200" height="200" fill="#fff"/><g fill="#1D2733"><rect x="10" y="10" width="46" height="46"/><rect x="16" y="16" width="34" height="34" fill="#fff"/><rect x="22" y="22" width="22" height="22"/><rect x="144" y="10" width="46" height="46"/><rect x="150" y="16" width="34" height="34" fill="#fff"/><rect x="156" y="22" width="22" height="22"/><rect x="10" y="144" width="46" height="46"/><rect x="16" y="150" width="34" height="34" fill="#fff"/><rect x="22" y="156" width="22" height="22"/><rect x="62" y="66" width="6" height="6"/><rect x="72" y="70" width="6" height="6"/><rect x="82" y="62" width="6" height="6"/><rect x="94" y="72" width="6" height="6"/><rect x="104" y="64" width="6" height="6"/><rect x="116" y="74" width="6" height="6"/><rect x="128" y="66" width="6" height="6"/><rect x="62" y="84" width="6" height="6"/><rect x="76" y="80" width="6" height="6"/><rect x="88" y="88" width="6" height="6"/><rect x="100" y="78" width="6" height="6"/><rect x="112" y="86" width="6" height="6"/><rect x="126" y="80" width="6" height="6"/><rect x="136" y="90" width="6" height="6"/><rect x="64" y="102" width="6" height="6"/><rect x="78" y="96" width="6" height="6"/><rect x="90" y="106" width="6" height="6"/><rect x="102" y="98" width="6" height="6"/><rect x="114" y="104" width="6" height="6"/><rect x="128" y="96" width="6" height="6"/><rect x="140" y="104" width="6" height="6"/><rect x="62" y="120" width="6" height="6"/><rect x="72" y="114" width="6" height="6"/><rect x="84" y="122" width="6" height="6"/><rect x="96" y="116" width="6" height="6"/><rect x="108" y="124" width="6" height="6"/><rect x="120" y="118" width="6" height="6"/><rect x="132" y="126" width="6" height="6"/><rect x="68" y="132" width="6" height="6"/><rect x="82" y="138" width="6" height="6"/><rect x="94" y="134" width="6" height="6"/><rect x="106" y="140" width="6" height="6"/><rect x="118" y="136" width="6" height="6"/><rect x="130" y="142" width="6" height="6"/></g></svg></div><div class="od-code-num">8890 6623 4410</div><div class="od-code-tip">核销码每 60 秒自动刷新</div></section>
+    <section class="od-card"><div class="od-title">券信息</div><div class="od-row"><span class="label">代金券</span><span class="value">天天简餐40元代50元代金券</span></div><div class="od-row"><span class="label">有效期至</span><span class="value">2026-08-30</span></div><div class="od-row"><span class="label">使用说明</span><span class="value">每单限用 1 张；超出面额部分到店补收</span></div></section>
+    <section class="od-card"><div class="od-title">商家信息</div><div class="od-row"><span class="label">商家</span><span class="value">天天简餐</span></div><div class="od-row"><span class="label">地址</span><span class="value">南医大社区 19 栋底商 102</span></div><div class="od-row"><span class="label">电话</span><span class="value od-contact">020-8888 8888</span></div></section>
+    <section class="od-card" id="amountCard"><div class="od-title">金额信息</div><div class="od-row"><span class="label">实付金额</span><span class="value od-paid-value od-paid-amount">¥40</span><span class="value od-free-value">免费（¥0）</span></div><div class="od-row"><span class="label">平台服务费</span><span class="value od-paid-value">已含在商家结算中</span><span class="value od-free-value">¥0</span></div><div class="od-row"><span class="label">分账金额</span><span class="value od-paid-value">¥2.00</span><span class="value od-free-value">¥0</span></div></section>
+    <div class="od-refund" id="refundTip">未核销可申请退款，退款将原路退回微信支付账户。</div>
+  </main></div>
+  <footer class="m-fixed-actions" id="footActions"><button class="m-action-secondary" id="refundBtn">申请退款</button><button class="m-action-primary" data-m-action="toast" data-message="联系商家或平台客服">联系客服</button></footer>
+</div>
+</div>
+<div class="od-dialog" id="refundDialog" hidden><section class="od-dialog-box"><div class="od-dialog-head"><div class="od-dialog-title">申请退款</div><button class="od-dialog-close" id="closeRefund" aria-label="关闭"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></div><div class="od-reason-list"><label class="od-reason"><input type="radio" name="reason" checked> 暂时不想使用</label><label class="od-reason"><input type="radio" name="reason"> 商家诱导线下交易</label><label class="od-reason" id="reasonOtherWrap"><input type="radio" name="reason" id="reasonOther"> 其他原因（请填写）</label><textarea class="od-reason-text" id="reasonOtherText" maxlength="100" placeholder="请描述您遇到的问题（必填，最多 100 字）"></textarea></div><div class="od-dialog-actions"><button id="cancelRefund">取消</button><button class="primary" id="confirmRefund">提交退款申请</button></div></section></div>
+<script>
+(function(){
+  var params=new URLSearchParams(location.search), st=params.get('state')||'unused';
+  var screen=document.querySelector('.m-phone-screen'), stateName=document.getElementById('stateName'), stateSub=document.getElementById('stateSub'), codeCard=document.getElementById('codeCard'), refundBtn=document.getElementById('refundBtn'), refundTip=document.getElementById('refundTip'), dialog=document.getElementById('refundDialog');
+  function hideRefund(){ refundBtn.style.display='none'; }
+  if(st==='free'){
+    screen.classList.add('od-free'); stateName.textContent='已领取'; stateSub.textContent='免费券已生成订单，到店出示核销码'; refundTip.textContent='免费券不产生退款，过期后自动失效。';
+  }
+  if(st==='verified'){
+    stateName.textContent='已核销'; stateSub.textContent='核销时间 2026-08-22 12:30 · 天天简餐'; stateName.style.color='#00b578'; codeCard.style.display='none'; hideRefund(); refundTip.textContent='已核销订单不提供退款按钮，如有售后问题请联系客服。';
+  }
+  if(st==='refunded'){
+    stateName.textContent='已退款'; stateSub.textContent='退款金额 ¥40 · 原路退回微信支付'; stateName.style.color='#86909c'; codeCard.style.display='none'; hideRefund(); refundTip.textContent='退款已完成，预计 1-3 个工作日到账。';
+  }
+  if(st==='refunding'){
+    stateName.textContent='退款中'; stateSub.textContent='退款处理中，暂不可使用 · 预计 1-3 个工作日到账'; stateName.style.color='#ff7d00'; codeCard.style.display='none'; hideRefund(); refundTip.textContent='退款申请已提交，核销码已隐藏，商家无法核销该订单。';
+  }
+  if(st==='expired'){
+    stateName.textContent='已过期'; stateSub.textContent='免费券已过有效期'; stateName.style.color='#86909c'; codeCard.style.display='none'; hideRefund(); refundTip.textContent='免费券过期不创建退款记录，仅页面展示已过期。';
+  }
+  if(st==='free') hideRefund();
+  if(st==='refund-modal') dialog.hidden=false;
+  refundBtn.addEventListener('click',function(){dialog.hidden=false;});
+  document.getElementById('closeRefund').addEventListener('click',function(){dialog.hidden=true;});
+  document.getElementById('cancelRefund').addEventListener('click',function(){dialog.hidden=true;});
+  document.getElementById('confirmRefund').addEventListener('click',function(){var other=document.getElementById('reasonOther'); var box=document.getElementById('reasonOtherText'); if(other&&other.checked&&!box.value.trim()){box.style.borderColor='#e9305a'; box.focus(); return;} dialog.hidden=true; hideRefund(); stateName.textContent='退款中'; stateSub.textContent='退款处理中，暂不可使用 · 预计 1-3 个工作日到账'; refundTip.textContent='退款申请已自动审核通过，正在微信退款，结果将通过消息通知你。';});
+  document.getElementById('reasonOther').addEventListener('change',function(){document.getElementById('reasonOtherText').classList.toggle('show',this.checked);});
+})();
+</script>
+</body>
+</html>

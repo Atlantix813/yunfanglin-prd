@@ -1,0 +1,79 @@
+<!-- prototype-states: default -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC后台 · 抽佣配置</title>
+<link rel="stylesheet" href="组件库样式.css">
+<link rel="stylesheet" href="pc-icons.css">
+<script src="pc-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+.pc-cc-example{margin-top:12px;background:#F7F9FC;border-radius:6px;padding:12px 16px;font-size:13px;color:#4E5969;line-height:2}
+.pc-mo-dyn{margin-top:8px;font-size:13px;color:#3491FA}
+</style>
+</head>
+<body>
+
+<div class="yfl-pc-root page-wrapper">
+  <header class="header">
+    <div class="header-left"><div class="header-logo">云芳邻管理系统</div><div class="header-hamburger"><span></span><span></span><span></span></div></div>
+    <div class="header-right"><span class="header-right-item">使用指南</span><span class="header-right-item">消息</span><span class="header-right-item"><span class="avatar">管</span>平台管理员</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" data-pc-group>
+      <div class="sidebar-item"><span class="label">工作台</span></div>
+      <div class="sidebar-item"><span class="label">商家管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">代金券管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">退款管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item expanded"><span class="label">系统配置</span><span class="arrow">›</span></div>
+      <div class="sidebar-sub">
+        <div class="sidebar-item active" data-pc-action="menu">抽佣比例</div>
+        <div class="sidebar-item" data-pc-action="menu">分账参数</div>
+      </div>
+    </aside>
+    <section class="main">
+      <nav class="tab-bar" data-pc-group><div class="tab-item active" data-pc-action="tab">抽佣比例</div><div class="tab-item" data-pc-action="tab">工作台</div></nav>
+      <div class="content">
+        <div class="page-header"><h1 class="page-title">抽佣比例</h1><span class="breadcrumb">系统配置 / 抽佣比例</span></div>
+
+        <section class="pc-form-section" style="background:#fff;padding:20px;border-radius:4px">
+          <h3 class="pc-form-section-title">代金券抽佣</h3>
+          <div class="pc-form-grid">
+            <div class="pc-form-field">
+              <label>平台级默认抽佣比例</label>
+              <div style="display:flex;align-items:center;gap:8px">
+                <input class="pc-input" style="width:140px" placeholder="如 5" type="number">
+                <span>%</span>
+              </div>
+            </div>
+          </div>
+          <div class="pc-form-section-title" style="font-weight:400;color:#86909C">
+            抽佣基数 = 居民实付金额，不按券面额计算。比例调整后对新订单生效，历史订单保持原比例。当前未配置默认值，运营需在商家访谈后确认再启用。
+          <div class="pc-mo-dyn">比例支持动态调整：保存后对新订单生效，历史订单保持原比例（订单创建时固化当时比例）。</div>
+          <div class="pc-form-section-title" style="font-weight:400;color:#86909C">分账结算周期 T（天）</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input class="pc-input" style="width:140px" value="7" type="number"><span>天</span>
+          </div>
+          <div class="pc-mo-dyn">核销后 T 天由分账调度任务触发分账（每日 1 次扫描）；对之后核销的订单生效，预计分账日期按核销时 T 固化。缓冲期内资金冻结，已核销退款可直接原路退。</div>
+          </div>
+          <div class="pc-cc-example">
+            示例：实付 ¥40，按 5% 抽佣 → 商家到账 ¥38（40 − 2）；按 3% 抽佣 → 商家到账 ¥38.8。<br>
+            单笔分账总额不得超过「实付 − 微信支付手续费」，且受微信分账最大比例限制（默认 30%）。
+          </div>
+          <div style="margin-top:16px">
+            <button class="btn btn-primary" data-pc-action="toast" data-message="已保存并生效">保存</button>
+            <button class="btn btn-default" data-pc-action="reset">重置</button>
+          </div>
+        </section>
+
+      </div>
+    </section>
+  </div>
+</div>
+</body>
+</html>

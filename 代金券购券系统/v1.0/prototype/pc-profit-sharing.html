@@ -1,0 +1,127 @@
+<!-- prototype-states: list, extend -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PC后台 · 分账与结算</title>
+<link rel="stylesheet" href="组件库样式.css">
+<link rel="stylesheet" href="pc-icons.css">
+<script src="pc-components.js" defer></script>
+<style>
+html,body{margin:0;padding:0;overflow:hidden;height:100%}
+.ps-extend-help{font-size:12px;color:#86909C;line-height:1.7}.ps-log{margin-top:14px;border-top:1px solid #EEF0F4;padding-top:12px}.ps-log-item{font-size:12px;color:#86909C;padding:4px 0}.ps-log-item b{color:#1D2733}
+</style>
+</head>
+<body>
+
+<div class="yfl-pc-root page-wrapper">
+  <header class="header">
+    <div class="header-left"><div class="header-logo">云芳邻管理系统</div><div class="header-hamburger"><span></span><span></span><span></span></div></div>
+    <div class="header-right"><span class="header-right-item">使用指南</span><span class="header-right-item">消息</span><span class="header-right-item"><span class="avatar">管</span>平台管理员</span></div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar" data-pc-group>
+      <div class="sidebar-item"><span class="label">工作台</span></div>
+      <div class="sidebar-item"><span class="label">商家管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">代金券管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item"><span class="label">退款管理</span><span class="arrow">›</span></div>
+      <div class="sidebar-item expanded"><span class="label">分账结算</span><span class="arrow">›</span></div>
+      <div class="sidebar-sub">
+        <div class="sidebar-item active" data-pc-action="menu">分账流水</div>
+        <div class="sidebar-item" data-pc-action="menu">结算报表</div>
+        <div class="sidebar-item" data-pc-action="menu">异常任务</div>
+      </div>
+    </aside>
+    <section class="main">
+      <nav class="tab-bar" data-pc-group><div class="tab-item active" data-pc-action="tab">分账流水</div><div class="tab-item" data-pc-action="tab">工作台</div></nav>
+      <div class="content">
+        <div class="page-header"><h1 class="page-title">分账流水</h1><span class="breadcrumb">分账结算 / 分账流水</span></div>
+
+        <div class="filter-card">
+          <div class="filter-row">
+            <div class="filter-field"><label>订单号</label><input placeholder="请输入订单号"></div>
+            <div class="filter-field"><label>商家</label><input placeholder="请输入商家名称"></div>
+            <div class="filter-field"><label>分账状态</label><select><option>全部</option><option>待分账</option><option>已分账</option><option>分账异常</option><option>已终止（退款）</option></select></div>
+            <div class="filter-field"><label>核销时间</label><input placeholder="请选择日期范围"></div>
+            <button class="btn btn-primary" data-pc-action="query">查询</button>
+            <button class="btn btn-default" data-pc-action="reset">重置</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <div class="op-bar">
+            <button class="btn btn-outline" data-pc-action="toast" data-message="已创建导出任务">批量导出</button>
+            <span style="font-size:13px;color:#86909C">分账方向：商家特约商户号 → 平台商户号（抽佣）；剩余自动解冻归商家</span>
+          </div>
+          <table class="pc-table">
+            <thead><tr><th>分账单号</th><th>订单号</th><th>商家</th><th>实付金额</th><th>支付手续费</th><th>抽佣金额</th><th>商家解冻收入</th><th>分账状态</th><th>预计分账日期</th><th>分账时间</th><th>是否关联退款</th><th>终止原因</th><th>操作</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>FZ20260810012</td><td>DD20260810001</td><td>天天简餐</td><td>¥40</td><td>¥0.24</td><td>¥2.00</td><td>¥37.76</td>
+                <td><span class="tag tag-green">已分账</span></td><td>2026-08-16</td><td>2026-08-16 10:05</td><td>—</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="打开分账明细">明细</a></td>
+              </tr>
+              <tr style="background:#FFF7F7">
+                <td>FZ20260810009</td><td>DD20260810020</td><td>美邻家政服务</td><td>¥90</td><td>¥0.54</td><td>¥4.50</td><td>¥84.96</td>
+                <td><span class="tag tag-red">分账异常</span></td><td>2026-08-16</td><td>—</td><td>—</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="已重新发起分账">重新分账</a><span class="action-sep">|</span><a class="action-link" data-pc-action="toast" data-message="打开分账明细">明细</a></td>
+              </tr>
+              <tr>
+                <td>FZ20260809020</td><td>DD20260809001</td><td>三元里佳宜购物超市</td><td>¥84</td><td>¥0.50</td><td>¥4.20</td><td>¥79.30</td>
+                <td><span class="tag tag-orange">待分账</span></td><td id="pendingDate">2026-08-16<br><a class="action-link" data-ps-extend>延长分账</a></td><td>—</td><td>—</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="打开分账明细">明细</a></td>
+              </tr>
+              <tr>
+                <td>FZ20260812015</td><td>DD20260812008</td><td>桂花园家政</td><td>¥60</td><td>¥0.36</td><td>¥3.00</td><td>¥56.64</td>
+                <td><span class="tag tag-green">已分账</span></td><td>2026-08-18</td><td>2026-08-18 09:30</td><td>是 · RF20260820001 · 2026-08-20</td><td>—</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="打开分账明细">明细</a></td>
+              </tr>
+              <tr>
+                <td>FZ20260807011</td><td>DD20260807030</td><td>天天简餐</td><td>¥40</td><td>¥0.24</td><td>¥2.00</td><td>¥37.76</td>
+                <td><span class="tag">已终止（退款）</span></td><td>2026-08-14</td><td>—</td><td>是 · RF20260808010 · 2026-08-08</td><td>微信退款成功，分账终止</td>
+                <td><a class="action-link" data-pc-action="toast" data-message="打开分账明细">明细</a></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination"><span class="total">共 1,102 条</span><select class="pg-select"><option>10条/页</option></select><button class="pg active" data-pc-action="page">1</button><button class="pg" data-pc-action="page">2</button><button class="pg" data-pc-action="page">3</button></div>
+        </div>
+
+      </div>
+    </section>
+  </div>
+</div>
+
+<div class="overlay" id="extendModal" hidden>
+  <section class="modal modal-md">
+    <header class="modal-header"><h3>延长分账时间</h3><button class="modal-close" id="closeExtend" aria-label="关闭"><span class="yfl-icon yfl-icon--16" data-icon="close" aria-hidden="true"></span></button></header>
+    <div class="modal-body">
+      <div class="snapshot-card"><div class="desc-grid"><div class="desc-item"><span class="desc-label">订单号</span><span class="desc-value">DD20260809001</span></div><div class="desc-item"><span class="desc-label">付款时间</span><span class="desc-value">2026-08-09 10:20</span></div><div class="desc-item"><span class="desc-label">当前预计分账日</span><span class="desc-value" id="currentPlanDate">2026-08-16</span></div><div class="desc-item"><span class="desc-label">最晚可延至</span><span class="desc-value">付款后第 29 天 · 2026-09-07</span></div></div></div>
+      <div class="form-row"><label class="form-label"><span class="required">*</span>新的分账日期</label><div class="form-control pc-date-time-row"><input id="extendDate" type="date" value="2026-08-20" min="2026-08-16" max="2026-09-07"></div></div>
+      <div class="form-row"><label class="form-label"><span class="required">*</span>调整原因</label><div class="form-control"><textarea id="extendReason" class="form-textarea" placeholder="请输入延长分账的业务原因"></textarea></div></div>
+      <div class="ps-extend-help">所有待分账订单均可调整；新的分账日期不能超过付款后第 29 天，保留普通服务商 30 天冻结期的 1 天缓冲。</div>
+      <div class="ps-log"><div class="ps-log-item"><b>历史记录</b></div><div class="ps-log-item">暂无人工调整记录</div></div>
+    </div>
+    <footer class="modal-footer"><button class="btn btn-default" id="cancelExtend">取消</button><button class="btn btn-primary" id="confirmExtend">保存分账日期</button></footer>
+  </section>
+</div>
+<script>
+(function(){
+  var modal=document.getElementById('extendModal'), openers=document.querySelectorAll('[data-ps-extend]'), close=document.getElementById('closeExtend'), cancel=document.getElementById('cancelExtend'), confirm=document.getElementById('confirmExtend'), date=document.getElementById('extendDate'), reason=document.getElementById('extendReason'), pending=document.getElementById('pendingDate'), current=document.getElementById('currentPlanDate');
+  function open(){modal.hidden=false;} function hide(){modal.hidden=true;}
+  openers.forEach(function(item){item.addEventListener('click',open);});
+  if(new URLSearchParams(location.search).get('state')==='extend') open();
+  close.addEventListener('click',hide); cancel.addEventListener('click',hide);
+  confirm.addEventListener('click',function(){
+    if(!date.value || !reason.value.trim()){reason.focus();return;}
+    pending.firstChild.nodeValue=date.value; current.textContent=date.value; hide();
+    var note=document.createElement('div'); note.className='ps-log-item'; note.innerHTML='<b>刚刚</b>：管理员将预计分账日调整为 '+date.value+'（'+reason.value.trim()+'）';
+    document.querySelector('.ps-log').appendChild(note);
+  });
+})();
+</script>
+</body>
+</html>
