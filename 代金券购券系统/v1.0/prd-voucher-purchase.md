@@ -117,15 +117,15 @@
 
 下列流程图按业务流组织，判断节点为数据库/字段级，分支覆盖各状态流转：
 
-<!-- prototype: src="prototype/flow-onboarding-main.html" width="1197" height="2140" title="业务流 · 商家进件 · 主链" -->
+<!-- prototype: src="prototype/flow-onboarding-main.html" width="1347" height="2316" title="业务流 · 商家进件 · 主链" -->
 <!-- prototype: src="prototype/flow-onboarding-abnormal.html" width="1042" height="1788" title="业务流 · 商家进件 · 异常分支" -->
-<!-- prototype: src="prototype/flow-settlement-modify.html" width="725" height="1100" title="业务流 · 结算账户修改子流程" -->
-<!-- prototype: src="prototype/flow-merchant-cancel.html" width="1258" height="1236" title="业务流 · 商家注销子流程" -->
+<!-- prototype: src="prototype/flow-settlement-modify.html" width="1098" height="1036" title="业务流 · 结算账户修改子流程" -->
+<!-- prototype: src="prototype/flow-merchant-cancel.html" width="1254" height="1412" title="业务流 · 商家注销子流程" -->
 <!-- prototype: src="prototype/flow-issue.html" width="1053" height="1436" title="业务流 · 商家发券" -->
 <!-- prototype: src="prototype/flow-free.html" width="792" height="1236" title="业务流 · 免费券领取" -->
 <!-- prototype: src="prototype/flow-verify.html" width="1248" height="1460" title="业务流 · 到店核销" -->
-<!-- prototype: src="prototype/flow-profit.html" width="1403" height="1608" title="业务流 · 分账记录（待分账/已分账/异常/已终止）" -->
-<!-- prototype: src="prototype/refund.html" width="1863" height="2080" title="业务流 · 退款（未核销 / 已核销未分账 / 已核销已分账）" -->
+<!-- prototype: src="prototype/flow-profit.html" width="1498" height="1808" title="业务流 · 分账记录（待分账/已分账/异常/已终止）" -->
+<!-- prototype: src="prototype/refund.html" width="1606" height="2280" title="业务流 · 退款（未核销 / 已核销未分账 / 已核销已分账）" -->
 
 - 商家进件主链：**串行主线 + 超管异步引导**——提交创建申请单 → 超管扫统一链接核对联系信息（不影响审核）→ 平台审核（1-3 工作日，通过/驳回分支）→ 审核通过后判定是否账户验证（法人本人当超管免验证；需验证主体完成汇款/法人扫码）→ 签约 → 开通权限 → 特约商户号回写；超管侧全部操作通过同一链接按状态分步引导。
 - 进件异常分支：审核驳回（同编号覆盖重提）、30 天作废（重新发起新申请单）。
