@@ -118,7 +118,7 @@
 下列流程图按业务流组织，判断节点为数据库/字段级，分支覆盖各状态流转：
 
 <!-- prototype: src="prototype/flow-onboarding-main.html" width="1347" height="2316" title="业务流 · 商家进件 · 主链" -->
-<!-- prototype: src="prototype/flow-onboarding-abnormal.html" width="1042" height="1788" title="业务流 · 商家进件 · 异常分支" -->
+<!-- prototype: src="prototype/flow-onboarding-abnormal.html" width="" height="1194 1060" title="业务流 · 商家进件 · 异常分支" -->
 <!-- prototype: src="prototype/flow-settlement-modify.html" width="1098" height="1036" title="业务流 · 结算账户修改子流程" -->
 <!-- prototype: src="prototype/flow-merchant-cancel.html" width="1254" height="1412" title="业务流 · 商家注销子流程" -->
 <!-- prototype: src="prototype/flow-issue.html" width="1053" height="1436" title="业务流 · 商家发券" -->
