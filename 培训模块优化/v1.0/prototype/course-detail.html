@@ -1,0 +1,212 @@
+<!-- prototype-states: unfavorited, favorited -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>教培系统 · 课程详情</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
+  .detail-page { height: 100%; display: flex; flex-direction: column; background: #fff; }
+  .detail-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .detail-scroll::-webkit-scrollbar { display: none; }
+
+  /* 收藏按钮（课程标题行右侧，深蓝主题） */
+  .detail-hero-title-row {
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .detail-hero-title {
+    flex: 1; min-width: 0;
+  }
+  .hero-fav {
+    flex-shrink: 0; height: 30px; padding: 0 12px; border: 1px solid rgba(255,255,255,.5);
+    border-radius: 15px; background: rgba(255,255,255,.16); color: #fff; margin-top: 2px;
+    display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600;
+  }
+  .hero-fav.on { background: #fff; color: #1E4E91; border-color: #fff; }
+
+  /* 课程信息区（蓝色） */
+  .detail-hero {
+    width: 100%; background: #1E4E91; padding: 6px 20px 22px; color: #fff; flex-shrink: 0;
+  }
+  .detail-hero-title {
+    font-size: 16px; font-weight: 600; color: rgba(255,255,255,.92); line-height: 24px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .detail-hero-info { display: flex; align-items: center; margin-top: 16px; }
+  .detail-hero-info-left { flex: 1; min-width: 0; }
+  .detail-hero-record { font-size: 14px; color: rgba(255,255,255,.88); }
+  .detail-hero-record strong { font-size: 20px; font-weight: 600; }
+  .detail-hero-progress {
+    width: 64px; height: 64px; flex-shrink: 0; position: relative; margin-left: 12px;
+  }
+  .detail-hero-track, .detail-hero-fill {
+    position: absolute; inset: 0; border-radius: 50%;
+  }
+  .detail-hero-track { border: 5px solid rgba(255,255,255,.3); }
+  .detail-hero-fill {
+    border: 5px solid transparent; border-top-color: #fff; border-right-color: #fff;
+    transform: rotate(45deg);
+  }
+  .detail-hero-progress-num {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 600;
+  }
+
+  /* 内容区（白色圆角上浮） */
+  .detail-content {
+    flex: 1; min-height: 0; background: #fff; border-radius: 16px 16px 0 0;
+    margin-top: -16px; position: relative; padding: 20px; overflow-y: auto;
+  }
+  .detail-content::-webkit-scrollbar { display: none; }
+
+  .detail-tabs { display: flex; gap: 24px; margin-bottom: 16px; }
+  .detail-tab {
+    border: 0; background: transparent; font-size: 15px; color: #8A94A6;
+    padding: 4px 0; position: relative; font-weight: 500;
+  }
+  .detail-tab.active { color: #272E3B; font-weight: 600; }
+  .detail-tab.active::after {
+    content: ''; position: absolute; left: 50%; bottom: -2px; transform: translateX(-50%);
+    width: 20px; height: 3px; border-radius: 2px; background: #2F86F4;
+  }
+
+  /* 课程简介 */
+  .detail-desc { font-size: 13px; color: #4B5563; line-height: 22px; }
+  .detail-divider { height: 1px; background: #F2F3F5; margin: 16px 0; }
+
+  /* 视频课时列表 */
+  .detail-lesson {
+    padding: 12px 0; border-bottom: 1px solid #F7F8FA;
+  }
+  .detail-lesson:last-child { border-bottom: 0; }
+  .detail-lesson-top { display: flex; align-items: center; gap: 8px; }
+  .detail-lesson-type {
+    height: 20px; padding: 0 8px; border-radius: 4px; display: inline-flex; align-items: center;
+    background: #EBF5FF; color: #2F86F4; font-size: 11px; font-weight: 600;
+  }
+  .detail-lesson-status { margin-left: auto; font-size: 12px; color: #8A94A6; }
+  .detail-lesson-status.done { color: #34C96E; }
+  .detail-lesson-title { margin-top: 6px; font-size: 14px; color: #272E3B; }
+
+  /* 附件 */
+  .detail-attach {
+    display: flex; align-items: center; gap: 10px; padding: 12px 0;
+    border-bottom: 1px solid #F7F8FA;
+  }
+  .detail-attach:last-child { border-bottom: 0; }
+  .detail-attach-name { flex: 1; min-width: 0; font-size: 13px; color: #272E3B; }
+  .detail-attach-size { flex-shrink: 0; font-size: 11px; color: #B0B8C8; }
+  .detail-attach-download { flex-shrink: 0; font-size: 12px; color: #2F86F4; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="yfl-c-root is-dark-nav m-phone">
+  <div class="m-phone-screen detail-page">
+
+    <div class="m-status-bar">
+      <span class="time">9:41</span>
+      <div class="m-status-icons" aria-hidden="true">
+        <svg data-inline-svg-ok width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
+        <svg data-inline-svg-ok width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <!-- 顶部导航：返回 + 培训管理（深蓝） -->
+    <div class="m-nav-bar">
+      <button class="back" aria-label="返回" onclick="window.YunFangLinC && window.YunFangLinC.showToast(document.body, '返回学习首页')">‹</button>
+      <span class="title">培训管理</span>
+    </div>
+
+    <!-- 课程信息区（蓝色） -->
+    <div class="detail-hero">
+      <div class="detail-hero-title-row">
+        <div class="detail-hero-title">《您的声音》</div>
+        <button class="hero-fav" id="favBtn" data-fav="0" onclick="toggleFav()">
+          <span class="yfl-icon yfl-icon--14" data-icon="heart" aria-hidden="true"></span>
+          <span id="favText">收藏</span>
+        </button>
+      </div>
+      <div class="detail-hero-info">
+        <div class="detail-hero-info-left">
+          <div class="detail-hero-record">已学完课时 <strong>0</strong> / 1</div>
+        </div>
+        <div class="detail-hero-progress">
+          <div class="detail-hero-track"></div>
+          <div class="detail-hero-fill"></div>
+          <span class="detail-hero-progress-num">1%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 内容区 -->
+    <div class="detail-content">
+      <div class="detail-tabs">
+        <button class="detail-tab active" onclick="showTab('catalog', this)">课程目录</button>
+        <button class="detail-tab" onclick="showTab('attach', this)">课程附件</button>
+      </div>
+
+      <div id="catalog">
+        <p class="detail-desc">这是一部聚焦世界超大城市治理共性问题的纪录电影。它以北京"12345"热线接入的市民电话为线索，通过纪实拍摄手法，呈现了北京这座拥有超过 2100 万常住人口的超大型城市市民生活的鲜活故事。影片以 12345 北京市民热线服务中心接入的市民诉求电话为线索，串联起话务员的成长、停车难、老楼加装电梯、市民打分机制、数字化智能化治理方式等 7 个故事，从不同侧面讲述北京市接诉即办改革实践。</p>
+        <div class="detail-divider"></div>
+        <div class="detail-lesson">
+          <div class="detail-lesson-top">
+            <span class="detail-lesson-type">视频</span>
+            <span class="detail-lesson-status">学习到 23:20</span>
+          </div>
+          <div class="detail-lesson-title">《您的声音》 (1:28:43)</div>
+        </div>
+      </div>
+
+      <div id="attach" style="display:none">
+        <div class="detail-attach">
+          <span class="detail-attach-name">《您的声音》课程资料.pdf</span>
+          <span class="detail-attach-size">3.2 MB</span>
+          <span class="detail-attach-download">下载</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-toast"></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const allowedStates = ['unfavorited', 'favorited'];
+    const initialState = allowedStates.includes(params.get('state')) ? params.get('state') : 'unfavorited';
+
+    window.toggleFav = function () {
+      const btn = document.getElementById('favBtn');
+      const text = document.getElementById('favText');
+      const on = btn.dataset.fav === '1';
+      btn.dataset.fav = on ? '0' : '1';
+      btn.classList.toggle('on', !on);
+      text.textContent = on ? '收藏' : '已收藏';
+      window.YunFangLinC && window.YunFangLinC.showToast(document.body, on ? '已取消收藏' : '收藏成功');
+    };
+    if (initialState === 'favorited') {
+      document.getElementById('favBtn').dataset.fav = '1';
+      document.getElementById('favBtn').classList.add('on');
+      document.getElementById('favText').textContent = '已收藏';
+    }
+
+    window.showTab = function (id, el) {
+      document.querySelectorAll('.detail-tab').forEach(function (n) { n.classList.remove('active'); });
+      document.getElementById('catalog').style.display = id === 'catalog' ? 'block' : 'none';
+      document.getElementById('attach').style.display = id === 'attach' ? 'block' : 'none';
+      el.classList.add('active');
+    };
+
+    const url = new URL(location.href);
+    url.searchParams.set('state', initialState);
+    history.replaceState(null, '', url);
+  })();
+</script>
+</body>
+</html>

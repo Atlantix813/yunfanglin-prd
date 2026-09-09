@@ -1,0 +1,318 @@
+<!-- prototype-states: list, import, edit -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>论述摘编管理</title>
+<link rel="stylesheet" href="组件库样式.css">
+<link rel="stylesheet" href="pc-icons.css">
+<script src="pc-components.js" defer></script>
+<style>
+  /* 弹层定位：组件库 overlay 无 fixed，按既有原型惯例补定位 */
+  .overlay { position: fixed; inset: 0; z-index: 80; }
+  .excerpt-title-cell { max-width: 420px; }
+  .excerpt-title-main { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .excerpt-title-sub { font-size: 12px; color: #86909C; margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .excerpt-setting {
+    margin: 16px 0 0; padding: 14px 16px; border: 1px solid #EEF2F8; border-radius: 8px;
+    background: #F7F9FC; display: flex; align-items: center; gap: 20px;
+  }
+  .excerpt-setting-label { font-size: 14px; font-weight: 600; color: #222835; flex-shrink: 0; }
+  .excerpt-setting-item { display: flex; align-items: center; gap: 8px; color: #4B5563; font-size: 13px; }
+  .excerpt-setting-num { width: 64px; height: 28px; border: 1px solid #D8DEE8; border-radius: 6px; padding: 0 8px; }
+  .excerpt-setting-help { color: #86909C; font-size: 12px; }
+  .switch-track { width: 40px; height: 22px; border-radius: 11px; background: #E5E7EB; position: relative; cursor: pointer; transition: .18s; }
+  .switch-track.on { background: #3F86F5; }
+  .switch-track::after { content: ''; position: absolute; left: 3px; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: .18s; box-shadow: 0 1px 2px rgba(0,0,0,.18); }
+  .switch-track.on::after { transform: translateX(18px); }
+  .import-tip { color: #86909C; font-size: 12px; line-height: 20px; }
+  .import-tip strong { color: #4B5563; }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+  <header class="header">
+    <div class="header-left">
+      <div class="header-logo">云芳邻管理后台</div>
+      <div class="header-hamburger"><span></span><span></span><span></span></div>
+    </div>
+    <div class="header-right">
+      <div class="header-right-item">消息</div>
+      <div class="header-right-item"><span class="avatar">管</span><span>平台管理员</span></div>
+    </div>
+  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-item"><span class="label">首页</span></div>
+      <div class="sidebar-item active"><span class="label">培训管理</span></div>
+      <div class="sidebar-sub">
+        <div class="sidebar-item">课程管理</div>
+        <div class="sidebar-item">学员统计</div>
+        <div class="sidebar-item active">论述摘编</div>
+      </div>
+      <div class="sidebar-item"><span class="label">合伙人管理</span></div>
+    </aside>
+    <main class="main">
+      <div class="tab-bar">
+        <div class="tab-item active">论述摘编管理<span class="tab-close">×</span></div>
+      </div>
+      <div class="content">
+        <div class="page-header">
+          <span class="page-title">论述摘编管理</span>
+          <span class="breadcrumb">培训管理 / 论述摘编</span>
+        </div>
+
+        <!-- 轮播设置 -->
+        <div class="excerpt-setting">
+          <span class="excerpt-setting-label">首页轮播设置</span>
+          <div class="excerpt-setting-item">
+            <span>开启首页走马灯</span>
+            <span class="switch-track on" onclick="toggleSwitch(this)"></span>
+          </div>
+          <div class="excerpt-setting-item">
+            <span>每日展示条数</span>
+            <input class="excerpt-setting-num" type="number" value="1" min="1" max="5">
+            <span class="excerpt-setting-help">每天从已上架论述中随机抽取展示，当天不重复</span>
+          </div>
+        </div>
+
+        <!-- 筛选卡 -->
+        <div class="filter-card">
+          <div class="filter-row">
+            <div class="filter-field"><label>标题关键词</label><input placeholder="请输入标题关键词"></div>
+            <div class="filter-field"><label>状态</label>
+              <select><option>全部</option><option>已上架</option><option>已下架</option></select>
+            </div>
+            <button class="btn btn-primary" onclick="toast('已查询')">查询</button>
+            <button class="btn btn-default" onclick="toast('已重置')">重置</button>
+          </div>
+        </div>
+
+        <!-- 操作栏 + 表格 -->
+        <div class="table-wrap">
+          <div class="op-bar">
+            <button class="btn btn-primary" onclick="openModal('editModal');resetEditForm()">新增论述</button>
+            <button class="btn btn-outline" onclick="openModal('importModal')">批量导入</button>
+            <button class="btn btn-default" onclick="toast('正在导出')">导出</button>
+          </div>
+          <table class="pc-table">
+            <thead>
+              <tr>
+                <th style="width:50px"><input type="checkbox"></th>
+                <th>序号</th>
+                <th>标题</th>
+                <th>正文</th>
+                <th>来源</th>
+                <th>状态</th>
+                <th>创建时间</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td>1</td>
+                <td class="excerpt-title-cell">
+                  <div class="excerpt-title-main">坚持共建共治共享，建设人人有责、人人尽责、人人享有的社会治理共同体</div>
+                  <div class="excerpt-title-sub">字数：46</div>
+                </td>
+                <td class="excerpt-title-cell"><div class="excerpt-title-sub">社区是社会治理的基本单元。要把更多资源、服务、管理放到社区，更好为社区居民提供精准化、精细化服务。</div></td>
+                <td>基层治理论述摘编</td>
+                <td><span class="tag tag-green">已上架</span></td>
+                <td>2026-08-20 10:24</td>
+                <td>
+                  <a class="action-link" onclick="openModal('editModal')">编辑</a><span class="action-sep">|</span>
+                  <a class="action-link" onclick="openConfirm('下架论述','确认下架该条论述？下架后 C 端不再展示。')">下架</a><span class="action-sep">|</span>
+                  <a class="action-link" onclick="openConfirm('删除论述','确认删除该条论述？删除后不可恢复。')">删除</a>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td>2</td>
+                <td class="excerpt-title-cell">
+                  <div class="excerpt-title-main">把群众的事当作自己的事</div>
+                  <div class="excerpt-title-sub">字数：38</div>
+                </td>
+                <td class="excerpt-title-cell"><div class="excerpt-title-sub">社区工作要以人民为中心，把群众的操心事、烦心事、揪心事当作自己的事来办，用心用情解决群众急难愁盼问题。</div></td>
+                <td>基层治理论述摘编</td>
+                <td><span class="tag tag-green">已上架</span></td>
+                <td>2026-08-20 10:20</td>
+                <td>
+                  <a class="action-link" onclick="openModal('editModal')">编辑</a><span class="action-sep">|</span>
+                  <a class="action-link" onclick="openConfirm('下架论述','确认下架该条论述？下架后 C 端不再展示。')">下架</a><span class="action-sep">|</span>
+                  <a class="action-link" onclick="openConfirm('删除论述','确认删除该条论述？删除后不可恢复。')">删除</a>
+                </td>
+              </tr>
+              <tr>
+                <td><input type="checkbox"></td>
+                <td>3</td>
+                <td class="excerpt-title-cell">
+                  <div class="excerpt-title-main">发挥基层党组织战斗堡垒作用</div>
+                  <div class="excerpt-title-sub">字数：52</div>
+                </td>
+                <td class="excerpt-title-cell"><div class="excerpt-title-sub">要加强社区党组织建设，把基层党组织建设成为宣传党的主张、贯彻党的决定、领导基层治理、团结动员群众、推动改革发展的坚强战斗堡垒。</div></td>
+                <td>基层治理论述摘编</td>
+                <td><span class="tag tag-orange">已下架</span></td>
+                <td>2026-08-19 16:02</td>
+                <td>
+                  <a class="action-link" onclick="openModal('editModal')">编辑</a><span class="action-sep">|</span>
+                  <a class="action-link" onclick="openConfirm('上架论述','确认上架该条论述？上架后进入首页轮播候选池。')">上架</a><span class="action-sep">|</span>
+                  <a class="action-link" onclick="openConfirm('删除论述','确认删除该条论述？删除后不可恢复。')">删除</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="pagination">
+            <span class="total">共 12 条</span>
+            <span class="pg active">1</span><span class="pg">2</span>
+            <select class="pg-select"><option>10条/页</option><option>20条/页</option></select>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- 新增/编辑弹窗 -->
+<div class="overlay" id="editModal" hidden>
+  <div class="modal modal-lg">
+    <div class="modal-header"><h3 id="editModalTitle">新增论述</h3><div class="modal-close" onclick="closeModal('editModal')">×</div></div>
+    <div class="modal-body">
+      <div class="section">
+        <div class="section-title">论述内容</div>
+        <div class="form-row">
+          <div class="form-label"><span class="required">*</span>标题</div>
+          <div class="form-control"><input type="text" placeholder="请输入论述标题"><div class="form-help">标题用于 C 端列表展示，建议使用论述核心观点。</div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-label"><span class="required">*</span>正文</div>
+          <div class="form-control"><textarea style="min-height:120px" placeholder="请输入论述正文"></textarea><div class="form-help">正文会完整展示在 C 端列表卡片中。</div></div>
+        </div>
+        <div class="form-row">
+          <div class="form-label">来源</div>
+          <div class="form-control"><input type="text" placeholder="如：基层治理论述摘编"></div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">发布设置</div>
+        <div class="form-row">
+          <div class="form-label">上架状态</div>
+          <div class="form-control">
+            <div class="radio-group">
+              <label><input type="radio" name="status" checked> 立即上架</label>
+              <label><input type="radio" name="status"> 暂不上架</label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" onclick="closeModal('editModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('editModal');toast('论述已保存')">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 批量导入弹窗 -->
+<div class="overlay" id="importModal" hidden>
+  <div class="modal modal-lg">
+    <div class="modal-header"><h3>批量导入论述</h3><div class="modal-close" onclick="closeModal('importModal')">×</div></div>
+    <div class="modal-body">
+      <div class="section">
+        <div class="section-title">导入说明</div>
+        <div class="import-tip">
+          <p>1. 请使用 <strong>Excel 模板</strong> 填写论述内容，模板字段包括：<strong>标题、正文、来源</strong>。</p>
+          <p>2. 点击「下载导入模板」获取模板文件；正文建议每条不超过 200 字。</p>
+          <p>3. 导入时逐条校验，标题或正文为空的行会被跳过并给出提示。</p>
+          <p>4. 导入后默认进入<strong>暂不上架</strong>状态，需在列表手动上架或设置立即上架。</p>
+        </div>
+        <div class="form-row" style="margin-top:14px">
+          <div class="form-label">导入文件</div>
+          <div class="form-control">
+            <div class="pc-upload-grid">
+              <div class="pc-upload-box filled">论述摘编导入模板.xlsx<span class="pc-upload-remove">×</span></div>
+            </div>
+            <div class="form-help">支持 .xlsx 格式，单次最多 500 条。</div>
+          </div>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-title">导入结果预览</div>
+        <div class="table-wrap" style="margin-top:0">
+          <table class="pc-table">
+            <thead><tr><th>标题</th><th>正文摘要</th><th>来源</th><th>校验结果</th></tr></thead>
+            <tbody>
+              <tr><td>坚持以人民为中心的发展思想</td><td>社区工作要以人民为中心……</td><td>基层治理论述摘编</td><td><span class="tag tag-green">通过</span></td></tr>
+              <tr><td>加强和创新基层社会治理</td><td>坚持和完善新时代'枫桥经验'……</td><td>基层治理论述摘编</td><td><span class="tag tag-green">通过</span></td></tr>
+              <tr><td></td><td>（正文为空）</td><td>—</td><td><span class="tag tag-red">跳过</span></td></tr>
+            </tbody>
+          </table>
+          <div class="pagination"><span class="total">共 3 条，2 条可导入，1 条跳过</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" onclick="toast('已下载导入模板')">下载导入模板</button>
+      <button class="btn btn-default" onclick="closeModal('importModal')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('importModal');toast('已导入 2 条论述')">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- 确认弹窗 -->
+<div class="overlay" id="confirm" hidden>
+  <div class="modal modal-sm">
+    <div class="modal-header"><h3 id="confirmTitle">确认操作</h3><div class="modal-close" onclick="closeModal('confirm')">×</div></div>
+    <div class="modal-body">
+      <div class="confirm-dialog">
+        <div class="confirm-icon warn">!</div>
+        <div class="confirm-content">
+          <div class="confirm-title" id="confirmSub">请确认</div>
+          <div class="confirm-desc" id="confirmText"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" onclick="closeModal('confirm')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('confirm');toast('操作已提交')">确认</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+  function openModal(id) { document.getElementById(id).hidden = false; }
+  function closeModal(id) { document.getElementById(id).hidden = true; }
+  function openConfirm(title, text) {
+    document.getElementById('confirmTitle').textContent = title;
+    document.getElementById('confirmSub').textContent = title;
+    document.getElementById('confirmText').textContent = text;
+    openModal('confirm');
+  }
+  function toggleSwitch(el) { el.classList.toggle('on'); }
+  function resetEditForm() { document.getElementById('editModalTitle').textContent = '新增论述'; }
+  function toast(text) {
+    var t = document.getElementById('toast');
+    t.textContent = text; t.classList.add('show');
+    clearTimeout(window.__tt);
+    window.__tt = setTimeout(function () { t.classList.remove('show'); }, 1500);
+  }
+  document.querySelectorAll('.pc-upload-remove').forEach(function (el) {
+    el.addEventListener('click', function () { this.parentElement.classList.remove('filled'); this.parentElement.innerHTML = '<span>+</span>'; });
+  });
+
+  // 支持 ?state= 参数：list / import / edit
+  (function () {
+    var params = new URLSearchParams(location.search);
+    var state = params.get('state') || 'list';
+    if (state === 'import') {
+      openModal('importModal');
+    } else if (state === 'edit') {
+      resetEditForm();
+      openModal('editModal');
+    }
+  })();
+</script>
+</body>
+</html>

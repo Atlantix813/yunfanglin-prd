@@ -1,0 +1,368 @@
+<!-- prototype-states: list, create, edit -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>分类管理 - 云芳邻管理系统</title>
+<link rel="stylesheet" href="components.css">
+<style>
+  /* 弹层定位：components.css 的 overlay 无 fixed，按既有原型惯例补定位 */
+  .overlay { position: fixed; inset: 0; z-index: 900; }
+
+  /* 分类树面板 */
+  .cat-layout { display: flex; align-items: stretch; gap: 16px; margin-top: 16px; }
+  .cat-tree-panel {
+    width: 300px; flex-shrink: 0; background: #fff; border: 1px solid #E5E6EB; border-radius: 8px;
+    padding: 12px 0; max-height: 640px; overflow-y: auto;
+  }
+  .cat-tree-title { padding: 0 16px 10px; font-size: 14px; font-weight: 700; color: #272E3B; border-bottom: 1px solid #F2F3F5; }
+  .cat-tree-node {
+    display: flex; align-items: center; min-height: 40px; padding: 0 16px 0 14px;
+    font-size: 13px; color: #4E5969; gap: 10px; border-bottom: 1px solid #F7F8FA;
+  }
+  .cat-tree-node.child { padding-left: 40px; }
+  .cat-drag-icon { flex-shrink: 0; color: #C9CDD4; cursor: grab; font-size: 14px; letter-spacing: 1px; }
+  .cat-node-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cat-node-icons { display: none; gap: 6px; align-items: center; flex-shrink: 0; }
+  .cat-tree-node:hover .cat-node-icons { display: flex; }
+  .cat-node-icon {
+    width: 22px; height: 22px; border-radius: 4px; cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center; color: #86909C;
+  }
+  .cat-node-icon:hover { background: #F2F3F5; }
+  .cat-node-icon.danger { color: #F53F3F; }
+
+  /* 右侧说明 */
+  .cat-info { flex: 1; min-width: 0; }
+  .cat-limit-card {
+    padding: 14px 16px; border: 1px solid #B8D4FA; border-radius: 8px; background: #EBF5FF;
+    display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #2F6EEB; line-height: 20px;
+  }
+  .cat-tip-card {
+    margin-top: 12px; padding: 14px 16px; border: 1px solid #EEF2F8; border-radius: 8px; background: #F7F9FC;
+    font-size: 13px; color: #4E5969; line-height: 22px;
+  }
+  .cat-tip-card strong { color: #272E3B; }
+
+  /* 弹窗字段 */
+  .form-field { flex: 1; }
+  .form-field select, .form-field input {
+    width: 100%; height: 32px; border: 1px solid #E5E6EB; border-radius: 4px; padding: 0 10px;
+    font-size: 13px; color: #272E3B; outline: none; font-family: inherit; background: #fff;
+  }
+  .form-field select { padding-right: 28px; appearance: none; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='%23A9AEB8'%3E%3Cpath d='M0 0l5 6 5-6z'/%3E%3C/svg%3E") no-repeat right 10px center #fff; }
+  .cat-level-note { margin-top: 6px; font-size: 12px; color: #86909C; }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+
+<!-- Header -->
+<div class="header">
+  <div class="header-left">
+    <div class="header-logo">云芳邻管理系统</div>
+    <div class="header-hamburger"><span></span><span></span><span></span></div>
+  </div>
+  <div class="header-right">
+    <div class="header-right-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 2L3 7v6c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7l-9-5z"/></svg><span>使用指南</span></div>
+    <div class="header-right-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg></div>
+    <div class="header-right-item"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg></div>
+    <div class="header-right-item"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3"/></svg></div>
+    <div class="header-right-item">
+      <div class="avatar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+      <span>管理员</span><svg width="10" height="6" viewBox="0 0 10 6" fill="#fff"><path d="M0 0l5 6 5-6z"/></svg>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="sidebar-item"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/></svg><span class="label">工作台</span></div>
+  <div class="sidebar-item"><span class="label">用户管理</span><span class="arrow">›</span></div>
+  <div class="sidebar-item expanded active"><span class="label">培训管理员</span><span class="arrow">›</span></div>
+  <div class="sidebar-sub">
+    <div class="sidebar-item active">分类管理</div>
+    <div class="sidebar-item">资源管理</div>
+    <div class="sidebar-sub-sub">
+      <div class="sidebar-item">视频</div>
+      <div class="sidebar-item">图片</div>
+      <div class="sidebar-item">课件</div>
+    </div>
+    <div class="sidebar-item">课程中心</div>
+    <div class="sidebar-sub-sub">
+      <div class="sidebar-item">线上课</div>
+    </div>
+    <div class="sidebar-item">学员管理</div>
+  </div>
+  <div class="sidebar-item"><span class="label">任务管理</span><span class="arrow">›</span></div>
+  <div class="sidebar-item"><span class="label">权限管理</span><span class="arrow">›</span></div>
+  <div class="sidebar-item"><span class="label">系统管理</span><span class="arrow">›</span></div>
+  <div class="sidebar-item"><span class="label">公共管理</span><span class="arrow">›</span></div>
+  <div class="sidebar-item"><span class="label">邻里圈</span><span class="arrow">›</span></div>
+  <div class="sidebar-item"><span class="label">运营统计</span><span class="arrow">›</span></div>
+  <div class="sidebar-item"><span class="label">选民登记管理</span><span class="arrow">›</span></div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="tab-bar">
+    <div class="tab-item" style="color:#C9CDD4;">工作台</div>
+    <div class="tab-item active">分类管理 <span class="tab-close">x</span></div>
+  </div>
+
+  <div class="content">
+    <div class="page-header">
+      <span class="page-title">分类管理</span>
+      <span class="breadcrumb">培训管理 / 分类管理</span>
+    </div>
+
+    <div class="op-bar">
+      <button class="btn btn-primary" onclick="openCreate()">新建分类</button>
+    </div>
+
+    <div class="cat-layout">
+      <!-- 左侧分类树 -->
+      <div class="cat-tree-panel">
+        <div class="cat-tree-title">课程分类（最多两级）</div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">社区治理</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('社区治理','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node child">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">矛盾调解</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('矛盾调解','社区治理')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openConfirm()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node child">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">居民协商</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('居民协商','社区治理')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openConfirm()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">社区品牌</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('社区品牌','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">急救知识</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('急救知识','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node child">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">心肺复苏</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('心肺复苏','急救知识')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openConfirm()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">央视案例</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('央视案例','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">他山之石</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('他山之石','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">名师讲堂</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('名师讲堂','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">优秀社区工作者</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('优秀社区工作者','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">互学互鉴</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('互学互鉴','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">专题课程</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('专题课程','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">公开课</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('公开课','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+        <div class="cat-tree-node">
+          <span class="cat-drag-icon">⋮⋮</span>
+          <span class="cat-node-name">抢险救灾</span>
+          <span class="cat-node-icons">
+            <span class="cat-node-icon" title="编辑" onclick="openEdit('抢险救灾','作为一级分类')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 3a2.83 2.83 0 114 4L7.5 20.5 2 22l1.5-5.5z"/></svg></span>
+            <span class="cat-node-icon danger" title="删除" onclick="openDeleteTip()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6"/></svg></span>
+          </span>
+        </div>
+      </div>
+
+      <!-- 右侧说明 -->
+      <div class="cat-info">
+        <div class="cat-limit-card">
+          <span style="flex-shrink:0">ℹ</span>
+          <span>分类层级限制为最多两级：一级分类可新建二级分类，二级分类不可再新建子分类（三级及以上分类不再支持）。</span>
+        </div>
+        <div class="cat-tip-card">
+          <strong>层级规则说明</strong><br>
+          1. 「新建分类」时，[所属上级]下拉仅展示「作为一级分类」和全部一级分类。<br>
+          2. 选择「作为一级分类」创建一级分类；选择某个一级分类作为上级，创建二级分类。<br>
+          3. 二级分类不可再作为上级创建三级分类，下拉中不提供二级分类选项。<br>
+          4. 课程中心、资源管理（视频/图片/课件）共用同一套分类树。
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- 新建/编辑分类弹窗 -->
+<div class="overlay" id="categoryModal" style="display:none">
+  <div class="modal modal-md">
+    <div class="modal-header"><h3 id="catModalTitle">新建分类</h3><span class="modal-close" onclick="closeModal()">×</span></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-label"><span class="required">*</span>所属上级</div>
+        <div class="form-field">
+          <select id="parentSelect">
+            <option value="root">作为一级分类</option>
+            <option value="community">社区治理</option>
+            <option value="brand">社区品牌</option>
+            <option value="firstaid">急救知识</option>
+            <option value="cctv">央视案例</option>
+            <option value="model">他山之石</option>
+            <option value="lecture">名师讲堂</option>
+            <option value="worker">优秀社区工作者</option>
+            <option value="exchange">互学互鉴</option>
+            <option value="topic">专题课程</option>
+            <option value="open">公开课</option>
+            <option value="rescue">抢险救灾</option>
+          </select>
+          <div class="cat-level-note">选择一级分类作为上级时，创建的是二级分类；二级分类不可再作为上级。</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-label"><span class="required">*</span>分类名称</div>
+        <div class="form-field"><input id="catName" placeholder="请输入分类名称" autocomplete="off"></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveCategory()">确定</button>
+    </div>
+  </div>
+</div>
+
+<!-- 删除确认 -->
+<div class="overlay" id="confirmModal" style="display:none">
+  <div class="modal modal-sm">
+    <div class="modal-header"><h3>操作确认</h3><span class="modal-close" onclick="closeConfirm()">×</span></div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:10px 0 16px;">
+        <div style="font-size:15px;font-weight:600;color:#272E3B;margin-bottom:8px;">确认删除此分类？</div>
+        <div style="font-size:13px;color:#86909C;line-height:20px;">删除后该分类下课程将变为未分类，历史学习记录保留。</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-default" onclick="closeConfirm()">取消</button>
+      <button class="btn btn-primary" onclick="closeConfirm();toast('删除成功')">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- 一级分类删除关联提示 -->
+<div class="overlay" id="deleteTipModal" style="display:none">
+  <div class="modal modal-sm">
+    <div class="modal-header"><h3>无法删除</h3><span class="modal-close" onclick="closeDeleteTip()">×</span></div>
+    <div class="modal-body">
+      <div style="text-align:center;padding:10px 0 16px;">
+        <div style="font-size:15px;font-weight:600;color:#272E3B;margin-bottom:8px;">该分类下存在子分类</div>
+        <div style="font-size:13px;color:#86909C;line-height:20px;">一级分类包含子分类时不可直接删除，请先删除或迁移其下的二级分类。</div>
+      </div>
+    </div>
+    <div class="modal-footer center">
+      <button class="btn btn-primary" onclick="closeDeleteTip()">我知道了</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<script>
+  function openCreate() {
+    document.getElementById('catModalTitle').textContent = '新建分类';
+    document.getElementById('parentSelect').value = 'root';
+    document.getElementById('catName').value = '';
+    document.getElementById('categoryModal').style.display = 'flex';
+  }
+  function openEdit(name, parent) {
+    document.getElementById('catModalTitle').textContent = '编辑分类';
+    document.getElementById('parentSelect').value = parent === '作为一级分类' ? 'root' : parent;
+    document.getElementById('catName').value = name;
+    document.getElementById('categoryModal').style.display = 'flex';
+  }
+  function closeModal() { document.getElementById('categoryModal').style.display = 'none'; }
+  function saveCategory() { closeModal(); toast('保存成功'); }
+  function openConfirm() { document.getElementById('confirmModal').style.display = 'flex'; }
+  function closeConfirm() { document.getElementById('confirmModal').style.display = 'none'; }
+  function openDeleteTip() { document.getElementById('deleteTipModal').style.display = 'flex'; }
+  function closeDeleteTip() { document.getElementById('deleteTipModal').style.display = 'none'; }
+  function toast(text) {
+    var node = document.getElementById('toast');
+    node.textContent = text; node.classList.add('show');
+    clearTimeout(window.__tt);
+    window.__tt = setTimeout(function () { node.classList.remove('show'); }, 1500);
+  }
+
+  // 支持 ?state= 参数：list / create / edit
+  (function () {
+    var params = new URLSearchParams(location.search);
+    var state = params.get('state') || 'list';
+    if (state === 'create') openCreate();
+    else if (state === 'edit') openEdit('矛盾调解', 'community');
+  })();
+</script>
+</body>
+</html>

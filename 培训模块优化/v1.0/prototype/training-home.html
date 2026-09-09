@@ -1,0 +1,429 @@
+<!-- prototype-states: category-community, search-result -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>教培系统 · 学习首页</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
+  .train-home { height: 100%; display: flex; flex-direction: column; background: #fff; }
+  .train-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .train-scroll::-webkit-scrollbar { display: none; }
+
+  /* 顶部搜索区 */
+  .train-search-wrap { padding: 10px 16px 8px; background: #fff; }
+  .train-search-bar {
+    height: 36px; padding: 0 14px; display: flex; align-items: center; gap: 8px;
+    border-radius: 18px; background: #F4F6FA; color: #939CAB;
+  }
+  .train-search-bar input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 14px; color: #222835; }
+  .train-search-bar input::placeholder { color: #B0B8C8; }
+  .train-search-action { border: 0; background: transparent; color: #3F86F5; font-size: 13px; font-weight: 600; }
+
+  /* 论述摘编横幅（走马灯） */
+  .train-excerpt-banner {
+    margin: 0 16px 4px; height: 44px; padding: 0 14px; border-radius: 10px;
+    display: flex; align-items: center; gap: 10px; cursor: pointer;
+    background: linear-gradient(90deg, #FDF0E3, #FFF7EC); color: #8A4B00;
+    box-shadow: 0 1px 4px rgba(138,75,0,.06);
+  }
+  .train-excerpt-tag {
+    flex-shrink: 0; height: 20px; padding: 0 8px; border-radius: 4px;
+    display: inline-flex; align-items: center; background: #FF9D19; color: #fff;
+    font-size: 11px; font-weight: 700;
+  }
+  .train-excerpt-text {
+    flex: 1; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+    font-size: 13px; color: #8A4B00;
+  }
+  .train-excerpt-arrow { flex-shrink: 0; color: #D08A3A; font-size: 13px; }
+
+  /* 分类导航：一级横向 tab + 二级 chip */
+  .train-category {
+    margin: 8px 0 0; background: #fff;
+  }
+  .train-cat-scroll { display: flex; align-items: center; gap: 6px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+  .train-cat-scroll::-webkit-scrollbar { display: none; }
+  .train-cat-tab {
+    flex-shrink: 0; height: 34px; padding: 0 14px; border: 0; border-radius: 17px;
+    background: #F4F6FA; color: #4B5563; font-size: 13px; font-weight: 600;
+  }
+  .train-cat-tab.active { background: #EBF5FF; color: #3F86F5; box-shadow: inset 0 0 0 1px #B8D4FA; }
+  .train-cat-tab .more-mark { margin-left: 3px; font-size: 11px; color: #939CAB; }
+
+  .train-sub-scroll { display: none; gap: 6px; padding: 10px 16px 2px; overflow-x: auto; scrollbar-width: none; }
+  .train-sub-scroll.show { display: flex; }
+  .train-sub-scroll::-webkit-scrollbar { display: none; }
+  .train-sub-chip {
+    flex-shrink: 0; height: 28px; padding: 0 12px; border: 1px solid #E8EEF8; border-radius: 14px;
+    background: #fff; color: #4B5563; font-size: 12px;
+  }
+  .train-sub-chip.active { border-color: #B8D4FA; background: #EBF5FF; color: #3F86F5; font-weight: 600; }
+
+  /* 课程列表 */
+  .train-list { padding: 14px 16px 24px; }
+  .train-list-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .train-list-title { font-size: 15px; font-weight: 700; color: #222835; }
+  .train-list-count { font-size: 12px; color: #939CAB; }
+  .train-course {
+    padding: 14px 0; border-bottom: 1px solid #F4F6F9; display: flex; gap: 12px;
+  }
+  .train-course:last-child { border-bottom: 0; }
+  .train-course[hidden] { display: none; }
+  .train-course-cover {
+    width: 96px; height: 68px; flex-shrink: 0; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, var(--c1), var(--c2)); color: rgba(255,255,255,.92);
+  }
+  .train-course-cover .yfl-icon { color: rgba(255,255,255,.92); }
+  .train-course-main { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; }
+  .train-course-name {
+    font-size: 15px; line-height: 21px; color: #222835; font-weight: 600;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .train-course-desc {
+    margin-top: 4px; font-size: 12px; line-height: 18px; color: #8A94A6;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .train-course-meta { display: flex; align-items: center; gap: 6px; }
+  .train-course-cat { flex-shrink: 0; color: #B0B8C8; font-size: 11px; }
+  .train-course-progress { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
+  .train-course-progress-track { flex: 1; height: 4px; border-radius: 2px; background: #EAEFF7; overflow: hidden; }
+  .train-course-progress-fill { height: 100%; border-radius: 2px; background: #3F86F5; }
+  .train-course-progress-text { flex-shrink: 0; color: #3F86F5; font-size: 11px; font-weight: 600; }
+  .train-course-done { flex-shrink: 0; color: #FF9D19; font-size: 11px; font-weight: 600; }
+
+  /* 空状态 */
+  .train-empty { padding: 48px 20px; text-align: center; color: #B0B8C8; font-size: 13px; }
+  .train-empty-icon { display: block; margin: 0 auto 10px; color: #C6D0DE; }
+
+  /* 底部导航（三栏，沿用 meedu 真实图标） */
+  .train-bottom {
+    width: 375px; height: 62px; flex-shrink: 0; display: flex; align-items: stretch;
+    border-top: 1px solid #F2F3F5; background: #fff;
+  }
+  .train-bottom-item {
+    flex: 1; min-width: 0; height: 62px; border: 0; background: transparent;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    color: #999; font-size: 10px; line-height: 14px;
+  }
+  .train-bottom-item.active { color: #333; font-weight: 600; }
+  .train-bottom-icon { width: 28px; height: 28px; flex: 0 0 28px; display: flex; align-items: center; justify-content: center; }
+  .train-bottom-icon img { width: 28px; height: 28px; display: block; }
+
+  .m-toast { position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%) translateY(16px); z-index: 100; min-width: 120px; max-width: 320px; padding: 11px 16px; border-radius: 10px; background: rgba(34,40,53,.92); color: #fff; text-align: center; font-size: 13px; font-weight: 600; opacity: 0; pointer-events: none; transition: .18s; }
+  .m-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="yfl-c-root m-phone">
+  <div class="m-phone-screen train-home">
+
+    <div class="m-status-bar">
+      <span class="time">9:41</span>
+      <div class="m-status-icons" aria-hidden="true">
+        <svg data-inline-svg-ok width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
+        <svg data-inline-svg-ok width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <div class="m-nav-bar">
+      <span class="title">学习中心</span>
+      <div class="capsule" aria-label="小程序菜单">
+        <div class="capsule-dots"><span></span><span></span><span></span></div>
+        <div class="capsule-divider"></div>
+        <div class="capsule-close"><span class="capsule-target"></span></div>
+      </div>
+    </div>
+
+    <div class="train-scroll">
+      <!-- 搜索栏 -->
+      <div class="train-search-wrap">
+        <div class="train-search-bar">
+          <span class="yfl-icon yfl-icon--18" data-icon="search" aria-hidden="true"></span>
+          <input type="text" id="searchInput" placeholder="搜索课程名称或课程简介">
+          <button class="train-search-action" id="searchBtn">搜索</button>
+        </div>
+      </div>
+
+      <!-- 论述摘编横幅（走马灯） -->
+      <div class="train-excerpt-banner" id="excerptBanner" onclick="window.YunFangLinC && window.YunFangLinC.showToast(document.body, '进入论述摘编列表')">
+        <span class="train-excerpt-tag">今日论述</span>
+        <span class="train-excerpt-text" id="excerptText">社区工作要以人民为中心，把群众的操心事、烦心事、揪心事当作自己的事来办。</span>
+        <span class="train-excerpt-arrow">›</span>
+      </div>
+
+      <!-- 分类导航（两级：一级 tab + 二级 chip，后台限制最多两级） -->
+      <div class="train-category">
+        <div class="train-cat-scroll" id="catScroll">
+          <button class="train-cat-tab active" data-cat="all">全部</button>
+          <button class="train-cat-tab" data-cat="community">社区治理</button>
+          <button class="train-cat-tab" data-cat="safety">安全应急</button>
+          <button class="train-cat-tab" data-cat="service">便民服务</button>
+          <button class="train-cat-tab" data-cat="party">党建学习</button>
+        </div>
+        <div class="train-sub-scroll" id="subScroll">
+          <button class="train-sub-chip active" data-sub="all">全部子类</button>
+          <button class="train-sub-chip" data-sub="mediation">矛盾调解</button>
+          <button class="train-sub-chip" data-sub="consultation">居民协商</button>
+          <button class="train-sub-chip" data-sub="volunteer">志愿服务</button>
+        </div>
+      </div>
+
+      <!-- 课程列表 -->
+      <div class="train-list">
+        <div class="train-list-head">
+          <span class="train-list-title" id="listTitle">全部课程</span>
+          <span class="train-list-count" id="listCount">共 8 门</span>
+        </div>
+        <div id="courseList">
+          <div class="train-course" data-cat="community" data-sub="mediation" data-name="社区合伙人政策与准入规则">
+            <div class="train-course-cover" style="--c1:#35B3FF;--c2:#13B4A9"><span class="yfl-icon yfl-icon--24" data-icon="service" aria-hidden="true"></span></div>
+            <div class="train-course-main">
+              <div class="train-course-name">社区合伙人政策与准入规则</div>
+              <div class="train-course-desc">介绍社区合伙人的政策背景、准入条件与申请流程，帮助社区工作人员理解合伙人机制。</div>
+              <div class="train-course-meta">
+                <span class="train-course-cat">社区治理</span>
+                <div class="train-course-progress"><div class="train-course-progress-track"><div class="train-course-progress-fill" style="width:86%"></div></div><span class="train-course-progress-text">86%</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="train-course" data-cat="community" data-sub="consultation" data-name="社区服务站日常巡查与记录规范">
+            <div class="train-course-cover" style="--c1:#7348FF;--c2:#C236C9"><span class="yfl-icon yfl-icon--24" data-icon="service" aria-hidden="true"></span></div>
+            <div class="train-course-main">
+              <div class="train-course-name">社区服务站日常巡查与记录规范</div>
+              <div class="train-course-desc">规范社区服务站日常巡查与记录流程，覆盖巡查要点、记录标准与问题上报。</div>
+              <div class="train-course-meta">
+                <span class="train-course-cat">社区治理</span>
+                <span class="train-course-done">✓ 已学完</span>
+              </div>
+            </div>
+          </div>
+          <div class="train-course" data-cat="safety" data-sub="fire" data-name="消防安全检查实务">
+            <div class="train-course-cover" style="--c1:#FFA617;--c2:#FF6332"><span class="yfl-icon yfl-icon--24" data-icon="alert" aria-hidden="true"></span></div>
+            <div class="train-course-main">
+              <div class="train-course-name">消防安全检查实务</div>
+              <div class="train-course-desc">讲解社区消防安全检查要点、隐患识别与整改跟进，提升基层消防安全管理能力。</div>
+              <div class="train-course-meta">
+                <span class="train-course-cat">安全应急</span>
+                <div class="train-course-progress"><div class="train-course-progress-track"><div class="train-course-progress-fill" style="width:42%"></div></div><span class="train-course-progress-text">42%</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="train-course" data-cat="safety" data-sub="plan" data-name="社区应急预案编制与演练">
+            <div class="train-course-cover" style="--c1:#16B7C2;--c2:#2489C9"><span class="yfl-icon yfl-icon--24" data-icon="alert" aria-hidden="true"></span></div>
+            <div class="train-course-main">
+              <div class="train-course-name">社区应急预案编制与演练</div>
+              <div class="train-course-desc">学习社区应急预案的编制方法、演练组织与应急响应流程，提高应急处置能力。</div>
+              <div class="train-course-meta">
+                <span class="train-course-cat">安全应急</span>
+                <span class="train-course-done">✓ 已学完</span>
+              </div>
+            </div>
+          </div>
+          <div class="train-course" data-cat="service" data-sub="all" data-name="便民服务事项办理指南">
+            <div class="train-course-cover" style="--c1:#18C46A;--c2:#16B7A2"><span class="yfl-icon yfl-icon--24" data-icon="guide" aria-hidden="true"></span></div>
+            <div class="train-course-main">
+              <div class="train-course-name">便民服务事项办理指南</div>
+              <div class="train-course-desc">梳理常见便民服务事项的办理条件、材料与流程，方便居民一次办成。</div>
+              <div class="train-course-meta">
+                <span class="train-course-cat">便民服务</span>
+                <div class="train-course-progress"><div class="train-course-progress-track"><div class="train-course-progress-fill" style="width:18%"></div></div><span class="train-course-progress-text">18%</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="train-course" data-cat="party" data-sub="all" data-name="基层党组织建设实务">
+            <div class="train-course-cover" style="--c1:#C236C9;--c2:#7348FF"><span class="yfl-icon yfl-icon--24" data-icon="review" aria-hidden="true"></span></div>
+            <div class="train-course-main">
+              <div class="train-course-name">基层党组织建设实务</div>
+              <div class="train-course-desc">围绕基层党组织标准化规范化建设，讲解组织生活、党员管理与作用发挥。</div>
+              <div class="train-course-meta">
+                <span class="train-course-cat">党建学习</span>
+                <div class="train-course-progress"><div class="train-course-progress-track"><div class="train-course-progress-fill" style="width:0%"></div></div><span class="train-course-progress-text">未学习</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="train-course" data-cat="party" data-sub="all" data-name="民法典与社区治理">
+            <div class="train-course-cover" style="--c1:#FF9348;--c2:#FF6A3C"><span class="yfl-icon yfl-icon--24" data-icon="review" aria-hidden="true"></span></div>
+            <div class="train-course-main">
+              <div class="train-course-name">民法典与社区治理</div>
+              <div class="train-course-desc">结合民法典相关条款，讲解社区治理中常见的法律问题与处理思路。</div>
+              <div class="train-course-meta">
+                <span class="train-course-cat">党建学习</span>
+                <div class="train-course-progress"><div class="train-course-progress-track"><div class="train-course-progress-fill" style="width:30%"></div></div><span class="train-course-progress-text">30%</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="train-course" data-cat="community" data-sub="volunteer" data-name="社区志愿服务组织与激励">
+            <div class="train-course-cover" style="--c1:#3F86F5;--c2:#5B9FFF"><span class="yfl-icon yfl-icon--24" data-icon="service" aria-hidden="true"></span></div>
+            <div class="train-course-main">
+              <div class="train-course-name">社区志愿服务组织与激励</div>
+              <div class="train-course-desc">介绍社区志愿服务队伍的组织方式、活动开展与激励措施。</div>
+              <div class="train-course-meta">
+                <span class="train-course-cat">社区治理</span>
+                <div class="train-course-progress"><div class="train-course-progress-track"><div class="train-course-progress-fill" style="width:0%"></div></div><span class="train-course-progress-text">未学习</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="train-empty" id="emptyResult" hidden>
+          <span class="train-empty-icon"><span class="yfl-icon yfl-icon--24" data-icon="search" aria-hidden="true"></span></span>
+          没有找到相关课程
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部导航：首页 / 学习 / 我的（沿用 meedu 真实图标） -->
+    <div class="train-bottom">
+      <button class="train-bottom-item" data-page="home">
+        <span class="train-bottom-icon"><img src="meedu-assets/icon-home-n@2x.png" alt=""></span>
+        <span>首页</span>
+      </button>
+      <button class="train-bottom-item active" data-page="study">
+        <span class="train-bottom-icon"><img src="meedu-assets/icon-study-h@2x.png" alt=""></span>
+        <span>学习</span>
+      </button>
+      <button class="train-bottom-item" data-page="mine">
+        <span class="train-bottom-icon"><img src="meedu-assets/icon-me-n@2x.png" alt=""></span>
+        <span>我的</span>
+      </button>
+    </div>
+    <div class="m-toast"></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const allowedStates = ['category-community', 'category-safety', 'sub-filter', 'search-result', 'excerpt-more'];
+    const initialState = allowedStates.includes(params.get('state')) ? params.get('state') : 'category-community';
+
+    const catScroll = document.getElementById('catScroll');
+    const subScroll = document.getElementById('subScroll');
+    const courseList = document.getElementById('courseList');
+    const emptyResult = document.getElementById('emptyResult');
+    const listTitle = document.getElementById('listTitle');
+    const listCount = document.getElementById('listCount');
+    const searchInput = document.getElementById('searchInput');
+
+    const catTabs = [...document.querySelectorAll('.train-cat-tab')];
+    const subChips = [...document.querySelectorAll('.train-sub-chip')];
+    const courses = [...document.querySelectorAll('.train-course')];
+
+    // 各一级分类的二级分类集合
+    const subByCat = {
+      community: ['全部子类', '矛盾调解', '居民协商', '志愿服务'],
+      safety: ['全部子类', '消防安全', '应急预案'],
+      service: ['全部子类'],
+      party: ['全部子类'],
+      all: []
+    };
+    // 课程 - 二级分类映射（原型用 data-sub 近似表达）
+    const courseSub = {
+      '社区合伙人政策与准入规则': '矛盾调解',
+      '社区服务站日常巡查与记录规范': '居民协商',
+      '消防安全检查实务': '消防安全',
+      '社区应急预案编制与演练': '应急预案',
+      '社区志愿服务组织与激励': '志愿服务'
+    };
+
+    function renderSubs(cat) {
+      const list = subByCat[cat] || [];
+      subScroll.innerHTML = list.map(function (name, i) {
+        return '<button class="train-sub-chip' + (i === 0 ? ' active' : '') + '" data-sub="' + (i === 0 ? 'all' : name) + '">' + name + '</button>';
+      }).join('');
+      subScroll.classList.toggle('show', list.length > 0);
+      subScroll.querySelectorAll('.train-sub-chip').forEach(function (chip) {
+        chip.addEventListener('click', function () {
+          subScroll.querySelectorAll('.train-sub-chip').forEach(function (c) { c.classList.remove('active'); });
+          chip.classList.add('active');
+          filterCourses();
+        });
+      });
+    }
+
+    function activeCat() {
+      const tab = catTabs.find(function (t) { return t.classList.contains('active'); });
+      return tab ? tab.dataset.cat : 'all';
+    }
+    function activeSub() {
+      const chip = subScroll.querySelector('.train-sub-chip.active');
+      return chip ? chip.dataset.sub : 'all';
+    }
+
+    function filterCourses() {
+      const cat = activeCat();
+      const sub = activeSub();
+      const keyword = searchInput.value.trim();
+      let count = 0;
+      courses.forEach(function (course) {
+        const catOk = cat === 'all' || course.dataset.cat === cat;
+        const subOk = sub === 'all' || course.dataset.sub === sub || courseSub[course.dataset.name] === sub;
+        const kwOk = !keyword || course.dataset.name.includes(keyword);
+        const visible = catOk && subOk && kwOk;
+        course.hidden = !visible;
+        if (visible) count += 1;
+      });
+      listCount.textContent = '共 ' + count + ' 门';
+      emptyResult.hidden = count !== 0;
+    }
+
+    function renderState(next) {
+      const state = allowedStates.includes(next) ? next : 'category-community';
+      catTabs.forEach(function (t) { t.classList.remove('active'); });
+      if (state === 'category-community') {
+        catTabs.find(function (t) { return t.dataset.cat === 'community'; }).classList.add('active');
+        renderSubs('community');
+      } else if (state === 'category-safety') {
+        catTabs.find(function (t) { return t.dataset.cat === 'safety'; }).classList.add('active');
+        renderSubs('safety');
+      } else if (state === 'sub-filter') {
+        catTabs.find(function (t) { return t.dataset.cat === 'community'; }).classList.add('active');
+        renderSubs('community');
+      } else if (state === 'search-result') {
+        catTabs.find(function (t) { return t.dataset.cat === 'all'; }).classList.add('active');
+        renderSubs('all');
+        searchInput.value = '调解';
+      } else {
+        catTabs.find(function (t) { return t.dataset.cat === 'all'; }).classList.add('active');
+        renderSubs('all');
+      }
+      filterCourses();
+      const url = new URL(location.href);
+      url.searchParams.set('state', state);
+      history.replaceState(null, '', url);
+    }
+
+    catTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        catTabs.forEach(function (t) { t.classList.remove('active'); });
+        tab.classList.add('active');
+        renderSubs(tab.dataset.cat);
+        filterCourses();
+      });
+    });
+
+    searchInput.addEventListener('input', filterCourses);
+    document.getElementById('searchBtn').addEventListener('click', filterCourses);
+
+    document.querySelectorAll('.train-bottom-item').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const page = btn.dataset.page;
+        if (page === 'home') { window.YunFangLinC && window.YunFangLinC.showToast(document.body, '进入培训首页'); return; }
+        if (page === 'mine') { window.YunFangLinC && window.YunFangLinC.showToast(document.body, '进入我的页'); return; }
+        document.querySelectorAll('.train-bottom-item').forEach(function (i) { i.classList.remove('active'); });
+        btn.classList.add('active');
+        window.YunFangLinC && window.YunFangLinC.showToast(document.body, '当前在学习页');
+      });
+    });
+
+    renderState(initialState);
+  })();
+</script>
+</body>
+</html>

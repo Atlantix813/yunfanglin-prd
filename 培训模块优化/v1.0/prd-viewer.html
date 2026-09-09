@@ -1,0 +1,2163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>云芳邻 · 培训模块优化迭代 PRD</title>
+  <style>
+    :root {
+      --blue: #2f8cff;
+      --blue-dark: #1d6ee8;
+      --blue-weak: #eaf4ff;
+      --green: #16b36a;
+      --green-bg: #eaf9f1;
+      --orange: #f59e0b;
+      --orange-bg: #fff5df;
+      --red: #ef4444;
+      --red-bg: #fff1f1;
+      --text: #1f2937;
+      --sub: #4b5563;
+      --muted: #8a94a6;
+      --line: #e5e7eb;
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --soft: #f8fafc;
+      --shadow: 0 14px 40px rgba(15, 23, 42, .08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 14px;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .app {
+      height: 100vh;
+      display: grid;
+      grid-template-rows: 74px 1fr;
+      overflow: hidden;
+    }
+
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      min-width: 0;
+      z-index: 5;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #2f8cff, #63b3ff);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      flex: none;
+    }
+
+    .title {
+      min-width: 0;
+    }
+
+    .title strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .title span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 6px 12px;
+      background: #fff;
+      color: var(--sub);
+    }
+
+    .sidebar-toggle {
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      color: #526071;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+    }
+
+    .sidebar-toggle:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .sidebar-toggle svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .layout {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 252px 1fr;
+      overflow: hidden;
+    }
+
+    .layout.sidebar-collapsed {
+      grid-template-columns: 64px 1fr;
+    }
+
+    .sidebar {
+      min-height: 0;
+      overflow-y: auto;
+      background: #fff;
+      border-right: 1px solid var(--line);
+      padding: 18px 14px;
+    }
+
+    .layout.sidebar-collapsed .sidebar {
+      padding: 14px 8px;
+      overflow-x: hidden;
+    }
+
+    .sidebar-menu-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 0 4px 12px 10px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .sidebar-menu-title {
+      color: #334155;
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .sidebar-menu-head .sidebar-toggle {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      flex: none;
+    }
+
+    .layout.sidebar-collapsed .sidebar-menu-head {
+      justify-content: center;
+      padding: 0 0 10px;
+    }
+
+    .layout.sidebar-collapsed .sidebar-menu-title {
+      display: none;
+    }
+
+    .nav-label {
+      color: #a0a9b7;
+      font-weight: 800;
+      font-size: 12px;
+      padding: 8px 10px;
+    }
+
+    .layout.sidebar-collapsed .nav-label {
+      height: 14px;
+      padding: 7px 0;
+      color: transparent;
+      overflow: hidden;
+    }
+
+    .feature-btn {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      color: #425166;
+      border-radius: 10px;
+      padding: 12px 12px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: start;
+    }
+
+    .layout.sidebar-collapsed .feature-btn {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      padding: 12px 0;
+    }
+
+    .feature-btn:hover {
+      background: #f3f7ff;
+      color: var(--blue);
+    }
+
+    .feature-btn.active {
+      background: var(--blue-weak);
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .feature-name {
+      line-height: 1.45;
+      min-width: 0;
+    }
+
+    body.large-mode:not(.sidebar-collapsed) .feature-btn {
+      grid-template-columns: 1fr;
+      padding-left: 16px;
+    }
+
+    .layout.sidebar-collapsed .feature-name {
+      display: none;
+    }
+
+    .content {
+      min-width: 0;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .feature-head {
+      padding: 18px 22px 14px;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      min-width: 0;
+      flex: none;
+    }
+
+    .feature-head h1 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.35;
+    }
+
+    .feature-head p {
+      margin: 8px 0 0;
+      color: var(--sub);
+      line-height: 1.7;
+      max-width: 1080px;
+    }
+
+    .page-tabs {
+      min-width: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      overflow-x: auto;
+      padding: 0 22px;
+      position: sticky;
+      top: 0;
+      z-index: 4;
+      flex: none;
+    }
+
+    .page-tab {
+      border: 0;
+      background: transparent;
+      border-bottom: 3px solid transparent;
+      color: #526071;
+      padding: 15px 18px 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: 800;
+    }
+
+    .page-tab:hover {
+      color: var(--blue);
+      background: #f7fbff;
+    }
+
+    .page-tab.active {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+      background: #fff;
+    }
+
+    .workspace {
+      min-height: 0;
+      min-width: 0;
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .workspace.pc {
+      grid-template-columns: minmax(0, 1fr) minmax(360px, 32%);
+    }
+
+    .workspace.mobile {
+      grid-template-columns: minmax(390px, 430px) minmax(520px, 1fr);
+    }
+
+    .workspace.doc-only {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .workspace.doc-only .proto-panel {
+      display: none;
+    }
+
+    .doc-panel,
+    .proto-panel {
+      min-width: 0;
+      min-height: 0;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .doc-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      order: 2;
+    }
+
+    .doc-head {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(180deg, #fff, #fbfdff);
+    }
+
+    .doc-head .kicker {
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .doc-head h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    .doc-scroll {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 18px 20px 80px;
+    }
+
+    .block {
+      background: var(--soft);
+      border: 1px solid #eef2f7;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .block h3 {
+      margin: 0 0 10px;
+      color: var(--blue);
+      font-size: 15px;
+    }
+
+    .block p,
+    .block li {
+      line-height: 1.78;
+      color: #38465a;
+    }
+
+    .block p {
+      margin: 0;
+    }
+
+    .block ul,
+    .block ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .table-scroll {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .table-scroll table {
+      width: 100%;
+      min-width: 720px;
+      border-collapse: collapse;
+    }
+
+    .table-scroll th,
+    .table-scroll td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      line-height: 1.65;
+      color: #38465a;
+    }
+
+    .table-scroll th {
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .table-scroll tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .token {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      background: #edf5ff;
+      font-weight: 800;
+      line-height: 1.35;
+      white-space: nowrap;
+    }
+
+    .token-action {
+      border: 1px solid #c7e1ff;
+      border-radius: 999px;
+      background: #edf5ff;
+      color: var(--blue);
+    }
+
+    .token-page {
+      border: 1px solid #d8ccff;
+      border-radius: 4px;
+      background: #f4f0ff;
+      color: #6f42c1;
+    }
+
+    .token-field {
+      border: 1px dashed #8fd0b0;
+      border-radius: 3px;
+      background: #edf9f2;
+      color: #16845b;
+    }
+
+    .md-code {
+      background: #f6f8fa;
+      border: 1px solid #e8ecf1;
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: #333;
+      font-family: "SF Mono", Consolas, Menlo, monospace;
+    }
+
+    .change-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .change-item {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 13px 14px;
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .tag {
+      height: 24px;
+      min-width: 42px;
+      padding: 0 8px;
+      border-radius: 6px;
+      display: inline-grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .add {
+      color: var(--green);
+      background: var(--green-bg);
+    }
+
+    .adjust {
+      color: var(--orange);
+      background: var(--orange-bg);
+    }
+
+    .delete {
+      color: var(--red);
+      background: var(--red-bg);
+    }
+
+    .change-body strong {
+      display: block;
+      margin-bottom: 6px;
+      line-height: 1.4;
+    }
+
+    .change-body p {
+      margin: 0;
+      color: #465568;
+      line-height: 1.75;
+    }
+
+    .change-body ol {
+      margin: 0;
+      padding-left: 18px;
+      color: #465568;
+      line-height: 1.75;
+    }
+
+    .change-body .rule-groups {
+      padding-left: 20px;
+    }
+
+    .change-body .rule-groups > li {
+      margin-bottom: 8px;
+    }
+
+    .change-body .rule-groups > li:last-child {
+      margin-bottom: 0;
+    }
+
+    .change-body .rule-title {
+      display: inline-block;
+      margin-bottom: 2px;
+      color: #1f2d3d;
+      font-weight: 700;
+    }
+
+    .change-body .rule-groups ol {
+      margin-top: 2px;
+      padding-left: 20px;
+    }
+
+    .proto-panel {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      background: #f8fafc;
+      order: 1;
+    }
+
+    .proto-head {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 34px;
+      grid-template-areas:
+        "title open";
+      gap: 10px 12px;
+      align-items: start;
+    }
+
+    .proto-head.has-states {
+      grid-template-areas:
+        "title open"
+        "states open";
+    }
+
+    .proto-title {
+      grid-area: title;
+      min-width: 0;
+    }
+
+    .proto-title span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 4px;
+    }
+
+    .proto-title strong {
+      display: block;
+      font-size: 15px;
+      line-height: 1.35;
+      overflow: visible;
+      text-overflow: clip;
+      white-space: normal;
+    }
+
+    .open-btn {
+      grid-area: open;
+      width: 34px;
+      height: 34px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #526071;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .open-btn:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .open-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .open-btn:disabled {
+      opacity: .45;
+      cursor: default;
+    }
+
+    .proto-fullscreen-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      background: #f4f7fb;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .18s ease;
+    }
+
+    .proto-fullscreen-overlay.show {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .proto-fullscreen-bar {
+      height: 52px;
+      flex: 0 0 52px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 0 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .proto-fullscreen-back {
+      height: 34px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: #526071;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .proto-fullscreen-back:hover {
+      color: var(--blue);
+      border-color: #b9d7ff;
+      background: #f7fbff;
+    }
+
+    .proto-fullscreen-back svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .proto-fullscreen-title {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ink);
+    }
+
+    .proto-fullscreen-stage {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .proto-fullscreen-frame {
+      position: absolute;
+      overflow: hidden;
+      transform-origin: top left;
+      background: #fff;
+      border: 1px solid #d6dde8;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, .16);
+    }
+
+    .proto-fullscreen-frame.mobile {
+      border-radius: 30px;
+    }
+
+    .proto-fullscreen-frame.pc {
+      border-radius: 12px;
+    }
+
+    .proto-fullscreen-frame iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+    }
+
+    .state-bar {
+      grid-area: states;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-width: 0;
+      align-items: center;
+    }
+
+    .state-bar:empty {
+      display: none;
+    }
+
+    .state-btn {
+      border: 1px solid #dbe2ea;
+      background: #fff;
+      color: #526071;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .state-btn.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .proto-stage {
+      min-height: 0;
+      min-width: 0;
+      overflow: hidden;
+      position: relative;
+      display: grid;
+      place-items: center;
+      padding: 14px;
+    }
+
+    .pc-stage {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: 1px solid #dbe2ea;
+      border-radius: 12px;
+      background: #fff;
+    }
+
+    .pc-stage iframe {
+      display: block;
+      border: 0;
+      background: #fff;
+      transform-origin: top left;
+      opacity: 0;
+      transition: opacity .16s ease;
+    }
+
+    .phone-shell {
+      width: 375px;
+      height: 812px;
+      border-radius: 30px;
+      border: 1px solid #d6dde8;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, .14);
+      transform-origin: center center;
+    }
+
+    .phone-shell iframe {
+      width: 375px;
+      height: 812px;
+      border: 0;
+      display: block;
+      background: #fff;
+      opacity: 0;
+      transition: opacity .16s ease;
+    }
+
+    .empty {
+      color: var(--muted);
+      line-height: 1.8;
+      padding: 20px;
+    }
+
+    @media (max-width: 1280px) {
+      .layout {
+        grid-template-columns: 220px 1fr;
+      }
+
+      .layout.sidebar-collapsed {
+        grid-template-columns: 64px 1fr;
+      }
+
+      .workspace.pc {
+        grid-template-columns: minmax(0, 1fr) minmax(340px, 34%);
+      }
+
+      .workspace.mobile {
+        grid-template-columns: minmax(360px, 400px) minmax(460px, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo">云</div>
+        <div class="title">
+          <strong>云芳邻 · 培训模块优化迭代 PRD</strong>
+          <span>左侧切功能，横向切页面，原型按当前内容展示。</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="sidebar-menu-head">
+          <div class="sidebar-menu-title">需求菜单</div>
+          <button class="sidebar-toggle" id="sidebarToggle" type="button" title="收起左侧菜单" aria-label="收起左侧菜单">
+            <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M15 9l-3 3 3 3"></path></svg>
+          </button>
+        </div>
+        <div class="nav-label" id="sectionNavLabel">基础内容</div>
+        <div id="sectionNav"></div>
+        <div class="nav-label" id="featureNavLabel">需求说明</div>
+        <div id="featureNav"></div>
+      </aside>
+
+      <main class="content">
+        <section class="feature-head">
+          <h1 id="featureTitle"></h1>
+          <p id="featureSummary"></p>
+        </section>
+        <nav class="page-tabs" id="pageTabs"></nav>
+        <section class="workspace pc" id="workspace">
+          <article class="doc-panel">
+            <div class="doc-head">
+              <div class="kicker" id="docKicker"></div>
+              <h2 id="pageTitle"></h2>
+            </div>
+            <div class="doc-scroll" id="docScroll"></div>
+          </article>
+
+          <aside class="proto-panel">
+            <div class="proto-head">
+              <div class="proto-title">
+                <span id="protoKicker">原型预览</span>
+                <strong id="protoTitle"></strong>
+              </div>
+              <div class="state-bar" id="stateBar"></div>
+              <button class="open-btn" id="openProto" type="button" title="全屏查看原型" aria-label="全屏查看原型">
+                <svg viewBox="0 0 24 24"><path d="M8 4H4v4"></path><path d="M4 4l6 6"></path><path d="M16 4h4v4"></path><path d="M20 4l-6 6"></path><path d="M8 20H4v-4"></path><path d="M4 20l6-6"></path><path d="M16 20h4v-4"></path><path d="M20 20l-6-6"></path></svg>
+              </button>
+            </div>
+            <div class="proto-stage" id="protoStage">
+              <div class="empty">请选择一个页面。</div>
+            </div>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <div class="proto-fullscreen-overlay" id="protoFullscreen" aria-hidden="true">
+      <div class="proto-fullscreen-bar">
+        <button class="proto-fullscreen-back" id="closeProtoFullscreen" type="button">
+          <svg viewBox="0 0 24 24"><path d="M19 12H5"></path><path d="M12 19l-7-7 7-7"></path></svg>
+          返回文档
+        </button>
+        <strong class="proto-fullscreen-title" id="protoFullscreenTitle"></strong>
+      </div>
+      <div class="proto-fullscreen-stage" id="protoFullscreenStage"></div>
+    </div>
+  </div>
+
+  <script>
+/* GENERATED_PRD_DATA_START */
+    // 由 prd-training-module-optimization.md 自动生成，MD SHA256: 764323c89db03d5ad9be27117553603a6db8d296613b51a066f6b35d472ca12a
+    const PRD_MODE = "small";
+    const SECTION_DATA = [
+      {
+        "id": "需求背景",
+        "no": "背",
+        "title": "需求背景",
+        "desc": "本期版本性质和组织方式。",
+        "summary": "培训模块（教培系统）已在区社工部试点通过，区社工部决定将培训扩展到全部社区。2026-08-19 与区社工部（邱哥、欣彤）的沟通会上，收集到一批培训模块使用反馈，主要涉及：课程分类在 C 端难以发现、课程搜索能力不足、课程收藏与个人中心入口缺失、优秀论述内容展示需求。 本期为培训模块的小需求聚合迭代。各功能相互独立、可单独评审与开发。进度条修复、分享功能、图文课程、AI 摘要相关能力按会议结论不进入本期（见<span class=\"token token-action\">「本期不做」</span>）。",
+        "blocks": [
+          {
+            "title": "需求背景",
+            "html": "<p>培训模块（教培系统）已在区社工部试点通过，区社工部决定将培训扩展到全部社区。2026-08-19 与区社工部（邱哥、欣彤）的沟通会上，收集到一批培训模块使用反馈，主要涉及：课程分类在 C 端难以发现、课程搜索能力不足、课程收藏与个人中心入口缺失、优秀论述内容展示需求。</p><p>本期为培训模块的小需求聚合迭代。各功能相互独立、可单独评审与开发。进度条修复、分享功能、图文课程、AI 摘要相关能力按会议结论不进入本期（见<span class=\"token token-action\">「本期不做」</span>）。</p>"
+          }
+        ]
+      },
+      {
+        "id": "需求清单",
+        "no": "清",
+        "title": "需求清单",
+        "desc": "本期 4 个独立功能。",
+        "summary": "本期 4 个独立功能。",
+        "blocks": [
+          {
+            "title": "需求清单",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>编号</th><th>需求</th><th>状态</th><th>影响范围</th><th>说明</th></tr></thead><tbody><tr><td>功能一</td><td>课程搜索</td><td>已细化</td><td>教培 C 端学习首页、PC 新建课程</td><td>新增搜索栏，支持按课程名称与课程简介模糊搜索；课程卡片新增课程简介显示（最多 2 行）；PC 新建课程<span class=\"token token-field\">[课程简介]</span>下方新增提示。</td></tr><tr><td>功能二</td><td>课程分类交互改版</td><td>已细化</td><td>教培 C 端学习首页、PC 分类管理</td><td>移除课程类型 tab（已学完/未学完）；分类从下拉筛选改为一级分类横向 tab + 二级分类 chip；新建分类时<span class=\"token token-field\">[所属上级]</span>仅支持选择一级分类作为上级。</td></tr><tr><td>功能三</td><td>课程收藏</td><td>已细化</td><td>教培 C 端课程详情、我的页、收藏列表</td><td>课程详情新增收藏按钮；在<span class=\"token token-page\">【我的】</span>页学习统计卡中新增<span class=\"token token-action\">「我的收藏」</span>入口；新增收藏课程列表页。</td></tr><tr><td>功能四</td><td>论述摘编</td><td>已细化</td><td>教培 C 端学习首页、论述列表页、PC 后台</td><td>C 端首页新增论述摘编走马灯横幅（上下轮播）+ 二级列表页（支持标题模糊搜索、点击论述置顶）；PC 后台新增论述摘编管理台账，支持批量导入与轮播设置。</td></tr></tbody></table></div>"
+          }
+        ]
+      },
+      {
+        "id": "本期不做",
+        "no": "本",
+        "title": "本期不做",
+        "desc": "基础需求内容。",
+        "summary": "",
+        "blocks": [
+          {
+            "title": "本期不做",
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>内容</th><th>说明</th></tr></thead><tbody><tr><td>视频进度条修复</td><td>安卓机型进度条消失与“第一遍不可快进、可回看”规则由研发作为独立任务处理，不进入本期 PRD。</td></tr><tr><td>分享功能</td><td>培训模块有权限限制，直接分享意义不大，本期不做。</td></tr><tr><td>图文课程</td><td>图文内容无法记录学习进度，本期不做；优秀社区工作者事迹等公告类内容走首页公告或云芳邻首页。</td></tr><tr><td>AI 摘要</td><td>不引入 AI 生成课程摘要；课程简介由人工填写，作为搜索数据源。</td></tr></tbody></table></div>"
+          }
+        ]
+      }
+    ];
+
+    const DATA = [
+      {
+        "id": "功能一-课程搜索",
+        "no": "一",
+        "title": "功能一 · 课程搜索",
+        "desc": "当前课程浏览只能按分类筛选，居民无法按关键词查找课程。本期在教培 C 端学习首页新增搜索",
+        "summary": "当前课程浏览只能按分类筛选，居民无法按关键词查找课程。本期在教培 C 端学习首页新增搜索栏，支持按课程名称与课程简介模糊搜索，帮助居民快速定位课程。",
+        "pages": [
+          {
+            "id": "教培-c-端学习首页",
+            "tab": "教培 C 端学习首页",
+            "title": "教培 C 端学习首页",
+            "type": "mobile",
+            "location": "居民进入教培系统学习首页，页面顶部。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "搜索栏 · 课程搜索",
+                "desc": "在首页顶部新增搜索输入框与<span class=\"token token-action\">「搜索」</span>按钮，支持按课程名称、课程简介模糊搜索。",
+                "groups": [
+                  {
+                    "title": "出现与进入逻辑",
+                    "items": [
+                      "搜索栏固定在首页顶部，位于论述摘编横幅上方。",
+                      "点击<span class=\"token token-action\">「搜索」</span>后按关键词过滤课程列表。"
+                    ]
+                  },
+                  {
+                    "title": "搜索范围",
+                    "items": [
+                      "匹配课程名称包含关键词的课程。",
+                      "匹配课程简介包含关键词的课程。",
+                      "课程简介来自 PC 后台新建课程时的<span class=\"token token-field\">[课程简介]</span>字段，由人工填写维护。"
+                    ]
+                  },
+                  {
+                    "title": "结果展示",
+                    "items": [
+                      "命中结果在课程列表中展示，列表标题显示当前搜索词与命中数量。",
+                      "无命中结果时展示空状态“没有找到相关课程”。",
+                      "清空关键词后恢复分类筛选默认列表。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "课程卡片 · 课程简介显示",
+                "desc": "在课程卡片课程名称下方新增课程简介展示，最多 2 行，超出省略号截断，位于进度条上方。",
+                "groups": [
+                  {
+                    "title": "展示位置",
+                    "items": [
+                      "课程简介位于课程卡片课程名称下方、学习进度条上方。"
+                    ]
+                  },
+                  {
+                    "title": "展示规则",
+                    "items": [
+                      "展示<span class=\"token token-field\">[课程简介]</span>字段内容，最多 2 行，超出部分以省略号截断。",
+                      "未填写课程简介的课程，卡片不展示简介行。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "教培端原型 · 学习首页 · 搜索结果状态",
+              "states": [
+                {
+                  "label": "教培端原型 · 学习首页 · 搜索结果状态",
+                  "url": "prototype/training-home.html?state=search-result"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端新建课程",
+            "tab": "PC端新建课程",
+            "title": "PC端新建课程",
+            "type": "pc",
+            "location": "PC 后台教培系统<span class=\"token token-page\">【课程管理】</span>点击<span class=\"token token-action\">「新建课程」</span>或行内<span class=\"token token-action\">「编辑」</span>后打开的抽屉。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "表单提示 · <span class=\"token token-field\">[课程简介]</span>下方新增提示",
+                "desc": "在<span class=\"token token-field\">[课程简介]</span>字段下方新增蓝色提示文案，说明简介用于学员端展示与搜索。",
+                "groups": [
+                  {
+                    "title": "展示位置",
+                    "items": [
+                      "位于<span class=\"token token-action\">「更多选项」</span>下的<span class=\"token token-field\">[课程简介]</span>输入框下方。"
+                    ]
+                  },
+                  {
+                    "title": "提示文案",
+                    "items": [
+                      "提示文案固定为“课程简介会展示在学员端课程卡片上，并参与学员端课程搜索”。"
+                    ]
+                  },
+                  {
+                    "title": "字段本身",
+                    "items": [
+                      "<span class=\"token token-field\">[课程简介]</span>仍为选填项，不强制填写。",
+                      "未填写简介的课程，学员端课程卡片不展示简介行，搜索时仅匹配课程名称。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型 · 新建课程抽屉 · 课程简介搜索提示",
+              "states": [
+                {
+                  "label": "PC端原型 · 新建课程抽屉 · 课程简介搜索提示",
+                  "url": "prototype/pc-course-create.html?state=drawer"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能二-课程分类交互改版",
+        "no": "二",
+        "title": "功能二 · 课程分类交互改版",
+        "desc": "当前课程分类在 C 端是一个顶部「所有分类」下拉，分类不可见、需要点开才能选择。本期将分",
+        "summary": "当前课程分类在 C 端是一个顶部<span class=\"token token-action\">「所有分类」</span>下拉，分类不可见、需要点开才能选择。本期将分类交互改为一级分类横向 tab + 二级分类 chip；同时限制后台分类最多两级（二级分类不可再建子分类），从源头控制层级，前端无需多级抽屉。",
+        "pages": [
+          {
+            "id": "教培-c-端学习首页",
+            "tab": "教培 C 端学习首页",
+            "title": "教培 C 端学习首页",
+            "type": "mobile",
+            "location": "居民进入教培系统学习首页，搜索栏下方。",
+            "changes": [
+              {
+                "type": "delete",
+                "label": "删除",
+                "title": "分类下拉 · <span class=\"token token-action\">「所有分类」</span>下拉",
+                "desc": "移除原顶部<span class=\"token token-action\">「所有分类」</span>下拉筛选。"
+              },
+              {
+                "type": "delete",
+                "label": "删除",
+                "title": "课程类型 tab · <span class=\"token token-action\">「全部 / 已学完 / 未学完」</span>",
+                "desc": "移除原课程类型筛选 tab 行。课程列表卡片已展示学习进度状态，该 tab 移除后按分类与关键词筛选课程。",
+                "groups": [
+                  {
+                    "title": "移除内容",
+                    "items": [
+                      "移除学习首页顶部的课程类型筛选 tab 行。"
+                    ]
+                  },
+                  {
+                    "title": "移除原因",
+                    "items": [
+                      "课程列表卡片已展示学习进度状态，无需通过<span class=\"token token-action\">「已学完/未学完」</span>筛选。"
+                    ]
+                  },
+                  {
+                    "title": "移除后效果",
+                    "items": [
+                      "学习首页顶部仅保留搜索栏、论述摘编横幅、一级分类 tab 与二级分类 chip。",
+                      "课程列表默认展示全部课程，按当前选中的分类与关键词过滤。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "分类导航 · 一级分类横向 tab",
+                "desc": "新增一行横向滚动的分类 tab，展示<span class=\"token token-action\">「全部」</span>及全部一级分类，点击后按该分类筛选课程。",
+                "groups": [
+                  {
+                    "title": "展示规则",
+                    "items": [
+                      "一级分类 tab 横向排列，支持左右滑动。",
+                      "首个 tab 固定为<span class=\"token token-action\">「全部」</span>，其后按后台分类树的一级分类顺序展示。",
+                      "当前选中分类高亮，选中的一级分类名称同步展示在列表标题中。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击<span class=\"token token-action\">「全部」</span>展示全部课程。",
+                      "点击某个一级分类，仅展示归属该分类的课程，并在其下方展开二级分类 chip 行。",
+                      "一级分类不含子分类时，不展示二级分类 chip 行。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "分类导航 · 二级分类 chip",
+                "desc": "选中含子分类的一级分类时，其下方展开一行子分类 chip，点击后按子分类精确筛选。",
+                "groups": [
+                  {
+                    "title": "展示规则",
+                    "items": [
+                      "选中含子分类的一级分类后，其下方展示一行子分类 chip。",
+                      "chip 行首个固定为<span class=\"token token-action\">「全部子类」</span>，其后按子分类顺序展示。",
+                      "支持横向滑动查看更多子分类。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击<span class=\"token token-action\">「全部子类」</span>展示当前一级分类下全部课程。",
+                      "点击某个子分类，仅展示归属该子分类的课程。"
+                    ]
+                  },
+                  {
+                    "title": "层级说明",
+                    "items": [
+                      "前端固定展示一级分类 tab + 二级分类 chip，不提供三级及以上分类入口。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "教培端原型 · 学习首页 · 一级分类选中状态",
+              "states": [
+                {
+                  "label": "教培端原型 · 学习首页 · 一级分类选中状态",
+                  "url": "prototype/training-home.html?state=category-community"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端分类管理",
+            "tab": "PC端分类管理",
+            "title": "PC端分类管理",
+            "type": "pc",
+            "location": "PC 后台教培系统<span class=\"token token-page\">【分类管理】</span>页面。",
+            "changes": [
+              {
+                "type": "adjust",
+                "label": "调整",
+                "title": "新建分类弹窗 · <span class=\"token token-field\">[所属上级]</span>选项",
+                "desc": "调整<span class=\"token token-field\">[所属上级]</span>下拉的选项范围，仅支持选择一级分类作为上级。",
+                "groups": [
+                  {
+                    "title": "选项范围",
+                    "items": [
+                      "<span class=\"token token-field\">[所属上级]</span>下拉为扁平列表，仅展示<span class=\"token token-action\">「作为一级分类」</span>和全部一级分类。",
+                      "选择<span class=\"token token-action\">「作为一级分类」</span>创建一级分类；选择某个一级分类作为上级，创建二级分类。",
+                      "二级分类不可再作为上级，下拉中不出现二级分类选项。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型",
+              "states": [
+                {
+                  "label": "分类管理",
+                  "url": "prototype/pc-course-category.html?state=list"
+                },
+                {
+                  "label": "新建分类弹窗",
+                  "url": "prototype/pc-course-category.html?state=create"
+                },
+                {
+                  "label": "编辑分类弹窗",
+                  "url": "prototype/pc-course-category.html?state=edit"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能三-课程收藏",
+        "no": "三",
+        "title": "功能三 · 课程收藏",
+        "desc": "居民学习课程时希望收藏感兴趣的课程，便于后续快速找到。本期在课程详情新增收藏按钮，并在教",
+        "summary": "居民学习课程时希望收藏感兴趣的课程，便于后续快速找到。本期在课程详情新增收藏按钮，并在教培<span class=\"token token-action\">「我的」</span>页新增<span class=\"token token-action\">「我的收藏」</span>入口与收藏课程列表页，收藏交互对齐商城<span class=\"token token-action\">「关注店铺」</span>的形态。",
+        "pages": [
+          {
+            "id": "教培-c-端课程详情",
+            "tab": "教培 C 端课程详情",
+            "title": "教培 C 端课程详情",
+            "type": "mobile",
+            "location": "居民在教培系统点击课程卡片进入课程详情页。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "操作按钮 · <span class=\"token token-action\">「收藏」</span>",
+                "desc": "在课程详情页课程标题行右侧新增收藏按钮，点击后收藏或取消收藏当前课程。",
+                "groups": [
+                  {
+                    "title": "按钮展示",
+                    "items": [
+                      "按钮位于课程标题《课程名称》同一行的右侧，与课程名并排展示。",
+                      "未收藏时按钮显示为<span class=\"token token-field\">[收藏]</span>，使用蓝色系线性心形图标。",
+                      "已收藏时按钮显示为<span class=\"token token-field\">[已收藏]</span>，切换为白色底、深蓝字。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击<span class=\"token token-action\">「收藏」</span>后收藏当前课程，按钮切换为<span class=\"token token-field\">[已收藏]</span>，提示“收藏成功”。",
+                      "再次点击取消收藏，按钮切换为<span class=\"token token-field\">[收藏]</span>，提示“已取消收藏”。"
+                    ]
+                  },
+                  {
+                    "title": "数据写入",
+                    "items": [
+                      "收藏关系记录当前用户与当前课程，同一用户对同一课程仅保留一条收藏记录。",
+                      "收藏记录用于教培<span class=\"token token-action\">「我的」</span>页<span class=\"token token-page\">【我的收藏】</span>列表展示。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "教培端原型 · 课程详情",
+              "states": [
+                {
+                  "label": "未收藏状态",
+                  "url": "prototype/course-detail.html?state=unfavorited"
+                },
+                {
+                  "label": "已收藏状态",
+                  "url": "prototype/course-detail.html?state=favorited"
+                }
+              ]
+            }
+          },
+          {
+            "id": "教培-c-端我的页",
+            "tab": "教培 C 端我的页",
+            "title": "教培 C 端我的页",
+            "type": "mobile",
+            "location": "点击教培系统底部导航<span class=\"token token-action\">「我的」</span>进入。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "功能入口 · <span class=\"token token-action\">「我的收藏」</span>",
+                "desc": "在<span class=\"token token-page\">【我的】</span>页学习统计卡<span class=\"token token-action\">「累计学习」</span>后新增<span class=\"token token-action\">「我的收藏」</span>入口，展示收藏数量，点击进入收藏课程列表页。",
+                "groups": [
+                  {
+                    "title": "入口位置",
+                    "items": [
+                      "位于<span class=\"token token-page\">【我的】</span>页学习统计卡中，<span class=\"token token-action\">「累计学习」</span>之后、<span class=\"token token-action\">「所属社区」</span>之前。"
+                    ]
+                  },
+                  {
+                    "title": "入口展示",
+                    "items": [
+                      "入口与统计卡其他项同尺寸、同排列，使用心形图标与收藏数量展示。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击后进入<span class=\"token token-page\">【我的收藏】</span>课程列表页。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "教培端原型 · 我的页",
+              "states": [
+                {
+                  "label": "教培端原型 · 我的页",
+                  "url": "prototype/training-mine.html?state=default"
+                }
+              ]
+            }
+          },
+          {
+            "id": "教培-c-端我的收藏列表",
+            "tab": "教培 C 端我的收藏列表",
+            "title": "教培 C 端我的收藏列表",
+            "type": "mobile",
+            "location": "点击教培<span class=\"token token-page\">【我的】</span>页<span class=\"token token-action\">「我的收藏」</span>入口进入。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "页面 · <span class=\"token token-page\">【我的收藏】</span>",
+                "desc": "新增收藏课程列表页，展示当前用户已收藏的课程，支持长按删除与进入课程详情。",
+                "groups": [
+                  {
+                    "title": "展示规则",
+                    "items": [
+                      "按收藏时间倒序展示已收藏课程。",
+                      "每条展示课程封面、课程名称与课程分类。",
+                      "列表底部展示提示“长按课程卡片可删除收藏”。",
+                      "无收藏时展示空状态与<span class=\"token token-action\">「去逛逛」</span>按钮，点击<span class=\"token token-action\">「去逛逛」</span>返回学习首页。"
+                    ]
+                  },
+                  {
+                    "title": "操作与结果",
+                    "items": [
+                      "点击课程卡片进入对应课程详情。",
+                      "长按课程卡片（约 600ms）弹出确认弹窗，确认后删除该收藏，课程从列表移除并提示“已取消收藏”。",
+                      "收藏数量与<span class=\"token token-page\">【我的】</span>页<span class=\"token token-field\">[我的收藏]</span>统计一致。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "教培端原型",
+              "states": [
+                {
+                  "label": "我的收藏列表",
+                  "url": "prototype/training-favorites.html?state=list"
+                },
+                {
+                  "label": "我的收藏 · 空状态",
+                  "url": "prototype/training-favorites.html?state=empty"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "功能四-论述摘编",
+        "no": "四",
+        "title": "功能四 · 论述摘编",
+        "desc": "区社工部希望在培训系统首页展示习近平总书记关于基层治理的重要论述，供社区工作者日常学习参",
+        "summary": "区社工部希望在培训系统首页展示习近平总书记关于基层治理的重要论述，供社区工作者日常学习参考。本期在教培 C 端学习首页新增论述摘编走马灯横幅与二级列表页；PC 后台新增论述摘编管理台账，支持新增、编辑、上架、下架、删除、批量导入与首页轮播设置。",
+        "pages": [
+          {
+            "id": "教培-c-端学习首页",
+            "tab": "教培 C 端学习首页",
+            "title": "教培 C 端学习首页",
+            "type": "mobile",
+            "location": "居民进入教培系统学习首页，搜索栏下方、分类导航上方。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "横幅 · 论述摘编走马灯",
+                "desc": "在首页新增论述摘编横幅，展示今日随机论述，点击进入论述摘编列表页。",
+                "groups": [
+                  {
+                    "title": "展示规则",
+                    "items": [
+                      "横幅位于搜索栏下方、分类导航上方。",
+                      "横幅左侧展示<span class=\"token token-action\">「今日论述」</span>标签，中间展示当前论述内容（单行省略），右侧展示进入箭头。",
+                      "横幅使用暖色渐变背景，纯文字展示，不做图片轮播。",
+                      "轮播采用上下滚动效果，按每日展示条数依次切换当前论述。"
+                    ]
+                  },
+                  {
+                    "title": "内容来源",
+                    "items": [
+                      "展示内容来自 PC 后台论述摘编台账中<span class=\"token token-field\">[已上架]</span>的论述。",
+                      "每天从已上架论述中随机抽取展示条数，当天不重复；每日展示条数由 PC 后台轮播设置控制。"
+                    ]
+                  },
+                  {
+                    "title": "点击结果",
+                    "items": [
+                      "点击横幅进入<span class=\"token token-page\">【论述摘编】</span>列表页。",
+                      "进入列表页后，点击的那条论述置顶展示，其余论述保持随机顺序。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "教培端原型 · 学习首页 · 论述摘编横幅",
+              "states": [
+                {
+                  "label": "教培端原型 · 学习首页 · 论述摘编横幅",
+                  "url": "prototype/training-home.html?state=category-community"
+                }
+              ]
+            }
+          },
+          {
+            "id": "教培-c-端论述摘编列表",
+            "tab": "教培 C 端论述摘编列表",
+            "title": "教培 C 端论述摘编列表",
+            "type": "mobile",
+            "location": "点击学习首页论述摘编横幅进入。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "页面 · <span class=\"token token-page\">【论述摘编】</span>",
+                "desc": "新增论述摘编列表页，展示全部已上架论述的完整列表。",
+                "groups": [
+                  {
+                    "title": "搜索栏",
+                    "items": [
+                      "页面顶部提供搜索输入框与<span class=\"token token-action\">「搜索」</span>按钮，针对论述标题做模糊搜索。",
+                      "输入关键词点击<span class=\"token token-action\">「搜索」</span>后，仅展示标题包含关键词的论述。",
+                      "清空关键词后恢复默认列表。"
+                    ]
+                  },
+                  {
+                    "title": "展示规则",
+                    "items": [
+                      "页面顶部展示栏目说明区，标题为“习近平总书记关于基层治理的重要论述”。",
+                      "默认列表按上架时间倒序展示已上架论述；通过首页横幅进入时，点击的论述置顶、其余随机。",
+                      "每条论述展示标题、正文（最多 3 行省略）、来源与<span class=\"token token-action\">「查看全文」</span>入口。"
+                    ]
+                  },
+                  {
+                    "title": "操作与结果",
+                    "items": [
+                      "点击<span class=\"token token-action\">「查看全文」</span>，该卡片在当前位置展开显示完整正文，按钮变为<span class=\"token token-action\">「收起全文」</span>。",
+                      "再次点击<span class=\"token token-action\">「收起全文」</span>，卡片恢复为摘要状态。",
+                      "无已上架论述或搜索无结果时展示空状态。"
+                    ]
+                  },
+                  {
+                    "title": "数据来源",
+                    "items": [
+                      "列表数据与首页走马灯同源，均来自 PC 后台论述摘编台账。"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "mobile",
+              "width": 375,
+              "height": 812,
+              "title": "教培端原型",
+              "states": [
+                {
+                  "label": "论述摘编列表",
+                  "url": "prototype/training-excerpts.html?state=list"
+                },
+                {
+                  "label": "论述摘编列表 · 搜索结果状态",
+                  "url": "prototype/training-excerpts.html?state=search"
+                },
+                {
+                  "label": "论述摘编列表 · 查看全文展开状态",
+                  "url": "prototype/training-excerpts.html?state=expanded"
+                },
+                {
+                  "label": "论述摘编 · 空状态",
+                  "url": "prototype/training-excerpts.html?state=empty"
+                }
+              ]
+            }
+          },
+          {
+            "id": "pc端论述摘编管理",
+            "tab": "PC端论述摘编管理",
+            "title": "PC端论述摘编管理",
+            "type": "pc",
+            "location": "PC 后台<span class=\"token token-page\">【培训管理】</span>主菜单下新增<span class=\"token token-page\">【论述摘编】</span>子菜单。",
+            "changes": [
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "页面 · <span class=\"token token-page\">【论述摘编管理】</span>",
+                "desc": "在<span class=\"token token-page\">【培训管理】</span>主菜单下新增论述摘编管理台账。",
+                "groups": [
+                  {
+                    "title": "页面结构",
+                    "items": [
+                      "页面由轮播设置区、筛选区、操作栏、论述台账表格组成。",
+                      "轮播设置区位于页面顶部，下方为筛选区与台账表格。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "轮播设置 · 首页轮播设置",
+                "desc": "支持开启/关闭首页走马灯，配置每日展示条数。",
+                "groups": [
+                  {
+                    "title": "开启与关闭",
+                    "items": [
+                      "轮播开关控制 C 端首页论述摘编横幅是否展示。",
+                      "关闭后 C 端首页不展示论述横幅。"
+                    ]
+                  },
+                  {
+                    "title": "每日展示条数",
+                    "items": [
+                      "配置每天从已上架论述中随机抽取的条数。",
+                      "默认值为 1，支持配置 1 至 5 条。"
+                    ]
+                  },
+                  {
+                    "title": "随机规则",
+                    "items": [
+                      "随机抽取规则写入系统配置，不写死在代码中。",
+                      "每天从<span class=\"token token-field\">[已上架]</span>论述池中随机抽取，当天不重复；次日重新抽取。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "操作按钮 · <span class=\"token token-action\">「新增论述」</span><span class=\"token token-action\">「批量导入」</span><span class=\"token token-action\">「导出」</span>",
+                "desc": "表格上方操作栏新增论述新增、批量导入与导出入口。"
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "列表字段 · 论述台账字段",
+                "desc": "展示标题、正文、来源、状态、创建时间。",
+                "groups": [
+                  {
+                    "title": "基础字段",
+                    "items": [
+                      "<span class=\"token token-field\">[标题]</span>展示论述标题，超长省略。",
+                      "<span class=\"token token-field\">[正文]</span>展示论述正文，超长省略。",
+                      "<span class=\"token token-field\">[来源]</span>展示论述来源，如“基层治理论述摘编”。"
+                    ]
+                  },
+                  {
+                    "title": "状态字段",
+                    "items": [
+                      "<span class=\"token token-field\">[状态]</span>展示<span class=\"token token-field\">[已上架]</span>或<span class=\"token token-field\">[已下架]</span>。",
+                      "<span class=\"token token-field\">[已上架]</span>使用绿色标签，<span class=\"token token-field\">[已下架]</span>使用橙色标签。"
+                    ]
+                  },
+                  {
+                    "title": "时间字段",
+                    "items": [
+                      "<span class=\"token token-field\">[创建时间]</span>展示到年月日时分。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "行内操作 · <span class=\"token token-action\">「编辑」</span><span class=\"token token-action\">「上架/下架」</span><span class=\"token token-action\">「删除」</span>",
+                "desc": "支持对单条论述进行编辑、状态切换与删除。"
+              }
+            ],
+            "blocks": [],
+            "prototype": {
+              "kind": "pc",
+              "width": 1920,
+              "height": 1080,
+              "title": "PC端原型",
+              "states": [
+                {
+                  "label": "论述摘编管理",
+                  "url": "prototype/pc-excerpts-manage.html?state=list"
+                },
+                {
+                  "label": "批量导入弹窗",
+                  "url": "prototype/pc-excerpts-manage.html?state=import"
+                },
+                {
+                  "label": "新增/编辑论述弹窗",
+                  "url": "prototype/pc-excerpts-manage.html?state=edit"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ];
+    /* GENERATED_PRD_DATA_END */
+
+    const sectionNav = document.getElementById("sectionNav");
+    const featureNav = document.getElementById("featureNav");
+    const sectionNavLabel = document.getElementById("sectionNavLabel");
+    const featureNavLabel = document.getElementById("featureNavLabel");
+    const featureTitle = document.getElementById("featureTitle");
+    const featureSummary = document.getElementById("featureSummary");
+    const pageTabs = document.getElementById("pageTabs");
+    const workspace = document.getElementById("workspace");
+    const docKicker = document.getElementById("docKicker");
+    const pageTitle = document.getElementById("pageTitle");
+    const docScroll = document.getElementById("docScroll");
+    const protoKicker = document.getElementById("protoKicker");
+    const protoTitle = document.getElementById("protoTitle");
+    const protoStage = document.getElementById("protoStage");
+    const stateBar = document.getElementById("stateBar");
+    const openProto = document.getElementById("openProto");
+    const protoFullscreen = document.getElementById("protoFullscreen");
+    const protoFullscreenTitle = document.getElementById("protoFullscreenTitle");
+    const protoFullscreenStage = document.getElementById("protoFullscreenStage");
+    const closeProtoFullscreen = document.getElementById("closeProtoFullscreen");
+    const protoHead = document.querySelector(".proto-head");
+    const layout = document.querySelector(".layout");
+    const content = document.querySelector(".content");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+
+    let activeSectionId = SECTION_DATA[0]?.id || null;
+    let activeFeatureId = DATA[0].id;
+    let activePageId = DATA[0].pages[0].id;
+    let activeStateIndex = 0;
+    let loadTimer = null;
+
+    const collapseIcon = '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M15 9l-3 3 3 3"></path></svg>';
+    const expandIcon = '<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"></rect><path d="M10 5v14"></path><path d="M13 9l3 3-3 3"></path></svg>';
+
+    document.body.classList.toggle("large-mode", PRD_MODE === "large");
+    sectionNavLabel.hidden = PRD_MODE === "large" || SECTION_DATA.length === 0;
+    featureNavLabel.hidden = PRD_MODE === "large";
+    featureNavLabel.textContent = "需求说明";
+
+    function refitPrototype() {
+      const page = currentPage();
+      if (!page || !page.prototype) return;
+      page.prototype.kind === "mobile" ? fitMobileFrame() : fitPcFrame();
+    }
+
+    function syncSidebarToggle() {
+      const collapsed = layout.classList.contains("sidebar-collapsed");
+      sidebarToggle.innerHTML = collapsed ? expandIcon : collapseIcon;
+      sidebarToggle.title = collapsed ? "展开左侧菜单" : "收起左侧菜单";
+      sidebarToggle.setAttribute("aria-label", sidebarToggle.title);
+    }
+
+    sidebarToggle.addEventListener("click", () => {
+      layout.classList.toggle("sidebar-collapsed");
+      syncSidebarToggle();
+      setTimeout(refitPrototype, 180);
+    });
+
+    function currentSection() {
+      return SECTION_DATA.find(item => item.id === activeSectionId);
+    }
+
+    function currentFeature() {
+      return DATA.find(item => item.id === activeFeatureId) || DATA[0];
+    }
+
+    function currentPage() {
+      const feature = currentFeature();
+      return feature.pages.find(item => item.id === activePageId) || feature.pages[0];
+    }
+
+    function abs(url) {
+      const u = new URL(url, window.location.href);
+      if (url && !url.startsWith("about:")) {
+        u.searchParams.set("ts", Date.now());
+      }
+      return u.href;
+    }
+
+    function fitFullscreenFrame() {
+      const frame = protoFullscreenStage.querySelector(".proto-fullscreen-frame");
+      if (!frame) return;
+      const baseW = Number(frame.dataset.baseW) || 375;
+      const baseH = Number(frame.dataset.baseH) || 812;
+      const rect = protoFullscreenStage.getBoundingClientRect();
+      const padding = 28;
+      const scale = Math.min((rect.width - padding * 2) / baseW, (rect.height - padding * 2) / baseH);
+      const safeScale = Math.max(scale, .2);
+      const displayW = baseW * safeScale;
+      const displayH = baseH * safeScale;
+      frame.style.left = Math.max((rect.width - displayW) / 2, 0) + "px";
+      frame.style.top = Math.max((rect.height - displayH) / 2, 0) + "px";
+      frame.style.transform = `scale(${safeScale.toFixed(4)})`;
+    }
+
+    function openPrototypeFullscreen() {
+      const page = currentPage();
+      const proto = page && page.prototype;
+      if (!proto || !proto.states || !proto.states.length) return;
+      const state = proto.states[activeStateIndex] || proto.states[0];
+      const kind = proto.kind === "mobile" ? "mobile" : "pc";
+      const baseW = Number(proto.width) || (kind === "mobile" ? 375 : 1920);
+      const baseH = Number(proto.height) || (kind === "mobile" ? 812 : 1080);
+
+      protoFullscreenTitle.textContent = proto.states.length > 1 ? `${proto.title} · ${state.label}` : proto.title;
+      protoFullscreenStage.innerHTML = "";
+
+      const frame = document.createElement("div");
+      frame.className = `proto-fullscreen-frame ${kind}`;
+      frame.dataset.baseW = String(baseW);
+      frame.dataset.baseH = String(baseH);
+      frame.style.width = baseW + "px";
+      frame.style.height = baseH + "px";
+
+      const iframe = document.createElement("iframe");
+      iframe.src = abs(state.url);
+      iframe.title = protoFullscreenTitle.textContent;
+      iframe.onload = () => {
+        hideIframeScrollbar(iframe);
+        setTimeout(() => runAction(iframe, state.action), 180);
+      };
+      frame.appendChild(iframe);
+      protoFullscreenStage.appendChild(frame);
+
+      protoFullscreen.classList.add("show");
+      protoFullscreen.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(fitFullscreenFrame);
+    }
+
+    function closePrototypeFullscreen() {
+      protoFullscreen.classList.remove("show");
+      protoFullscreen.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      protoFullscreenStage.innerHTML = "";
+      openProto.focus();
+    }
+
+    openProto.addEventListener("click", openPrototypeFullscreen);
+    closeProtoFullscreen.addEventListener("click", closePrototypeFullscreen);
+    document.addEventListener("keydown", event => {
+      if (event.key === "Escape" && protoFullscreen.classList.contains("show")) closePrototypeFullscreen();
+    });
+
+    function renderSectionNav() {
+      sectionNav.innerHTML = SECTION_DATA.map(section => `
+        <button class="feature-btn ${section.id === activeSectionId ? "active" : ""}" data-section="${section.id}">
+          <span class="feature-name">${section.title}</span>
+        </button>
+      `).join("");
+
+      sectionNav.querySelectorAll(".feature-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeSectionId = btn.dataset.section;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderFeatureNav() {
+      featureNav.innerHTML = DATA.map(feature => `
+        <button class="feature-btn ${!activeSectionId && feature.id === activeFeatureId ? "active" : ""}" data-feature="${feature.id}">
+          <span class="feature-name">${feature.title}</span>
+        </button>
+      `).join("");
+
+      featureNav.querySelectorAll(".feature-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const target = DATA.find(item => item.id === btn.dataset.feature);
+          if (!target) return;
+          activeSectionId = null;
+          activeFeatureId = target.id;
+          activePageId = target.pages[0].id;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderTabs() {
+      if (activeSectionId) {
+        pageTabs.innerHTML = "";
+        return;
+      }
+      const feature = currentFeature();
+      pageTabs.innerHTML = feature.pages.map(page => `
+        <button class="page-tab ${page.id === activePageId ? "active" : ""}" data-page="${page.id}">${page.tab}</button>
+      `).join("");
+
+      pageTabs.querySelectorAll(".page-tab").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activePageId = btn.dataset.page;
+          activeStateIndex = 0;
+          renderAll();
+        });
+      });
+    }
+
+    function renderDoc() {
+      const section = currentSection();
+      if (section) {
+        featureTitle.textContent = section.title;
+        featureSummary.innerHTML = section.summary;
+        docKicker.textContent = "基础内容";
+        pageTitle.textContent = section.title;
+        docScroll.innerHTML = section.blocks.map(block => `
+          <div class="block">
+            <h3>${block.title}</h3>
+            ${block.html || `<ul>${(block.list || []).map(item => `<li>${item}</li>`).join("")}</ul>`}
+          </div>
+        `).join("");
+        docScroll.scrollTop = 0;
+        return;
+      }
+
+      const feature = currentFeature();
+      const page = currentPage();
+      featureTitle.textContent = feature.title;
+      featureSummary.innerHTML = feature.summary;
+      const kickerMap = {
+        overview: "业务需求",
+        pc: "PC端页面需求",
+        mobile: "移动端页面需求",
+        merchant: "商家端页面需求",
+        message: "消息需求",
+        task: "任务需求",
+        table: "底表设计需求"
+      };
+      docKicker.textContent = kickerMap[page.type] || "需求说明";
+      pageTitle.textContent = page.title;
+
+      const changes = page.changes || [];
+      const changeHtml = changes.map(change => {
+        const body = renderChangeBody(change);
+        return `
+          <div class="change-item">
+            <span class="tag ${change.type}">${change.label}</span>
+            <div class="change-body">
+              <strong>${change.title}</strong>
+              ${body}
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      const notes = page.notes && page.notes.length
+        ? `<div class="block"><h3>补充说明</h3><ul>${page.notes.map(item => `<li>${item}</li>`).join("")}</ul></div>`
+        : "";
+
+      const detailBlocks = (page.blocks || []).map(block => `
+        <div class="block">
+          <h3>${block.title}</h3>
+          ${block.html}
+        </div>
+      `).join("");
+
+      const pageLead = ['pc', 'mobile', 'merchant'].includes(page.type)
+        ? `
+          ${page.location ? `<div class="block"><h3>页面位置</h3><p>${page.location}</p></div>` : ""}
+          ${changeHtml ? `<div class="block"><h3>本页改动</h3><div class="change-list">${changeHtml}</div></div>` : ""}
+        `
+        : "";
+
+      docScroll.innerHTML = `${pageLead}${detailBlocks}${notes}`;
+      docScroll.scrollTop = 0;
+    }
+
+    function renderChangeBody(change) {
+      if (change.groups) {
+        return `<ol class="rule-groups">${change.groups.map(group => `
+          <li><span class="rule-title">${group.title}</span><ol>${group.items.map(item => `<li>${item}</li>`).join("")}</ol></li>
+        `).join("")}</ol>`;
+      }
+      if (change.list) return `<ol>${change.list.map(item => `<li>${item}</li>`).join("")}</ol>`;
+      return `<p>${change.desc}</p>`;
+    }
+
+    function hideIframeScrollbar(iframe) {
+      try {
+        const doc = iframe.contentDocument || iframe.contentWindow.document;
+        const style = doc.createElement("style");
+        style.textContent = "html, body, * { scrollbar-width: none !important; -ms-overflow-style: none !important; } ::-webkit-scrollbar { display: none !important; width: 0 !important; height: 0 !important; }";
+        doc.head.appendChild(style);
+      } catch (e) {
+        console.warn("skip iframe style", e);
+      }
+    }
+
+    function runAction(iframe, action) {
+      if (!action) return;
+      try {
+        const win = iframe.contentWindow;
+        const fn = win && win[action.fn];
+        if (typeof fn === "function") fn.apply(win, action.args || []);
+      } catch (e) {
+        console.warn("skip iframe action", e);
+      }
+    }
+
+    function fitPcFrame() {
+      const wrap = protoStage.querySelector(".pc-stage");
+      const iframe = protoStage.querySelector("iframe");
+      if (!wrap || !iframe) return;
+      const rect = wrap.getBoundingClientRect();
+      let body = null;
+      let root = null;
+      try {
+        const doc = iframe.contentDocument;
+        body = doc && doc.body;
+        root = doc && doc.documentElement;
+      } catch (e) {
+        console.warn("skip iframe size inspect", e);
+      }
+      const baseW = Math.max(
+        Number(iframe.dataset.baseW) || 1920,
+        body ? body.scrollWidth : 0,
+        body ? body.offsetWidth : 0,
+        root ? root.scrollWidth : 0,
+        root ? root.offsetWidth : 0
+      );
+      const baseH = Math.max(
+        Number(iframe.dataset.baseH) || 1080,
+        body ? body.scrollHeight : 0,
+        body ? body.offsetHeight : 0,
+        root ? root.scrollHeight : 0,
+        root ? root.offsetHeight : 0
+      );
+      const scale = Math.min(rect.width / baseW, rect.height / baseH);
+      iframe.style.width = baseW + "px";
+      iframe.style.height = baseH + "px";
+      iframe.style.transform = `scale(${Math.max(scale, .2).toFixed(4)})`;
+    }
+
+    function fitMobileFrame() {
+      const shell = protoStage.querySelector(".phone-shell");
+      if (!shell) return;
+      const rect = protoStage.getBoundingClientRect();
+      const scale = Math.min((rect.width - 28) / 375, (rect.height - 28) / 812, 1);
+      const s = Math.max(scale, 0.3);
+      // 布局尺寸随缩放同步，避免 transform 缩放后仍按 812px 占位导致上下被裁剪
+      shell.style.width = (375 * s) + "px";
+      shell.style.height = (812 * s) + "px";
+      shell.style.transform = "";
+      const frame = shell.querySelector("iframe");
+      if (frame) {
+        frame.style.width = "375px";
+        frame.style.height = "812px";
+        frame.style.transformOrigin = "top left";
+        frame.style.transform = `scale(${s.toFixed(4)})`;
+      }
+    }
+
+    function renderStateBar(page) {
+      const states = page.prototype.states;
+      if (!states || states.length <= 1) {
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        return;
+      }
+      protoHead.classList.add("has-states");
+      stateBar.innerHTML = states.map((state, index) => `
+        <button class="state-btn ${index === activeStateIndex ? "active" : ""}" data-index="${index}">${state.label}</button>
+      `).join("");
+
+      stateBar.querySelectorAll(".state-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeStateIndex = Number(btn.dataset.index);
+          renderPrototype();
+        });
+      });
+    }
+
+    function renderPrototype() {
+      if (activeSectionId) {
+        workspace.className = "workspace doc-only";
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        openProto.disabled = true;
+        protoStage.innerHTML = "";
+        return;
+      }
+
+      const page = currentPage();
+      const proto = page.prototype;
+      if (!proto || !proto.states || !proto.states.length) {
+        workspace.className = "workspace doc-only";
+        stateBar.innerHTML = "";
+        protoHead.classList.remove("has-states");
+        openProto.disabled = true;
+        protoStage.innerHTML = "";
+        return;
+      }
+      const states = proto.states;
+      const state = states[activeStateIndex] || states[0];
+      const kind = proto.kind;
+
+      workspace.className = `workspace ${kind === "mobile" ? "mobile" : "pc"}`;
+      protoKicker.textContent = kind === "mobile" ? "移动端原型" : "PC端原型";
+      protoTitle.textContent = states.length > 1 ? `${proto.title} · ${state.label}` : proto.title;
+      openProto.disabled = false;
+      renderStateBar(page);
+
+      clearTimeout(loadTimer);
+      loadTimer = setTimeout(() => {
+        protoStage.innerHTML = "";
+        const iframe = document.createElement("iframe");
+          iframe.src = abs(state.url);
+          iframe.dataset.baseW = String(proto.width || 1920);
+          iframe.dataset.baseH = String(proto.height || 1080);
+          iframe.onload = () => {
+            iframe.style.opacity = "1";
+            hideIframeScrollbar(iframe);
+          setTimeout(() => runAction(iframe, state.action), 180);
+          kind === "mobile" ? fitMobileFrame() : fitPcFrame();
+        };
+
+        if (kind === "mobile") {
+          const shell = document.createElement("div");
+          shell.className = "phone-shell";
+          shell.appendChild(iframe);
+          protoStage.appendChild(shell);
+          requestAnimationFrame(fitMobileFrame);
+        } else {
+          const wrap = document.createElement("div");
+          wrap.className = "pc-stage";
+          wrap.appendChild(iframe);
+          protoStage.appendChild(wrap);
+          requestAnimationFrame(fitPcFrame);
+        }
+      }, 80);
+    }
+
+    function renderAll() {
+      renderSectionNav();
+      renderFeatureNav();
+      renderTabs();
+      renderDoc();
+      renderPrototype();
+      content.scrollTop = 0;
+    }
+
+    window.addEventListener("resize", () => {
+      refitPrototype();
+      fitFullscreenFrame();
+    });
+
+    syncSidebarToggle();
+    renderAll();
+  </script>
+</body>
+</html>

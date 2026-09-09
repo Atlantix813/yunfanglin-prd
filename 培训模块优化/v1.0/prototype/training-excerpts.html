@@ -1,0 +1,199 @@
+<!-- prototype-states: list, expanded, empty, search -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>教培系统 · 论述摘编</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
+  .excerpt-page { height: 100%; display: flex; flex-direction: column; background: #F6F8FB; }
+  .excerpt-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .excerpt-scroll::-webkit-scrollbar { display: none; }
+
+  .excerpt-head {
+    padding: 18px 16px; background: linear-gradient(135deg, #FDF0E3, #FFF7EC);
+    border-radius: 0 0 16px 16px;
+  }
+  .excerpt-head-title { font-size: 17px; font-weight: 700; color: #8A4B00; }
+  .excerpt-head-desc { margin-top: 6px; font-size: 12px; color: #B97B33; line-height: 18px; }
+
+  .excerpt-list { padding: 12px 16px 24px; }
+  .excerpt-card {
+    padding: 16px 14px; margin-bottom: 10px; border-radius: 12px; background: #fff;
+    box-shadow: 0 2px 8px rgba(30,50,90,.05);
+  }
+  .excerpt-card-title { font-size: 14px; font-weight: 700; color: #222835; line-height: 20px; }
+  .excerpt-card-text {
+    margin-top: 8px; font-size: 13px; color: #4B5563; line-height: 21px;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  }
+  .excerpt-card-full {
+    display: none; margin-top: 8px; padding: 12px; border-radius: 8px;
+    background: #F7F9FC; font-size: 13px; color: #222835; line-height: 22px;
+  }
+  .excerpt-card.expanded .excerpt-card-text { display: none; }
+  .excerpt-card.expanded .excerpt-card-full { display: block; }
+  .excerpt-card-meta { margin-top: 10px; padding-top: 10px; border-top: 1px solid #F4F6F9; display: flex; align-items: center; justify-content: space-between; }
+  .excerpt-card-source { font-size: 11px; color: #B0B8C8; }
+  .excerpt-card-more { font-size: 12px; color: #3F86F5; font-weight: 600; }
+  .excerpt-card.expanded .excerpt-card-more { color: #8A94A6; }
+
+  .excerpt-empty { padding: 70px 20px; text-align: center; color: #B0B8C8; font-size: 13px; }
+  .excerpt-empty-icon { display: block; margin: 0 auto 10px; color: #C6D0DE; }
+
+  /* 搜索栏 */
+  .excerpt-search { padding: 0 16px 4px; }
+  .excerpt-search-bar {
+    height: 36px; padding: 0 14px; display: flex; align-items: center; gap: 8px;
+    border-radius: 18px; background: #fff; color: #939CAB;
+    box-shadow: 0 1px 4px rgba(30,80,150,.06);
+  }
+  .excerpt-search-bar input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 14px; color: #222835; }
+  .excerpt-search-bar input::placeholder { color: #B0B8C8; }
+  .excerpt-search-action { border: 0; background: transparent; color: #3F86F5; font-size: 13px; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="yfl-c-root m-phone">
+  <div class="m-phone-screen excerpt-page">
+
+    <div class="m-status-bar">
+      <span class="time">9:41</span>
+      <div class="m-status-icons" aria-hidden="true">
+        <svg data-inline-svg-ok width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
+        <svg data-inline-svg-ok width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <div class="m-nav-bar">
+      <button class="back" aria-label="返回" onclick="window.YunFangLinC && window.YunFangLinC.showToast(document.body, '返回学习首页')">‹</button>
+      <span class="title">论述摘编</span>
+      <div class="capsule" aria-label="小程序菜单">
+        <div class="capsule-dots"><span></span><span></span><span></span></div>
+        <div class="capsule-divider"></div>
+        <div class="capsule-close"><span class="capsule-target"></span></div>
+      </div>
+    </div>
+
+    <div class="excerpt-scroll">
+      <div class="excerpt-head">
+        <div class="excerpt-head-title">习近平总书记关于基层治理的重要论述</div>
+        <div class="excerpt-head-desc">社区工作者学习参考 · 每日更新</div>
+      </div>
+
+      <!-- 搜索栏（标题模糊搜索） -->
+      <div class="excerpt-search">
+        <div class="excerpt-search-bar">
+          <span class="yfl-icon yfl-icon--18" data-icon="search" aria-hidden="true"></span>
+          <input type="text" id="excerptSearch" placeholder="搜索论述标题">
+          <button class="excerpt-search-action" id="excerptSearchBtn">搜索</button>
+        </div>
+      </div>
+
+      <div class="excerpt-list" id="excerptList">
+        <div class="excerpt-card">
+          <div class="excerpt-card-title">坚持共建共治共享，建设人人有责、人人尽责、人人享有的社会治理共同体</div>
+          <div class="excerpt-card-text">社区是社会治理的基本单元。要把更多资源、服务、管理放到社区，更好为社区居民提供精准化、精细化服务。</div>
+          <div class="excerpt-card-full">社区是社会治理的基本单元。要把更多资源、服务、管理放到社区，更好为社区居民提供精准化、精细化服务。坚持和发展新时代"枫桥经验"，推动社会治理重心向基层下移，把更多资源、服务、管理放到社区，更好为社区居民提供精准化、精细化服务。建设人人有责、人人尽责、人人享有的社会治理共同体，需要每一个社区工作者立足岗位、主动作为，把群众满意度作为检验工作成效的根本标准。</div>
+          <div class="excerpt-card-meta">
+            <span class="excerpt-card-source">来源：基层治理论述摘编</span>
+            <span class="excerpt-card-more">查看全文 ›</span>
+          </div>
+        </div>
+        <div class="excerpt-card">
+          <div class="excerpt-card-title">把群众的事当作自己的事</div>
+          <div class="excerpt-card-text">社区工作要以人民为中心，把群众的操心事、烦心事、揪心事当作自己的事来办，用心用情解决群众急难愁盼问题。</div>
+          <div class="excerpt-card-full">社区工作要以人民为中心，把群众的操心事、烦心事、揪心事当作自己的事来办，用心用情解决群众急难愁盼问题。要善于倾听群众呼声，把群众反映的问题一件一件解决好，把好事办实、把实事办好，让社区成为居民最放心、最安心的港湾。</div>
+          <div class="excerpt-card-meta">
+            <span class="excerpt-card-source">来源：基层治理论述摘编</span>
+            <span class="excerpt-card-more">查看全文 ›</span>
+          </div>
+        </div>
+        <div class="excerpt-card">
+          <div class="excerpt-card-title">发挥基层党组织战斗堡垒作用</div>
+          <div class="excerpt-card-text">要加强社区党组织建设，把基层党组织建设成为宣传党的主张、贯彻党的决定、领导基层治理、团结动员群众、推动改革发展的坚强战斗堡垒。</div>
+          <div class="excerpt-card-full">要加强社区党组织建设，把基层党组织建设成为宣传党的主张、贯彻党的决定、领导基层治理、团结动员群众、推动改革发展的坚强战斗堡垒。社区党组织书记要当好"领头雁"，把社区党员组织起来、把群众动员起来，让党的旗帜在社区治理一线高高飘扬。</div>
+          <div class="excerpt-card-meta">
+            <span class="excerpt-card-source">来源：基层治理论述摘编</span>
+            <span class="excerpt-card-more">查看全文 ›</span>
+          </div>
+        </div>
+        <div class="excerpt-card">
+          <div class="excerpt-card-title">推进基层治理体系和治理能力现代化</div>
+          <div class="excerpt-card-text">要加强和创新基层社会治理，坚持和完善新时代'枫桥经验'，把矛盾纠纷化解在基层、化解在萌芽状态。</div>
+          <div class="excerpt-card-full">要加强和创新基层社会治理，坚持和完善新时代"枫桥经验"，把矛盾纠纷化解在基层、化解在萌芽状态。要完善基层群众自治制度，畅通群众参与渠道，让群众的事群众商量着办，推动基层治理效能不断提升。</div>
+          <div class="excerpt-card-meta">
+            <span class="excerpt-card-source">来源：基层治理论述摘编</span>
+            <span class="excerpt-card-more">查看全文 ›</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="excerpt-empty" id="excerptEmpty" hidden><span class="excerpt-empty-icon"><span class="yfl-icon yfl-icon--24" data-icon="guide" aria-hidden="true"></span></span>暂无论述内容</div>
+    </div>
+    <div class="m-toast"></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const allowedStates = ['list', 'expanded', 'empty', 'search'];
+    const initialState = allowedStates.includes(params.get('state')) ? params.get('state') : 'list';
+
+    // 查看全文：展开/收起
+    document.querySelectorAll('.excerpt-card').forEach(function (card) {
+      const more = card.querySelector('.excerpt-card-more');
+      more.addEventListener('click', function () {
+        card.classList.toggle('expanded');
+        more.textContent = card.classList.contains('expanded') ? '收起全文' : '查看全文 ›';
+      });
+    });
+
+    // 已上架论述列表（原型演示用，取自 DOM）
+    const excerptList = document.getElementById('excerptList');
+    const excerptEmpty = document.getElementById('excerptEmpty');
+    const searchInput = document.getElementById('excerptSearch');
+    const cards = Array.from(document.querySelectorAll('.excerpt-card'));
+
+    function render(list) {
+      excerptList.innerHTML = '';
+      list.forEach(function (c) { excerptList.appendChild(c); });
+      excerptEmpty.hidden = list.length !== 0;
+    }
+
+    function applySearch() {
+      const kw = searchInput.value.trim();
+      const list = !kw ? cards.slice() : cards.filter(function (c) {
+        return c.querySelector('.excerpt-card-title').textContent.includes(kw);
+      });
+      render(list);
+    }
+
+    // 搜索
+    document.getElementById('excerptSearchBtn').addEventListener('click', applySearch);
+    searchInput.addEventListener('input', applySearch);
+
+    if (initialState === 'expanded') {
+      cards[0].classList.add('expanded');
+      cards[0].querySelector('.excerpt-card-more').textContent = '收起全文';
+    } else if (initialState === 'empty') {
+      excerptList.hidden = true;
+      excerptEmpty.hidden = false;
+    } else if (initialState === 'search') {
+      searchInput.value = '治理';
+      applySearch();
+    }
+
+    const url = new URL(location.href);
+    url.searchParams.set('state', initialState);
+    history.replaceState(null, '', url);
+  })();
+</script>
+</body>
+</html>

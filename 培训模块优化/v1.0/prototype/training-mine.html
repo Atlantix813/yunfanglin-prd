@@ -1,0 +1,161 @@
+<!-- prototype-states: default, with-favorites -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>教培系统 · 我的</title>
+<link rel="stylesheet" href="mobile-components.css">
+<link rel="stylesheet" href="mobile-icons.css">
+<script src="mobile-components.js" defer></script>
+<style>
+  html, body { margin: 0; padding: 0; height: 100%; background: #fff; }
+  .train-mine { height: 100%; display: flex; flex-direction: column; background: #fff; }
+  .train-scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .train-scroll::-webkit-scrollbar { display: none; }
+
+  /* 顶部浅蓝渐变 + 用户信息（对齐截图） */
+  .mine-head {
+    padding: 28px 20px 24px;
+    background: linear-gradient(180deg, #DDEBFF 0%, #EAF2FF 60%, #F6F8FB 100%);
+  }
+  .mine-user { display: flex; align-items: center; gap: 14px; }
+  .mine-avatar {
+    width: 60px; height: 60px; flex-shrink: 0; border-radius: 50%;
+    border: 2px solid #fff; overflow: hidden; background: linear-gradient(135deg, #F6C7AE 0 42%, #77BAF2 42%);
+    display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px; font-weight: 700;
+    box-shadow: 0 2px 10px rgba(30,80,150,.14);
+  }
+  .mine-user-info { flex: 1; min-width: 0; }
+  .mine-name { font-size: 18px; font-weight: 700; color: #222835; line-height: 26px; }
+  .mine-org { margin-top: 5px; font-size: 13px; color: #4B5563; }
+  .mine-arrow { color: #9DB6DA; font-size: 14px; flex-shrink: 0; }
+
+  /* 统计区（2×2 白色卡片） */
+  .mine-stats {
+    margin: 0 16px; border-radius: 12px; background: #fff; overflow: hidden;
+    box-shadow: 0 2px 10px rgba(30,80,150,.06);
+  }
+  .mine-stats-row { display: flex; align-items: stretch; }
+  .mine-stats-row + .mine-stats-row { border-top: 1px solid #F2F4F8; }
+  .mine-stat {
+    flex: 1; min-width: 0; padding: 16px 0; border: 0; background: transparent;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    color: #222835; cursor: default;
+  }
+  .mine-stat + .mine-stat { border-left: 1px solid #F2F4F8; }
+  .mine-stat-value { font-size: 18px; font-weight: 700; color: #222835; line-height: 24px; white-space: nowrap; }
+  .mine-stat-label { font-size: 12px; color: #8A94A6; line-height: 16px; }
+  /* 收藏入口格（可点击，蓝色强调） */
+  .mine-fav-entry { cursor: pointer; }
+  .mine-fav-entry .mine-stat-value { color: #2F86F4; display: inline-flex; align-items: center; gap: 4px; }
+  .mine-fav-entry .mine-stat-label { color: #2F86F4; font-weight: 600; }
+  .mine-fav-icon { color: #2F86F4; }
+
+  /* 底部导航（三栏，meedu 真实图标） */
+  .train-bottom {
+    width: 375px; height: 62px; flex-shrink: 0; display: flex; align-items: stretch;
+    border-top: 1px solid #F2F3F5; background: #fff;
+  }
+  .train-bottom-item {
+    flex: 1; min-width: 0; height: 62px; border: 0; background: transparent;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    color: #999; font-size: 10px; line-height: 14px;
+  }
+  .train-bottom-item.active { color: #333; font-weight: 600; }
+  .train-bottom-icon { width: 28px; height: 28px; flex: 0 0 28px; display: flex; align-items: center; justify-content: center; }
+  .train-bottom-icon img { width: 28px; height: 28px; display: block; }
+</style>
+</head>
+<body>
+<div class="yfl-c-root m-phone">
+  <div class="m-phone-screen train-mine">
+
+    <div class="m-status-bar">
+      <span class="time">9:41</span>
+      <div class="m-status-icons" aria-hidden="true">
+        <svg data-inline-svg-ok width="16" height="10" viewBox="0 0 16 10" fill="currentColor"><rect x="0" y="7" width="2.5" height="3" rx=".5"/><rect x="4" y="5" width="2.5" height="5" rx=".5"/><rect x="8" y="2.5" width="2.5" height="7.5" rx=".5"/><rect x="12" y="0" width="2.5" height="10" rx=".5"/></svg>
+        <svg data-inline-svg-ok width="23" height="10" viewBox="0 0 23 10" fill="none"><rect x=".5" y=".5" width="19" height="9" rx="2" stroke="currentColor"/><rect x="2.5" y="2.5" width="15" height="5" rx="1" fill="currentColor"/><path d="M21 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </div>
+    </div>
+
+    <div class="m-nav-bar">
+      <span class="title">培训管理</span>
+      <div class="capsule" aria-label="小程序菜单">
+        <div class="capsule-dots"><span></span><span></span><span></span></div>
+        <div class="capsule-divider"></div>
+        <div class="capsule-close"><span class="capsule-target"></span></div>
+      </div>
+    </div>
+
+    <div class="train-scroll">
+      <!-- 用户信息 -->
+      <div class="mine-head">
+        <div class="mine-user">
+          <div class="mine-avatar">梁</div>
+          <div class="mine-user-info">
+            <div class="mine-name">梁生</div>
+            <div class="mine-org">测试社区2（勿选）</div>
+          </div>
+          <span class="mine-arrow">›</span>
+        </div>
+      </div>
+
+      <!-- 统计区：第一行 今日学习/累计学习/收藏；第二行 所属社区/课时总进度 -->
+      <div class="mine-stats">
+        <div class="mine-stats-row">
+          <div class="mine-stat"><span class="mine-stat-value">0时0分</span><span class="mine-stat-label">今日学习</span></div>
+          <div class="mine-stat"><span class="mine-stat-value">0时23分</span><span class="mine-stat-label">累计学习</span></div>
+          <button class="mine-stat mine-fav-entry" data-m-action="toast" data-message="进入我的收藏课程">
+            <span class="mine-stat-value"><span class="yfl-icon yfl-icon--18 mine-fav-icon" data-icon="heart" aria-hidden="true"></span> 3</span>
+            <span class="mine-stat-label">收藏</span>
+          </button>
+        </div>
+        <div class="mine-stats-row">
+          <div class="mine-stat"><span class="mine-stat-value">测试社区2</span><span class="mine-stat-label">所属社区</span></div>
+          <div class="mine-stat"><span class="mine-stat-value">0/3</span><span class="mine-stat-label">课时总进度</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部导航：首页 / 学习 / 我的（meedu 真实图标） -->
+    <div class="train-bottom">
+      <button class="train-bottom-item" data-page="home">
+        <span class="train-bottom-icon"><img src="meedu-assets/icon-home-n@2x.png" alt=""></span>
+        <span>首页</span>
+      </button>
+      <button class="train-bottom-item" data-page="study">
+        <span class="train-bottom-icon"><img src="meedu-assets/icon-study-n@2x.png" alt=""></span>
+        <span>学习</span>
+      </button>
+      <button class="train-bottom-item active" data-page="mine">
+        <span class="train-bottom-icon"><img src="meedu-assets/icon-me-h@2x.png" alt=""></span>
+        <span>我的</span>
+      </button>
+    </div>
+    <div class="m-toast"></div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const params = new URLSearchParams(location.search);
+    const allowedStates = ['default', 'with-favorites'];
+    const initialState = allowedStates.includes(params.get('state')) ? params.get('state') : 'default';
+
+    document.querySelectorAll('.train-bottom-item').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const page = btn.dataset.page;
+        if (page === 'home') { window.YunFangLinC && window.YunFangLinC.showToast(document.body, '进入培训首页'); return; }
+        if (page === 'study') { window.YunFangLinC && window.YunFangLinC.showToast(document.body, '进入学习页'); return; }
+      });
+    });
+
+    const url = new URL(location.href);
+    url.searchParams.set('state', initialState);
+    history.replaceState(null, '', url);
+  })();
+</script>
+</body>
+</html>
