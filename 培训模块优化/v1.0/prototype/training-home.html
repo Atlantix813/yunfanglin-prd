@@ -85,7 +85,6 @@
   .cat-drop-panel {
     position: absolute; left: 0; right: 0; top: 320px; z-index: 61;
     background: #fff; border-radius: 0 0 16px 16px;
-    box-shadow: 0 12px 24px rgba(15,23,42,.14);
     transform: translateY(-8px); opacity: 0; pointer-events: none;
     transition: transform .16s ease, opacity .16s ease;
     max-height: calc(100% - 340px); display: flex; flex-direction: column;
@@ -477,10 +476,10 @@
       }).join('');
       sheetList.querySelectorAll('.cat-drop-tag').forEach(function (tag) {
         tag.addEventListener('click', function () {
+          // 点选仅切换选中态，点「确定」才筛选并收起
           pendingCat = tag.dataset.cat;
-          // 点选即筛选并收起
-          applyCat(pendingCat);
-          closeSheet();
+          sheetList.querySelectorAll('.cat-drop-tag').forEach(function (t) { t.classList.remove('active'); });
+          tag.classList.add('active');
         });
       });
     }
@@ -636,7 +635,6 @@
   .cat-drop-panel {
     position: absolute; left: 0; right: 0; top: 320px; z-index: 61;
     background: #fff; border-radius: 0 0 16px 16px;
-    box-shadow: 0 12px 24px rgba(15,23,42,.14);
     transform: translateY(-8px); opacity: 0; pointer-events: none;
     transition: transform .16s ease, opacity .16s ease;
     max-height: calc(100% - 340px); display: flex; flex-direction: column;
