@@ -79,13 +79,13 @@
   /* 分类下拉展开层（从分类栏下方往下展开，盖住课程列表） */
   .cat-drop-overlay {
     position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 60; display: none;
-    background: rgba(0,0,0,.4);
+    background: transparent;
   }
   .cat-drop-overlay.show { display: block; }
   .cat-drop-panel {
     position: absolute; left: 0; right: 0; top: 320px; z-index: 61;
-    background: #fff; border-radius: 0 0 16px 16px;
-    transform: translateY(-8px); opacity: 0; pointer-events: none;
+    background: #fff; border-radius: 0 0 16px 16px; border-top: 1px solid #F4F6F9;
+    transform: translateY(-14px); opacity: 0; pointer-events: none;
     transition: transform .16s ease, opacity .16s ease;
     max-height: calc(100% - 340px); display: flex; flex-direction: column;
   }
@@ -629,13 +629,13 @@
   /* 分类下拉展开层（从分类栏下方往下展开，盖住课程列表） */
   .cat-drop-overlay {
     position: absolute; left: 0; right: 0; top: 0; bottom: 0; z-index: 60; display: none;
-    background: rgba(0,0,0,.4);
+    background: transparent;
   }
   .cat-drop-overlay.show { display: block; }
   .cat-drop-panel {
     position: absolute; left: 0; right: 0; top: 320px; z-index: 61;
-    background: #fff; border-radius: 0 0 16px 16px;
-    transform: translateY(-8px); opacity: 0; pointer-events: none;
+    background: #fff; border-radius: 0 0 16px 16px; border-top: 1px solid #F4F6F9;
+    transform: translateY(-14px); opacity: 0; pointer-events: none;
     transition: transform .16s ease, opacity .16s ease;
     max-height: calc(100% - 340px); display: flex; flex-direction: column;
   }
