@@ -72,6 +72,7 @@
     flex-shrink: 0; width: 36px; height: 34px; margin-left: 6px; border: 0;
     border-left: 1px solid #EEF2F8; background: #fff; color: #4B5563;
     display: inline-flex; align-items: center; justify-content: center;
+    position: relative; z-index: 62;
   }
   .train-cat-drop-arrow { font-size: 12px; color: #939CAB; }
   .train-cat-drop.open .train-cat-drop-arrow { color: #3F86F5; transform: rotate(180deg); }
@@ -90,7 +91,7 @@
     max-height: calc(100% - 340px); display: flex; flex-direction: column;
   }
   .cat-drop-overlay.show .cat-drop-panel { transform: translateY(0); opacity: 1; pointer-events: auto; }
-  .cat-drop-tags { padding: 16px 16px 4px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; }
+  .cat-drop-tags { padding: 18px 16px 4px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; }
   .cat-drop-tag {
     height: 32px; padding: 0 14px; border: 1px solid #E8EEF8; border-radius: 16px;
     background: #F7F9FC; color: #4B5563; font-size: 13px;
@@ -497,11 +498,11 @@
     function openSheet() {
       pendingCat = activeCat();
       renderSheetTags();
-      // 面板顶对齐分类栏底部（动态计算，避免写死偏移）
+      // 面板顶对齐分类栏顶部（盖住原 tab 行与二级 chip 行，避免重复 tab 视觉）
       const categoryEl = document.querySelector('.train-category');
       const screenEl = document.querySelector('.m-phone-screen');
-      const bottom = categoryEl.getBoundingClientRect().bottom - screenEl.getBoundingClientRect().top;
-      document.querySelector('.cat-drop-panel').style.top = bottom + 'px';
+      const top = categoryEl.getBoundingClientRect().top - screenEl.getBoundingClientRect().top;
+      document.querySelector('.cat-drop-panel').style.top = top + 'px';
       overlay.classList.add('show');
       catDropBtn.classList.add('open');
     }
@@ -622,6 +623,7 @@
     flex-shrink: 0; width: 36px; height: 34px; margin-left: 6px; border: 0;
     border-left: 1px solid #EEF2F8; background: #fff; color: #4B5563;
     display: inline-flex; align-items: center; justify-content: center;
+    position: relative; z-index: 62;
   }
   .train-cat-drop-arrow { font-size: 12px; color: #939CAB; }
   .train-cat-drop.open .train-cat-drop-arrow { color: #3F86F5; transform: rotate(180deg); }
@@ -640,7 +642,7 @@
     max-height: calc(100% - 340px); display: flex; flex-direction: column;
   }
   .cat-drop-overlay.show .cat-drop-panel { transform: translateY(0); opacity: 1; pointer-events: auto; }
-  .cat-drop-tags { padding: 16px 16px 4px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; }
+  .cat-drop-tags { padding: 18px 16px 4px; display: flex; flex-wrap: wrap; gap: 10px; overflow-y: auto; }
   .cat-drop-tag {
     height: 32px; padding: 0 14px; border: 1px solid #E8EEF8; border-radius: 16px;
     background: #F7F9FC; color: #4B5563; font-size: 13px;
