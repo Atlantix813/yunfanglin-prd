@@ -953,7 +953,7 @@
 
   <script>
 /* GENERATED_PRD_DATA_START */
-    // 由 prd-training-module-optimization.md 自动生成，MD SHA256: 764323c89db03d5ad9be27117553603a6db8d296613b51a066f6b35d472ca12a
+    // 由 prd-training-module-optimization.md 自动生成，MD SHA256: ce6f38645af48473fe5288d897ecd24a882f5cee0918a97296fd813185bf3d6f
     const PRD_MODE = "small";
     const SECTION_DATA = [
       {
@@ -978,7 +978,7 @@
         "blocks": [
           {
             "title": "需求清单",
-            "html": "<div class=\"table-scroll\"><table><thead><tr><th>编号</th><th>需求</th><th>状态</th><th>影响范围</th><th>说明</th></tr></thead><tbody><tr><td>功能一</td><td>课程搜索</td><td>已细化</td><td>教培 C 端学习首页、PC 新建课程</td><td>新增搜索栏，支持按课程名称与课程简介模糊搜索；课程卡片新增课程简介显示（最多 2 行）；PC 新建课程<span class=\"token token-field\">[课程简介]</span>下方新增提示。</td></tr><tr><td>功能二</td><td>课程分类交互改版</td><td>已细化</td><td>教培 C 端学习首页、PC 分类管理</td><td>移除课程类型 tab（已学完/未学完）；分类从下拉筛选改为一级分类横向 tab + 二级分类 chip；新建分类时<span class=\"token token-field\">[所属上级]</span>仅支持选择一级分类作为上级。</td></tr><tr><td>功能三</td><td>课程收藏</td><td>已细化</td><td>教培 C 端课程详情、我的页、收藏列表</td><td>课程详情新增收藏按钮；在<span class=\"token token-page\">【我的】</span>页学习统计卡中新增<span class=\"token token-action\">「我的收藏」</span>入口；新增收藏课程列表页。</td></tr><tr><td>功能四</td><td>论述摘编</td><td>已细化</td><td>教培 C 端学习首页、论述列表页、PC 后台</td><td>C 端首页新增论述摘编走马灯横幅（上下轮播）+ 二级列表页（支持标题模糊搜索、点击论述置顶）；PC 后台新增论述摘编管理台账，支持批量导入与轮播设置。</td></tr></tbody></table></div>"
+            "html": "<div class=\"table-scroll\"><table><thead><tr><th>编号</th><th>需求</th><th>状态</th><th>影响范围</th><th>说明</th></tr></thead><tbody><tr><td>功能一</td><td>课程搜索</td><td>已细化</td><td>教培 C 端学习首页、PC 新建课程</td><td>新增搜索栏，支持按课程名称与课程简介模糊搜索；课程卡片新增课程简介显示（最多 2 行）；PC 新建课程<span class=\"token token-field\">[课程简介]</span>下方新增提示。</td></tr><tr><td>功能二</td><td>课程分类交互改版</td><td>已细化</td><td>教培 C 端学习首页、PC 分类管理</td><td>移除课程类型 tab（已学完/未学完）；分类改为一级分类横向 tab（右侧展开全部分类面板）+ 二级分类 chip，分类均展示课程数量；新建分类时<span class=\"token token-field\">[所属上级]</span>仅支持选择一级分类作为上级。</td></tr><tr><td>功能三</td><td>课程收藏</td><td>已细化</td><td>教培 C 端课程详情、我的页、收藏列表</td><td>课程详情新增收藏按钮；在<span class=\"token token-page\">【我的】</span>页学习统计卡中新增<span class=\"token token-action\">「我的收藏」</span>入口；新增收藏课程列表页。</td></tr><tr><td>功能四</td><td>论述摘编</td><td>已细化</td><td>教培 C 端学习首页、论述列表页、PC 后台</td><td>C 端首页新增论述摘编走马灯横幅（上下轮播）+ 二级列表页（支持标题模糊搜索、点击论述置顶）；PC 后台新增论述摘编管理台账，支持批量导入与轮播设置。</td></tr></tbody></table></div>"
           }
         ]
       },
@@ -1181,13 +1181,14 @@
                 "type": "add",
                 "label": "新增",
                 "title": "分类导航 · 一级分类横向 tab",
-                "desc": "新增一行横向滚动的分类 tab，展示<span class=\"token token-action\">「全部」</span>及全部一级分类，点击后按该分类筛选课程。",
+                "desc": "新增一行横向滚动的分类 tab，展示<span class=\"token token-action\">「全部」</span>及全部一级分类，tab 行右侧固定<span class=\"token token-action\">「展开」</span>按钮，点击打开全部分类面板。",
                 "groups": [
                   {
                     "title": "展示规则",
                     "items": [
                       "一级分类 tab 横向排列，支持左右滑动。",
                       "首个 tab 固定为<span class=\"token token-action\">「全部」</span>，其后按后台分类树的一级分类顺序展示。",
+                      "tab 行右侧固定<span class=\"token token-action\">「展开」</span>按钮，不随 tab 滑动。",
                       "当前选中分类高亮，选中的一级分类名称同步展示在列表标题中。"
                     ]
                   },
@@ -1204,6 +1205,57 @@
               {
                 "type": "add",
                 "label": "新增",
+                "title": "分类导航 · 全部分类面板",
+                "desc": "点击<span class=\"token token-action\">「展开」</span>后底部滑出分类面板，展示<span class=\"token token-action\">「全部」</span>与全部一级分类，选中后点<span class=\"token token-action\">「确定」</span>应用筛选。",
+                "groups": [
+                  {
+                    "title": "打开与关闭",
+                    "items": [
+                      "点击 tab 行右侧<span class=\"token token-action\">「展开」</span>按钮，底部滑出<span class=\"token token-page\">【全部分类】</span>面板。",
+                      "点击<span class=\"token token-action\">「取消」</span>、右上角关闭按钮或遮罩关闭面板，不改变当前筛选。"
+                    ]
+                  },
+                  {
+                    "title": "面板结构",
+                    "items": [
+                      "面板展示<span class=\"token token-action\">「全部」</span>与全部一级分类，每项右侧展示该分类课程数量。",
+                      "点击面板中的分类项即为选中，选中项高亮。"
+                    ]
+                  },
+                  {
+                    "title": "确定结果",
+                    "items": [
+                      "点击<span class=\"token token-action\">「确定」</span>后按选中分类筛选课程，并关闭面板。",
+                      "确定后选中的一级分类 tab 自动滑动至可见位置。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
+                "title": "分类导航 · 分类数量展示",
+                "desc": "<span class=\"token token-action\">「全部」</span>、各一级分类、各二级分类后均以括号+数字展示该分类下的课程数量。",
+                "groups": [
+                  {
+                    "title": "数量规则",
+                    "items": [
+                      "<span class=\"token token-action\">「全部」</span>与各一级分类：展示该分类（含其子分类）下的课程总数。",
+                      "各二级分类：展示归属该子分类的课程数。",
+                      "<span class=\"token token-action\">「全部子类」</span>：展示当前一级分类下的课程总数。"
+                    ]
+                  },
+                  {
+                    "title": "更新时机",
+                    "items": [
+                      "数量随课程上下架实时更新，前端展示时取实时统计。"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "add",
+                "label": "新增",
                 "title": "分类导航 · 二级分类 chip",
                 "desc": "选中含子分类的一级分类时，其下方展开一行子分类 chip，点击后按子分类精确筛选。",
                 "groups": [
@@ -1212,7 +1264,7 @@
                     "items": [
                       "选中含子分类的一级分类后，其下方展示一行子分类 chip。",
                       "chip 行首个固定为<span class=\"token token-action\">「全部子类」</span>，其后按子分类顺序展示。",
-                      "支持横向滑动查看更多子分类。"
+                      "支持横向滑动查看更多子分类，不做下拉面板。"
                     ]
                   },
                   {
@@ -1236,11 +1288,15 @@
               "kind": "mobile",
               "width": 375,
               "height": 812,
-              "title": "教培端原型 · 学习首页 · 一级分类选中状态",
+              "title": "教培端原型 · 学习首页",
               "states": [
                 {
-                  "label": "教培端原型 · 学习首页 · 一级分类选中状态",
+                  "label": "一级分类选中状态",
                   "url": "prototype/training-home.html?state=category-community"
+                },
+                {
+                  "label": "全部分类面板",
+                  "url": "prototype/training-home.html?state=panel"
                 }
               ]
             }
